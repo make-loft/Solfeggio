@@ -1,0 +1,3 @@
+[submodule "Rainbow"]
+	path = Rainbow
+	url = ../Rainbow
