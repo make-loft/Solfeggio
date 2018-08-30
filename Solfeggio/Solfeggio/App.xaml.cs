@@ -1,5 +1,6 @@
 using Ace;
 using Ace.Specific;
+using Rainbow;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
@@ -7,6 +8,9 @@ namespace Solfeggio
 {
 	public partial class App
 	{
+	    public static Complex[] CurrentSpectrum = new Complex[0];
+	    public static Complex Max;
+
 		public App ()
 		{
 			InitializeComponent();
