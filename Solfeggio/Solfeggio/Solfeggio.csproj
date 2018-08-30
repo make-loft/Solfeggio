@@ -9,6 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Rainbow\Rainbow.csproj" />
+    <ProjectReference Include="..\..\Ace\Ace.Base\Ace.Base.Standard2.0.csproj" />
+    <ProjectReference Include="..\..\Ace\Ace.Core\Ace.Core.Standard2.0.csproj" />
+    <ProjectReference Include="..\..\Ace\Ace.Zest\Ace.Zest.Xamarin.csproj" />
+    <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj" />
   </ItemGroup>
 </Project>

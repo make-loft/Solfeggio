@@ -1,11 +1,11 @@
-using System;
-using Xamarin.Forms;
+using Ace;
+using Ace.Specific;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace Solfeggio
 {
-	public partial class App : Application
+	public partial class App
 	{
 		public App ()
 		{
@@ -16,12 +16,12 @@ namespace Solfeggio
 
 		protected override void OnStart ()
 		{
-			// Handle when your app starts
-		}
+		    Memory.ActiveBox = new Memory(new KeyFileStorage());
+        }
 
 		protected override void OnSleep ()
 		{
-			// Handle when your app sleeps
+            Store.Snapshot();
 		}
 
 		protected override void OnResume ()
