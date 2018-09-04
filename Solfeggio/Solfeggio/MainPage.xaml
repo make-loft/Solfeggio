@@ -6,7 +6,7 @@
     xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest.Xamarin"
     xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
-    BindingContext="{m:Store Key=viewModels:CoreViewModel}">
+    BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
     <Grid BackgroundColor="White">
         <forms:SKCanvasView

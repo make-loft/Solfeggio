@@ -1,26 +1,44 @@
-﻿using System;
+﻿using System.Runtime.Serialization;
 using Ace;
 using Rainbow;
 
 namespace Solfeggio.ViewModels
 {
-    public class CoreViewModel : ContextObject, IExposable
+	[DataContract]
+	public class SpectralViewModel : ContextObject, IExposable
     {
-		public Complex[] CurrentSpectrum { get; set; }
+		public IAudioInputDevice AudioInputDevice { get; } = Store.Get<IAudioInputDevice>();
 
-	    public IMicrophone Microphone { get; } = Store.Get<IMicrophone>();
+	    public delegate double ApodizationFunc(double binIndex, double frameSize);
 
-	    public Func<double, double, double> Window
+		public ApodizationFunc ActiveWindow
 		{
-			get => Get(() => Window) ?? Windowing.Gausse;
-			set => Set(() => Window, value);
+			get => Get(() => ActiveWindow, Windowing.Gausse);
+			set => Set(() => ActiveWindow, value);
 	    }
 
-	    public SmartSet<Func<double, double, double>> Windows { get; set; }
+	    public ApodizationFunc[] Windows { get; set; } =
+	    {
+		    Windowing.BlackmanHarris,
+			Windowing.DOGWavelet,
+			Windowing.Gausse,
+			Windowing.Hamming,
+			Windowing.Hann,
+		    Windowing.Rectangle,
+	    };
+
+	    [DataMember]
+	    public int FramePow
+	    {
+		    get { return Get(() => FramePow, 12); }
+		    set { Set(() => FramePow, value); }
+	    }
+
+		public Complex[] CurrentSpectrum { get; set; }
 
 		public void Expose()
 	    {
-			Microphone.DataReady += (sender, args) =>
+			AudioInputDevice.DataReady += (sender, args) =>
 			{
 				var buffer = args.Buffer;		
 				var frame = new Complex[4096];
@@ -33,7 +51,7 @@ namespace Solfeggio.ViewModels
 				CurrentSpectrum = spectrum;
 			};
 
-			Microphone.Start();
+			AudioInputDevice.Start();
 		}
     }
 }

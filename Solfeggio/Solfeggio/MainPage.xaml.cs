@@ -109,7 +109,7 @@ namespace Solfeggio
             var info = args.Info;
             var surface = args.Surface;
             var canvas = surface.Canvas;
-            var spectrum = Store.Get<CoreViewModel>().CurrentSpectrum;
+            var spectrum = Store.Get<SpectralViewModel>().CurrentSpectrum;
             var magnitudes = spectrum.Select(c => (float) c.Magnitude).ToList();
             var max = magnitudes.Max();
             var scale = info.Height / max;

@@ -31,7 +31,7 @@ namespace Solfeggio.Droid
 			    Log.Error("Unhandled", args.ExceptionObject.ToString());
 
 		    Memory.ActiveBox = new Memory(new KeyFileStorage());
-		    Store.Set<IMicrophone>(Microphone.Default);
+		    Store.Set<IAudioInputDevice>(Microphone.Default);
 
 			RequestedOrientation = ScreenOrientation.Landscape;
 		    Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);

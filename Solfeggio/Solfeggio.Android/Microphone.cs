@@ -4,7 +4,7 @@ using Encoding = Android.Media.Encoding;
 
 namespace Solfeggio.Droid
 {
-    public class Microphone : IMicrophone
+    public class Microphone : IAudioInputDevice
     {
         public static readonly Microphone Default = new Microphone();
 
@@ -13,15 +13,17 @@ namespace Solfeggio.Droid
         private AudioRecord _recorder;
 
         public int SampleRate { get; set; } = 16000;
+	    public int BufferSize { get; private set; }
+	    public TimeSpan BufferDuration => TimeSpan.FromSeconds((float) BufferSize / SampleRate);
 
-        public Microphone() => Initialize();
+		public Microphone() => Initialize();
 
         public void Initialize()
         {
             try
             {
-                var bufferSize = AudioRecord.GetMinBufferSize(SampleRate, ChannelIn.Mono, Encoding.Pcm16bit);
-                _buffer = new byte[bufferSize];
+                BufferSize = AudioRecord.GetMinBufferSize(SampleRate, ChannelIn.Mono, Encoding.Pcm16bit);
+                _buffer = new byte[BufferSize];
                 _recorder = new AudioRecord(AudioSource.Mic, SampleRate, ChannelIn.Mono, Encoding.Pcm16bit, _buffer.Length);
             }
             catch (Exception e)
@@ -31,12 +33,12 @@ namespace Solfeggio.Droid
             }
         }
 
-        private async void InLoop()
+        private async void StartDataLooper()
         {
             while (_isStarted)
             {
                 var readLength = await _recorder.ReadAsync(_buffer, 0, _buffer.Length);
-	            DataReady?.Invoke(this, new DataReadyEventArgs {Buffer = _buffer, ReadLength = readLength, Source = this});
+	            DataReady?.Invoke(this, new AudioInputEventArgs {Buffer = _buffer, ReadLength = readLength, Source = this});
             }
         }
 
@@ -44,7 +46,7 @@ namespace Solfeggio.Droid
         {
             _recorder.StartRecording();
             _isStarted = true;
-            InLoop();
+            StartDataLooper();
         }
 
         public void Stop()
@@ -53,6 +55,6 @@ namespace Solfeggio.Droid
             _isStarted = false;
         }
 
-        public event EventHandler<DataReadyEventArgs> DataReady;
+        public event EventHandler<AudioInputEventArgs> DataReady;
     }
 }
