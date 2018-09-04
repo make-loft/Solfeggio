@@ -1,14 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="Solfeggio.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-    xmlns:solfeggio="clr-namespace:Solfeggio;assembly=Solfeggio"
-    x:Class="Solfeggio.MainPage">
+    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest.Xamarin"
+    xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
+    BindingContext="{m:Store Key=viewModels:CoreViewModel}">
 
     <Grid BackgroundColor="White">
-        <forms:SKCanvasView BackgroundColor="BlanchedAlmond" x:Name="canvasView" Touch="OnTouchEffectAction" EnableTouchEvents="True"
-                           PaintSurface="OnCanvasViewPaintSurface" />
+        <forms:SKCanvasView
+            x:Name="CanvasView"
+            BackgroundColor="BlanchedAlmond"
+            EnableTouchEvents="True"
+            Touch="OnTouchEffectAction"
+            PaintSurface="OnCanvasViewPaintSurface" />
     </Grid>
 
 </ContentPage>

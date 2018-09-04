@@ -4,16 +4,9 @@ using Encoding = Android.Media.Encoding;
 
 namespace Solfeggio.Droid
 {
-    public class Microphone
+    public class Microphone : IMicrophone
     {
         public static readonly Microphone Default = new Microphone();
-
-        public class DataReadyEventArgs : EventArgs
-        {
-            public byte[] Buffer { get; set; }
-            public int ReadLength { get; set; }
-            public Microphone Source { get; set; }
-        }
 
         private bool _isStarted;
         private byte[] _buffer;
@@ -43,8 +36,7 @@ namespace Solfeggio.Droid
             while (_isStarted)
             {
                 var readLength = await _recorder.ReadAsync(_buffer, 0, _buffer.Length);
-                DataReady?.Invoke(this,
-                    new DataReadyEventArgs {Buffer = _buffer, ReadLength = readLength, Source = this});
+	            DataReady?.Invoke(this, new DataReadyEventArgs {Buffer = _buffer, ReadLength = readLength, Source = this});
             }
         }
 

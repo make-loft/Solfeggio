@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
-using System.Numerics;
 using Android;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Ace;
+using Ace.Specific;
 using Android.Support.V4.App;
+using Android.Util;
+using Android.Views;
 using Android.Widget;
-using Rainbow;
 
 namespace Solfeggio.Droid
 {
@@ -17,53 +18,43 @@ namespace Solfeggio.Droid
         Icon = "@mipmap/icon",
         Theme = "@style/MainTheme",
         MainLauncher = true,
+        NoHistory = true,
+        ScreenOrientation = ScreenOrientation.Landscape,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private static readonly string[] RequriedPermissions = {Manifest.Permission.RecordAudio};
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            try
-            {
-                //TabLayoutResource = Resource.Layout.Tabbar;
-                //ToolbarResource = Resource.Layout.Toolbar;
+	    protected override void OnCreate(Bundle bundle)
+	    {
+			AppDomain.CurrentDomain.UnhandledException += (o, args) =>
+			    Log.Error("Unhandled", args.ExceptionObject.ToString());
 
-                base.OnCreate(bundle);
+		    Memory.ActiveBox = new Memory(new KeyFileStorage());
+		    Store.Set<IMicrophone>(Microphone.Default);
 
-                Xamarin.Forms.Forms.Init(this, bundle);
-                LoadApplication(new App());
+			RequestedOrientation = ScreenOrientation.Landscape;
+		    Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
+		    base.OnCreate(bundle);
 
-                Microphone.Default.DataReady += (sender, args) =>
-                {
-                    Console.WriteLine(args.ReadLength);
-                    var buffer = args.Buffer;
-                    var frame = new Complex[4096];
-                    for (var i = 0; i < frame.Length; i++)
-                    {
-                        frame[i] = buffer[i];
-                    }
+		    Xamarin.Forms.Forms.Init(this, bundle);
+		    LoadApplication(new App());
 
-                    var spectrum = frame.DecimationInTime(true);
-                    App.CurrentSpectrum = spectrum;
-                    Console.WriteLine(spectrum[128]);
-                };
+		    try
+		    {
+			    if (RequriedPermissions.Any(p => CheckSelfPermission(p).IsNot(Permission.Granted)))
+			    {
+				    ActivityCompat.RequestPermissions(this, RequriedPermissions, RequestPermissionCode);
+			    }
+			}
+		    catch (Exception e)
+		    {
+			    Console.WriteLine(e);
+		    }
+	    }
 
-                Microphone.Default.Start();
-
-                if (RequriedPermissions.Any(p => CheckSelfPermission(p).IsNot(Permission.Granted)))
-                {
-                    ActivityCompat.RequestPermissions(this, RequriedPermissions, RequestPermissionCode);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        private const int RequestPermissionCode = 1000;
+	    private const int RequestPermissionCode = 1000;
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
