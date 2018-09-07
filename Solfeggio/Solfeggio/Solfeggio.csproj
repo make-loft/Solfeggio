@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\Ace\Ace.Zest\Ace.Zest.Xamarin.csproj" />
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Converters\" />
+  </ItemGroup>
 </Project>

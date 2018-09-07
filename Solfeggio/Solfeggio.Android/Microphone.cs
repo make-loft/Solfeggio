@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
+using Ace;
 using Android.Media;
+using Java.Nio;
+using Rainbow;
 using Encoding = Android.Media.Encoding;
 
 namespace Solfeggio.Droid
@@ -8,52 +12,85 @@ namespace Solfeggio.Droid
     {
         public static readonly Microphone Default = new Microphone();
 
-        private bool _isStarted;
-        private byte[] _buffer;
+        public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
+
+        private ByteBuffer _bytes;
         private AudioRecord _recorder;
 
-        public int SampleRate { get; set; } = 16000;
-	    public int BufferSize { get; private set; }
-	    public TimeSpan BufferDuration => TimeSpan.FromSeconds((float) BufferSize / SampleRate);
+        public static double[] GetValidSampleRates() =>
+            AudioInputDevice.StandardSampleRates.Where(IsValidSampleRate).ToArray();
 
-		public Microphone() => Initialize();
-
-        public void Initialize()
+        public static bool IsValidSampleRate(double frequency)
         {
             try
             {
-                BufferSize = AudioRecord.GetMinBufferSize(SampleRate, ChannelIn.Mono, Encoding.Pcm16bit);
-                _buffer = new byte[BufferSize];
-                _recorder = new AudioRecord(AudioSource.Mic, SampleRate, ChannelIn.Mono, Encoding.Pcm16bit, _buffer.Length);
+                var sRate = (int) Math.Round(frequency);
+                var minBufferSize = AudioRecord.GetMinBufferSize((int) frequency, ChannelIn.Mono, Encoding.Pcm16bit);
+                new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, minBufferSize).Release();
+                return true;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
-                throw;
+                return false;
             }
         }
 
-        private async void StartDataLooper()
+        public double[] SampleRates { get; } = GetValidSampleRates();
+
+        public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
+
+        public int FrameSize { get; private set; }
+
+        public int MinFrameSize { get; private set; }
+
+        public void StartWith(double sampleRate = 48000d, int desiredFrameSize = 0)
         {
-            while (_isStarted)
+            if (_recorder.Is()) _recorder.Release();
+
+            var sRate = (int) Math.Round(sampleRate);
+            var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Encoding.Pcm16bit);
+            MinFrameSize = minBufferSizeInBytes / sizeof(short);
+            var desiredBufferSize = sizeof(short) * desiredFrameSize;
+            var bytesCount = desiredBufferSize < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSize;
+
+            _bytes = ByteBuffer.AllocateDirect(bytesCount).Order(ByteOrder.NativeOrder());
+            _recorder = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, _bytes.Capacity());
+            if (_recorder.State.Is(State.Uninitialized)) throw new Exception();
+
+            FrameSize = bytesCount / 2;
+
+            _recorder.StartRecording();
+            RunReadLooper();
+        }
+
+        private async void RunReadLooper()
+        {
+            while (IsRecodingState)
             {
-                var readLength = await _recorder.ReadAsync(_buffer, 0, _buffer.Length);
-	            DataReady?.Invoke(this, new AudioInputEventArgs {Buffer = _buffer, ReadLength = readLength, Source = this});
+                var currentRecorder = _recorder;
+                var readLengthInBytes = await currentRecorder.ReadAsync(_bytes, _bytes.Capacity());
+                if (currentRecorder.IsNot(_recorder)) return;
+
+                var frameSize = readLengthInBytes / sizeof(short);
+                var frame = new Complex[frameSize];
+                var shorts = _bytes.AsShortBuffer();
+                for (var i = 0; i < frameSize; i++)
+                {
+                    frame[i] = shorts.Get();
+                }
+
+                DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
             }
         }
 
         public void Start()
         {
+            if (_recorder.IsNot()) StartWith();
+            if (IsRecodingState) return;
             _recorder.StartRecording();
-            _isStarted = true;
-            StartDataLooper();
         }
 
-        public void Stop()
-        {
-            _recorder.Stop();
-            _isStarted = false;
-        }
+        public void Stop() => _recorder.Stop();
 
         public event EventHandler<AudioInputEventArgs> DataReady;
     }

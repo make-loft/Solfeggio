@@ -9,12 +9,81 @@
     BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
     <Grid BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+                
         <forms:SKCanvasView
-            x:Name="CanvasView"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            x:Name="SpectrumCanvas"
             BackgroundColor="BlanchedAlmond"
             EnableTouchEvents="True"
             Touch="OnTouchEffectAction"
-            PaintSurface="OnCanvasViewPaintSurface" />
+            PaintSurface="OnCanvasViewPaintSurface"/>
+
+        <forms:SKCanvasView
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            x:Name="PianoCanvas"
+            BackgroundColor="BlanchedAlmond"
+            EnableTouchEvents="True"/>
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="{m:Localizing Key=Pow, StringFormat='{}{0}: '}"/>
+            <Slider
+                Grid.Row="0"
+                Grid.Column="1"
+                Value="{Binding FramePow, Mode=TwoWay}"
+                Maximum="13"
+                Minimum="9"/>
+            <Label
+                Grid.Row="0"
+                Grid.Column="2"
+                Text="{Binding FramePow}"/>
+
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Text="{m:Localizing Key=SampleRate, StringFormat='{}{0}: '}"/>
+            <Slider
+                Grid.Row="1"
+                Grid.Column="1"
+                Maximum="{Binding MaxSampleRate}"
+                Minimum="{Binding MinSampleRate}"
+                Value="{Binding SampleRate, Mode=TwoWay}"/>
+            <Label
+                Grid.Row="1"
+                Grid.Column="2"
+                Text="{Binding SampleRate}"/>
+        </Grid>
+
     </Grid>
 
 </ContentPage>

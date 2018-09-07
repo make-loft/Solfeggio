@@ -6,9 +6,11 @@ using Ace;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Solfeggio.ViewModels;
+using Xamarin.Forms.Xaml;
 
 namespace Solfeggio
 {
+    [XamlCompilation (XamlCompilationOptions.Skip)]
     public partial class MainPage
     {
         readonly Dictionary<long, SKPath> _inProgressPaths = new Dictionary<long, SKPath>();
@@ -34,7 +36,7 @@ namespace Solfeggio
                         SKPath path = new SKPath();
                         path.MoveTo(ConvertToPixel(args.Location));
                         _inProgressPaths.Add(args.Id, path);
-                        CanvasView.InvalidateSurface();
+                        SpectrumCanvas.InvalidateSurface();
                     }
                     break;
 
@@ -43,7 +45,7 @@ namespace Solfeggio
                     {
                         SKPath path = _inProgressPaths[args.Id];
                         path.LineTo(ConvertToPixel(args.Location));
-                        CanvasView.InvalidateSurface();
+                        SpectrumCanvas.InvalidateSurface();
                     }
                     break;
 
@@ -52,7 +54,7 @@ namespace Solfeggio
                     {
                         _completedPaths.Add(_inProgressPaths[args.Id]);
                         _inProgressPaths.Remove(args.Id);
-                        CanvasView.InvalidateSurface();
+                        SpectrumCanvas.InvalidateSurface();
                     }
                     break;
 
@@ -60,7 +62,7 @@ namespace Solfeggio
                     if (_inProgressPaths.ContainsKey(args.Id))
                     {
                         _inProgressPaths.Remove(args.Id);
-                        CanvasView.InvalidateSurface();
+                        SpectrumCanvas.InvalidateSurface();
                     }
                     break;
             }
@@ -68,14 +70,14 @@ namespace Solfeggio
 
         SKPoint ConvertToPixel(SKPoint pt)
         {
-            return new SKPoint((float) (CanvasView.CanvasSize.Width * pt.X / CanvasView.Width),
-                (float) (CanvasView.CanvasSize.Height * pt.Y / CanvasView.Height));
+            return new SKPoint((float) (SpectrumCanvas.CanvasSize.Width * pt.X / SpectrumCanvas.Width),
+                (float) (SpectrumCanvas.CanvasSize.Height * pt.Y / SpectrumCanvas.Height));
         }
 
         public MainPage()
         {
             InitializeComponent();
-            WaitAndExecute(100, () => CanvasView.InvalidateSurface());
+            WaitAndExecute(100, () => SpectrumCanvas.InvalidateSurface());
         }
 
         private async void WaitAndExecute(int milisec, Action actionToExecute)
@@ -104,29 +106,32 @@ namespace Solfeggio
             }
         }
 
+        private float _max;
+
         void OnCanvasViewPaintSurface1(object sender, SKPaintSurfaceEventArgs args)
         {
-            var info = args.Info;
-            var surface = args.Surface;
-            var canvas = surface.Canvas;
+	        var width = (float) args.Info.Width;
+	        var height = (float) args.Info.Height;
+            var canvas = args.Surface.Canvas;
             var spectrum = Store.Get<SpectralViewModel>().CurrentSpectrum;
             var magnitudes = spectrum.Select(c => (float) c.Magnitude).ToList();
             var max = magnitudes.Max();
-            var scale = info.Height / max;
+            _max = max > _max ? max : _max;
+            var scale = height / _max;
 
             var path = new SKPath();
-            path.MoveTo(0.0f, info.Height);
+            path.MoveTo(0.0f, height);
             for (var i = 0; i < spectrum.Length; i++)
             {
-                path.LineTo(i, info.Height - magnitudes[i] * scale);
+                path.LineTo(i, height - magnitudes[i] * scale);
             }
 
-            path.LineTo(info.Width, info.Height);
+            path.LineTo(width, height);
             path.Close();
 
             var colors = new [] { SKColors.LightSteelBlue, SKColors.IndianRed };
             var startPoint = new SKPoint(0f, 0f);
-            var endPoint =new SKPoint(0f, info.Height);
+            var endPoint =new SKPoint(0f, height);
             var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, null, SKShaderTileMode.Clamp);
 
             var back = new SKPaint
@@ -149,7 +154,7 @@ namespace Solfeggio
             };
 
             canvas.Clear();
-            canvas.DrawRect(0f,0f, info.Width, info.Height, back);
+            canvas.DrawRect(0f,0f, width, height, back);
             canvas.DrawPath(path, fillPaint);
             canvas.DrawPath(path, strokePaint);
         }

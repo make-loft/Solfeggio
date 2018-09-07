@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Android", "Solfeggio\Solfeggio.Android\Solfeggio.Android.csproj", "{EC64A689-1014-44FD-9AC5-6FFA02EC9F44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Droid", "Solfeggio\Solfeggio.Android\Solfeggio.Droid.csproj", "{EC64A689-1014-44FD-9AC5-6FFA02EC9F44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.iOS", "Solfeggio\Solfeggio.iOS\Solfeggio.iOS.csproj", "{57E57A5B-5433-4942-8DBC-5B12ED162DC8}"
 EndProject
