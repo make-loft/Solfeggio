@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 using Ace;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Solfeggio
@@ -77,7 +81,11 @@ namespace Solfeggio
         public MainPage()
         {
             InitializeComponent();
-            WaitAndExecute(100, () => SpectrumCanvas.InvalidateSurface());
+            WaitAndExecute(100, () =>
+            {
+	            SpectrumCanvas.InvalidateSurface();
+				PianoCanvas.InvalidateSurface();
+            });
         }
 
         private async void WaitAndExecute(int milisec, Action actionToExecute)
@@ -106,57 +114,101 @@ namespace Solfeggio
             }
         }
 
-        private float _max;
+	    private SpectralViewModel _spectralViewModel = Store.Get<SpectralViewModel>();
+
+		void OnCanvasViewPaintSurfaceP(object sender, SKPaintSurfaceEventArgs args)
+	    {
+		    var width = (float)args.Info.Width;
+		    var height = (float)args.Info.Height;
+		    var canvas = args.Surface.Canvas;
+
+
+
+		    var PianoCanvas = new Panel(args) {  };
+
+		    var spectrum = _spectralViewModel.CurrentSpectrum;
+		    if (spectrum.IsNot()) return;
+
+		    PianoCanvas.Children.Clear();
+
+		    var presenter = Store.Get<Presenter>();
+		    var max = spectrum.Values.Max() * 0.7;
+		    if (max > presenter.MaxAmplitude) presenter.MaxAmplitude = max;
+
+		    presenter.DrawPiano(PianoCanvas, spectrum);
+		    //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
+		    //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
+		    //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
+		    //presenter.DrawTops(SpectrumCanvas, tops);
+
+		    PianoCanvas.Draw();
+
+
+		    return;
+		}
+
+		private float _max;
 
         void OnCanvasViewPaintSurface1(object sender, SKPaintSurfaceEventArgs args)
         {
-	        var width = (float) args.Info.Width;
-	        var height = (float) args.Info.Height;
-            var canvas = args.Surface.Canvas;
-            var spectrum = Store.Get<SpectralViewModel>().CurrentSpectrum;
-            var magnitudes = spectrum.Select(c => (float) c.Magnitude).ToList();
-            var max = magnitudes.Max();
-            _max = max > _max ? max : _max;
-            var scale = height / _max;
+	        var width = (float)args.Info.Width;
+	        var height = (float)args.Info.Height;
+	        var canvas = args.Surface.Canvas;
 
-            var path = new SKPath();
-            path.MoveTo(0.0f, height);
-            for (var i = 0; i < spectrum.Length; i++)
-            {
-                path.LineTo(i, height - magnitudes[i] * scale);
-            }
 
-            path.LineTo(width, height);
-            path.Close();
 
-            var colors = new [] { SKColors.LightSteelBlue, SKColors.IndianRed };
-            var startPoint = new SKPoint(0f, 0f);
-            var endPoint =new SKPoint(0f, height);
-            var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, null, SKShaderTileMode.Clamp);
+	        var SpectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
 
-            var back = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Shader = shader
-            };
+			var spectrum = _spectralViewModel.CurrentSpectrum;
+			if (spectrum.IsNot()) return;
 
-            var fillPaint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Yellow
-            };
+	        var waveInData = _spectralViewModel.WaveInData;
 
-            var strokePaint = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                Color = SKColors.Gold,
-                StrokeWidth = 1
-            };
+	        SpectrumCanvas.Children.Clear();
 
-            canvas.Clear();
-            canvas.DrawRect(0f,0f, width, height, back);
-            canvas.DrawPath(path, fillPaint);
-            canvas.DrawPath(path, strokePaint);
-        }
-    }
+	        var presenter = Store.Get<Presenter>();
+	        var max = spectrum.Values.Max() * 0.7;
+	        if (max > presenter.MaxAmplitude) presenter.MaxAmplitude = max;
+
+			presenter.DrawSpectrum(SpectrumCanvas, spectrum, SpectrumPolyline);
+	        //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
+	        presenter.DrawWave(SpectrumCanvas, waveInData, WaveInLine, new Thickness());
+	        //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
+	        //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
+	        //presenter.DrawTops(SpectrumCanvas, tops);
+
+	        SpectrumCanvas.Draw();
+		}
+
+	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new LinearGradientBrush
+	    {
+		    EndPoint = new Presenters.Point(0, h),
+		    GradientStops =
+		    {
+			    new GradientStop
+			    {
+				    Color = SKColors.LightSteelBlue.SkToPresenter(),
+				    Offset = 0
+			    },
+			    new GradientStop
+			    {
+				    Color = SKColors.IndianRed.SkToPresenter(),
+				    Offset = 1
+			    }
+		    }
+	    };
+
+	    private readonly Polyline SpectrumPolyline = new Polyline
+	    {
+		    Fill = new SolidColorBrush(SKColors.Yellow),
+		    Stroke = new SolidColorBrush(SKColors.Gold),
+			StrokeThickness = 1
+	    };
+
+	    private readonly Polyline WaveInLine = new Polyline
+	    {
+		    Stroke = new SolidColorBrush(SKColors.DarkRed),
+		    StrokeThickness = 1
+	    };
+	}
 }
