@@ -42,15 +42,15 @@ namespace Solfeggio.ViewModels
         [DataMember]
         public int FramePow
         {
-            get { return Get(() => FramePow, 12); }
-            set { Set(() => FramePow, value); }
+            get => Get(() => FramePow, 12);
+	        set => Set(() => FramePow, value);
         }
 
 	    [DataMember]
 	    public bool ShowSettings
 	    {
-		    get { return Get(() => ShowSettings); }
-		    set { Set(() => ShowSettings, value); }
+		    get => Get(() => ShowSettings);
+		    set => Set(() => ShowSettings, value);
 	    }
 
 		public int MinFramePow { get; set; }
@@ -85,7 +85,7 @@ namespace Solfeggio.ViewModels
 	    public double ShiftsPerFrame { get; set; } = 16;
 
 	    public void Expose()
-		{
+	    {
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
 				ActiveDevice.StartWith(ActiveDevice.SampleRate, (int)(FrameSize * (1d + 1d / ShiftsPerFrame)));
