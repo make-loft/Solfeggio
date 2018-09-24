@@ -14,7 +14,6 @@ namespace Solfeggio
 
 		protected override void OnStart ()
 		{
-
         }
 
 		protected override void OnSleep () => Store.Snapshot();
