@@ -7,9 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Ace;
-
+#if XAMARIN
 using Colors = SkiaSharp.SKColors;
 using Thickness = Xamarin.Forms.Thickness;
+#else
+using Color = System.Windows.Media.Color;
+using Point = System.Windows.Point;
+#endif
 
 namespace Solfeggio.Presenters
 {
@@ -18,146 +22,72 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush White = new SolidColorBrush(Colors.White);
 		public static SolidColorBrush Black = new SolidColorBrush(Colors.Black);
 		public static SolidColorBrush Purple = new SolidColorBrush(Colors.Purple);
+		public static SolidColorBrush Magenta = new SolidColorBrush(Colors.Magenta);
 	}
 
 	[DataContract]
-	internal class Presenter : ContextObject
+	internal class MusicalPresenter : ContextObject
 	{
 		public class PianoKey
 		{
 			public int Number { get; set; }
 			public double Frequency { get; set; }
 			public double LeftFrequency { get; set; }
-			public double RigthFrequency { get; set; }
+			public double RightFrequency { get; set; }
 			public string Note { get; set; }
 			public KeyValuePair<double, double> Peak { get; set; }
 
 			public double MiddleOffset => UseLogScale ? Math.Log(Frequency, 2) : Frequency;
 			public double LeftOffset => UseLogScale ? Math.Log(LeftFrequency, 2) : LeftFrequency;
-			public double RigthOffset => UseLogScale ? Math.Log(RigthFrequency, 2) : RigthFrequency;
+			public double RightOffset => UseLogScale ? Math.Log(RightFrequency, 2) : RightFrequency;
 
 			public bool IsTone { get; set; }
 			public int Hits { get; set; }
 			public double Magnitude { get; set; }
 			public bool UseLogScale { private get; set; }
-			public SolidColorBrush SolidColorBrush { get; set; }
+			public Brush Brush { get; set; }
 		}
 
+		private static readonly string[] Notes = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+
+		private static readonly double HalftonesCount = 12d;
+		private static readonly double BaseFrequancy = 440d/16d;
+		private static readonly double HalftoneStep = Math.Pow(2d, 1d / HalftonesCount);
 		private static readonly double[] BaseOktaveFrequencySet =
-		{
-			16.352, 17.324, 18.354, 19.445, 20.602, 21.827,
-			23.125, 24.500, 25.957, 27.500, 29.135, 30.868
-		};
+			Enumerable.Range(-9, 12).Select(dt => BaseFrequancy * Math.Pow(HalftoneStep, dt)).ToArray();
+		//{
+		//	16.352, 17.324, 18.354, 19.445, 20.602, 21.827,
+		//	23.125, 24.500, 25.957, 27.500, 29.135, 30.868
+		//};
 
 		private static readonly bool[] BaseOktaveToneSet =
-		{
-			true, false, true, false, true, true, false, true, false,
-			true, false, true
-		};
+			Enumerable.Range(0, BaseOktaveFrequencySet.Length).Select(i => i % 2 == 0).ToArray();
 
-		private static readonly SolidColorBrush[] BaseOktaveColorSet =
-		{
-			Brushes.White,
-			Brushes.Black,
-			Brushes.White,
-			Brushes.Black,
-			Brushes.White,
-			Brushes.White,
-			Brushes.Black,
-			Brushes.White,
-			Brushes.Black,
-			Brushes.White,
-			Brushes.Black,
-			Brushes.White
-		};
+		private static readonly Brush[] BaseOktaveColorSet =
+			BaseOktaveToneSet.Select(t => t ? Brushes.White : Brushes.Black).Cast<Brush>().ToArray();
 
-		public int ScaleA { get; set; }
-		public int ScaleB { get; set; }
+		public double MaxMagnitude { get; set; } = 0d;
+		public double FrequencyScale { get; set; } = 1d;
+		public double Delay { get; set; } = 5d;
 
-		public double MaxAmplitude
-		{
-			get { return Get(() => MaxAmplitude); }
-			set { Set(() => MaxAmplitude, value); }
-		}
+		private double _yScale;
 
-		[DataMember]
-		public bool AutoSensetive
-		{
-			get { return Get(() => AutoSensetive); }
-			set { Set(() => AutoSensetive, value); }
-		}
-
-		public double Delay
-		{
-			get { return Get(() => Delay, 5d); }
-			set { Set(() => Delay, value); }
-		}
-
-		private double _yScale = 1.0 / 512;
-
-		[DataMember]
-		public double LimitFrequency
-		{
-			get { return Get(() => LimitFrequency, 2150); }
-			set { Set(() => LimitFrequency, value); }
-		}
-
-		[DataMember]
-		public double TopFrequency
-		{
-			get { return Get(() => TopFrequency, 22096); }
-			set { Set(() => TopFrequency, value); }
-		}
-
-		public double FrequencyScale
-		{
-			get { return Get(() => FrequencyScale, 1.0); }
-			set { Set(() => FrequencyScale, value); }
-		}
-
-		[DataMember]
-		public bool UseHorizontalLogScale
-		{
-			get { return Get(() => UseHorizontalLogScale, true); }
-			set { Set(() => UseHorizontalLogScale, value); }
-		}
-
-		[DataMember]
-		public bool UseVerticalLogScale
-		{
-			get { return Get(() => UseVerticalLogScale); }
-			set { Set(() => UseVerticalLogScale, value); }
-		}
-
-		[DataMember]
-		public bool UseNoteFilter
-		{
-			get { return Get(() => UseNoteFilter); }
-			set { Set(() => UseNoteFilter, value); }
-		}
-
-		[DataMember]
-		public bool ShowHz
-		{
-			get { return Get(() => ShowHz, true); }
-			set { Set(() => ShowHz, value); }
-		}
-
-		[DataMember]
-		public bool ShowNotes
-		{
-			get { return Get(() => ShowNotes, true); }
-			set { Set(() => ShowNotes, value); }
-		}
+		[DataMember] public bool AutoSensetive { get; set; } = true;
+		[DataMember] public double LimitFrequency { get; set; } = 2150d;
+		[DataMember] public double TopFrequency { get; set; } = 22096d;
+		[DataMember] public bool UseHorizontalLogScale { get; set; } = true;
+		[DataMember] public bool UseVerticalLogScale { get; set; }
+		[DataMember] public bool UseNoteFilter { get; set; }
+		[DataMember] public bool ShowHz { get; set; } = true;
+		[DataMember] public bool ShowNotes { get; set; } = true;
+		private DateTime Timestamp { get; set; }
 
 		private static double GetVisualOffset(double xOffset, bool useHorizontalLogScale) =>
 			xOffset > 0 && useHorizontalLogScale ? Math.Log(xOffset, 2) : xOffset;
 
-		private DateTime Timestamp { get; set; }
-
 		public void DrawWave(Panel canvas, Dictionary<double, double> data, Polyline polyline, Thickness margin)
 		{
-			if (canvas == null || polyline == null) return;
+			if (canvas is null || polyline is null) return;
 			canvas.Children.Add(polyline);
 			polyline.Points.Clear();
 			var pixelStep = (canvas.ActualWidth + margin.Left + margin.Right) / data.Count;
@@ -167,51 +97,54 @@ namespace Solfeggio.Presenters
 				var sampleFrequency = pair.Key;
 				var sampleValue = pair.Value;
 				var x = sampleFrequency * pixelStep;
-				var y = canvas.ActualHeight / 2 + sampleValue * canvas.ActualHeight / 100000;
+				var y = canvas.ActualHeight / 2d + sampleValue * canvas.ActualHeight / 100000;
 				polyline.Points.Add(new Point(x - margin.Left, y));
 			}
 		}
 
+		private static double ScaleMagnitude(double value, bool useLogScale) =>
+			useLogScale ? 100 * Math.Log(value) : value;
+		
 		public void DrawSpectrum(Panel canvas, Dictionary<double, double> data, Polyline polyline)
 		{
-			if (canvas == null || polyline == null) return;
+			if (canvas is null || polyline is null) return;
 			var useHorizontalLogScale = UseHorizontalLogScale;
 			var useVerticalLogScale = UseVerticalLogScale;
-			var autoSensetive = AutoSensetive;
+			var autoSensitive = AutoSensetive;
 			var limitFrequency = LimitFrequency;
 
-			canvas.Children.Add(polyline);
+			if (canvas.Children.Contains(polyline).Not()) canvas.Children.Add(polyline);
 			polyline.Points.Clear();
 			var pixelStep = canvas.ActualWidth / GetVisualOffset(limitFrequency, useHorizontalLogScale);
 
-			polyline.Points.Add(new Point(0, canvas.ActualHeight));
+			polyline.Points.Add(new Point(0d, canvas.ActualHeight));
 			foreach (var pair in data)
 			{
 				var sampleFrequency = pair.Key;
 				if (sampleFrequency > limitFrequency) break;
 				var sampleValue = pair.Value;
 				var x = GetVisualOffset(sampleFrequency, useHorizontalLogScale) * pixelStep;
-				var amplitude = useVerticalLogScale ? 100 * Math.Log(sampleValue) : sampleValue;
-				if (autoSensetive)
+				var magnitude = ScaleMagnitude(sampleValue, useVerticalLogScale);
+				if (autoSensitive)
 				{
-					if (amplitude > 0.7 * MaxAmplitude)
+					if (magnitude > 0.7d * MaxMagnitude)
 					{
 						Timestamp = DateTime.Now;
 					}
 
-					if (amplitude > MaxAmplitude)
+					if (magnitude > MaxMagnitude)
 					{
-						MaxAmplitude = amplitude * 1.2;
+						MaxMagnitude = magnitude * 1.2d;
 					}
 					else if (Timestamp.AddSeconds(Delay) < DateTime.Now)
 					{
 						Timestamp = DateTime.Now;
-						MaxAmplitude *= 0.8;
+						MaxMagnitude *= 0.8d;
 					}
 				}
 
-				_yScale = canvas.ActualHeight * 0.8 / MaxAmplitude;
-				var y = amplitude * _yScale;
+				_yScale = canvas.ActualHeight * 0.8d / MaxMagnitude;
+				var y = magnitude * _yScale;
 				y = canvas.ActualHeight - y;
 				polyline.Points.Add(new Point(x, y));
 			}
@@ -221,23 +154,28 @@ namespace Solfeggio.Presenters
 
 		public void DrawTops(Panel canvas, List<PianoKey> keys)
 		{
-			if (canvas == null) return;
+			if (canvas is null) return;
+			
+			var showHz = ShowHz;
+			var showNotes = ShowNotes;
+			var maxMagnitude = MaxMagnitude;
 			var useVerticalLogScale = UseVerticalLogScale;
-			var pixelStep = canvas.ActualWidth / GetVisualOffset(LimitFrequency, useVerticalLogScale);
+			var useHorizontalLogScale = UseHorizontalLogScale;
+			var pixelStep = canvas.ActualWidth / GetVisualOffset(LimitFrequency, useHorizontalLogScale);
 
 			foreach (var key in keys)
 			{
 				var sampleFrequency = key.Peak.Key;
 				if (sampleFrequency > LimitFrequency) break;
 				var sampleValue = key.Peak.Value;
-				var x = GetVisualOffset(sampleFrequency, useVerticalLogScale) * pixelStep;
-				var amplitude = sampleValue;
+				var x = GetVisualOffset(sampleFrequency, useHorizontalLogScale) * pixelStep;
+				var magnitude = ScaleMagnitude(sampleValue, useVerticalLogScale);
 
-				_yScale = canvas.ActualHeight * 0.8 / MaxAmplitude;
-				var y = amplitude * _yScale;
+				_yScale = canvas.ActualHeight * 0.8 / maxMagnitude;
+				var y = magnitude * _yScale;
 				y = canvas.ActualHeight - y;
 
-				if (!ShowNotes && !ShowHz) return;
+				if (!showNotes && !showHz) return;
 
 				var panel = new StackPanel
 				{
@@ -246,21 +184,21 @@ namespace Solfeggio.Presenters
 				};
 
 				// todo
-				//canvas.Children.Add(panel);
+				canvas.Children.Add(panel);
 
-				if (ShowHz)
+				if (showHz)
 				{
 					panel.Children.Add(new TextBlock
 					{
 						FontSize = 9.0,
-						//Foreground = Brushes.Magenta,
+						Foreground = Brushes.Magenta,
 						Text = sampleFrequency.ToString("F")
 					});
 				}
 
-				if (ShowNotes)
+				if (showNotes)
 				{
-					var hz = ShowHz ? " (" + key.Frequency + ")" : string.Empty;
+					var hz = ShowHz ? $"({key.Frequency })" : "";
 					panel.Children.Add(new TextBlock
 					{
 						FontSize = 11.0,
@@ -274,18 +212,14 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		private static readonly string[] Notes = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-
-		public double MaxAmplitude1 { get; set; }
-
 		public List<PianoKey> DrawPiano(Panel canvas, Dictionary<double, double> data)
 		{
-			if (canvas == null) return new List<PianoKey>();
+			if (canvas is null) return new List<PianoKey>();
 			var useLogScale = UseHorizontalLogScale;
 			var limitFrequency = LimitFrequency;
 			var useNoteFilter = UseNoteFilter;
 			var frequencyScale = FrequencyScale;
-			var maxAmplitude0 = MaxAmplitude;
+			var maxMagnitude0 = MaxMagnitude;
 
 			canvas.Children.Clear();
 			var pixelStep = canvas.ActualWidth / GetVisualOffset(limitFrequency, useLogScale);
@@ -307,11 +241,11 @@ namespace Solfeggio.Presenters
 				var sampleFrequency = d.Key;
 				if (sampleFrequency > limitFrequency) break;
 				var key =
-					keys.FirstOrDefault(k => k.LeftFrequency < sampleFrequency && sampleFrequency <= k.RigthFrequency);
-				if (key == null) continue;
+					keys.FirstOrDefault(k => k.LeftFrequency < sampleFrequency && sampleFrequency <= k.RightFrequency);
+				if (key is null) continue;
 				if (useNoteFilter)
 				{
-					var range = key.RigthFrequency - key.LeftFrequency;
+					var range = key.RightFrequency - key.LeftFrequency;
 					var half = key.Frequency * frequencyScale - key.LeftFrequency;
 					sampleValue = (float)(sampleValue * Rainbow.Windowing.Gausse(half, range));
 				}
@@ -324,21 +258,21 @@ namespace Solfeggio.Presenters
 				}
 			}
 
-			var minAmplitude = maxAmplitude0 * 0.07;
-			var tops = keys.OrderByDescending(k => k.Magnitude).Take(10).Where(k => k.Magnitude > minAmplitude).ToList();
+			var minMagnitude = maxMagnitude0 * 0.07;
+			var tops = keys.OrderByDescending(k => k.Magnitude).Take(10).Where(k => k.Magnitude > minMagnitude).ToList();
 
-			//keys.ForEach(k => k.Amplitude = k.Amplitude/k.Hits);
+			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);
 			keys.ForEach(k => k.Magnitude = k.Magnitude * k.Magnitude);
-			var maxAmplitude = maxAmplitude0 * maxAmplitude0 * 0.32; // keys.Max(k => k.Amplitude);
-																	 //if (MaxAmplitude1 > maxAmplitude) maxAmplitude = MaxAmplitude1*0.7;
+			var maxMagnitude = maxMagnitude0 * maxMagnitude0 * 0.32; // keys.Max(k => k.Magnitude);
+																	 //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
 
-			//MaxAmplitude1 = maxAmplitude;
+			//MaxMagnitude1 = maxMagnitude;
 			foreach (var key in keys.Where(k => k.LeftFrequency < limitFrequency))
 			{
-				var tmp = 255 * key.Magnitude / maxAmplitude;
+				var tmp = 255 * key.Magnitude / maxMagnitude;
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0, 1) };
-				var baseColor = key.SolidColorBrush.Color;
+				var baseColor = key.Brush.As<SolidColorBrush>()?.Color ?? Colors.Transparent;
 				red = key.IsTone ? (byte)(baseColor.R - red) : red;
 				var pressColor = key.IsTone
 					? Color.FromArgb(255, baseColor.R, red, red)
@@ -353,7 +287,7 @@ namespace Solfeggio.Presenters
 					Y1 = 0,
 					Y2 = key.IsTone ? canvas.ActualHeight : canvas.ActualHeight * 0.7,
 					Stroke = gradientBrush,
-					StrokeThickness = (key.RigthOffset - key.LeftOffset) * pixelStep,
+					StrokeThickness = (key.RightOffset - key.LeftOffset) * pixelStep,
 				});
 			}
 
@@ -361,42 +295,43 @@ namespace Solfeggio.Presenters
 		}
 
 		private static PianoKey CreatePianoKey(double[] oktave, IList<bool> oktaveToneSet,
-			IList<SolidColorBrush> oktaveColorSet, int keyNumber, int oktaveNumber, string note, bool useLogScale)
+			IList<Brush> oktaveColorSet, int keyNumber, int oktaveNumber, string note, bool useLogScale)
 		{
 			oktave = oktave.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
 			var middleFrequency = oktave[keyNumber];
 
 			double leftFrequency;
-			double rigthFrequency;
+			double rightFrequency;
 			if (keyNumber == 0)
 			{
 				leftFrequency = oktave[oktave.Length - 1] / 2;
-				rigthFrequency = oktave[keyNumber + 1];
+				rightFrequency = oktave[keyNumber + 1];
 			}
 			else if (keyNumber == oktave.Length - 1)
 			{
 				leftFrequency = oktave[keyNumber - 1];
-				rigthFrequency = oktave[0] * 2;
+				rightFrequency = oktave[0] * 2;
 			}
 			else
 			{
 				leftFrequency = oktave[keyNumber - 1];
-				rigthFrequency = oktave[keyNumber + 1];
+				rightFrequency = oktave[keyNumber + 1];
 			}
 
-			var leftOffset = (Math.Log(leftFrequency, 2) + Math.Log(middleFrequency, 2)) / 2;
-			leftFrequency = Math.Pow(2, leftOffset);
-			var rigthOffset = (Math.Log(middleFrequency, 2) + Math.Log(rigthFrequency, 2)) / 2;
-			rigthFrequency = Math.Pow(2, rigthOffset);
+			var middleOffset = Math.Log(middleFrequency, 2d);
+			var leftOffset = (Math.Log(leftFrequency, 2d) + middleOffset) / 2d;
+			leftFrequency = Math.Pow(2d, leftOffset);
+			var rightOffset = (middleOffset + Math.Log(rightFrequency, 2d)) / 2d;
+			rightFrequency = Math.Pow(2d, rightOffset);
 			return new PianoKey
 			{
 				Number = keyNumber,
 				UseLogScale = useLogScale,
 				Frequency = middleFrequency,
 				LeftFrequency = leftFrequency,
-				RigthFrequency = rigthFrequency,
+				RightFrequency = rightFrequency,
 				IsTone = oktaveToneSet[keyNumber],
-				SolidColorBrush = oktaveColorSet[keyNumber],
+				Brush = oktaveColorSet[keyNumber],
 				Note = note + oktaveNumber,
 			};
 		}

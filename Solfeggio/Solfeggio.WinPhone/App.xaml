@@ -1,0 +1,26 @@
+﻿<Application 
+	x:Class="Solfeggio.App"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"	   
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:converters="clr-namespace:Ace.Converters;assembly=Ace.Zest"
+	xmlns:converters1="clr-namespace:Solfeggio.Converters">
+
+	<!--Application Resources-->
+	<Application.Resources>
+		<converters:BooleanConverter x:Key="NotConverter" OnTrue="False" OnFalse="True" OnNull="True"/>
+		<converters:BooleanConverter x:Key="TrueToVisibleConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Collapsed"/>
+		<converters:BooleanConverter x:Key="TrueToCollapsedConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Visible"/>
+		<converters:BooleanConverter x:Key="FalseToVisibleConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Collapsed"/>
+		<converters:BooleanConverter x:Key="FalseToCollapsedConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Visible"/>
+		<converters1:PowConverter x:Key="PowConverter" Base="2"/>
+	</Application.Resources>
+
+	<Application.ApplicationLifetimeObjects>
+		<!--Required object that handles lifetime events for the application-->
+		<shell:PhoneApplicationService 
+			Launching="Application_Launching" Closing="Application_Closing" 
+			Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+	</Application.ApplicationLifetimeObjects>
+
+</Application>

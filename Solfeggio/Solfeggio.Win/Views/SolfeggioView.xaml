@@ -1,0 +1,240 @@
+﻿<ContentControl
+	x:Class="Solfeggio.Views.SolfeggioView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:Ace.Converters;assembly=Ace.Zest"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest"
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:p="clr-namespace:Solfeggio.Presenters"
+	DataContext="{m:Store Key=vm:SpectralViewModel}"
+	HorizontalContentAlignment="Stretch"
+	VerticalContentAlignment="Stretch"
+	HorizontalAlignment="Stretch"
+	VerticalAlignment="Stretch"
+	Background="DimGray">
+
+	<Grid x:Name="LayoutRoot" Background="Transparent">
+		<Grid.Resources>
+			<SolidColorBrush x:Key="PanelBrush" Color="#77AAAAAA"/>
+			<Style TargetType="TextBlock">
+				<Setter Property="HorizontalAlignment" Value="Center"/>
+				<Setter Property="Margin" Value="5 0"/>
+			</Style>
+			<c:SwitchConverter x:Key="MarginConverter">
+				<m:Case Key="False" Value="100 0 0 0"/>
+				<m:Case Key="True" Value="-500 0 0 0"/>
+			</c:SwitchConverter>
+		</Grid.Resources>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<Canvas
+			Grid.ColumnSpan="2"
+			Margin="{Binding ElementName=LogH, Path=IsChecked, Converter={StaticResource MarginConverter}}"
+			Name="SpectrumCanvas"
+			HorizontalAlignment="Stretch">
+            <Canvas.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="Violet" Offset="0"/>
+                    <GradientStop Color="#FF0D0712" Offset="1"/>
+                </LinearGradientBrush>
+            </Canvas.Background>
+
+            <Polyline Name="MagnitudePolyline" Fill="Yellow" Stroke="Gold" StrokeThickness="1"/>
+			<Polyline Name="WaveInPolyline" Stroke="Crimson" StrokeThickness="1" Visibility="{Binding Path=IsChecked, ElementName=WaveInCheckBox, Converter={StaticResource TrueToVisibleConverter}}"/>
+			<Polyline Name="WaveOutPolyline" Stroke="YellowGreen" StrokeThickness="1" Visibility="{Binding Path=IsChecked, ElementName=WaveOutCheckBox, Converter={StaticResource TrueToVisibleConverter}}"/>
+		</Canvas>
+
+		<Canvas 
+			Grid.Row="1"
+			Grid.Column="0"
+			Grid.ColumnSpan="2"
+			x:Name="PianoCanvas" 
+			Margin="{Binding ElementName=LogH, Path=IsChecked, Converter={StaticResource MarginConverter}}"
+			HorizontalAlignment="Stretch"
+			Background="#FF616187"/>
+
+		<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+			<Grid.Resources>
+				<Style TargetType="ToggleButton">
+					<Setter Property="Padding" Value="4"/>
+					<Setter Property="Margin" Value="0 -5"/>
+					<Setter Property="FontSize" Value="12"/>
+					<Setter Property="VerticalAlignment" Value="Center"/>
+				</Style>
+			</Grid.Resources>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid 
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				Grid.Column="0" 
+				CacheMode="BitmapCache"
+				Background="{StaticResource PanelBrush}"
+				Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0" Text="Accuracy"/>
+
+				<Slider 
+					Grid.Row="1"
+					Minimum="9"
+					Maximum="13"
+					Margin="20 10 20 10"
+					Orientation="Vertical"
+					Value="{Binding FramePow, Mode=TwoWay}"/>
+
+				<TextBlock Grid.Row="2" Text="Speed"/>
+			</Grid>
+
+			<Grid 
+				Grid.Row="0" 
+				Grid.Column="1" 
+				Margin="0"
+				CacheMode="BitmapCache"
+				Background="{StaticResource PanelBrush}"
+				Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
+				<Grid.Resources>
+					<Style TargetType="Grid">
+						<Setter Property="Margin" Value="4 0"/>
+					</Style>
+				</Grid.Resources>
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid Grid.Column="0">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+
+					<TextBlock Grid.Row="0" Grid.Column="0" Text="Duration" FontWeight="SemiBold"/>
+					<TextBlock Grid.Row="1" Grid.Column="0" Text="Sample" HorizontalAlignment="Left"/>
+					<TextBlock Grid.Row="2" Grid.Column="0" Text="Frame" HorizontalAlignment="Left"/>
+					<TextBlock Grid.Row="0" Grid.Column="2" Text="bins"/>
+					<TextBlock Grid.Row="0" Grid.Column="1" Text="ms"/>
+
+					<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding BufferSize}"/>
+					<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding FrameSize}"/>
+					<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BufferDuration.TotalMilliseconds}"/>
+					<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FrameDuration.TotalMilliseconds}"/>
+				</Grid>
+
+				<Grid Grid.Column="1">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+
+					<TextBlock 
+						Grid.Row="0" 
+						HorizontalAlignment="Left" 
+						FontWeight="SemiBold" 
+						Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
+
+					<StackPanel Grid.Row="1" Orientation="Horizontal">
+						<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
+						<ToggleButton Content="Hz" IsChecked="{m:StoreBinding StoreKey=p:MusicalPresenter, Path=ShowHz, Mode=TwoWay}"/>
+						<ToggleButton Content="🎵" IsChecked="{m:StoreBinding StoreKey=p:MusicalPresenter, Path=ShowNotes, Mode=TwoWay}"/>
+						<ToggleButton IsChecked="{Binding UseAliasing, Mode=TwoWay}" Content="Aliasing"/>
+					</StackPanel>
+				</Grid>
+
+				<Grid Grid.Column="2" DataContext="{m:Store Key=p:MusicalPresenter}" Height="86" VerticalAlignment="Bottom">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<TextBlock Text="{Binding MaxAmplitude, StringFormat='Sensetive {0:0.0}'}" HorizontalAlignment="Left" FontWeight="SemiBold"/>
+					<Slider 
+						Grid.Row="1" 
+						Grid.Column="0" 
+						Margin="0 20 0 20"
+						Minimum="4"
+						Maximum="12"
+						Value="{Binding MaxAmplitude, Mode=TwoWay, Converter={StaticResource PowConverter}}"/>
+					<ToggleButton Grid.Row="1" Grid.Column="1" Name="AutosensetiveToggleButton" Content="Auto" IsChecked="{Binding AutoSensetive, Mode=TwoWay}"/>
+
+					<TextBlock Grid.Row="1" Grid.Column="0" Text="Whisper" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14"/>
+					<TextBlock Grid.Row="1" Grid.Column="0" Text="Cry" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14"/>
+
+					<Grid 
+						Grid.Row="0" 
+						Grid.RowSpan="2"
+						Grid.Column="0" 
+						Grid.ColumnSpan="2"
+						VerticalAlignment="Top"
+						HorizontalAlignment="Right"
+						Visibility="{Binding ElementName=AutosensetiveToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Grid.Column="1" Text="Delay" VerticalAlignment="Center"/>
+						<TextBox Grid.Column="2" Margin="-4 -8" Padding="0 -4" FontSize="14" Text="{Binding Delay, Mode=TwoWay}" InputScope="Number"/>
+						<TextBlock Grid.Column="3" Text="s" VerticalAlignment="Center"/>
+					</Grid>
+				</Grid>
+			</Grid>
+		</Grid>
+
+		<StackPanel Grid.Row="1" Grid.Column="0" Width="89">
+			<ToggleButton Content="🎼" Name="OptionsToggleButton" IsChecked="False"/>
+			<ToggleButton Content="📷" IsChecked="{Binding IsPaused, Mode=TwoWay}"/>
+			<ComboBox
+				ItemsSource="{Binding Windows}" 
+				SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+				DisplayMemberPath="Method.Name"/>
+			<CheckBox Content="LogV" IsChecked="{m:StoreBinding Path=UseVerticalLogScale, StoreKey=p:MusicalPresenter}"/>
+			<CheckBox Content="LogH" Name="LogH" IsChecked="{m:StoreBinding Path=UseHorizontalLogScale, StoreKey=p:MusicalPresenter}"/>
+			<CheckBox Content="WaveIn" Name="WaveInCheckBox" Foreground="Crimson" IsChecked="True"/>
+			<CheckBox Content="WaveOut" Name="WaveOutCheckBox" Foreground="YellowGreen" IsChecked="False"/>
+		</StackPanel>
+
+	</Grid>
+
+</ContentControl>

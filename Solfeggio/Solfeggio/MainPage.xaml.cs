@@ -131,9 +131,9 @@ namespace Solfeggio
 
 		    PianoCanvas.Children.Clear();
 
-		    var presenter = Store.Get<Presenter>();
+		    var presenter = Store.Get<MusicalPresenter>();
 		    var max = spectrum.Values.Max() * 0.7;
-		    if (max > presenter.MaxAmplitude) presenter.MaxAmplitude = max;
+		    if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
 		    presenter.DrawPiano(PianoCanvas, spectrum);
 		    //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
@@ -166,7 +166,7 @@ namespace Solfeggio
 
 	        SpectrumCanvas.Children.Clear();
 
-	        var presenter = Store.Get<Presenter>();
+	        var presenter = Store.Get<MusicalPresenter>();
 	        var max = spectrum.Values.Max() * 0.7;
 	        if (max > presenter.MaxAmplitude) presenter.MaxAmplitude = max;
 
