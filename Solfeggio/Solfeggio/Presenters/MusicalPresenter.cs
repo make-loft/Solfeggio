@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Ace;
-#if XAMARIN
+#if NETSTANDARD
 using Colors = SkiaSharp.SKColors;
 using Thickness = Xamarin.Forms.Thickness;
 #else
@@ -17,6 +17,21 @@ using Point = System.Windows.Point;
 
 namespace Solfeggio.Presenters
 {
+	#if !NETSTANDARD
+	public static class ColorEx
+	{
+		public static byte A(this Color c) => c.A;
+		public static byte R(this Color c) => c.R;
+		public static byte G(this Color c) => c.G;
+		public static byte B(this Color c) => c.B;
+		
+		public static byte Alpha(this Color c) => c.A;
+		public static byte Red(this Color c) => c.R;
+		public static byte Green(this Color c) => c.G;
+		public static byte Blue(this Color c) => c.B;
+	}
+	#endif
+	
 	public static class Brushes
 	{
 		public static SolidColorBrush White = new SolidColorBrush(Colors.White);
@@ -49,6 +64,9 @@ namespace Solfeggio.Presenters
 		}
 
 		private static readonly string[] Notes = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+		private static readonly bool[] IsToneSet = Notes.Select(n => n.EndsWith("#").Not()).ToArray();
+		private static readonly Brush[] BaseOktaveColorSet =
+			IsToneSet.Select(t => t ? Brushes.White : Brushes.Black).Cast<Brush>().ToArray();
 
 		private static readonly double HalftonesCount = 12d;
 		private static readonly double BaseFrequancy = 440d/16d;
@@ -60,12 +78,6 @@ namespace Solfeggio.Presenters
 		//	23.125, 24.500, 25.957, 27.500, 29.135, 30.868
 		//};
 
-		private static readonly bool[] BaseOktaveToneSet =
-			Enumerable.Range(0, BaseOktaveFrequencySet.Length).Select(i => i % 2 == 0).ToArray();
-
-		private static readonly Brush[] BaseOktaveColorSet =
-			BaseOktaveToneSet.Select(t => t ? Brushes.White : Brushes.Black).Cast<Brush>().ToArray();
-
 		public double MaxMagnitude { get; set; } = 0d;
 		public double FrequencyScale { get; set; } = 1d;
 		public double Delay { get; set; } = 5d;
@@ -73,7 +85,7 @@ namespace Solfeggio.Presenters
 		private double _yScale;
 
 		[DataMember] public bool AutoSensetive { get; set; } = true;
-		[DataMember] public double LimitFrequency { get; set; } = 2150d;
+		[DataMember] public double LimitFrequency { get; set; } = 9000d;
 		[DataMember] public double TopFrequency { get; set; } = 22096d;
 		[DataMember] public bool UseHorizontalLogScale { get; set; } = true;
 		[DataMember] public bool UseVerticalLogScale { get; set; }
@@ -183,8 +195,10 @@ namespace Solfeggio.Presenters
 					VerticalAlignment = VerticalAlignment.Top
 				};
 
+#if !NETSTANDARD
 				// todo
 				canvas.Children.Add(panel);
+#endif
 
 				if (showHz)
 				{
@@ -230,7 +244,7 @@ namespace Solfeggio.Presenters
 				keys.AddRange(BaseOktaveFrequencySet.Select((t, i) =>
 					CreatePianoKey(
 						BaseOktaveFrequencySet,
-						BaseOktaveToneSet,
+						IsToneSet,
 						BaseOktaveColorSet,
 						i, j, Notes[i], useLogScale)));
 			}
@@ -273,10 +287,10 @@ namespace Solfeggio.Presenters
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0, 1) };
 				var baseColor = key.Brush.As<SolidColorBrush>()?.Color ?? Colors.Transparent;
-				red = key.IsTone ? (byte)(baseColor.R - red) : red;
+				red = key.IsTone ? (byte)(baseColor.Red() - red) : red;
 				var pressColor = key.IsTone
-					? Color.FromArgb(255, baseColor.R, red, red)
-					: Color.FromArgb(255, red, baseColor.G, baseColor.B);
+					? Color.FromArgb(255, baseColor.Red(), red, red)
+					: Color.FromArgb(255, red, baseColor.Green(), baseColor.Blue());
 				gradientBrush.GradientStops.Add(new GradientStop { Color = baseColor, Offset = 0 });
 				gradientBrush.GradientStops.Add(new GradientStop { Color = pressColor, Offset = 1 });
 				canvas.Children.Add(new Line

@@ -167,8 +167,8 @@ namespace Solfeggio
 	        SpectrumCanvas.Children.Clear();
 
 	        var presenter = Store.Get<MusicalPresenter>();
-	        var max = spectrum.Values.Max() * 0.7;
-	        if (max > presenter.MaxAmplitude) presenter.MaxAmplitude = max;
+	        //var max = spectrum.Values.Max() * 0.7;
+	        //if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
 			presenter.DrawSpectrum(SpectrumCanvas, spectrum, SpectrumPolyline);
 	        //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
@@ -187,12 +187,12 @@ namespace Solfeggio
 		    {
 			    new GradientStop
 			    {
-				    Color = SKColors.LightSteelBlue.SkToPresenter(),
+				    Color = SKColors.LightSteelBlue,
 				    Offset = 0
 			    },
 			    new GradientStop
 			    {
-				    Color = SKColors.IndianRed.SkToPresenter(),
+				    Color = SKColors.IndianRed,
 				    Offset = 1
 			    }
 		    }

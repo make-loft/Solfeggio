@@ -77,8 +77,8 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Solfeggio.Win\Views\SolfegioView.xaml.cs">
-      <Link>Views\SolfegioView.xaml.cs</Link>
+    <Compile Include="..\Solfeggio.Win\Views\SolfeggioView.xaml.cs">
+      <Link>Views\SolfeggioView.xaml.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
@@ -109,8 +109,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="..\Solfeggio.Win\Views\SolfegioView.xaml">
-      <Link>Views\SolfegioView.xaml</Link>
+    <Page Include="..\Solfeggio.Win\Views\SolfeggioView.xaml">
+      <Link>Views\SolfeggioView.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -77,6 +77,7 @@ namespace Solfeggio.ViewModels
 
 		public bool UseAliasing { get; set; } = true;
 		public double ShiftsPerFrame { get; set; } = 16;
+		private int ShiftSize => (int) (FrameSize / ShiftsPerFrame);
 
 		public void Expose()
 		{
@@ -89,10 +90,9 @@ namespace Solfeggio.ViewModels
 			{
 				var frameSize = FrameSize;
 				if (args.Frame.Length < frameSize) return;
-				var spectrum0 = args.Frame.DecimationInTime(true);
-				var spectrum1 = spectrum0;
+				var spectrum0 = args.Frame.Take(FrameSize).DecimationInTime(true);
+				var spectrum1 = args.Frame.Skip(ShiftSize).Take(FrameSize).DecimationInTime(true);
 				
-
 				for (var i = 0; i < frameSize; i++)
 				{
 					spectrum0[i] /= frameSize;

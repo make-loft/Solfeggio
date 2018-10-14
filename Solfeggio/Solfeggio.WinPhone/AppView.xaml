@@ -12,7 +12,7 @@
 	Orientation="Landscape">
 
 	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<views:SolfegioView/>
+		<views:SolfeggioView/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

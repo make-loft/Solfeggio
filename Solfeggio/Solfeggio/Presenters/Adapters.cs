@@ -23,16 +23,18 @@ namespace Solfeggio.Presenters
 		public SKPoint ToSkPoint() => new SKPoint((float) X, (float) Y);
 	}
 
-
-	public struct Color
+	public static class Color
 	{
-		public SKColor SkColor { get; set; }
-		public byte A => SkColor.Alpha;
-		public byte R => SkColor.Red;
-		public byte G => SkColor.Green;
-		public byte B => SkColor.Blue;
-
-		public static Color FromArgb(byte a, byte r, byte g, byte b) => new Color {SkColor = new SKColor(r, g, b, a)};
+		public static byte A(this SKColor c) => c.Alpha;
+		public static byte R(this SKColor c) => c.Red;
+		public static byte G(this SKColor c) => c.Green;
+		public static byte B(this SKColor c) => c.Blue;
+		
+		public static byte Alpha(this SKColor c) => c.Alpha;
+		public static byte Red(this SKColor c) => c.Red;
+		public static byte Green(this SKColor c) => c.Green;
+		public static byte Blue(this SKColor c) => c.Blue;
+		public static SKColor FromArgb(byte a, byte r, byte g, byte b) => new SKColor(r, g, b, a);
 	}
 
 	public abstract class Brush
@@ -43,16 +45,16 @@ namespace Solfeggio.Presenters
 	public class SolidColorBrush : Brush
 	{
 		public SolidColorBrush() { }
-		public SolidColorBrush(Color color) => Color = color;
-		public SolidColorBrush(SKColor color) => Color = new Color { SkColor = color };
-		public Color Color { get; set; }
+		//public SolidColorBrush(Color color) => Color = color;
+		public SolidColorBrush(SKColor color) => Color = color;
+		public SKColor Color { get; set; }
 
-		public override SKPaint ToSkPaint() => new SKPaint {Color = Color.SkColor};
+		public override SKPaint ToSkPaint() => new SKPaint {Color = Color};
 	}
 
 	public static class ColorConverters
 	{
-		public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
+		//public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
 		public static Xamarin.Forms.Color SkToXamarin(this SKColor c) => Xamarin.Forms.Color.FromRgb(c.Red, c.Green, c.Blue);
 		public static SKColor XamarinToSk(this Xamarin.Forms.Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
 	}
@@ -67,7 +69,7 @@ namespace Solfeggio.Presenters
 		{
 			var startPoint = StartPoint.ToSkPoint();
 			var endPoint = EndPoint.ToSkPoint();
-			var colors = GradientStops.Select(s => s.Color.SkColor).ToArray();
+			var colors = GradientStops.Select(s => s.Color).ToArray();
 			var offsets = GradientStops.Select(s => (float) s.Offset).ToArray();
 			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
 			return new SKPaint
@@ -80,7 +82,7 @@ namespace Solfeggio.Presenters
 
 	public class GradientStop
 	{
-		public Color Color { get; set; }
+		public SKColor Color { get; set; }
 		public double Offset { get; set; }
 	}
 }
@@ -92,7 +94,7 @@ namespace System.Windows.Controls
 		public SolidColorBrush Foreground
 		{
 			get => new SolidColorBrush(TextColor.XamarinToSk());
-			set => TextColor = value.Color.SkColor.SkToXamarin();
+			set => TextColor = value.Color.SkToXamarin();
 		}
 	}
 

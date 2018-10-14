@@ -19,10 +19,6 @@ namespace Pitch
 		private const int kMinMidiNote = 21;  // A0
 		private const int kMaxMidiNote = 108; // C8
 
-		private float m_minPitch;
-		private float m_maxPitch;
-		private int m_minNote;
-		private int m_maxNote;
 		private int m_blockLen14;	   // 1/4 block len
 		private int m_blockLen24;	   // 2/4 block len
 		private int m_blockLen34;	   // 3/4 block len
@@ -48,19 +44,19 @@ namespace Pitch
 		public PitchDsp(double sampleRate, float minPitch, float maxPitch, float detectLevelThreshold)
 		{
 			m_sampleRate = sampleRate;
-			m_minPitch = minPitch;
-			m_maxPitch = maxPitch;
+			MinPitch = minPitch;
+			MaxPitch = maxPitch;
 			m_detectLevelThreshold = detectLevelThreshold;
 
-			m_minNote = (int)(PitchToMidiNote(m_minPitch) + 0.5f) + 2;
-			m_maxNote = (int)(PitchToMidiNote(m_maxPitch) + 0.5f) - 2;
+			MinNote = (int)(PitchToMidiNote(MinPitch) + 0.5f) + 2;
+			MaxNote = (int)(PitchToMidiNote(MaxPitch) + 0.5f) - 2;
 
-			m_blockLen44 = (int)(m_sampleRate / m_minPitch + 0.5f);
+			m_blockLen44 = (int)(m_sampleRate / MinPitch + 0.5f);
 			m_blockLen34 = (m_blockLen44 * 3) / 4;
 			m_blockLen24 = m_blockLen44 / 2;
 			m_blockLen14 = m_blockLen44 / 4;
 
-			m_numCourseSteps = (int)((Math.Log((double)m_maxPitch / (double)m_minPitch) / Math.Log(2.0)) * kCourseOctaveSteps + 0.5) + 3;
+			m_numCourseSteps = (int)((Math.Log((double)MaxPitch / (double)MinPitch) / Math.Log(2.0)) * kCourseOctaveSteps + 0.5) + 3;
 
 			m_pCourseFreqOffset = new float[m_numCourseSteps + 10000];
 			m_pCourseFreq = new float[m_numCourseSteps + 10000];
@@ -68,7 +64,7 @@ namespace Pitch
 			m_detectCurve = new float[m_numCourseSteps];
 
 			var freqStep = 1.0 / Math.Pow(2.0, 1.0 / kCourseOctaveSteps);
-			var curFreq = m_maxPitch / freqStep;
+			var curFreq = MaxPitch / freqStep;
 
 			// frequency is stored from high to low
 			for (int idx = 0; idx < m_numCourseSteps; idx++)
@@ -82,10 +78,10 @@ namespace Pitch
 				m_scanHiOffset[idx] = (float)Math.Pow(kScanHiFreqStep, (kScanHiSize / 2) - idx);
 		}
 
-		public float MaxPitch => m_maxPitch;
-		public float MinPitch => m_minPitch;
-		public int MaxNote => m_maxNote;
-		public int MinNote => m_minNote;
+		public float MaxPitch { get; }
+		public float MinPitch { get; }
+		public int MaxNote { get; }
+		public int MinNote { get; }
 
 		public float DetectPitch(float[] samplesLo, float[] samplesHi, int numSamples)
 		{
@@ -339,7 +335,7 @@ namespace Pitch
 			var srcIdx = srcStart;
 			var dstIdx = dstStart;
 
-			for (int idx = 0; idx < length; idx++)
+			for (var idx = 0; idx < length; idx++)
 				destination[dstIdx++] = source[srcIdx++];
 		}
 
@@ -359,10 +355,7 @@ namespace Pitch
 		/// Linear interpolation
 		/// nFrac is based on 1.0 = 256
 		/// </summary>
-		private float InterpolateLinear(float y0, float y1, float frac)
-		{
-			return y0 * (1.0f - frac) + y1 * frac;
-		}
+		private float InterpolateLinear(float y0, float y1, float frac) => y0 * (1.0f - frac) + y1 * frac;
 
 		/// <summary>
 		/// Medium Low res SumAbsDiff
@@ -381,7 +374,7 @@ namespace Pitch
 			float sample;
 
 			// Do a scan using linear interpolation and the specified step size
-			for (int idx = 0; idx < blockLen; idx += stepSize, count++)
+			for (var idx = 0; idx < blockLen; idx += stepSize, count++)
 			{
 				sample = samples[idx];
 				interp = InterpolateLinear(samples[offsetInt + idx], samples[offsetInt + idx + 1], offsetFrac);
@@ -449,13 +442,8 @@ namespace Pitch
 		/// </summary>
 		/// <param name="pitch"></param>
 		/// <returns></returns>
-		public static float PitchToMidiNote(float pitch)
-		{
-			if (pitch < 20.0f)
-				return 0.0f;
-
-			return (float)(12.0 * Math.Log10(pitch / 55.0) * InverseLog2) + 33.0f;
-		}
+		public static float PitchToMidiNote(float pitch) => 
+			pitch < 20.0f ? 0.0f : (float) (12.0 * Math.Log10(pitch / 55.0) * InverseLog2) + 33.0f;
 
 		/// <summary>
 		/// Get the pitch from the MIDI note
@@ -468,7 +456,7 @@ namespace Pitch
 				return 0.0f;
 
 			var pitch = (float)Math.Pow(10.0, (note - 33.0f) / InverseLog2 / 12.0f) * 55.0f;
-			return pitch <= m_maxPitch ? pitch : 0.0f;
+			return pitch <= MaxPitch ? pitch : 0.0f;
 		}
 
 		/// <summary>
@@ -541,7 +529,7 @@ namespace Pitch
 			}
 
 			if (showOctave)
-				noteText += " " + octave.ToString();
+				noteText += $" {octave}";
 
 			return noteText;
 		}

@@ -10,47 +10,23 @@ namespace Pitch
 		int m_bufSize;
 		int m_begBufOffset;
 		int m_availBuf;
-		long m_startPos;   // total circular buffer position
 		T[] m_buffer;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public CircularBuffer()
 		{
 		}
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="bufCount"></param>
-		public CircularBuffer(int bufCount)
-		{
-			SetSize(bufCount);
-		}
+		public CircularBuffer(int bufCount) => SetSize(bufCount);
+		public void Dispose() => SetSize(0);
 
-		/// <summary>
-		/// Dispose
-		/// </summary>
-		public void Dispose()
-		{
-			SetSize(0);
-		}
 
-		/// <summary>
-		/// Reset to the beginning of the buffer
-		/// </summary>
 		public void Reset()
 		{
 			m_begBufOffset = 0;
 			m_availBuf = 0;
-			m_startPos = 0;
+			StartPosition = 0;
 		}
 
-		/// <summary>
-		/// Set the buffer to the specified size
-		/// </summary>
-		/// <param name="newSize"></param>
 		public void SetSize(int newSize)
 		{
 			Reset();
@@ -58,8 +34,7 @@ namespace Pitch
 			if (m_bufSize == newSize)
 				return;
 
-			if (m_buffer != null)
-				m_buffer = null;
+			m_buffer = null;
 
 			m_bufSize = newSize;
 
@@ -67,46 +42,18 @@ namespace Pitch
 				m_buffer = new T[m_bufSize];
 		}
 
-		/// <summary>
-		/// Clear the buffer
-		/// </summary>
-		public void Clear()
-		{
-			Array.Clear(m_buffer, 0, m_buffer.Length);
-		}
+		public void Clear() => Array.Clear(m_buffer, 0, m_buffer.Length);
 
-		/// <summary>
-		/// Get or set the start position
-		/// </summary>
-		public long StartPosition
-		{
-			get { return m_startPos; }
-			set { m_startPos = value; }
-		}
+		public long StartPosition { get; set; }
 
-		/// <summary>
-		/// Get the end position
-		/// </summary>
-		public long EndPosition
-		{
-			get { return m_startPos + m_availBuf; }
-		}
+		public long EndPosition => StartPosition + m_availBuf;
 
-		/// <summary>
-		/// Get or set the amount of avaliable space
-		/// </summary>
 		public int Available
 		{
-			get { return m_availBuf; }
-			set { m_availBuf = Math.Min(value, m_bufSize); }
+			get => m_availBuf;
+			set => m_availBuf = Math.Min(value, m_bufSize);
 		}
 
-		/// <summary>
-		/// Write data into the buffer
-		/// </summary>
-		/// <param name="m_pInBuffer"></param>
-		/// <param name="count"></param>
-		/// <returns></returns>
 		public int WriteBuffer(T[] m_pInBuffer, int count)
 		{
 			count = Math.Min(count, m_bufSize);
@@ -128,16 +75,16 @@ namespace Pitch
 				else
 				{
 					m_begBufOffset += count;
-					m_startPos += count;
+					StartPosition += count;
 				}
 			}
 			else
 			{
 				// wrapped around
 				if (m_availBuf != m_bufSize)
-					m_startPos += pass2Count;  // first time wrap-around
+					StartPosition += pass2Count;  // first time wrap-around
 				else
-					m_startPos += count;
+					StartPosition += count;
 
 				m_begBufOffset = pass2Count;
 				m_availBuf = m_bufSize;
@@ -146,22 +93,15 @@ namespace Pitch
 			return count;
 		}
 
-		/// <summary>
-		/// Read from the buffer
-		/// </summary>
-		/// <param name="outBuffer"></param>
-		/// <param name="startRead"></param>
-		/// <param name="readCount"></param>
-		/// <returns></returns>
 		public bool ReadBuffer(T[] outBuffer, long startRead, int readCount)
 		{
 			var endRead = (int)(startRead + readCount);
-			var endAvail = (int)(m_startPos + m_availBuf);
+			var endAvail = (int)(StartPosition + m_availBuf);
 
-			if (startRead < m_startPos || endRead > endAvail)
+			if (startRead < StartPosition || endRead > endAvail)
 				return false;
 
-			var startReadPos = (int)(((startRead - m_startPos) + m_begBufOffset) % m_bufSize);
+			var startReadPos = (int)(((startRead - StartPosition) + m_begBufOffset) % m_bufSize);
 			var block1Samples = Math.Min(readCount, m_bufSize - startReadPos);
 			var block2Samples = readCount - block1Samples;
 
