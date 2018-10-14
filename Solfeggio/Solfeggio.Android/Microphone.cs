@@ -12,7 +12,11 @@ namespace Solfeggio.Droid
     {
         public static readonly Microphone Default = new Microphone();
 
-        public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
+	    public int FrameSize { get; private set; }
+	    public int MinFrameSize { get; private set; }
+	    public double[] SampleRates { get; } = GetValidSampleRates();
+	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
+		public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
 
         private ByteBuffer _bytes;
         private AudioRecord _recorder;
@@ -35,19 +39,11 @@ namespace Solfeggio.Droid
             }
         }
 
-        public double[] SampleRates { get; } = GetValidSampleRates();
-
-        public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
-
-        public int FrameSize { get; private set; }
-
-        public int MinFrameSize { get; private set; }
-
-        public void StartWith(double sampleRate = 48000d, int desiredFrameSize = 0)
+        public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
             if (_recorder.Is()) _recorder.Release();
 
-            var sRate = (int) Math.Round(sampleRate);
+            var sRate = sampleRate.Is(default) ? 48000 : (int) Math.Round(sampleRate);
             var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Encoding.Pcm16bit);
             MinFrameSize = minBufferSizeInBytes / sizeof(short);
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
