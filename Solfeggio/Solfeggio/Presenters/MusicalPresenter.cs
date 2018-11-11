@@ -283,16 +283,19 @@ namespace Solfeggio.Presenters
 			//MaxMagnitude1 = maxMagnitude;
 			foreach (var key in keys.Where(k => k.LeftFrequency < limitFrequency))
 			{
+				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0, 1) };
+				var basicColor = key.Brush.As<SolidColorBrush>()?.Color ?? Colors.Transparent;
 				var tmp = 255 * key.Magnitude / maxMagnitude;
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
-				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0, 1) };
-				var baseColor = key.Brush.As<SolidColorBrush>()?.Color ?? Colors.Transparent;
-				red = key.IsTone ? (byte)(baseColor.Red() - red) : red;
+				red = key.IsTone ? (byte)(basicColor.Red() - red) : red;
 				var pressColor = key.IsTone
-					? Color.FromArgb(255, baseColor.Red(), red, red)
-					: Color.FromArgb(255, red, baseColor.Green(), baseColor.Blue());
-				gradientBrush.GradientStops.Add(new GradientStop { Color = baseColor, Offset = 0 });
-				gradientBrush.GradientStops.Add(new GradientStop { Color = pressColor, Offset = 1 });
+					? Color.FromArgb(255, basicColor.Red(), red, red)
+					: Color.FromArgb(255, red, basicColor.Green(), basicColor.Blue());
+				gradientBrush.GradientStops.Merge
+				(
+					new GradientStop {Color = basicColor, Offset = 0.0},
+					new GradientStop {Color = pressColor, Offset = 0.5}
+				);
 				canvas.Children.Add(new Line
 				{
 					VerticalAlignment = VerticalAlignment.Stretch,

@@ -23,7 +23,7 @@ namespace Solfeggio.ViewModels
 
 		public ApodizationFunc ActiveWindow
 		{
-			get => Get(() => ActiveWindow, Windowing.Gausse);
+			get => Get(() => ActiveWindow, Gausse);
 			set => Set(() => ActiveWindow, value);
 		}
 
@@ -66,7 +66,7 @@ namespace Solfeggio.ViewModels
 				SampleRates.Remove(value);
 				ActiveDevice.StartWith(value, FrameSize);
 				SampleRates.Insert(0, value);
-				RaisePropertyChanged(() => SampleRate);
+				EvokePropertyChanged(() => SampleRate);
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace Solfeggio.ViewModels
 				ActiveDevice.StartWith();
 			};
 
-			RaisePropertyChanged(() => ActiveDevice);
+			EvokePropertyChanged(() => ActiveDevice);
 		}
 	}
 }

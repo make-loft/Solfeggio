@@ -17,7 +17,7 @@ namespace Solfeggio
 		{
 			UnhandledException += (sender, args) => MessageBox.Show(args.ExceptionObject.Message);
 
-			Memory.ActiveBox = new Memory(new KeyFileStorage());
+			Store.ActiveBox = new Memory(new KeyFileStorage());
 			Store.Set<IAudioInputDevice>(Microphone.Default);
 			LocalizationSource.Wrap.ActiveManager = English.ResourceManager;
 

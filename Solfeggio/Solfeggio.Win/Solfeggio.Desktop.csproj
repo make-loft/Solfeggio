@@ -43,7 +43,6 @@
       <HintPath>..\..\binaries\Microsoft.Xna.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -58,9 +57,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\Solfeggio.WinPhone\Microphone.cs">
-      <Link>Microphone.cs</Link>
-    </Compile>
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
     </Compile>
@@ -70,12 +66,24 @@
     <Compile Include="..\Solfeggio\ViewModels\SpectralViewModel.cs">
       <Link>ViewModels\SpectralViewModel.cs</Link>
     </Compile>
+    <Compile Include="Api\IAudioClient.cs" />
+    <Compile Include="Api\IWaveIn.cs" />
+    <Compile Include="Api\MmResult.cs" />
+    <Compile Include="Api\WaveFormat.cs" />
+    <Compile Include="Api\WaveFormatEncoding.cs">
+      <DependentUpon>WaveIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Api\WaveIn.cs" />
+    <Compile Include="Api\WaveInBuffer.cs" />
+    <Compile Include="Api\WaveInterop.cs" />
+    <Compile Include="Api\WaveOutCapabilities.cs" />
     <Compile Include="Converters\PowConverter.cs" />
     <Compile Include="Languages\English.Designer.cs">
       <DependentUpon>English.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Microphone.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>
