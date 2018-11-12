@@ -8,11 +8,17 @@
 	Startup="App_OnStartup"
 	Exit="App_OnExit">
 	<Application.Resources>
-		<m:BooleanConverter x:Key="NotConverter" OnTrue="False" OnFalse="True" OnNull="True"/>
-		<m:BooleanConverter x:Key="TrueToVisibleConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Collapsed"/>
-		<m:BooleanConverter x:Key="TrueToCollapsedConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Visible"/>
-		<m:BooleanConverter x:Key="FalseToVisibleConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Collapsed"/>
-		<m:BooleanConverter x:Key="FalseToCollapsedConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Visible"/>
-		<converters:PowConverter x:Key="PowConverter" Base="2"/>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Dictionaries/Templates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+			
+			<m:BooleanConverter x:Key="NotConverter" OnTrue="False" OnFalse="True" OnNull="True"/>
+			<m:BooleanConverter x:Key="TrueToVisibleConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Collapsed"/>
+			<m:BooleanConverter x:Key="TrueToCollapsedConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Visible"/>
+			<m:BooleanConverter x:Key="FalseToVisibleConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Collapsed"/>
+			<m:BooleanConverter x:Key="FalseToCollapsedConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Visible"/>
+			<converters:PowConverter x:Key="PowConverter" Base="2"/>
+		</ResourceDictionary>
 	</Application.Resources>
 </Application>

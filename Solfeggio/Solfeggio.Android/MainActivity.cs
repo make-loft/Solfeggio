@@ -30,7 +30,7 @@ namespace Solfeggio.Droid
 			AppDomain.CurrentDomain.UnhandledException += (o, args) =>
 			    Log.Error("Unhandled", args.ExceptionObject.ToString());
 
-		    Memory.ActiveBox = new Memory(new KeyFileStorage());
+		    //Store.ActiveBox = new Memory(new KeyFileStorage());
 		    Store.Set<IAudioInputDevice>(Microphone.Default);
 
 			RequestedOrientation = ScreenOrientation.Landscape;

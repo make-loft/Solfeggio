@@ -7,7 +7,7 @@ namespace Solfeggio
 	{
 		double[] SampleRates { get; }
 		double SampleRate { get; }
-		int FrameSize { get; }
+		int SampleSize { get; }
 
 		void StartWith(double sampleRate = default, int desiredFrameSize = default);
 		void Start();
@@ -18,7 +18,7 @@ namespace Solfeggio
 	public static class AudioInputDevice
 	{
 		public static TimeSpan GetBufferDuration(this IAudioInputDevice device) =>
-			TimeSpan.FromSeconds(device.FrameSize / device.SampleRate);
+			TimeSpan.FromSeconds(device.SampleSize / device.SampleRate);
 
 		public static readonly double[] StandardSampleRates =
 		{

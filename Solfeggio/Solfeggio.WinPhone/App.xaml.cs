@@ -15,7 +15,8 @@ namespace Solfeggio
 	{
 		public App()
 		{
-			UnhandledException += (sender, args) => MessageBox.Show(args.ExceptionObject.Message);
+			UnhandledException += (sender, args) =>
+                MessageBox.Show(args.ExceptionObject.ToString());
 
 			Store.ActiveBox = new Memory(new KeyFileStorage());
 			Store.Set<IAudioInputDevice>(Microphone.Default);
@@ -32,8 +33,6 @@ namespace Solfeggio
 
 		private void InitializePhoneApplication()
 		{
-			RootVisual = new PhoneApplicationFrame();
-
 			Current.Host.Settings.EnableFrameRateCounter = Debugger.IsAttached;
 			Current.Host.Settings.EnableCacheVisualization = Debugger.IsAttached;
 			PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;

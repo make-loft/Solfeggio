@@ -36,7 +36,7 @@ namespace Solfeggio.iOS
 
         public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
 
-        public int FrameSize { get; private set; }
+        public int SampleSize { get; private set; }
 
         public int MinFrameSize { get; private set; }
 
@@ -60,7 +60,7 @@ namespace Solfeggio.iOS
             if (_recorder.AllocateBuffer(bytesCount, out IntPtr _).IsNot(AudioQueueStatus.Ok)) throw new Exception();
 
 
-            FrameSize = bytesCount / 2;
+            SampleSize = bytesCount / 2;
 
             _recorder.Start();
             RunReadLooper();

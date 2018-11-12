@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Ace;
 using Rainbow;
 using static Rainbow.Windowing;
@@ -50,9 +49,16 @@ namespace Solfeggio.ViewModels
 			get => Get(() => ShowSettings);
 			set => Set(() => ShowSettings, value);
 		}
+		
+		public bool IsPaused
+		{
+			get => Get(() => IsPaused);
+			set => Set(() => IsPaused, value);
+		}
 
 		public int MinFramePow { get; set; }
 		public int FrameSize => (int) Math.Pow(2.0d, FramePow);
+		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
 		public Dictionary<double, double> CurrentSpectrum { get; set; }
 		public Dictionary<double, double> WaveInData { get; set; }
 		public Dictionary<double, double> WaveOutData { get; set; }
@@ -84,13 +90,15 @@ namespace Solfeggio.ViewModels
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
 				ActiveDevice.StartWith(ActiveDevice.SampleRate, (int)(FrameSize * (1d + 1d / ShiftsPerFrame)));
+				EvokePropertyChanged(nameof(FrameDuration));
+				EvokePropertyChanged(nameof(FrameSize));
 			};
 
 			void OnActiveDeviceOnDataReady(object sender, AudioInputEventArgs args)
 			{
 				var frameSize = FrameSize;
-				if (args.Frame.Length < frameSize) return;
-				var spectrum0 = args.Frame.Take(FrameSize).DecimationInTime(true);
+				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
+				var spectrum0 = args.Frame.Skip(0).Take(FrameSize).DecimationInTime(true);
 				var spectrum1 = args.Frame.Skip(ShiftSize).Take(FrameSize).DecimationInTime(true);
 				
 				for (var i = 0; i < frameSize; i++)

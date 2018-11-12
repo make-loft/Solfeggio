@@ -12,7 +12,7 @@ namespace Solfeggio.Droid
     {
         public static readonly Microphone Default = new Microphone();
 
-	    public int FrameSize { get; private set; }
+	    public int SampleSize { get; private set; }
 	    public int MinFrameSize { get; private set; }
 	    public double[] SampleRates { get; } = GetValidSampleRates();
 	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
@@ -53,7 +53,7 @@ namespace Solfeggio.Droid
             _recorder = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, _bytes.Capacity());
             if (_recorder.State.Is(State.Uninitialized)) throw new Exception();
 
-            FrameSize = bytesCount / 2;
+            SampleSize = bytesCount / 2;
 
             _recorder.StartRecording();
             RunReadLooper();

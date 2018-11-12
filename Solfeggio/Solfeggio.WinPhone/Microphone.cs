@@ -19,7 +19,7 @@ namespace Solfeggio
 		
 		public double[] SampleRates { get; } = {(double) Mic.Default.SampleRate};
 		public double SampleRate => Device.SampleRate;
-		public int FrameSize { get; private set; }
+		public int SampleSize { get; private set; }
 
 		private Mic Device { get; } = Mic.Default;
 		private byte[] _bytes;
@@ -27,9 +27,9 @@ namespace Solfeggio
 		public void StartWith(double sampleRate = default, int desiredFrameSize = default)
 		{
 			Stop();
-			FrameSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
+			SampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
 			var actualSampleRate = sampleRate.Is(default) ? Device.SampleRate : sampleRate;
-			var milliseconds = 1000d * FrameSize / actualSampleRate;
+			var milliseconds = 1000d * SampleSize / actualSampleRate;
 			milliseconds = Math.Ceiling(milliseconds/100)*100;
 			Device.BufferDuration = TimeSpan.FromMilliseconds(milliseconds);
 			var bufferSize = Device.GetSampleSizeInBytes(Device.BufferDuration);
@@ -48,7 +48,7 @@ namespace Solfeggio
 				DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
 			};
 			
-			var timer = new DispatcherTimer();
+			var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(25) };
 			timer.Tick += (sender, args) => FrameworkDispatcher.Update();
 			timer.Start();
 			Start();

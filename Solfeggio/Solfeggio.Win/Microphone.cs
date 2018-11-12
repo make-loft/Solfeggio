@@ -1,71 +1,69 @@
 using System;
-using System.Windows.Threading;
 using Ace;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Rainbow;
 using Solfeggio.Api;
 
 namespace Solfeggio
 {
-    class Microphone : IAudioInputDevice
+    class Microphone : SmartObject, IAudioInputDevice
     {
         public static readonly Microphone Default = new Microphone();
-                
-        private WaveIn wi = new WaveIn();
-		
+
         public double[] SampleRates { get; } = {(double) 44100};
         public double SampleRate => 44100;
-        public int FrameSize { get; private set; }
-
-        //private byte[] _bytes;
-
+        public int SampleSize { get; private set; }
+        public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(_wi.BufferMilliseconds);
+        private WaveIn _wi;
+        
         public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
-            Stop();
-            wi.DeviceNumber = 0;
-            wi.WaveFormat = new WaveFormat((int)SampleRate, 1);
-            FrameSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
-            var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
-            var milliseconds = 1000d * FrameSize / actualSampleRate;
-            milliseconds = Math.Ceiling(milliseconds/100)*100;
-            //Device.BufferDuration = TimeSpan.FromMilliseconds(milliseconds);
-            //var bufferSize = Device.GetSampleSizeInBytes(Device.BufferDuration);
-            //_bytes = new byte[bufferSize];
-			
-            wi.DataAvailable += (sender, args) =>
+            if (_wi.Is())
             {
-                var sampleSizeInBytes = args.Buffer.Length;
-                var sampleSize = sampleSizeInBytes/2;
-                var frame = new Complex[sampleSize];
-                for (var i = 0; i < sampleSize; i++)
-                {
-                    frame[i] = args.Buffer[i];
-                }
+                Stop();
+                _wi.DataAvailable -= OnWiOnDataAvailable;
+                _wi.Dispose();
+            }
+            
+            _wi = new WaveIn {DeviceNumber = 0, WaveFormat = new WaveFormat((int) SampleRate, 1)};
+            SampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
+            var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
+            var milliseconds = 1000d * SampleSize / actualSampleRate;
+            //milliseconds = Math.Ceiling(milliseconds / 100) * 100;
+            _wi.BufferMilliseconds = (int) milliseconds;
+            _wi.DataAvailable += OnWiOnDataAvailable;
 
-                DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
-            };
-			
-            var timer = new DispatcherTimer();
-            timer.Tick += (sender, args) => FrameworkDispatcher.Update();
-            timer.Start();
             Start();
+            EvokePropertyChanged(nameof(SampleSize));
+            EvokePropertyChanged(nameof(SampleDuration));
         }
 
-        private bool inRecording;
-        
+        private void OnWiOnDataAvailable(object sender, WaveInEventArgs args)
+        {
+            var sampleSizeInBytes = args.Buffer.Length;
+            var sampleSize = sampleSizeInBytes / 2;
+            var frame = new Complex[sampleSize];
+            for (var i = 0; i < sampleSize; i++)
+            {
+                frame[i] = args.Buffer[i];
+            }
+
+            DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
+        }
+
+        private bool _inRecording;
+
         public void Start()
         {
-            if (inRecording.Is(true)) return;
-            wi.StartRecording();
-            inRecording = true;
+            if (_inRecording.Is(true)) return;
+            _wi.StartRecording();
+            _inRecording = true;
         }
 
         public void Stop()
         {
-            if (inRecording.Is(false)) return;
-            wi.StartRecording();
-            inRecording = false;
+            if (_inRecording.Is(false)) return;
+            _wi.StopRecording();
+            _inRecording = false;
         }
 
         public event EventHandler<AudioInputEventArgs> DataReady;
