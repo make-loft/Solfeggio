@@ -8,8 +8,8 @@
     xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
     BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
-    <Grid BackgroundColor="White">
-        <Grid.RowDefinitions>
+    <Grid BackgroundColor="White" m:Rack.Rows="2* *" m:Rack.Columns="Auto *">
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -17,7 +17,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>-->
                 
         <forms:SKCanvasView
             Grid.Row="0"
