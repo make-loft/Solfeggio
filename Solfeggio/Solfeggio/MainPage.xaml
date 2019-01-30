@@ -4,21 +4,16 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest.Xamarin"
+    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest"
     xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
     BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
     <Grid BackgroundColor="White" m:Rack.Rows="2* *" m:Rack.Columns="Auto *">
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>-->
-                
+
+        <Grid.Resources>
+            <m:ResourceDictionary Source="Dictionaries/Templates.xaml"/>
+        </Grid.Resources>
+
         <forms:SKCanvasView
             Grid.Row="0"
             Grid.Column="0"
@@ -29,6 +24,7 @@
             Touch="OnTouchEffectAction"
             PaintSurface="OnCanvasViewPaintSurface"/>
 
+        
         <forms:SKCanvasView
             Grid.Row="1"
             Grid.Column="0"
@@ -96,6 +92,16 @@
                 Grid.Column="2"
                 ItemsSource="{Binding ActiveDevice.SampleRates}"
                 SelectedItem="{Binding SampleRate, Mode=TwoWay}"/>
+        </Grid>
+
+        <Grid m:Rack.Cell="R0 C0 CS2">
+            <ScrollView>
+                <Grid m:Rack.Rows="^ ^">
+                    <ContentView m:Rack.Cell="R0" ControlTemplate="{StaticResource ProcessingOptionsTemplate}"/>
+                    <ContentView m:Rack.Cell="R1" ControlTemplate="{StaticResource PresentationOptionsTemplate}"/>
+                </Grid>
+
+            </ScrollView>
         </Grid>
 
     </Grid>

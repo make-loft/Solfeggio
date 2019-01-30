@@ -19,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Folder Include="Converters\" />
+    <EmbeddedResource Update="Dictionaries\Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

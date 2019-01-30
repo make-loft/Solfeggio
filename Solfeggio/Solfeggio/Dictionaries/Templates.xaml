@@ -1,0 +1,125 @@
+<ResourceDictionary
+    x:Class="Solfeggio.Dictionaries.Templates"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest"
+    xmlns:a="clr-namespace:Ace.Adapters;assembly=Ace.Zest"
+    xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+    xmlns:p="clr-namespace:Solfeggio.Presenters"
+    xmlns:converters="clr-namespace:Solfeggio.Converters"
+    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace.Zest">
+    
+    <converters:PowConverter x:Key="PowConverter" Base="2"/>
+    <c:BooleanConverter x:Key="NotConverter" OnTrue="False" OnFalse="True" OnNull="True"/>
+    <c:BooleanConverter x:Key="TrueToVisibleConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Collapsed"/>
+    <c:BooleanConverter x:Key="TrueToCollapsedConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Visible"/>
+    <c:BooleanConverter x:Key="FalseToVisibleConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Collapsed"/>
+    <c:BooleanConverter x:Key="FalseToCollapsedConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Visible"/>
+    
+    
+    <ControlTemplate x:Key="SizeTemplate">
+        <Grid BindingContext="{m:Store Key=vm:SpectralViewModel}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Text="Duration"/>
+            <Label Grid.Row="1" Grid.Column="0" Text="Sample"/>
+            <Label Grid.Row="2" Grid.Column="0" Text="Frame"/>
+            <Label Grid.Row="0" Grid.Column="2" Text="bins"/>
+            <Label Grid.Row="0" Grid.Column="1" Text="ms"/>
+
+            <Label Grid.Row="1" Grid.Column="2" Text="{Binding ActiveDevice.SampleSize}"/>
+            <Label Grid.Row="2" Grid.Column="2" Text="{Binding FrameSize}"/>
+            <Label Grid.Row="1" Grid.Column="1" Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}"/>
+            <Label Grid.Row="2" Grid.Column="1" Text="{Binding FrameDuration.TotalMilliseconds}"/>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ProcessingOptionsTemplate">
+        <a:StackPanel DataContext="{m:Store Key=vm:SpectralViewModel}">           
+            <Label 
+                Grid.Row="0" 
+                Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
+
+            
+            <StackLayout Grid.Row="1" Grid.Column="0" Width="89">
+                <Picker
+                    ItemsSource="{Binding Windows}" 
+                    SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"/>
+            </StackLayout>
+           
+            
+            <Label Text="{Binding MaxAmplitude, StringFormat='Sensetive {0:0.0}'}"/>
+            <Slider 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                Margin="0 20 0 20"
+                Minimum="4"
+                Maximum="12"
+                Value="{Binding MaxAmplitude, Mode=TwoWay, Converter={StaticResource PowConverter}}"/>
+            <Switch Grid.Row="1" Grid.Column="1" x:Name="AutosensetiveToggleButton" IsToggled="{Binding AutoSensetive, Mode=TwoWay}"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Text="Whisper" FontSize="14"/>
+            <Label Grid.Row="1" Grid.Column="0" Text="Cry" FontSize="14"/>
+
+            <Grid 
+                Grid.Row="0" 
+                Grid.RowSpan="2"
+                Grid.Column="0" 
+                Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="1" Text="Delay"/>
+                <Entry Grid.Column="2" Margin="-4 -8" FontSize="14" Text="{Binding Delay, Mode=TwoWay}"/>
+                <Label Grid.Column="3" Text="s"/>
+            </Grid>
+            
+        </a:StackPanel>
+    </ControlTemplate>
+    
+    <ControlTemplate x:Key="PresentationOptionsTemplate">
+        <Grid m:Rack.Columns="* ^" m:Rack.Rows="^ ^ ^ ^ ^ ^ ^" BindingContext="{m:Store Key=p:MusicalPresenter}">
+            
+            <Label m:Rack.Cell="R0 C0"  Text="{m:Localizing Key=ShowHz}"/>
+            <Switch m:Rack.Cell="R0 C1" IsToggled="{Binding ShowHz, Mode=TwoWay}"/>
+
+            <Label m:Rack.Cell="R1 C0" Text="{m:Localizing Key=ShowNotes}"/>
+            <Switch m:Rack.Cell="R1 C1" IsToggled="{Binding ShowHz, Mode=TwoWay}"/>
+
+            <Label m:Rack.Cell="R2 C0" Text="{m:Localizing Key=UseVerticalLogScale}"/>
+            <Switch m:Rack.Cell="R2 C1" IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}"/>
+
+            <Label m:Rack.Cell="R3 C0" Text="{m:Localizing Key=UseHorizontalLogScale}"/>
+            <Switch m:Rack.Cell="R3 C1" IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}"/>
+
+            <Label m:Rack.Cell="R4 C0" Text="{m:Localizing Key=WaveIn}" TextColor="Crimson"/>
+            <Switch m:Rack.Cell="R4 C1" IsToggled="{m:Smart Key=ShowWaveIn}"/>
+
+            <Label m:Rack.Cell="R5 C0" Text="{m:Localizing Key=WaveOut}" TextColor="YellowGreen"/>
+            <Switch m:Rack.Cell="R5 C1" IsToggled="{m:Smart Key=ShowWaveOut}"/>
+
+            <Label m:Rack.Cell="R6 C0" Text="{m:Localizing Key=UseAliasing}"/>
+            <Switch m:Rack.Cell="R6 C1" IsToggled="{m:Smart Key=UseAliasing}"/>
+
+            <!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
+
+        </Grid>
+    </ControlTemplate>
+    
+</ResourceDictionary>

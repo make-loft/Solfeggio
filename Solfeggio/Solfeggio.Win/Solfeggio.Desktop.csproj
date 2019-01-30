@@ -74,6 +74,7 @@
     <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveOutCapabilities.cs" />
     <Compile Include="Converters\PowConverter.cs" />
+    <Compile Include="Dictionaries\Templates.cs" />
     <Compile Include="Languages\English.Designer.cs">
       <DependentUpon>English.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -134,17 +135,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Ace\Ace.Base\Ace.Base.Profile158.csproj">
-      <Project>{2fedb2cb-1b48-411f-a546-762bc9a688ca}</Project>
-      <Name>Ace.Base.Profile158</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Ace\Ace.Core\Ace.Core.Desktop.csproj">
-      <Project>{2582f9f6-c381-475e-b454-4c1e4d323268}</Project>
-      <Name>Ace.Core.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Ace\Ace.Zest\Ace.Zest.Desktop.csproj">
-      <Project>{a78c2d1c-9446-4b87-915b-2615f98f63c1}</Project>
-      <Name>Ace.Zest.Desktop</Name>
+    <ProjectReference Include="..\..\Ace\Ace.Desktop.csproj">
+      <Project>{72f032c7-6cd2-4ece-8f8a-ea42742a59c6}</Project>
+      <Name>Ace.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
