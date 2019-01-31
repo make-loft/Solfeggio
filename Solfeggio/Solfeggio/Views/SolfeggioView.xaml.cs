@@ -12,11 +12,11 @@ using Solfeggio.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Solfeggio
+namespace Solfeggio.Views
 {
     [XamlCompilation (XamlCompilationOptions.Skip)]
-    public partial class MainPage
-    {
+    public partial class SolfeggioView
+	{
         readonly Dictionary<long, SKPath> _inProgressPaths = new Dictionary<long, SKPath>();
         readonly List<SKPath> _completedPaths = new List<SKPath>();
 
@@ -78,7 +78,7 @@ namespace Solfeggio
                 (float) (SpectrumCanvas.CanvasSize.Height * pt.Y / SpectrumCanvas.Height));
         }
 
-        public MainPage()
+        public SolfeggioView()
         {
             InitializeComponent();
             WaitAndExecute(100, () =>
@@ -121,63 +121,55 @@ namespace Solfeggio
 		    var width = (float)args.Info.Width;
 		    var height = (float)args.Info.Height;
 		    var canvas = args.Surface.Canvas;
-
-
-
-		    var PianoCanvas = new Panel(args) {  };
+		    var pianoCanvas = new Panel(args);
 
 		    var spectrum = _spectralViewModel.CurrentSpectrum;
 		    if (spectrum.IsNot()) return;
 
-		    PianoCanvas.Children.Clear();
+		    pianoCanvas.Children.Clear();
 
 		    var presenter = Store.Get<MusicalPresenter>();
 		    var max = spectrum.Values.Max() * 0.7;
 		    if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
-		    presenter.DrawPiano(PianoCanvas, spectrum);
+		    presenter.DrawPiano(pianoCanvas, spectrum);
 		    //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
 		    //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
 		    //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
 		    //presenter.DrawTops(SpectrumCanvas, tops);
 
-		    PianoCanvas.Draw();
+		    pianoCanvas.Draw();
 
 
 		    return;
 		}
-
-		private float _max;
 
         void OnCanvasViewPaintSurface1(object sender, SKPaintSurfaceEventArgs args)
         {
 	        var width = (float)args.Info.Width;
 	        var height = (float)args.Info.Height;
 	        var canvas = args.Surface.Canvas;
-
-
-
-	        var SpectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
+	        var spectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
 
 			var spectrum = _spectralViewModel.CurrentSpectrum;
 			if (spectrum.IsNot()) return;
 
 	        var waveInData = _spectralViewModel.WaveInData;
 
-	        SpectrumCanvas.Children.Clear();
+	        spectrumCanvas.Children.Clear();
 
 	        var presenter = Store.Get<MusicalPresenter>();
 	        //var max = spectrum.Values.Max() * 0.7;
 	        //if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
-			presenter.DrawSpectrum(SpectrumCanvas, spectrum, SpectrumPolyline);
+			presenter.DrawSpectrum(spectrumCanvas, spectrum, SpectrumPolyline);
 	        //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
-	        presenter.DrawWave(SpectrumCanvas, waveInData, WaveInLine, new Thickness());
+	        presenter.DrawWave(spectrumCanvas, waveInData, WaveInLine, new Thickness());
 	        //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
 	        //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
 	        //presenter.DrawTops(SpectrumCanvas, tops);
 
-	        SpectrumCanvas.Draw();
+	        spectrumCanvas.Draw();
 		}
 
 	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new LinearGradientBrush

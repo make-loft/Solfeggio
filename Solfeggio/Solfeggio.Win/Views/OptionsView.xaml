@@ -6,6 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	DataContext="{m:Store Key=vm:SpectralViewModel}"
 	mc:Ignorable="d"
 	d:DesignHeight="450"

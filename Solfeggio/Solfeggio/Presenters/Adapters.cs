@@ -231,7 +231,6 @@ namespace System.Windows.Shapes
 			skBrush.Style = SKPaintStyle.Stroke;
 			return skBrush;
 		}
-
 	}
 
 	public class Polyline : Primitive
@@ -248,7 +247,6 @@ namespace System.Windows.Shapes
 				path.LineTo(points[i]);
 			}
 
-			path.Close();
 			return path;
 		}
 	}

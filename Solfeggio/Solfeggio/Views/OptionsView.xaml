@@ -1,0 +1,138 @@
+﻿<ContentView
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	x:Class="Solfeggio.Views.OptionsView">
+	
+	<ContentView.Content>
+		<StackLayout>
+			<Grid
+				m:Rack.Rows="^ ^ ^"
+				m:Rack.Columns="^ ^ ^ ^ ^">
+
+				<Label
+					m:Rack.Cell="R0 C0"
+					Text="{m:Localizing Key=Duration}" />
+				
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=Sample}" />
+				<Label
+					m:Rack.Cell="R2 C0"
+					Text="{m:Localizing Key=Frame}" />
+				<Label
+					m:Rack.Cell="R0 C2"
+					Text="bins" />
+				<Label
+					m:Rack.Cell="R0 C1"
+					Text="ms" />
+
+				<Label
+					m:Rack.Cell="R1 C2"
+					Text="{Binding ActiveDevice.SampleSize}" />
+				<Label
+					m:Rack.Cell="R2 C2"
+					Text="{Binding FrameSize}" />
+				<Label
+					m:Rack.Cell="R1 C1"
+					Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}" />
+				<Label
+					m:Rack.Cell="R2 C1"
+					Text="{Binding FrameDuration.TotalMilliseconds}" />
+			</Grid>
+
+			<Grid
+				m:Rack.Cell="R1 C0"
+				m:Rack.Rows="^ ^ ^ ^ *"
+				m:Rack.Columns="^ * ^">
+
+				<Label
+					m:Rack.Cell="R0 C0"
+					Text="{m:Localizing Key=Pow, StringFormat='{}{0}: '}" />
+				<Slider
+					m:Rack.Cell="R0 C1"
+					Value="{Binding FramePow, Mode=TwoWay}"
+					Maximum="13"
+					Minimum="9" />
+				<Label
+					m:Rack.Cell="R0 C2"
+					Text="{Binding FramePow}" />
+
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=SampleRate, StringFormat='{}{0}: '}" />
+				<Slider
+					m:Rack.Cell="R1 C1"
+					IsVisible="False"
+					Maximum="{Binding MaxSampleRate}"
+					Minimum="{Binding MinSampleRate}"
+					Value="{Binding SampleRate, Mode=TwoWay}" />
+
+				<Picker
+					m:Rack.Cell="R1 C2"
+					ItemsSource="{Binding ActiveDevice.SampleRates}"
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+			</Grid>
+
+			<Grid
+				m:Rack.Columns="* ^"
+				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^"
+				BindingContext="{m:Store Key=p:MusicalPresenter}">
+
+				<Label
+					m:Rack.Cell="R0 C0"
+					Text="{m:Localizing Key=ShowHz}" />
+				<Switch
+					m:Rack.Cell="R0 C1"
+					IsToggled="{Binding ShowHz, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=ShowNotes}" />
+				<Switch
+					m:Rack.Cell="R1 C1"
+					IsToggled="{Binding ShowNotes, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R2 C0"
+					Text="{m:Localizing Key=UseVerticalLogScale}" />
+				<Switch
+					m:Rack.Cell="R2 C1"
+					IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R3 C0"
+					Text="{m:Localizing Key=UseHorizontalLogScale}" />
+				<Switch
+					m:Rack.Cell="R3 C1"
+					IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R4 C0"
+					Text="{m:Localizing Key=WaveIn}"
+					TextColor="Crimson" />
+				<Switch
+					m:Rack.Cell="R4 C1"
+					IsToggled="{m:Smart Key=ShowWaveIn, DefaultValue=True}" />
+
+				<Label
+					m:Rack.Cell="R5 C0"
+					Text="{m:Localizing Key=WaveOut}"
+					TextColor="YellowGreen" />
+				<Switch
+					m:Rack.Cell="R5 C1"
+					IsToggled="{m:Smart Key=ShowWaveOut, DefaultValue=False}" />
+
+				<Label
+					m:Rack.Cell="R6 C0"
+					Text="{m:Localizing Key=UseAliasing}" />
+				<Switch
+					m:Rack.Cell="R6 C1"
+					IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
+
+				<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
+
+			</Grid>
+		</StackLayout>
+	</ContentView.Content>
+</ContentView>

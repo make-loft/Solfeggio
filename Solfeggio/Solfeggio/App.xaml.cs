@@ -9,7 +9,7 @@ namespace Solfeggio
 		public App ()
 		{
 			InitializeComponent();
-			MainPage = new MainPage();
+			MainPage = new Views.SolfeggioView();
 		}
 
 		protected override void OnStart ()

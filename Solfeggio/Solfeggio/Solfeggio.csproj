@@ -17,8 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\SolfeggioView.xaml.cs">
+      <DependentUpon>SolfeggioView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Dictionaries\Templates.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\OptionsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
