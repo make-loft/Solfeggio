@@ -5,53 +5,44 @@
     xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
     xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
-    xmlns:converters="clr-namespace:Solfeggio.Converters"
-    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace.Zest">
+    xmlns:converters="clr-namespace:Solfeggio.Converters">
     
     <converters:PowConverter x:Key="PowConverter" Base="2"/>
     
     <SolidColorBrush x:Key="PanelBrush" Color="#77AAAAAA"/>
     
     <ControlTemplate x:Key="SizeTemplate">
-        <Grid DataContext="{m:Store Key=vm:SpectralViewModel}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <Grid
+			Rack.Rows="^ ^ ^"
+			Rack.Columns="^ ^ ^ ^ ^"
+			DataContext="{m:Store Key=vm:SpectralViewModel}">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <TextBlock Rack.Cell="R0 C0" Text="Duration" FontWeight="SemiBold"/>
+            <TextBlock Rack.Cell="R1 C0" Text="Sample" HorizontalAlignment="Left"/>
+            <TextBlock Rack.Cell="R2 C0" Text="Frame" HorizontalAlignment="Left"/>
+            <TextBlock Rack.Cell="R0 C2" Text="bins"/>
+            <TextBlock Rack.Cell="R0 C1" Text="ms"/>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Duration" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Sample" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Frame" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="bins"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="ms"/>
-
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ActiveDevice.SampleSize}"/>
-            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding FrameSize}"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FrameDuration.TotalMilliseconds}"/>
+            <TextBlock Rack.Cell="R1 C2" Text="{Binding ActiveDevice.SampleSize}"/>
+            <TextBlock Rack.Cell="R2 C2" Text="{Binding FrameSize}"/>
+            <TextBlock Rack.Cell="R1 C1" Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}"/>
+            <TextBlock Rack.Cell="R2 C1" Text="{Binding FrameDuration.TotalMilliseconds}"/>
         </Grid>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ProcessingOptionsTemplate">
-        <StackPanel DataContext="{m:Store Key=vm:SpectralViewModel}">           
+        <StackPanel DataContext="{m:Store Key=p:MusicalPresenter}">           
             <TextBlock 
                 Grid.Row="0" 
                 HorizontalAlignment="Left" 
-                FontWeight="SemiBold" 
-                Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
+                FontWeight="SemiBold"
+				DataContext="{m:Store Key=vm:SpectralViewModel}"
+				Text="{Binding ActiveDevice.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
 
             
             <StackPanel Grid.Row="1" Grid.Column="0" Width="89">
                 <ComboBox
+					DataContext="{m:Store Key=vm:SpectralViewModel}"
                     ItemsSource="{Binding Windows}" 
                     SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
                     DisplayMemberPath="Method.Name"/>
@@ -71,22 +62,17 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Whisper" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Cry" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14"/>
 
-            <Grid 
-                Grid.Row="0" 
-                Grid.RowSpan="2"
-                Grid.Column="0" 
-                Grid.ColumnSpan="2"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Visibility="{Binding ElementName=AutosensetiveToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+			<Grid
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Right"
+				Rack.Columns="^ * * ^"
+				Visibility="{Binding ElementName=AutosensetiveToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
 
-                <TextBlock Grid.Column="1" Text="Delay" VerticalAlignment="Center"/>
+				<TextBlock Grid.Column="1" Text="Delay" VerticalAlignment="Center"/>
                 <TextBox Grid.Column="2" Margin="-4 -8" Padding="0 -4" FontSize="14" Text="{Binding Delay, Mode=TwoWay}" InputScope="Number"/>
                 <TextBlock Grid.Column="3" Text="s" VerticalAlignment="Center"/>
             </Grid>
@@ -95,10 +81,13 @@
     </ControlTemplate>
     
     <ControlTemplate x:Key="PresentationOptionsTemplate">
-        <Grid m:Rack.Columns="* ^" m:Rack.Rows="^ ^ ^ ^ ^ ^ ^" DataContext="{m:Store Key=p:MusicalPresenter}">
-            
-            <TextBlock m:Rack.Cell="R0 C0"  Text="{m:Localizing Key=ShowHz}"/>
-            <ToggleButton m:Rack.Cell="R0 C1" IsChecked="{Binding ShowHz, Mode=TwoWay}"/>
+		<Grid
+			m:Rack.Columns="* ^"
+			m:Rack.Rows="^ ^ ^ ^ ^ ^ ^"
+			DataContext="{m:Store Key=p:MusicalPresenter}">
+
+			<TextBlock m:Rack.Cell="R0 C0"  Text="{m:Localizing Key=ShowHz}"/>
+            <ToggleButton m:Rack.Cell="R0 C1" IsChecked="{Binding ShowHz, Mode=TwoWay}" Content="Hz"/>
 
             <TextBlock m:Rack.Cell="R1 C0" Text="{m:Localizing Key=ShowNotes}"/>
             <ToggleButton m:Rack.Cell="R1 C1" IsChecked="{Binding ShowHz, Mode=TwoWay}"/>

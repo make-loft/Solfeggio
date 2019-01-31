@@ -6,6 +6,7 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
+	xmlns:views="clr-namespace:Solfeggio.Views"
 	DataContext="{m:Store Key=vm:SpectralViewModel}"
 	HorizontalContentAlignment="Stretch"
 	VerticalContentAlignment="Stretch"
@@ -13,15 +14,27 @@
 	VerticalAlignment="Stretch"
 	Background="DimGray">
 
-	<Grid m:Rack.Columns="Auto *" m:Rack.Rows="2* *">
+	<Grid
+		m:Rack.Columns="Auto *"
+		m:Rack.Rows="2* *">
 		<Grid.Resources>
-			<Style TargetType="TextBlock">
-				<Setter Property="HorizontalAlignment" Value="Center"/>
-				<Setter Property="Margin" Value="5 0"/>
+			<Style
+				TargetType="TextBlock">
+				<Setter
+					Property="HorizontalAlignment"
+					Value="Center" />
+				<Setter
+					Property="Margin"
+					Value="5 0" />
 			</Style>
-			<c:SwitchConverter x:Key="MarginConverter">
-				<m:Case Key="False" Value="0 0 0 0"/>
-				<m:Case Key="True" Value="0 0 0 0"/>
+			<c:SwitchConverter
+				x:Key="MarginConverter">
+				<m:Case
+					Key="False"
+					Value="0 0 0 0" />
+				<m:Case
+					Key="True"
+					Value="0 0 0 0" />
 			</c:SwitchConverter>
 		</Grid.Resources>
 
@@ -29,40 +42,66 @@
 			m:Rack.Cell="R0 C0 CS2"
 			Name="SpectrumCanvas"
 			HorizontalAlignment="Stretch"
-			Margin="{Binding ElementName=LogH, Path=IsChecked, Converter={StaticResource MarginConverter}}">
-            <Canvas.Background>
-                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                    <GradientStop Color="Violet" Offset="0"/>
-                    <GradientStop Color="#FF0D0712" Offset="1"/>
-                </LinearGradientBrush>
-            </Canvas.Background>
+			Margin="{m:StoreBinding Path=UseHorizontalLogScale, Converter={StaticResource MarginConverter}, StoreKey=p:MusicalPresenter}">
+			<Canvas.Background>
+				<LinearGradientBrush
+					EndPoint="0,1"
+					StartPoint="0,0">
+					<GradientStop
+						Color="Violet"
+						Offset="0" />
+					<GradientStop
+						Color="#FF0D0712"
+						Offset="1" />
+				</LinearGradientBrush>
+			</Canvas.Background>
 
-			<Polyline Name="MagnitudePolyline" Fill="Yellow" Stroke="Gold" StrokeThickness="1"/>
-			<Polyline Name="WaveInPolyline" Stroke="Crimson" StrokeThickness="1" Visibility="{Binding Path=IsChecked, ElementName=WaveInCheckBox, Converter={StaticResource TrueToVisibleConverter}}"/>
-			<Polyline Name="WaveOutPolyline" Stroke="YellowGreen" StrokeThickness="1" Visibility="{Binding Path=IsChecked, ElementName=WaveOutCheckBox, Converter={StaticResource TrueToVisibleConverter}}"/>
+			<Polyline
+				Name="MagnitudePolyline"
+				Fill="Yellow"
+				Stroke="Gold"
+				StrokeThickness="1" />
+			<Polyline
+				Name="WaveInPolyline"
+				Stroke="Crimson"
+				StrokeThickness="1"
+				DataContext="{m:Store Key=p:MusicalPresenter}"
+				Visibility="{m:Smart Key=ShowWaveIn, Converter={StaticResource TrueToVisibleConverter}}" />
+			<Polyline
+				Name="WaveOutPolyline"
+				Stroke="YellowGreen"
+				StrokeThickness="1"
+				DataContext="{m:Store Key=p:MusicalPresenter}"
+				Visibility="{m:Smart Key=ShowWaveOut, Converter={StaticResource TrueToVisibleConverter}}" />
 		</Canvas>
 
-		<Canvas 
+		<Canvas
 			m:Rack.Cell="R1 C0 CS2"
-			Name="PianoCanvas" 
-			Margin="{Binding ElementName=LogH, Path=IsChecked, Converter={StaticResource MarginConverter}}"
+			Name="PianoCanvas"
+			Margin="{m:StoreBinding Path=UseHorizontalLogScale, Converter={StaticResource MarginConverter}, StoreKey=p:MusicalPresenter}"
 			HorizontalAlignment="Stretch"
-			Background="#FF616187"/>
+			Background="#FF616187" />
 
-		<StackPanel m:Rack.Cell="R1 C0" HorizontalAlignment="Left">			
-			<ToggleButton Content="🎼" Name="OptionsToggleButton" IsChecked="False"/>
-			<ToggleButton Content="📷" IsChecked="{Binding IsPaused, Mode=TwoWay}"/>
+		<StackPanel
+			m:Rack.Cell="R1 C0"
+			HorizontalAlignment="Left">
+			<ToggleButton
+				Content="🎼"
+				Name="OptionsToggleButton"
+				IsChecked="False" />
+			<ToggleButton
+				Content="📷"
+				IsChecked="{Binding IsPaused, Mode=TwoWay}" />
 		</StackPanel>
 
-        <Grid m:Rack.Cell="R0 C0 CS2">
-            <ScrollViewer>
-                <Grid m:Rack.Rows="^ ^">
-                    <ContentControl m:Rack.Cell="R0" Template="{StaticResource ProcessingOptionsTemplate}"/>
-                    <ContentControl m:Rack.Cell="R1" Template="{StaticResource PresentationOptionsTemplate}"/>
-                </Grid>
-                
-            </ScrollViewer>
-        </Grid>
+		<Grid
+			m:Rack.Cell="R0 C0 CS2"
+			Background="#AAAAAAAA"
+			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
+			<ScrollViewer>
+				<views:OptionsView />
+			</ScrollViewer>
+		</Grid>
 	</Grid>
 
 </ContentControl>

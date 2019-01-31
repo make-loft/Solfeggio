@@ -81,6 +81,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Microphone.cs" />
+    <Compile Include="Views\OptionsView.xaml.cs">
+      <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>
@@ -97,6 +100,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Dictionaries\Templates.xaml" />
+    <Page Include="Views\OptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SolfeggioView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

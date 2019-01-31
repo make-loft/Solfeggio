@@ -77,7 +77,7 @@ namespace Solfeggio.Presenters
 		//	23.125, 24.500, 25.957, 27.500, 29.135, 30.868
 		//};
 
-		public double MaxMagnitude { get; set; } = 0d;
+		public double MaxMagnitude { get; set; } = 1d;
 		public double FrequencyScale { get; set; } = 1d;
 		public double Delay { get; set; } = 5d;
 

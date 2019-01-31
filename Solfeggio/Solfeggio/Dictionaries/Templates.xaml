@@ -2,23 +2,48 @@
     x:Class="Solfeggio.Dictionaries.Templates"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace.Zest"
-    xmlns:a="clr-namespace:Ace.Adapters;assembly=Ace.Zest"
+    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+    xmlns:a="clr-namespace:Ace.Adapters;assembly=Ace"
     xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
     xmlns:converters="clr-namespace:Solfeggio.Converters"
-    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace.Zest">
+    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace"
+	xmlns:m1="clr-namespace:Ace.Markup;assembly=Ace">
     
     <converters:PowConverter x:Key="PowConverter" Base="2"/>
-    <c:BooleanConverter x:Key="NotConverter" OnTrue="False" OnFalse="True" OnNull="True"/>
-    <c:BooleanConverter x:Key="TrueToVisibleConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Collapsed"/>
-    <c:BooleanConverter x:Key="TrueToCollapsedConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Visible"/>
-    <c:BooleanConverter x:Key="FalseToVisibleConverter" OnTrue="Collapsed" OnFalse="Visible" OnNull="Collapsed"/>
-    <c:BooleanConverter x:Key="FalseToCollapsedConverter" OnTrue="Visible" OnFalse="Collapsed" OnNull="Visible"/>
-    
+   
+	<!--Use this values to reduce boxing/unboxing and string conversions-->
+    <x:Boolean x:Key="True">True</x:Boolean>
+    <x:Boolean x:Key="False">False</x:Boolean>
+
+    <x:Boolean x:Key="Hidden">False</x:Boolean>
+    <x:Boolean x:Key="Visible">True</x:Boolean>
+    <x:Boolean x:Key="Collapsed">False</x:Boolean>
+
+    <c:KeyToValueConverter x:Key="NullToTrueConverter" Key="{x:Null}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+    <c:KeyToValueConverter x:Key="NullToFalseConverter" Key="{x:Null}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+
+    <c:KeyToValueConverter x:Key="NullToHiddenConverter" Key="{x:Null}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <c:KeyToValueConverter x:Key="NullToVisibleConverter" Key="{x:Null}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <c:KeyToValueConverter x:Key="NullToCollapsedConverter" Key="{x:Null}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+
+    <c:KeyToValueConverter x:Key="TrueToFalseConverter" Key="{StaticResource True}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+    <c:KeyToValueConverter x:Key="FalseToTrueConverter" Key="{StaticResource False}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+
+    <c:KeyToValueConverter x:Key="TrueToHiddenConverter" Key="{StaticResource True}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <c:KeyToValueConverter x:Key="TrueToVisibleConverter" Key="{StaticResource True}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <c:KeyToValueConverter x:Key="TrueToCollapsedConverter" Key="{StaticResource True}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+
+    <c:KeyToValueConverter x:Key="FalseToHiddenConverter" Key="{StaticResource False}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <c:KeyToValueConverter x:Key="FalseToVisibleConverter" Key="{StaticResource False}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <c:KeyToValueConverter x:Key="FalseToCollapsedConverter" Key="{StaticResource False}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+
+    <c:KeyToValueConverter x:Key="EqualsToFalseConverter" KeySource="ConverterParameter" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+    <c:KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+
     
     <ControlTemplate x:Key="SizeTemplate">
-        <Grid BindingContext="{m:Store Key=vm:SpectralViewModel}">
+        <Grid BindingContext="{m1:Store Key=vm:SpectralViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -53,7 +78,7 @@
                 Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
 
             
-            <StackLayout Grid.Row="1" Grid.Column="0" Width="89">
+            <StackLayout Grid.Row="1" Grid.Column="0">
                 <Picker
                     ItemsSource="{Binding Windows}" 
                     SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"/>
@@ -65,7 +90,7 @@
                 Grid.Row="1" 
                 Grid.Column="0" 
                 Margin="0 20 0 20"
-                Minimum="4"
+                Minimum="0"
                 Maximum="12"
                 Value="{Binding MaxAmplitude, Mode=TwoWay, Converter={StaticResource PowConverter}}"/>
             <Switch Grid.Row="1" Grid.Column="1" x:Name="AutosensetiveToggleButton" IsToggled="{Binding AutoSensetive, Mode=TwoWay}"/>

@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Threading;
 using Ace;
-using Ace.Specific;
 using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 
