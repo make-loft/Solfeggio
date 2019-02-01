@@ -96,10 +96,21 @@ namespace Solfeggio.ViewModels
 
 			void OnActiveDeviceOnDataReady(object sender, AudioInputEventArgs args)
 			{
+				var (j, k) = 0d;
 				var frameSize = FrameSize;
+
+				var frame0 = args.Frame.Skip(0).Take(FrameSize).ToArray();
+				var frame1 = args.Frame.Skip(ShiftSize).Take(FrameSize).ToArray();
+				var activeWindow = ActiveWindow;
+				for (var i = 0; i < frameSize; i++)
+				{
+					frame0[i] *= activeWindow(i, frameSize);
+					frame1[i] *= activeWindow(i, frameSize);
+				}
+
 				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
-				var spectrum0 = args.Frame.Skip(0).Take(FrameSize).DecimationInTime(true);
-				var spectrum1 = args.Frame.Skip(ShiftSize).Take(FrameSize).DecimationInTime(true);
+				var spectrum0 = frame0.DecimationInTime(true);
+				var spectrum1 = frame1.DecimationInTime(true);
 				
 				for (var i = 0; i < frameSize; i++)
 				{
@@ -107,10 +118,9 @@ namespace Solfeggio.ViewModels
 					spectrum1[i] /= frameSize;
 				}
 
-				var j = 0d;
 				var outSample = spectrum0.DecimationInTime(false);
-				WaveInData = args.Frame.ToDictionary(c => j++, c => c.Real);
-				WaveOutData = outSample.ToDictionary(c => j++, c => c.Real);
+				WaveInData = args.Frame.Take(outSample.Length).ToDictionary(c => j++, c => c.Real);
+				WaveOutData = outSample.ToDictionary(c => k++, c => c.Real);
 
 				var spectrum = Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
 				if (UseAliasing) spectrum = Filtering.Antialiasing(spectrum);

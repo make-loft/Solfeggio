@@ -96,10 +96,14 @@
 
 		<Grid
 			m:Rack.Cell="R0 C0 CS2"
-			Background="#AAAAAAAA"
 			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
-			<ScrollViewer>
-				<views:OptionsView />
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+				<Grid>
+					<Border
+						Background="#FF616187" Opacity=".5" />
+					<views:OptionsView
+						Margin="24" />
+				</Grid>
 			</ScrollViewer>
 		</Grid>
 	</Grid>

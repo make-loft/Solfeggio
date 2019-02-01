@@ -32,12 +32,18 @@
 			m:Rack.Cell="R1 C0"
 			VerticalOptions="End"
 			HorizontalOptions="Start"
+			IsToggled="{Binding IsPaused}" />
+		
+		<Switch
+			m:Rack.Cell="R1 C0"
+			VerticalOptions="Start"
+			HorizontalOptions="Start"
 			IsToggled="{Binding ShowSettings}" />
 
 		<Grid
 			m:Rack.Cell="R0 C0 CS2"
 			IsVisible="{Binding ShowSettings}">
-			<ScrollView>
+			<ScrollView Orientation="Both">
 				<Grid
 					m:Rack.Rows="^ ^">
 					<Grid BackgroundColor="DimGray" Opacity=".5" />

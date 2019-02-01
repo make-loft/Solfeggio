@@ -53,6 +53,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
+      <Link>Converters\DelegateToNameConverter.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
     </Compile>
@@ -61,6 +64,10 @@
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\SpectralViewModel.cs">
       <Link>ViewModels\SpectralViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Views\OptionsView.xaml.cs">
+      <Link>Views\OptionsView.xaml.cs</Link>
+      <DependentUpon>OptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Api\IAudioClient.cs" />
     <Compile Include="Api\IWaveIn.cs" />
@@ -81,12 +88,13 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Microphone.cs" />
-    <Compile Include="Views\OptionsView.xaml.cs">
-      <DependentUpon>OptionsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>
+    <Page Include="..\Solfeggio\Views\OptionsView.xaml">
+      <Link>Views\OptionsView.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AppView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,10 +108,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Dictionaries\Templates.xaml" />
-    <Page Include="Views\OptionsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\SolfeggioView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +153,10 @@
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
       <Name>Rainbow.Standard1.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xamarin.Synonyms\Xamarin.Synonyms.csproj">
+      <Project>{8faec57e-0ea0-4ab5-9ae6-b0e639aed5a4}</Project>
+      <Name>Xamarin.Synonyms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -89,5 +89,7 @@ namespace Solfeggio.Droid
         public void Stop() => _recorder.Stop();
 
         public event EventHandler<AudioInputEventArgs> DataReady;
-    }
+
+		public override string ToString() => "Microphone";
+	}
 }

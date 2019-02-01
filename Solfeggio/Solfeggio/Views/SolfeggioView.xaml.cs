@@ -139,9 +139,6 @@ namespace Solfeggio.Views
 		    //presenter.DrawTops(SpectrumCanvas, tops);
 
 		    pianoCanvas.Draw();
-
-
-		    return;
 		}
 
         void OnCanvasViewPaintSurface1(object sender, SKPaintSurfaceEventArgs args)
@@ -155,8 +152,9 @@ namespace Solfeggio.Views
 			if (spectrum.IsNot()) return;
 
 	        var waveInData = _spectralViewModel.WaveInData;
+			var waveOutData = _spectralViewModel.WaveOutData;
 
-	        spectrumCanvas.Children.Clear();
+			spectrumCanvas.Children.Clear();
 
 	        var presenter = Store.Get<MusicalPresenter>();
 	        //var max = spectrum.Values.Max() * 0.7;
@@ -164,12 +162,14 @@ namespace Solfeggio.Views
 
 			presenter.DrawSpectrum(spectrumCanvas, spectrum, SpectrumPolyline);
 	        //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
-	        presenter.DrawWave(spectrumCanvas, waveInData, WaveInLine, new Thickness());
-	        //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
-	        //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
-	        //presenter.DrawTops(SpectrumCanvas, tops);
+			if (presenter["ShowWaveIn"].Is(true))
+				presenter.DrawWave(spectrumCanvas, waveInData, WaveInLine, new Thickness());
+			if (presenter["ShowWaveOut"].Is(true))
+				presenter.DrawWave(spectrumCanvas, waveOutData, WaveOutLine, new Thickness());
+			//var tops = presenter.DrawPiano(PianoCanvas, spectrum);
+			//presenter.DrawTops(SpectrumCanvas, tops);
 
-	        spectrumCanvas.Draw();
+			spectrumCanvas.Draw();
 		}
 
 	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new LinearGradientBrush
@@ -202,5 +202,11 @@ namespace Solfeggio.Views
 		    Stroke = new SolidColorBrush(SKColors.DarkRed),
 		    StrokeThickness = 1
 	    };
+
+		private readonly Polyline WaveOutLine = new Polyline
+		{
+			Stroke = new SolidColorBrush(SKColors.GreenYellow),
+			StrokeThickness = 1
+		};
 	}
 }

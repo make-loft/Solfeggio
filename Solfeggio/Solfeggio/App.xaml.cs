@@ -1,26 +1,19 @@
 using Ace;
 using Xamarin.Forms.Xaml;
 
-[assembly: XamlCompilation (XamlCompilationOptions.Compile)]
+[assembly: XamlCompilation(XamlCompilationOptions.Skip)]
 namespace Solfeggio
 {
 	public partial class App
 	{
-		public App ()
+		public App()
 		{
 			InitializeComponent();
 			MainPage = new Views.SolfeggioView();
 		}
 
-		protected override void OnStart ()
-		{
-        }
-
-		protected override void OnSleep () => Store.Snapshot();
-
-		protected override void OnResume ()
-		{
-			// Handle when your app resumes
-		}
+		protected override void OnStart() { }
+		protected override void OnSleep() => Store.Snapshot();
+		protected override void OnResume() { }
 	}
 }
