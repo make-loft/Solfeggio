@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\Pivot.xaml.cs">
+      <DependentUpon>Pivot.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>

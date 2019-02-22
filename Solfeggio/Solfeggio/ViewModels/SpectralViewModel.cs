@@ -16,13 +16,13 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveDevice, value);
 		}
 
-		public IAudioInputDevice[] Devices { get; } = {Store.Get<IAudioInputDevice>()};
+		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>() };
 
 		public delegate double ApodizationFunc(double binIndex, double frameSize);
 
 		public ApodizationFunc ActiveWindow
 		{
-			get => Get(() => ActiveWindow, Gausse);
+			get => Get(() => ActiveWindow, Rectangle);
 			set => Set(() => ActiveWindow, value);
 		}
 
@@ -49,7 +49,7 @@ namespace Solfeggio.ViewModels
 			get => Get(() => ShowSettings);
 			set => Set(() => ShowSettings, value);
 		}
-		
+
 		public bool IsPaused
 		{
 			get => Get(() => IsPaused);
@@ -57,7 +57,7 @@ namespace Solfeggio.ViewModels
 		}
 
 		public int MinFramePow { get; set; }
-		public int FrameSize => (int) Math.Pow(2.0d, FramePow);
+		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
 		public Dictionary<double, double> CurrentSpectrum { get; set; }
 		public Dictionary<double, double> WaveInData { get; set; }
@@ -83,7 +83,7 @@ namespace Solfeggio.ViewModels
 
 		public bool UseAliasing { get; set; } = true;
 		public double ShiftsPerFrame { get; set; } = 16;
-		private int ShiftSize => (int) (FrameSize / ShiftsPerFrame);
+		private int ShiftSize => (int)(FrameSize / ShiftsPerFrame);
 
 		public void Expose()
 		{
@@ -102,16 +102,18 @@ namespace Solfeggio.ViewModels
 				var frame0 = args.Frame.Skip(0).Take(FrameSize).ToArray();
 				var frame1 = args.Frame.Skip(ShiftSize).Take(FrameSize).ToArray();
 				var activeWindow = ActiveWindow;
+				if (activeWindow.Is(Rectangle)) goto SkipApodization;
 				for (var i = 0; i < frameSize; i++)
 				{
 					frame0[i] *= activeWindow(i, frameSize);
 					frame1[i] *= activeWindow(i, frameSize);
 				}
 
+			SkipApodization:
 				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
 				var spectrum0 = frame0.DecimationInTime(true);
 				var spectrum1 = frame1.DecimationInTime(true);
-				
+
 				for (var i = 0; i < frameSize; i++)
 				{
 					spectrum0[i] /= frameSize;

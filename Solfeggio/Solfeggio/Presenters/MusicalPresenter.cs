@@ -62,24 +62,42 @@ namespace Solfeggio.Presenters
 			public Brush Brush { get; set; }
 		}
 
-		private static readonly string[] Notes = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-		private static readonly bool[] IsToneSet = Notes.Select(n => n.EndsWith("#").Not()).ToArray();
+		private static readonly string[] Notes =
+			{"C|B♯","C♯|D♭","D","D♯|E♭","E|F♭","F|E♯","F♯|G♭","G","G♯|A♭","A","A♯|B♭","B|C♭"};
+
+		private static readonly bool[] IsToneSet = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
 		private static readonly Brush[] BaseOktaveColorSet =
 			IsToneSet.Select(t => t ? Brushes.White : Brushes.Black).Cast<Brush>().ToArray();
 
-		private static readonly double HalftonesCount = 12d;
-		private static readonly double BaseFrequancy = 440d/16d;
-		private static readonly double HalftoneStep = Math.Pow(2d, 1d / HalftonesCount);
-		private static readonly double[] BaseOktaveFrequencySet =
-			Enumerable.Range(-9, 12).Select(dt => BaseFrequancy * Math.Pow(HalftoneStep, dt)).ToArray();
-		//{
-		//	16.352, 17.324, 18.354, 19.445, 20.602, 21.827,
-		//	23.125, 24.500, 25.957, 27.500, 29.135, 30.868
-		//};
+		public static double[] PitchStandards { get; } = { 415d, 432d, 435d, 415d, 440d, 444d };
+		public static double DefaultPitchStandard = 440d;
+
+		[DataMember]
+		public double ActivePitchStandard
+		{
+			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
+			set
+			{
+				Set(() => ActivePitchStandard, value);
+				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
+			}
+		}
+
+		private static double HalftonesCount { get; } = 12;
+		private static double GetBaseFrequancy(double pitchStandard) => pitchStandard / 16d;
+		private static double GetHalftoneStep(double halftonesCount) => Math.Pow(2d, 1d / halftonesCount);
+
+		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
+			GetBaseOktaveFrequencySet(GetBaseFrequancy(pitchStandard), GetHalftoneStep(HalftonesCount));
+
+		private static double[] GetBaseOktaveFrequencySet(double baseFrequancy, double halftoneStep) =>
+			Enumerable.Range(-9, 12).Select(dt => baseFrequancy * Math.Pow(halftoneStep, dt)).ToArray();
+
+		private double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 
 		public double MaxMagnitude { get; set; } = 1d;
 		public double FrequencyScale { get; set; } = 1d;
-		public double Delay { get; set; } = 5d;
+		public double DelayInSeconds { get; set; } = 5d;
 
 		private double _yScale;
 
@@ -123,12 +141,17 @@ namespace Solfeggio.Presenters
 			var useVerticalLogScale = UseVerticalLogScale;
 			var autoSensitive = AutoSensetive;
 			var limitFrequency = LimitFrequency;
+			var actualWidth = canvas.ActualWidth;
+			var actualHeight = canvas.ActualHeight;
+
 
 			if (canvas.Children.Contains(polyline).Not()) canvas.Children.Add(polyline);
 			polyline.Points.Clear();
-			var pixelStep = canvas.ActualWidth / GetVisualOffset(limitFrequency, useHorizontalLogScale);
+			var pixelStep = actualWidth / GetVisualOffset(limitFrequency, useHorizontalLogScale);
 
-			polyline.Points.Add(new Point(0d, canvas.ActualHeight));
+			_yScale = actualHeight * 0.8d / MaxMagnitude;
+
+			polyline.Points.Add(new Point(0d, actualHeight));
 			foreach (var pair in data)
 			{
 				var sampleFrequency = pair.Key;
@@ -136,6 +159,10 @@ namespace Solfeggio.Presenters
 				var sampleValue = pair.Value;
 				var x = GetVisualOffset(sampleFrequency, useHorizontalLogScale) * pixelStep;
 				var magnitude = ScaleMagnitude(sampleValue, useVerticalLogScale);
+				var y = magnitude * _yScale;
+				y = actualHeight - y;
+				polyline.Points.Add(new Point(x, y));
+
 				if (autoSensitive)
 				{
 					if (magnitude > 0.7d * MaxMagnitude)
@@ -146,21 +173,17 @@ namespace Solfeggio.Presenters
 					if (magnitude > MaxMagnitude)
 					{
 						MaxMagnitude = magnitude * 1.2d;
+						Timestamp = DateTime.Now;
 					}
-					else if (Timestamp.AddSeconds(Delay) < DateTime.Now)
+					else if (Timestamp.AddSeconds(DelayInSeconds) < DateTime.Now)
 					{
 						Timestamp = DateTime.Now;
 						MaxMagnitude *= 0.8d;
 					}
 				}
-
-				_yScale = canvas.ActualHeight * 0.8d / MaxMagnitude;
-				var y = magnitude * _yScale;
-				y = canvas.ActualHeight - y;
-				polyline.Points.Add(new Point(x, y));
 			}
 
-			polyline.Points.Add(new Point(canvas.ActualWidth, canvas.ActualHeight));
+			polyline.Points.Add(new Point(actualWidth, actualHeight));
 		}
 
 		public void DrawTops(Panel canvas, List<PianoKey> keys)
@@ -238,11 +261,12 @@ namespace Solfeggio.Presenters
 			var pixelStep = canvas.ActualWidth / GetVisualOffset(limitFrequency, useLogScale);
 
 			var keys = new List<PianoKey>();
-			for (var j = 1; j < 13; j++)
+			var maxKeyNumber = HalftonesCount + 1;
+			for (var j = 1; j < maxKeyNumber; j++)
 			{
-				keys.AddRange(BaseOktaveFrequencySet.Select((t, i) =>
+				keys.AddRange(_baseOktaveFrequencySet.Select((t, i) =>
 					CreatePianoKey(
-						BaseOktaveFrequencySet,
+						_baseOktaveFrequencySet,
 						IsToneSet,
 						BaseOktaveColorSet,
 						i, j, Notes[i], useLogScale)));

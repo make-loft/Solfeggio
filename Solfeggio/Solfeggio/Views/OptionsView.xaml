@@ -92,7 +92,7 @@
 
 		<Grid
 			m:Rack.Columns="* ^"
-			m:Rack.Rows="^ ^ ^ ^ ^ ^ ^"
+			m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
 			BindingContext="{m:Store Key=p:MusicalPresenter}">
 
 			<Label
@@ -145,6 +145,30 @@
 			<Switch
 				m:Rack.Cell="R6 C1"
 				IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
+
+			<Label
+				m:Rack.Cell="R7 C0"
+				Text="{m:Localizing Key=AutoSensetive}" />
+			<Switch
+				m:Rack.Cell="R7 C1"
+				IsToggled="{m:Smart Key=AutoSensetive, DefaultValue=True}" />
+
+			<Label
+				m:Rack.Cell="R8 C0"
+				Text="{m:Localizing Key=PitchStandard}" />
+			<Picker
+				m:Rack.Cell="R8 C1"
+				ItemsSource="{Binding PitchStandards}"
+				SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
+
+			<Label
+				m:Rack.Cell="R9 C0"
+				Text="{m:Localizing Key=PitchStandard}" />
+			<Slider
+				m:Rack.Cell="R9 C1"
+				Maximum="512"
+				Minimum="64"
+				Value="{Binding MaxMagnitude, Mode=TwoWay}" />
 
 			<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
 

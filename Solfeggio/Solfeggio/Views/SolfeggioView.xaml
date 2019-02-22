@@ -6,6 +6,7 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
 	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
 	<Grid
@@ -42,14 +43,26 @@
 
 		<Grid
 			m:Rack.Cell="R0 C0 CS2"
+			m:Rack.Rows="^ ^"
 			IsVisible="{Binding ShowSettings}">
-			<ScrollView Orientation="Both">
-				<Grid
-					m:Rack.Rows="^ ^">
-					<Grid BackgroundColor="DimGray" Opacity=".5" />
-					<views:OptionsView />
-				</Grid>
-			</ScrollView>
+
+			<Grid
+				BackgroundColor="DimGray"
+				Opacity=".5" />
+			<controls:Pivot>
+
+					<controls:PivotItem
+						Header="Analize">
+						<views:OptionsView />
+					</controls:PivotItem>
+
+					<controls:PivotItem
+						Header="Advanced">
+						<Label
+							Text="Hello" />
+					</controls:PivotItem>
+
+			</controls:Pivot>
 		</Grid>
 
 	</Grid>

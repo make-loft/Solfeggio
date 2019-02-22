@@ -49,26 +49,26 @@
 					<Setter.Value>
 						<ControlTemplate
 							TargetType="{x:Type xamarin:Switch}">
-							<Border
-								Width="{TemplateBinding Width}"
-								Height="{TemplateBinding Height}"
-								Background="{TemplateBinding Background}"
-								CornerRadius="8">
-								<Grid>
-									<Ellipse
-										Width="{TemplateBinding Height}"
-										Height="{TemplateBinding Height}"
-										HorizontalAlignment="Right"
-										Fill="White"
-										Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToVisibleConverter}}" />
-									<Ellipse
-										Width="{TemplateBinding Height}"
-										Height="{TemplateBinding Height}"
-										HorizontalAlignment="Left"
-										Fill="WhiteSmoke"
-										Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToCollapsedConverter}}"/>
-								</Grid>
-							</Border>
+							<Grid>
+								<Border
+									Width="{TemplateBinding Width}"
+									Height="8"
+									Background="{TemplateBinding Background}"
+									CornerRadius="4">
+								</Border>
+								<Ellipse
+									Width="{TemplateBinding Height}"
+									Height="{TemplateBinding Height}"
+									HorizontalAlignment="Right"
+									Fill="White"
+									Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToVisibleConverter}}" />
+								<Ellipse
+									Width="{TemplateBinding Height}"
+									Height="{TemplateBinding Height}"
+									HorizontalAlignment="Left"
+									Fill="WhiteSmoke"
+									Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToCollapsedConverter}}" />
+							</Grid>
 						</ControlTemplate>
 					</Setter.Value>
 				</Setter>

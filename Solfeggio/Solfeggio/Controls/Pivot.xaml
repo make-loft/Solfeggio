@@ -1,0 +1,39 @@
+﻿<ContentView
+	x:Class="Solfeggio.Controls.Pivot"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	m:Rack.Columns="* 4*">
+
+	<ContentView.Content>
+
+		<Grid
+			m:Rack.Columns="* 4*">
+
+			<ListView
+				Rotation="0"
+				m:Rack.Cell="C0">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<Label
+								Rotation="0"
+								Text="{Binding Header}" />
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+
+			<ScrollView
+				m:Rack.Cell="C1"
+				Orientation="Both">
+				<StackLayout>
+					<ContentPresenter />
+				</StackLayout>
+			</ScrollView>
+			
+		</Grid>
+
+	</ContentView.Content>
+
+</ContentView>
