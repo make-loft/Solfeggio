@@ -18,15 +18,6 @@
 		m:Rack.Columns="Auto *"
 		m:Rack.Rows="2* *">
 		<Grid.Resources>
-			<Style
-				TargetType="TextBlock">
-				<Setter
-					Property="HorizontalAlignment"
-					Value="Center" />
-				<Setter
-					Property="Margin"
-					Value="5 0" />
-			</Style>
 			<c:SwitchConverter
 				x:Key="MarginConverter">
 				<m:Case
@@ -100,9 +91,8 @@
 			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 				<Grid>
 					<Border
-						Background="#FF616187" Opacity=".5" />
-					<views:OptionsView
-						Margin="24" />
+						Background="DimGray" Opacity=".5" />
+					<views:OptionsView />
 				</Grid>
 			</ScrollViewer>
 		</Grid>

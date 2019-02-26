@@ -39,7 +39,7 @@ namespace Solfeggio.ViewModels
 		[DataMember]
 		public int FramePow
 		{
-			get => Get(() => FramePow, 11);
+			get => Get(() => FramePow, 10);
 			set => Set(() => FramePow, value);
 		}
 
@@ -65,7 +65,7 @@ namespace Solfeggio.ViewModels
 
 		public double SampleRate
 		{
-			get => ActiveDevice.SampleRate;
+			get => ActiveDevice?.SampleRate ?? default;
 			set
 			{
 				if (value <= 0) return;
@@ -78,8 +78,8 @@ namespace Solfeggio.ViewModels
 
 		public SmartSet<double> SampleRates { get; private set; }
 
-		public double MinSampleRate => ActiveDevice.SampleRates.Min();
-		public double MaxSampleRate => ActiveDevice.SampleRates.Max();
+		public double MinSampleRate => ActiveDevice?.SampleRates.Min() ?? default;
+		public double MaxSampleRate => ActiveDevice?.SampleRates.Max() ?? default;
 
 		public bool UseAliasing { get; set; } = true;
 		public double ShiftsPerFrame { get; set; } = 16;
@@ -132,6 +132,7 @@ namespace Solfeggio.ViewModels
 
 			this[() => ActiveDevice].PropertyChanging += (sender, args) =>
 			{
+				if (ActiveDevice.IsNot()) return;
 				ActiveDevice.Stop();
 				ActiveDevice.DataReady -= OnActiveDeviceOnDataReady;
 			};

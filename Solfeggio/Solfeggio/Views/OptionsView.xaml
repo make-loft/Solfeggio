@@ -18,8 +18,8 @@
 		<controls:PivotItem
 			Header="{m:Localizing Key=Levels}">
 			<Grid
-				m:Rack.Rows="^ ^ ^ ^ ^"
-				m:Rack.Columns="* 2* *"
+				m:Rack.Rows="^ ^ ^ ^ ^ ^"
+				m:Rack.Columns="^ * ^"
 				BindingContext="{m:Store Key=prsenters:MusicalPresenter}">
 
 				<Label
@@ -40,11 +40,10 @@
 				
 				<Label
 					m:Rack.Cell="R2 C1"
-					Text="{m:Localizing Key=AutoSensetive}" />
+					Text="{m:Localizing Key=AutoSensitive}" />
 				<Switch
 					m:Rack.Cell="R2 C2"
-					IsToggled="{m:Smart Key=AutoSensetive, DefaultValue=True}" />
-
+					IsToggled="{m:Smart Key=AutoSensitive, DefaultValue=True}" />
 
 				<Label
 					m:Rack.Cell="R3 C1"
@@ -59,8 +58,7 @@
 					m:Rack.Cell="R4 C1"
 					Maximum="13"
 					Minimum="9"				
-					BindingContext="{m:Store Key=viewModels:SpectralViewModel}"
-					Value="{Binding FramePow, Mode=TwoWay}" />
+					Value="{m:StoreBinding Path=FramePow, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
 				<StackLayout
 					m:Rack.Cell="R4 C2">
 					<Label
@@ -68,7 +66,7 @@
 				</StackLayout>
 
 				<Grid
-					m:Rack.Cell="R5 C1 CS0"
+					m:Rack.Cell="R5 C1 CS1"
 					m:Rack.Rows="^ ^ ^ ^"
 					m:Rack.Columns="^ ^ ^ ^ ^"
 					BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
@@ -110,67 +108,67 @@
 		<controls:PivotItem
 			Header="{m:Localizing Key=Visuals}">
 			<Grid
-				m:Rack.Columns="* ^"
+				m:Rack.Columns="^ ^ *"
 				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
 				BindingContext="{m:Store Key=p:MusicalPresenter}">
 
 				<Label
-					m:Rack.Cell="R2 C0"
+					m:Rack.Cell="R0 C0"
 					Text="{m:Localizing Key=PitchStandard}" />
 				<Picker
-					m:Rack.Cell="R2 C1"
+					m:Rack.Cell="R0 C1"
 					ItemsSource="{Binding PitchStandards}"
 					SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
 				<Label
-					m:Rack.Cell="R0 C0"
+					m:Rack.Cell="R1 C0"
 					Text="{m:Localizing Key=ShowHz}" />
 				<Switch
-					m:Rack.Cell="R0 C1"
+					m:Rack.Cell="R1 C1"
 					IsToggled="{Binding ShowHz, Mode=TwoWay}" />
 
 				<Label
-					m:Rack.Cell="R1 C0"
+					m:Rack.Cell="R2 C0"
 					Text="{m:Localizing Key=ShowNotes}" />
 				<Switch
-					m:Rack.Cell="R1 C1"
+					m:Rack.Cell="R2 C1"
 					IsToggled="{Binding ShowNotes, Mode=TwoWay}" />
 
 				<Label
-					m:Rack.Cell="R2 C0"
+					m:Rack.Cell="R3 C0"
 					Text="{m:Localizing Key=UseVerticalLogScale}" />
 				<Switch
-					m:Rack.Cell="R2 C1"
+					m:Rack.Cell="R3 C1"
 					IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}" />
 
 				<Label
-					m:Rack.Cell="R3 C0"
+					m:Rack.Cell="R4 C0"
 					Text="{m:Localizing Key=UseHorizontalLogScale}" />
 				<Switch
-					m:Rack.Cell="R3 C1"
+					m:Rack.Cell="R4 C1"
 					IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}" />
 
 				<Label
-					m:Rack.Cell="R4 C0"
+					m:Rack.Cell="R5 C0"
 					Text="{m:Localizing Key=WaveIn}"
 					TextColor="Crimson" />
 				<Switch
-					m:Rack.Cell="R4 C1"
+					m:Rack.Cell="R5 C1"
 					IsToggled="{m:Smart Key=ShowWaveIn, DefaultValue=True}" />
 
 				<Label
-					m:Rack.Cell="R5 C0"
+					m:Rack.Cell="R6 C0"
 					Text="{m:Localizing Key=WaveOut}"
 					TextColor="YellowGreen" />
 				<Switch
-					m:Rack.Cell="R5 C1"
+					m:Rack.Cell="R6 C1"
 					IsToggled="{m:Smart Key=ShowWaveOut, DefaultValue=False}" />
 
 				<Label
-					m:Rack.Cell="R6 C0"
+					m:Rack.Cell="R7 C0"
 					Text="{m:Localizing Key=UseAliasing}" />
 				<Switch
-					m:Rack.Cell="R6 C1"
+					m:Rack.Cell="R7 C1"
 					IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
 
 
@@ -219,6 +217,14 @@
 					Text="{m:Localizing Key=PowOf2}" />
 				<Picker
 					m:Rack.Cell="R3 C1"
+					ItemsSource="{StaticResource AllowedPowsOf2}"
+					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+				
+				<Label
+					m:Rack.Cell="R4 C0"
+					Text="{m:Localizing Key=ShiftSize}" />
+				<Picker
+					m:Rack.Cell="R4 C1"
 					ItemsSource="{StaticResource AllowedPowsOf2}"
 					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 

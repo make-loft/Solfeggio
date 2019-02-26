@@ -28,7 +28,7 @@ namespace Solfeggio
             SampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
             var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
             var milliseconds = 1000d * SampleSize / actualSampleRate;
-            //milliseconds = Math.Ceiling(milliseconds / 100) * 100;
+            milliseconds = Math.Ceiling(milliseconds / 100) * 100;
             _wi.BufferMilliseconds = (int) milliseconds;
             _wi.DataAvailable += OnWiOnDataAvailable;
 
@@ -39,12 +39,11 @@ namespace Solfeggio
 
         private void OnWiOnDataAvailable(object sender, WaveInEventArgs args)
         {
-            var sampleSizeInBytes = args.Buffer.Length;
-            var sampleSize = sampleSizeInBytes / 2;
+            var sampleSize = args.Bins.Length;
             var frame = new Complex[sampleSize];
             for (var i = 0; i < sampleSize; i++)
             {
-                frame[i] = args.Buffer[i];
+                frame[i] = args.Bins[i];
             }
 
             DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});

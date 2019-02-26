@@ -15,15 +15,14 @@ namespace Solfeggio.Api
     
     public class WaveInEventArgs : EventArgs
     {
-        public WaveInEventArgs(byte[] buffer, int bytes)
+        public WaveInEventArgs(short[] buffer, int binsCount)
         {
-            Buffer = buffer;
-            BytesRecorded = bytes;
+            Bins = buffer;
+			BinsCount = binsCount;
         }
 
-        public byte[] Buffer { get; }
-
-        public int BytesRecorded { get; }
+        public short[] Bins { get; }
+        public int BinsCount { get; }
     }
     
     public class StoppedEventArgs : EventArgs

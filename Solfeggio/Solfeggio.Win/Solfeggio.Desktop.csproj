@@ -80,6 +80,7 @@
     <Compile Include="Api\WaveInBuffer.cs" />
     <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveOutCapabilities.cs" />
+    <Compile Include="Controls\Pivot.cs" />
     <Compile Include="Converters\PowConverter.cs" />
     <Compile Include="Dictionaries\Templates.cs" />
     <Compile Include="Languages\English.Designer.cs">

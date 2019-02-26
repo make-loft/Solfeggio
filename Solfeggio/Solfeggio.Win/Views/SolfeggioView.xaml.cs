@@ -21,15 +21,24 @@ namespace Solfeggio.Views
 				var spectrum = spectralViewModel.CurrentSpectrum;
 				if (spectrum.IsNot()) return;
 
+				MagnitudePolyline.Points.Clear();
+				WaveOutPolyline.Points.Clear();
+				WaveInPolyline.Points.Clear();
+
 				PianoCanvas.Children.Clear();
 				SpectrumCanvas.Children.Clear();
 
-				var max = spectrum.Values.Max() * 0.7;
+				SpectrumCanvas.Children.Add(MagnitudePolyline);
+				SpectrumCanvas.Children.Add(WaveInPolyline);
+				SpectrumCanvas.Children.Add(WaveOutPolyline);
 
-				presenter.DrawSpectrum(SpectrumCanvas, spectrum, MagnitudePolyline);
-				var waveCorrectionMargin = presenter.UseHorizontalLogScale ? SpectrumCanvas.Margin : new Thickness();
-				presenter.DrawWave(SpectrumCanvas, spectralViewModel.WaveInData, WaveInPolyline, waveCorrectionMargin);
-				presenter.DrawWave(SpectrumCanvas, spectralViewModel.WaveOutData, WaveOutPolyline, waveCorrectionMargin);
+				//var max = spectrum.Values.Max() * 0.7;
+
+				var width = SpectrumCanvas.ActualWidth;
+				var height = SpectrumCanvas.ActualHeight;
+				presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
+				presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);
+				presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
 				var tops = presenter.DrawPiano(PianoCanvas, spectrum);
 				presenter.DrawTops(SpectrumCanvas, tops);
 			};

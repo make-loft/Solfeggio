@@ -21,6 +21,17 @@ namespace Xamarin.Forms
 
 	public class StackLayout : StackPanel
 	{
+		public static readonly DependencyProperty BindingContextProperty =
+			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(StackLayout), new PropertyMetadata((o, e)=>
+			{
+				if (o is Control control) control.SetValue(DataContextProperty, e.NewValue);
+			}));
+
+		public object BindingContext
+		{
+			get => GetValue(BindingContextProperty);
+			set => SetValue(BindingContextProperty, value);
+		}
 	}
 
 	public class Label : TextBlock

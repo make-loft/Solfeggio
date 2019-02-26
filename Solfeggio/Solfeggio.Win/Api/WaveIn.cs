@@ -330,17 +330,14 @@ namespace Solfeggio.Api
                         recording = false;
                     }
                 }
-
             }
         }
 
-        private void RaiseDataAvailable(WaveInBuffer buffer)
-        {
-            DataAvailable?.Invoke(this, new WaveInEventArgs(buffer.Data, buffer.BytesRecorded));
-        }
+		private void RaiseDataAvailable(WaveInBuffer buffer) =>
+			DataAvailable?.Invoke(this, new WaveInEventArgs(buffer.Data, buffer.BinsCount));
 
 
-        private void OpenWaveInDevice()
+		private void OpenWaveInDevice()
         {
             CloseWaveInDevice();
             WaveInOpen(out waveInHandle, DeviceNumber, WaveFormat, callback);

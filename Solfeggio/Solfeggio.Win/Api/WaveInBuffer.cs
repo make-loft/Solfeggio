@@ -3,32 +3,30 @@ using System.Runtime.InteropServices;
 
 namespace Solfeggio.Api
 {
-    class WaveInBuffer : IDisposable
-    {
-        private readonly WaveHeader header;
-        private readonly Int32 bufferSize; // allocated bytes, may not be the same as bytes read
-        private readonly byte[] buffer;
-        private GCHandle hBuffer;
-        private IntPtr waveInHandle;
-        private GCHandle hHeader; // we need to pin the header structure
-        private GCHandle hThis; // for the user callback
+	class WaveInBuffer : WaveInBuffer<short>
+	{
+		public WaveInBuffer(IntPtr waveInHandle, int binsCount) : base(waveInHandle, binsCount) { }
+	}
 
-        /// <summary>
-        /// creates a new wavebuffer
-        /// </summary>
-        /// <param name="waveInHandle">WaveIn device to write to</param>
-        /// <param name="bufferSize">Buffer size in bytes</param>
-        public WaveInBuffer(IntPtr waveInHandle, Int32 bufferSize)
+	class WaveInBuffer<T> : IDisposable where T : struct
+    {
+		private static readonly int SizeOfBin = Marshal.SizeOf(typeof(T));
+		private readonly WaveHeader header;
+		private readonly GCHandle hBuffer;
+        private readonly GCHandle hHeader; // we need to pin the header structure
+        private readonly GCHandle hThis; // for the user callback
+		private IntPtr waveInHandle;
+
+		public WaveInBuffer(IntPtr waveInHandle, int binsCount)
         {
-            this.bufferSize = bufferSize;
-            this.buffer = new byte[bufferSize];
-            this.hBuffer = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            this.Data = new T[binsCount];
+            this.hBuffer = GCHandle.Alloc(Data, GCHandleType.Pinned);
             this.waveInHandle = waveInHandle;
 
             header = new WaveHeader();
             hHeader = GCHandle.Alloc(header, GCHandleType.Pinned);
             header.dataBuffer = hBuffer.AddrOfPinnedObject();
-            header.bufferLength = bufferSize;
+            header.bufferLength = SizeOfBin * binsCount;
             header.loops = 1;
             hThis = GCHandle.Alloc(this);
             header.userData = (IntPtr)hThis;
@@ -37,9 +35,6 @@ namespace Solfeggio.Api
             //MmException.Try(WaveInterop.waveInAddBuffer(waveInHandle, header, Marshal.SizeOf(header)), "waveInAddBuffer");
         }
 
-        /// <summary>
-        /// Place this buffer back to record more audio
-        /// </summary>
         public void Reuse()
         {
             // TEST: we might not actually need to bother unpreparing and repreparing
@@ -51,98 +46,32 @@ namespace Solfeggio.Api
 
         #region Dispose Pattern
 
-        /// <summary>
-        /// Finalizer for this wave buffer
-        /// </summary>
         ~WaveInBuffer()
         {
-            Dispose(false);
+            Dispose();
             System.Diagnostics.Debug.Assert(true, "WaveInBuffer was not disposed");
         }
 
-        /// <summary>
-        /// Releases resources held by this WaveBuffer
-        /// </summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            Dispose(true);
-        }
 
-        /// <summary>
-        /// Releases resources held by this WaveBuffer
-        /// </summary>
-        protected void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // free managed resources
-            }
-            // free unmanaged resources
-            if (waveInHandle != IntPtr.Zero)
-            {
-                WaveInterop.waveInUnprepareHeader(waveInHandle, header, Marshal.SizeOf(header));
-                waveInHandle = IntPtr.Zero;
-            }
-            if (hHeader.IsAllocated)
-                hHeader.Free();
-            if (hBuffer.IsAllocated)
-                hBuffer.Free();
-            if (hThis.IsAllocated)
-                hThis.Free();
+			if (waveInHandle != IntPtr.Zero)
+			{
+				WaveInterop.waveInUnprepareHeader(waveInHandle, header, Marshal.SizeOf(header));
+				waveInHandle = IntPtr.Zero;
+			}
 
-        }
+			if (hHeader.IsAllocated) hHeader.Free();
+			if (hBuffer.IsAllocated) hBuffer.Free();
+			if (hThis.IsAllocated) hThis.Free();
+		}
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Provides access to the actual record buffer (for reading only)
-        /// </summary>
-        public byte[] Data => buffer;
-
-        /// <summary>
-        /// Indicates whether the Done flag is set on this buffer
-        /// </summary>
-        public bool Done
-        {
-            get
-            {
-                return (header.flags & WaveHeaderFlags.Done) == WaveHeaderFlags.Done;
-            }
-        }
-
-
-        /// <summary>
-        /// Indicates whether the InQueue flag is set on this buffer
-        /// </summary>
-        public bool InQueue
-        {
-            get
-            {
-                return (header.flags & WaveHeaderFlags.InQueue) == WaveHeaderFlags.InQueue;
-            }
-        }
-
-        /// <summary>
-        /// Number of bytes recorded
-        /// </summary>
-        public int BytesRecorded
-        {
-            get
-            {
-                return header.bytesRecorded;
-            }
-        }
-
-        /// <summary>
-        /// The buffer size in bytes
-        /// </summary>
-        public Int32 BufferSize
-        {
-            get
-            {
-                return bufferSize;
-            }
-        }
-    }
+		public T[] Data { get; }
+		public bool Done => (header.flags & WaveHeaderFlags.Done) == WaveHeaderFlags.Done;
+		public bool InQueue => (header.flags & WaveHeaderFlags.InQueue) == WaveHeaderFlags.InQueue;
+		public int BinsCount => header.bytesRecorded / SizeOfBin;
+	}
 }

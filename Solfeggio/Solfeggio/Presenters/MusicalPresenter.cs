@@ -101,7 +101,7 @@ namespace Solfeggio.Presenters
 
 		private double _yScale;
 
-		[DataMember] public bool AutoSensetive { get; set; } = true;
+		[DataMember] public bool AutoSensitive { get; set; } = true;
 		[DataMember] public double LimitFrequency { get; set; } = 9000d;
 		[DataMember] public double TopFrequency { get; set; } = 22096d;
 		[DataMember] public bool UseHorizontalLogScale { get; set; } = true;
@@ -114,44 +114,33 @@ namespace Solfeggio.Presenters
 		private static double GetVisualOffset(double xOffset, bool useHorizontalLogScale) =>
 			xOffset > 0 && useHorizontalLogScale ? Math.Log(xOffset, 2) : xOffset;
 
-		public void DrawWave(Panel canvas, Dictionary<double, double> data, Polyline polyline, Thickness margin)
+		public void DrawWave(ICollection<Point> points, Dictionary<double, double> data, double width, double height)
 		{
-			if (canvas is null || polyline is null) return;
-			canvas.Children.Add(polyline);
-			polyline.Points.Clear();
-			var pixelStep = (canvas.ActualWidth + margin.Left + margin.Right) / data.Count;
-
+			var pixelStep = width / data.Count;
 			foreach (var pair in data)
 			{
 				var sampleFrequency = pair.Key;
 				var sampleValue = pair.Value;
 				var x = sampleFrequency * pixelStep;
-				var y = canvas.ActualHeight / 2d + sampleValue * canvas.ActualHeight / 100000;
-				polyline.Points.Add(new Point(x - margin.Left, y));
+				var y = height * (0.5d + sampleValue / 500000);
+				points.Add(new Point(x, y));
 			}
 		}
 
 		private static double ScaleMagnitude(double value, bool useLogScale) =>
 			useLogScale ? 100 * Math.Log(value) : value;
 		
-		public void DrawSpectrum(Panel canvas, Dictionary<double, double> data, Polyline polyline)
+		public void DrawSpectrum(ICollection<Point> points, Dictionary<double, double> data, double width, double height)
 		{
-			if (canvas is null || polyline is null) return;
 			var useHorizontalLogScale = UseHorizontalLogScale;
 			var useVerticalLogScale = UseVerticalLogScale;
-			var autoSensitive = AutoSensetive;
+			var autoSensitive = AutoSensitive;
 			var limitFrequency = LimitFrequency;
-			var actualWidth = canvas.ActualWidth;
-			var actualHeight = canvas.ActualHeight;
+			var pixelStep = width / GetVisualOffset(limitFrequency, useHorizontalLogScale);
 
+			_yScale = height * 0.8d / MaxMagnitude;
 
-			if (canvas.Children.Contains(polyline).Not()) canvas.Children.Add(polyline);
-			polyline.Points.Clear();
-			var pixelStep = actualWidth / GetVisualOffset(limitFrequency, useHorizontalLogScale);
-
-			_yScale = actualHeight * 0.8d / MaxMagnitude;
-
-			polyline.Points.Add(new Point(0d, actualHeight));
+			points.Add(new Point(0d, height));
 			foreach (var pair in data)
 			{
 				var sampleFrequency = pair.Key;
@@ -160,8 +149,8 @@ namespace Solfeggio.Presenters
 				var x = GetVisualOffset(sampleFrequency, useHorizontalLogScale) * pixelStep;
 				var magnitude = ScaleMagnitude(sampleValue, useVerticalLogScale);
 				var y = magnitude * _yScale;
-				y = actualHeight - y;
-				polyline.Points.Add(new Point(x, y));
+				y = height - y;
+				points.Add(new Point(x, y));
 
 				if (autoSensitive)
 				{
@@ -183,7 +172,7 @@ namespace Solfeggio.Presenters
 				}
 			}
 
-			polyline.Points.Add(new Point(actualWidth, actualHeight));
+			points.Add(new Point(width, height));
 		}
 
 		public void DrawTops(Panel canvas, List<PianoKey> keys)
