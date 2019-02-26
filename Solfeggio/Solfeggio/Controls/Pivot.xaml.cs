@@ -7,7 +7,14 @@ namespace Solfeggio.Controls
 {
 	public class PivotItem : ContentView
 	{
-		public string Header { get; set; }
+		public static readonly BindableProperty HeaderProperty =
+			BindableProperty.Create(nameof(Header), typeof(string), typeof(PivotItem));
+
+		public string Header
+		{
+			get => GetValue(HeaderProperty).To<string>();
+			set => SetValue(HeaderProperty, value);
+		}
 	}
 
 	[ContentProperty("Items")]
@@ -17,10 +24,20 @@ namespace Solfeggio.Controls
 		public Pivot()
 		{
 			InitializeComponent();
-			Content.To<Grid>().Children[0].To(out ListView listView).ItemsSource = Items;
-			Content.To<Grid>().Children[1].To<ScrollView>().Content.To<StackLayout>().Children[0].To(out ContentPresenter presenter);
-			listView.ItemSelected += (o, e) => presenter.Content = listView.SelectedItem.To<PivotItem>().Content;
+			Content.To(out Grid grid).With
+			(
+				grid.Children[0].To(out ListView listView).ItemsSource = Items,
+				grid.Children[1].To(out ScrollView scrollView).Content.To(out ContentPresenter presenter)
+			);
+
 			Items.CollectionChanged += (o, e) => listView.SelectedItem = listView.SelectedItem ?? Items.FirstOrDefault();
+			listView.ItemSelected += async (o, e) => await Invoke.Delay(32, () => listView.SelectedItem.To(out PivotItem item).With
+			(
+				scrollView.Orientation = ScrollOrientation.Both,
+				presenter.BindingContext = item.BindingContext,
+				presenter.Content = item.Content,
+				scrollView.Orientation = ScrollOrientation.Vertical
+			));
 		}
 
 		public SmartSet<PivotItem> Items { get; } = new SmartSet<PivotItem>();

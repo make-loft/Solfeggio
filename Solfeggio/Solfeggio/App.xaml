@@ -11,6 +11,16 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 
+		<Style
+			TargetType="Grid">
+			<Setter
+				Property="RowSpacing"
+				Value="0" />
+			<Setter
+				Property="ColumnSpacing"
+				Value="0" />
+		</Style>
+
 		<Style TargetType="Picker">
 			<Setter
 				Property="FontSize"

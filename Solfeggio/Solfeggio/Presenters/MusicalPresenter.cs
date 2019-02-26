@@ -69,7 +69,7 @@ namespace Solfeggio.Presenters
 		private static readonly Brush[] BaseOktaveColorSet =
 			IsToneSet.Select(t => t ? Brushes.White : Brushes.Black).Cast<Brush>().ToArray();
 
-		public static double[] PitchStandards { get; } = { 415d, 432d, 435d, 415d, 440d, 444d };
+		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 432d, 435d, 415d, 440d, 444d }.ToSet();
 		public static double DefaultPitchStandard = 440d;
 
 		[DataMember]

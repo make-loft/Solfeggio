@@ -138,6 +138,7 @@ namespace Solfeggio.ViewModels
 
 			this[() => ActiveDevice].PropertyChanged += (sender, args) =>
 			{
+				if (ActiveDevice.IsNot()) return;
 				SampleRates = ActiveDevice.SampleRates.ToSet();
 				ActiveDevice.DataReady += OnActiveDeviceOnDataReady;
 				ActiveDevice.StartWith();

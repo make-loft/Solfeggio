@@ -88,11 +88,11 @@ namespace Solfeggio.Views
             });
         }
 
-        private async void WaitAndExecute(int milisec, Action actionToExecute)
+        private async void WaitAndExecute(int milliseconds, Action actionToExecute)
         {
             while (true)
             {
-                await Task.Delay(milisec);
+                await Task.Delay(milliseconds);
                 actionToExecute();
             }
         }

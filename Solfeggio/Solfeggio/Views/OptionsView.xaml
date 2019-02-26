@@ -3,6 +3,9 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:prsenters="clr-namespace:Solfeggio.Presenters"
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:converters="clr-namespace:Solfeggio.Converters">
 
 	<ContentView.Resources>
@@ -10,169 +13,218 @@
 			x:Key="DelegateToNameConverter" />
 	</ContentView.Resources>
 
-	<StackLayout
-		Orientation="Horizontal">
+	<controls:Pivot>
 
-		<Grid
-			m:Rack.Cell="R3 C0 CS5"
-			m:Rack.Rows="^ ^ ^ ^ ^"
-			m:Rack.Columns="^ ^">
+		<controls:PivotItem
+			Header="{m:Localizing Key=Levels}">
+			<Grid
+				m:Rack.Rows="^ ^ ^ ^ ^"
+				m:Rack.Columns="* 2* *"
+				BindingContext="{m:Store Key=prsenters:MusicalPresenter}">
 
-			<Label
-				m:Rack.Cell="R0 C0"
-				Text="{m:Localizing Key=Device}" />
-			<Picker
-				m:Rack.Cell="R0 C1"
-				ItemsSource="{Binding Devices}"
-				SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R0 C1"
+					Text="{m:Localizing Key=Sensitive}" />
 
-			<Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=SampleRate}" />
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=Whisper}" />
+				<Slider
+					m:Rack.Cell="R1 C1"
+					Maximum="512"
+					Minimum="64"
+					Value="{Binding MaxMagnitude, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R1 C2"
+					Text="{m:Localizing Key=Cry}" />
+				
+				<Label
+					m:Rack.Cell="R2 C1"
+					Text="{m:Localizing Key=AutoSensetive}" />
+				<Switch
+					m:Rack.Cell="R2 C2"
+					IsToggled="{m:Smart Key=AutoSensetive, DefaultValue=True}" />
 
-			<Picker
-				m:Rack.Cell="R1 C1"
-				ItemsSource="{Binding ActiveDevice.SampleRates}"
-				SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R2 C0"
-				Text="{m:Localizing Key=Window}" />
-			<Picker
-				m:Rack.Cell="R2 C1"
-				ItemsSource="{Binding Windows}"
-				SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+				<Label
+					m:Rack.Cell="R3 C1"
+					Text="{m:Localizing Key=TimeFrame}" />
 
-			<Label
-				m:Rack.Cell="R3 C0"
-				Text="{m:Localizing Key=PowOf2}" />
-			<Picker
-				m:Rack.Cell="R3 C1"
-				ItemsSource="{StaticResource AllowedPowsOf2}"
-				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+				<StackLayout
+					m:Rack.Cell="R4 C0">
+					<Label
+						Text="{m:Localizing Key=Short-Speed}" />
+				</StackLayout>
+				<Slider
+					m:Rack.Cell="R4 C1"
+					Maximum="13"
+					Minimum="9"				
+					BindingContext="{m:Store Key=viewModels:SpectralViewModel}"
+					Value="{Binding FramePow, Mode=TwoWay}" />
+				<StackLayout
+					m:Rack.Cell="R4 C2">
+					<Label
+						Text="{m:Localizing Key=Long-Accurate}" />
+				</StackLayout>
 
-		</Grid>
+				<Grid
+					m:Rack.Cell="R5 C1 CS0"
+					m:Rack.Rows="^ ^ ^ ^"
+					m:Rack.Columns="^ ^ ^ ^ ^"
+					BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
-		<Grid
-			m:Rack.Cell="R4 C0 CS2"
-			m:Rack.Rows="^ ^ ^ ^"
-			m:Rack.Columns="^ ^ ^ ^ ^">
+					<Label
+						m:Rack.Cell="R0 C0"
+						Text="{m:Localizing Key=Duration}" />
 
-			<Label
-				m:Rack.Cell="R0 C0"
-				Text="{m:Localizing Key=Duration}" />
+					<Label
+						m:Rack.Cell="R1 C0"
+						Text="{m:Localizing Key=Sample}" />
+					<Label
+						m:Rack.Cell="R2 C0"
+						Text="{m:Localizing Key=Frame}" />
+					<Label
+						m:Rack.Cell="R0 C2"
+						Text="bins" />
+					<Label
+						m:Rack.Cell="R0 C1"
+						Text="ms" />
 
-			<Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=Sample}" />
-			<Label
-				m:Rack.Cell="R2 C0"
-				Text="{m:Localizing Key=Frame}" />
-			<Label
-				m:Rack.Cell="R0 C2"
-				Text="bins" />
-			<Label
-				m:Rack.Cell="R0 C1"
-				Text="ms" />
+					<Label
+						m:Rack.Cell="R1 C2"
+						Text="{Binding ActiveDevice.SampleSize}" />
+					<Label
+						m:Rack.Cell="R2 C2"
+						Text="{Binding FrameSize}" />
+					<Label
+						m:Rack.Cell="R1 C1"
+						Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}" />
+					<Label
+						m:Rack.Cell="R2 C1"
+						Text="{Binding FrameDuration.TotalMilliseconds}" />
+				</Grid>
 
-			<Label
-				m:Rack.Cell="R1 C2"
-				Text="{Binding ActiveDevice.SampleSize}" />
-			<Label
-				m:Rack.Cell="R2 C2"
-				Text="{Binding FrameSize}" />
-			<Label
-				m:Rack.Cell="R1 C1"
-				Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}" />
-			<Label
-				m:Rack.Cell="R2 C1"
-				Text="{Binding FrameDuration.TotalMilliseconds}" />
-		</Grid>
+			</Grid>
+		</controls:PivotItem>
 
-		<Grid
-			m:Rack.Columns="* ^"
-			m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
-			BindingContext="{m:Store Key=p:MusicalPresenter}">
+		<controls:PivotItem
+			Header="{m:Localizing Key=Visuals}">
+			<Grid
+				m:Rack.Columns="* ^"
+				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
+				BindingContext="{m:Store Key=p:MusicalPresenter}">
 
-			<Label
-				m:Rack.Cell="R0 C0"
-				Text="{m:Localizing Key=ShowHz}" />
-			<Switch
-				m:Rack.Cell="R0 C1"
-				IsToggled="{Binding ShowHz, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R2 C0"
+					Text="{m:Localizing Key=PitchStandard}" />
+				<Picker
+					m:Rack.Cell="R2 C1"
+					ItemsSource="{Binding PitchStandards}"
+					SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=ShowNotes}" />
-			<Switch
-				m:Rack.Cell="R1 C1"
-				IsToggled="{Binding ShowNotes, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R0 C0"
+					Text="{m:Localizing Key=ShowHz}" />
+				<Switch
+					m:Rack.Cell="R0 C1"
+					IsToggled="{Binding ShowHz, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R2 C0"
-				Text="{m:Localizing Key=UseVerticalLogScale}" />
-			<Switch
-				m:Rack.Cell="R2 C1"
-				IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=ShowNotes}" />
+				<Switch
+					m:Rack.Cell="R1 C1"
+					IsToggled="{Binding ShowNotes, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R3 C0"
-				Text="{m:Localizing Key=UseHorizontalLogScale}" />
-			<Switch
-				m:Rack.Cell="R3 C1"
-				IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}" />
+				<Label
+					m:Rack.Cell="R2 C0"
+					Text="{m:Localizing Key=UseVerticalLogScale}" />
+				<Switch
+					m:Rack.Cell="R2 C1"
+					IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R4 C0"
-				Text="{m:Localizing Key=WaveIn}"
-				TextColor="Crimson" />
-			<Switch
-				m:Rack.Cell="R4 C1"
-				IsToggled="{m:Smart Key=ShowWaveIn, DefaultValue=True}" />
+				<Label
+					m:Rack.Cell="R3 C0"
+					Text="{m:Localizing Key=UseHorizontalLogScale}" />
+				<Switch
+					m:Rack.Cell="R3 C1"
+					IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R5 C0"
-				Text="{m:Localizing Key=WaveOut}"
-				TextColor="YellowGreen" />
-			<Switch
-				m:Rack.Cell="R5 C1"
-				IsToggled="{m:Smart Key=ShowWaveOut, DefaultValue=False}" />
+				<Label
+					m:Rack.Cell="R4 C0"
+					Text="{m:Localizing Key=WaveIn}"
+					TextColor="Crimson" />
+				<Switch
+					m:Rack.Cell="R4 C1"
+					IsToggled="{m:Smart Key=ShowWaveIn, DefaultValue=True}" />
 
-			<Label
-				m:Rack.Cell="R6 C0"
-				Text="{m:Localizing Key=UseAliasing}" />
-			<Switch
-				m:Rack.Cell="R6 C1"
-				IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
+				<Label
+					m:Rack.Cell="R5 C0"
+					Text="{m:Localizing Key=WaveOut}"
+					TextColor="YellowGreen" />
+				<Switch
+					m:Rack.Cell="R5 C1"
+					IsToggled="{m:Smart Key=ShowWaveOut, DefaultValue=False}" />
 
-			<Label
-				m:Rack.Cell="R7 C0"
-				Text="{m:Localizing Key=AutoSensetive}" />
-			<Switch
-				m:Rack.Cell="R7 C1"
-				IsToggled="{m:Smart Key=AutoSensetive, DefaultValue=True}" />
+				<Label
+					m:Rack.Cell="R6 C0"
+					Text="{m:Localizing Key=UseAliasing}" />
+				<Switch
+					m:Rack.Cell="R6 C1"
+					IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
 
-			<Label
-				m:Rack.Cell="R8 C0"
-				Text="{m:Localizing Key=PitchStandard}" />
-			<Picker
-				m:Rack.Cell="R8 C1"
-				ItemsSource="{Binding PitchStandards}"
-				SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
-			<Label
-				m:Rack.Cell="R9 C0"
-				Text="{m:Localizing Key=PitchStandard}" />
-			<Slider
-				m:Rack.Cell="R9 C1"
-				Maximum="512"
-				Minimum="64"
-				Value="{Binding MaxMagnitude, Mode=TwoWay}" />
+				<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
 
-			<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
+			</Grid>
+		</controls:PivotItem>
 
-		</Grid>
-	</StackLayout>
+		<controls:PivotItem
+			Header="{m:Localizing Key=Advanced}">
+
+			<Grid
+				m:Rack.Cell="R3 C0 CS5"
+				m:Rack.Rows="^ ^ ^ ^ ^"
+				m:Rack.Columns="^ ^"
+				BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
+
+				<Label
+					m:Rack.Cell="R0 C0"
+					Text="{m:Localizing Key=Device}" />
+				<Picker
+					m:Rack.Cell="R0 C1"
+					ItemsSource="{Binding Devices}"
+					SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R1 C0"
+					Text="{m:Localizing Key=SampleRate}" />
+
+				<Picker
+					m:Rack.Cell="R1 C1"
+					ItemsSource="{Binding ActiveDevice.SampleRates}"
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R2 C0"
+					Text="{m:Localizing Key=Window}" />
+				<Picker
+					m:Rack.Cell="R2 C1"
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+				<Label
+					m:Rack.Cell="R3 C0"
+					Text="{m:Localizing Key=PowOf2}" />
+				<Picker
+					m:Rack.Cell="R3 C1"
+					ItemsSource="{StaticResource AllowedPowsOf2}"
+					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+
+			</Grid>
+		</controls:PivotItem>
+
+	</controls:Pivot>
 
 </ContentView>
