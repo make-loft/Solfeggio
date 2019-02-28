@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
-using System.Threading;
+using System.Collections.Generic;
 
 namespace Pitch
 {
@@ -36,8 +34,6 @@ namespace Pitch
 		private bool m_recordPitchRecords;
 		private int m_pitchRecordHistorySize;
 		private List<PitchRecord> m_pitchRecords = new List<PitchRecord>();
-		private PitchRecord m_curPitchRecord = new PitchRecord();
-
 		private IIRFilter m_iirFilterLoLo, m_iirFilterLoHi, m_iirFilterHiLo, m_iirFilterHiHi;
 
 		public delegate void PitchDetectedHandler(PitchTracker sender, PitchRecord pitchRecord);
@@ -120,7 +116,7 @@ namespace Pitch
 		}
 
 		public IList PitchRecords => m_pitchRecords.AsReadOnly();
-		public PitchRecord CurrentPitchRecord => m_curPitchRecord;
+		public PitchRecord CurrentPitchRecord { get; private set; } = new PitchRecord();
 
 		public long CurrentPitchSamplePosition { get; private set; }
 		public static float MinDetectFrequency { get; } = 50.0f;
@@ -308,7 +304,7 @@ namespace Pitch
 			};
 
 
-			m_curPitchRecord = record;
+			CurrentPitchRecord = record;
 
 			if (m_recordPitchRecords)
 			{

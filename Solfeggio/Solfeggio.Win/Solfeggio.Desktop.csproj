@@ -59,6 +59,21 @@
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Pitch\CircularBuffer.cs">
+      <Link>Pitch\CircularBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Pitch\Extensions.cs">
+      <Link>Pitch\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Pitch\IIRFilter.cs">
+      <Link>Pitch\IIRFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Pitch\PitchDsp.cs">
+      <Link>Pitch\PitchDsp.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Pitch\PitchTracker.cs">
+      <Link>Pitch\PitchTracker.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Presenters\MusicalPresenter.cs">
       <Link>Presenters\MusicalPresenter.cs</Link>
     </Compile>

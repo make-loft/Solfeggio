@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Collections;
 
 namespace Pitch
 {
@@ -101,12 +97,6 @@ namespace Pitch
 		/// <summary>
 		/// Low resolution pitch detection
 		/// </summary>
-		/// <param name="dataIdx"></param>
-		/// <param name="begFreqIdx"></param>
-		/// <param name="endFreqIdx"></param>
-		/// <param name="blockLen"></param>
-		/// <param name="stepSize"></param>
-		/// <returns></returns>
 		private float DetectPitchLo(float[] samplesLo, float[] samplesHi)
 		{
 			m_detectCurve.Clear();
@@ -131,7 +121,7 @@ namespace Pitch
 				{
 					if (!bufferSwitched)
 					{
-						m_detectCurve.Clear(258 - peakScanSizeHalf, 258 + peakScanSizeHalf);
+						m_detectCurve.Clear(258 - peakScanSizeHalf, peakScanSize + 1);
 						bufferSwitched = true;
 					}
 
@@ -211,9 +201,6 @@ namespace Pitch
 		/// <summary>
 		/// High resolution pitch detection
 		/// </summary>
-		/// <param name="dataIdx"></param>
-		/// <param name="lowFreqIdx"></param>
-		/// <returns></returns>
 		private float DetectPitchHi(float[] samples, int lowFreqIdx)
 		{
 			var peakIdx = -1;
@@ -265,12 +252,6 @@ namespace Pitch
 		/// Create a sine wave with the specified frequency, amplitude and starting angle.
 		/// Returns the updated angle.
 		/// </summary>
-		/// <param name="buffer"></param>
-		/// <param name="numSamples"></param>
-		/// <param name="freq"></param>
-		/// <param name="amplitude"></param>
-		/// <param name="startAngle"></param>
-		/// <returns></returns>
 		public static double CreateSineWave(float[] buffer, int numSamples, float sampleRate,
 											float freq, float amplitude, double startAngle)
 		{
@@ -293,11 +274,6 @@ namespace Pitch
 		/// <summary>
 		/// Returns true if the level is above the specified value
 		/// </summary>
-		/// <param name="buffer"></param>
-		/// <param name="startIdx"></param>
-		/// <param name="len"></param>
-		/// <param name="level"></param>
-		/// <returns></returns>
 		public bool LevelIsAbove(float[] buffer, int len, float level)
 		{
 			if (buffer == null || buffer.Length == 0)
@@ -317,10 +293,6 @@ namespace Pitch
 		/// <summary>
 		/// Copy the data from the source to the destination buffer
 		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="destination"></param>
-		/// <param name="startPos"></param>  
-		/// <param name="length"></param>
 		public static void CopyBuffer<T>(T[] source, int srcStart, T[] destination, int dstStart, int length)
 		{
 			if (length < 0)
@@ -418,10 +390,6 @@ namespace Pitch
 		/// <summary>
 		/// Get the MIDI note and cents of the pitch 
 		/// </summary>
-		/// <param name="pitch"></param>
-		/// <param name="note"></param>
-		/// <param name="cents"></param>
-		/// <returns></returns>
 		public static bool PitchToMidiNote(float pitch, out int note, out int cents)
 		{
 			if (pitch < 20.0f)
@@ -448,8 +416,6 @@ namespace Pitch
 		/// <summary>
 		/// Get the pitch from the MIDI note
 		/// </summary>
-		/// <param name="note"></param>
-		/// <returns></returns>
 		public float MidiNoteToPitch(float note)
 		{
 			if (note < 33.0f)
@@ -462,10 +428,6 @@ namespace Pitch
 		/// <summary>
 		/// Format a midi note to text
 		/// </summary>
-		/// <param name="note"></param>
-		/// <param name="sharps"></param>
-		/// <param name="showOctave"></param>
-		/// <returns></returns>
 		public static string GetNoteName(int note, bool sharps, bool showOctave)
 		{
 			if (note < kMinMidiNote || note > kMaxMidiNote)
@@ -533,6 +495,5 @@ namespace Pitch
 
 			return noteText;
 		}
-
 	}
 }

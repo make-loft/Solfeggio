@@ -3,7 +3,7 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-	xmlns:prsenters="clr-namespace:Solfeggio.Presenters"
+	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:converters="clr-namespace:Solfeggio.Converters">
@@ -11,19 +11,20 @@
 	<ContentView.Resources>
 		<converters:DelegateToNameConverter
 			x:Key="DelegateToNameConverter" />
+		<converters:PowConverter x:Key="PowConverter" />
 	</ContentView.Resources>
 
 	<controls:Pivot>
 
 		<controls:PivotItem
-			Header="{m:Localizing Key=Levels}">
+			Header="{m:Localizing Key=Сalibration}">
 			<Grid
 				m:Rack.Rows="^ ^ ^ ^ ^ ^"
 				m:Rack.Columns="^ * ^"
-				BindingContext="{m:Store Key=prsenters:MusicalPresenter}">
+				BindingContext="{m:Store Key=presenters:MusicalPresenter}">
 
 				<Label
-					m:Rack.Cell="R0 C1"
+					m:Rack.Cell="R0 C0"
 					Text="{m:Localizing Key=Sensitive}" />
 
 				<Label
@@ -31,19 +32,23 @@
 					Text="{m:Localizing Key=Whisper}" />
 				<Slider
 					m:Rack.Cell="R1 C1"
-					Maximum="512"
-					Minimum="64"
-					Value="{Binding MaxMagnitude, Mode=TwoWay}" />
+					Maximum="28"
+					Minimum="1"
+					Value="{Binding MaxMagnitude, Mode=TwoWay, Converter={StaticResource PowConverter}, ConverterParameter=2}" />
 				<Label
 					m:Rack.Cell="R1 C2"
 					Text="{m:Localizing Key=Cry}" />
-				
-				<Label
-					m:Rack.Cell="R2 C1"
-					Text="{m:Localizing Key=AutoSensitive}" />
-				<Switch
-					m:Rack.Cell="R2 C2"
-					IsToggled="{m:Smart Key=AutoSensitive, DefaultValue=True}" />
+
+				<StackLayout
+					m:Rack.Cell="R0 C1"
+					Orientation="Horizontal">
+					<Label
+						Text="{m:Localizing Key=Manual}" />
+					<Switch
+						IsToggled="{Binding AutoSensitive, Mode=TwoWay}" />
+					<Label
+						Text="{m:Localizing Key=Automatic}" />
+				</StackLayout>
 
 				<Label
 					m:Rack.Cell="R3 C1"
@@ -106,11 +111,11 @@
 		</controls:PivotItem>
 
 		<controls:PivotItem
-			Header="{m:Localizing Key=Visuals}">
+			Header="{m:Localizing Key=Visualization}">
 			<Grid
 				m:Rack.Columns="^ ^ *"
 				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
-				BindingContext="{m:Store Key=p:MusicalPresenter}">
+				BindingContext="{m:Store Key=presenters:MusicalPresenter}">
 
 				<Label
 					m:Rack.Cell="R0 C0"

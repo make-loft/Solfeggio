@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Pitch
+﻿namespace Pitch
 {
 	public static class Extensions
 	{
-		public static void Clear<T>(this T[] buffer) => Array.Clear(buffer, 0, buffer.Length);
+		public static void Clear<T>(this T[] buffer, T value = default) => buffer.Clear(0, buffer.Length, value);
+		public static void Clear<T>(this T[] buffer, int start, int length, T value = default)
+		{
+			if (value == default) System.Array.Clear(buffer, start, length);
+			else for (int i = start; i < length; i++) buffer[i] = value;
+		}
 
 		public static void Copy(this float[] fromBuffer, float[] toBuffer, int fromStart, int toStart, int length)
 		{
@@ -55,17 +55,6 @@ namespace Pitch
 				for (int fromIdx = fromBegIdx, toIdx = toBegIdx; fromIdx <= fromEndIdx; fromIdx++, toIdx++)
 					toBuffer[toIdx] = fromBuffer[fromIdx];
 			}
-		}
-
-		public static void Clear(this float[] buffer, int startIdx, int endIdx)
-		{
-			Array.Clear(buffer, startIdx, endIdx - startIdx + 1);
-		}
-
-		public static void Fill(this double[] buffer, double value)
-		{
-			for (int idx = 0; idx < buffer.Length; idx++)
-				buffer[idx] = value;
 		}
 	}
 }

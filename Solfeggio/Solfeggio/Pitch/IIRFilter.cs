@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Pitch
 {
@@ -451,14 +448,14 @@ namespace Pitch
 			if (m_inHistory == null || m_outHistory == null)
 				return;
 
-			m_inHistory.Fill(startValue);
+			m_inHistory.Clear(startValue);
 
 			if (m_inHistory != null)
 			{
 				switch (m_filterType)
 				{
 					case FilterType.LP:
-						m_outHistory.Fill(startValue);
+						m_outHistory.Clear(startValue);
 						break;
 
 					default:

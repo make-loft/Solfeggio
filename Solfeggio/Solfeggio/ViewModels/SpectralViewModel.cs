@@ -85,13 +85,23 @@ namespace Solfeggio.ViewModels
 		public double ShiftsPerFrame { get; set; } = 16;
 		private int ShiftSize => (int)(FrameSize / ShiftsPerFrame);
 
+		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
+
 		public void Expose()
 		{
+			var tracker = new Pitch.PitchTracker();
+
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
 				ActiveDevice.StartWith(ActiveDevice.SampleRate, (int)(FrameSize * (1d + 1d / ShiftsPerFrame)));
 				EvokePropertyChanged(nameof(FrameDuration));
 				EvokePropertyChanged(nameof(FrameSize));
+			};
+
+			tracker.PitchDetected += (t, r) =>
+			{
+				if (r.Pitch == 0f) return;
+				Pitches.Add(r.Pitch);
 			};
 
 			void OnActiveDeviceOnDataReady(object sender, AudioInputEventArgs args)
@@ -110,6 +120,11 @@ namespace Solfeggio.ViewModels
 				}
 
 			SkipApodization:
+
+				var floats = frame0.Select(v => (float)(v.Real/short.MaxValue)).ToArray();
+				tracker.SampleRate = SampleRate;
+				tracker.ProcessBuffer(floats);
+
 				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
 				var spectrum0 = frame0.DecimationInTime(true);
 				var spectrum1 = frame1.DecimationInTime(true);

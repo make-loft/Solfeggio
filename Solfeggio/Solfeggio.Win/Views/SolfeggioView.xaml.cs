@@ -39,8 +39,8 @@ namespace Solfeggio.Views
 				presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
 				presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);
 				presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
-				var tops = presenter.DrawPiano(PianoCanvas, spectrum);
-				presenter.DrawTops(SpectrumCanvas, tops);
+				var tops = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
+				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height);
 			};
 
 			timer.Start();

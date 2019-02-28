@@ -34,6 +34,10 @@ namespace Xamarin.Forms
 		}
 	}
 
+	public class Entry : TextBox
+	{
+	}
+
 	public class Label : TextBlock
     {
 		public Brush TextColor { get; set; }
