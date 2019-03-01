@@ -3,8 +3,12 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	Title="Solfeggio" Height="404" Width="1224"
-	Background="Gray">
+	DataContext="{Store Key=vm:SpectralViewModel}"
+	Height="{Smart Height, DefaultValue=400}"
+	Width="{Smart Width, DefaultValue=1000}"
+	Left="{Smart Left, DefaultValue=NaN}"
+	Top="{Smart Top, DefaultValue=NaN}"
+	Title="Solfeggio">
 
 	<views:SolfeggioView/>
 

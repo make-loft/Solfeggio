@@ -114,7 +114,7 @@
 			Header="{m:Localizing Key=Visualization}">
 			<Grid
 				m:Rack.Columns="^ ^ *"
-				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
+				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
 				BindingContext="{m:Store Key=presenters:MusicalPresenter}">
 
 				<Label
@@ -171,11 +171,17 @@
 
 				<Label
 					m:Rack.Cell="R7 C0"
-					Text="{m:Localizing Key=UseAliasing}" />
-				<Switch
+					Text="{m:Localizing Key=LowFrequency}" />
+				<Entry
 					m:Rack.Cell="R7 C1"
-					IsToggled="{m:Smart Key=UseAliasing, DefaultValue=True}" />
+					Text="{Binding LowFrequency, Mode=TwoWay}" />
 
+				<Label
+					m:Rack.Cell="R8 C0"
+					Text="{m:Localizing Key=TopFrequency}" />
+				<Entry
+					m:Rack.Cell="R8 C1"
+					Text="{Binding TopFrequency, Mode=TwoWay}" />
 
 				<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
 
@@ -187,7 +193,7 @@
 
 			<Grid
 				m:Rack.Cell="R3 C0 CS5"
-				m:Rack.Rows="^ ^ ^ ^ ^"
+				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^"
 				m:Rack.Columns="^ ^"
 				BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
 
@@ -233,6 +239,19 @@
 					ItemsSource="{StaticResource AllowedPowsOf2}"
 					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 
+				<Label
+					m:Rack.Cell="R5 C0"
+					Text="{m:Localizing Key=ShiftsPerFrame}" />
+				<Entry
+					m:Rack.Cell="R5 C1"
+					Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />
+
+				<Label
+					m:Rack.Cell="R6 C0"
+					Text="{m:Localizing Key=UseAliasing}" />
+				<Switch
+					m:Rack.Cell="R6 C1"
+					IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
 			</Grid>
 		</controls:PivotItem>
 

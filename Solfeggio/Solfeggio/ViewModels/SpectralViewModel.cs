@@ -39,7 +39,7 @@ namespace Solfeggio.ViewModels
 		[DataMember]
 		public int FramePow
 		{
-			get => Get(() => FramePow, 10);
+			get => Get(() => FramePow, 11);
 			set => Set(() => FramePow, value);
 		}
 
@@ -59,9 +59,9 @@ namespace Solfeggio.ViewModels
 		public int MinFramePow { get; set; }
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
-		public Dictionary<double, double> CurrentSpectrum { get; set; }
-		public Dictionary<double, double> WaveInData { get; set; }
-		public Dictionary<double, double> WaveOutData { get; set; }
+		public IList<Complex> CurrentSpectrum { get; set; }
+		public IList<Complex> WaveInData { get; set; }
+		public IList<Complex> WaveOutData { get; set; }
 
 		public double SampleRate
 		{
@@ -81,8 +81,8 @@ namespace Solfeggio.ViewModels
 		public double MinSampleRate => ActiveDevice?.SampleRates.Min() ?? default;
 		public double MaxSampleRate => ActiveDevice?.SampleRates.Max() ?? default;
 
-		public bool UseAliasing { get; set; } = true;
-		public double ShiftsPerFrame { get; set; } = 16;
+		[DataMember] public bool UseAliasing { get; set; } = true;
+		[DataMember] public double ShiftsPerFrame { get; set; } = 16;
 		private int ShiftSize => (int)(FrameSize / ShiftsPerFrame);
 
 		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
@@ -136,11 +136,16 @@ namespace Solfeggio.ViewModels
 				}
 
 				var outSample = spectrum0.DecimationInTime(false);
-				WaveInData = args.Frame.Take(outSample.Length).ToDictionary(c => j++, c => c.Real);
-				WaveOutData = outSample.ToDictionary(c => k++, c => c.Real);
+				WaveInData = args.Frame.Take(outSample.Length).Select(c => new Complex(j++, c.Real)).ToArray();
+				WaveOutData = outSample.Select(c => new Complex(k++, c.Real)).ToArray();
 
 				var spectrum = Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
 				if (UseAliasing) spectrum = Filtering.Antialiasing(spectrum);
+				foreach (var pitch in Pitches.ToArray())
+				{
+					Pitches.Remove(pitch);
+					//var index = spectrum.BinarySearch(new Complex(pitch, 0d), Comparer<Complex>.Create());
+				}
 
 				CurrentSpectrum = spectrum;
 			}
