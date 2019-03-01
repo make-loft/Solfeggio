@@ -140,7 +140,7 @@ namespace Solfeggio.ViewModels
 				WaveOutData = outSample.Select(c => new Complex(k++, c.Real)).ToArray();
 
 				var spectrum = Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
-				if (UseAliasing) spectrum = Filtering.Antialiasing(spectrum);
+				if (UseAliasing) spectrum = Filtering.Correct(spectrum);
 				foreach (var pitch in Pitches.ToArray())
 				{
 					Pitches.Remove(pitch);
