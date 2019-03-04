@@ -37,6 +37,7 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush FullToneKeyBrush = new SolidColorBrush(Colors.White);
 		public static SolidColorBrush HalfToneKeyBrush = new SolidColorBrush(Colors.Black);
 
+		public static SolidColorBrush GridBrush = new SolidColorBrush(Colors.Violet) { Opacity = 0.3d };
 		public static SolidColorBrush NoteBrush = new SolidColorBrush(Colors.Purple);
 		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.BlanchedAlmond);
 	}
@@ -86,7 +87,7 @@ namespace Solfeggio.Presenters
 		private static readonly Brush[] OktaveBrushes =
 			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
 
-		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 432d, 435d, 440d, 444d }.ToSet();
+		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d }.ToSet();
 		public static double DefaultPitchStandard = 440d;
 
 		[DataMember]
@@ -115,7 +116,6 @@ namespace Solfeggio.Presenters
 		[DataMember] public double MaxMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
 		[DataMember] public double TopFrequency { get; set; } = 9000d;
-		//[DataMember] public double TopFrequency { get; set; } = 22096d;
 
 		[DataMember] public bool UseHorizontalLogScale { get; set; } = true;
 		[DataMember] public bool UseVerticalLogScale { get; set; }
@@ -147,6 +147,63 @@ namespace Solfeggio.Presenters
 			full = width * top / (top - low);
 			step = full / top;
 			scale = height * 0.8d / MaxMagnitude;
+		}
+
+		public void DrawGrid(System.Collections.IList items, double width, double height, double step)
+		{
+			var useHorizontalLogScale = UseHorizontalLogScale;
+			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step0, out var scale);
+
+			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
+			var finishFrequency = TopFrequency;
+			for (var i = startFrequency; i < finishFrequency; i += step)
+			{
+				var x = GetVisualOffset(i, step0, full, delt, useHorizontalLogScale);
+				items.Add(new Line
+				{
+					X1 = x,
+					X2 = x,
+					Y1 = 0,
+					Y2 = width,
+					StrokeThickness = 1d,
+					Stroke = AppPalette.GridBrush
+				});
+			}
+		}
+
+		private IEnumerable<double> EnumerateNotes(double breakNote)
+		{
+			for (var j = 0; ; j++)
+			{
+				for (var i = 0; i < _baseOktaveFrequencySet.Length; i++)
+				{
+					var note = _baseOktaveFrequencySet[i] * Math.Pow(2, j);
+					if (note > breakNote) yield break;
+					else yield return note;
+				}
+			}
+		}
+
+		public void DrawNotes(System.Collections.IList items, double width, double height, double step)
+		{
+			var useHorizontalLogScale = UseHorizontalLogScale;
+			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step0, out var scale);
+
+			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
+
+			foreach (var note in EnumerateNotes(topFrequency))
+			{
+				var x = GetVisualOffset(note, step0, full, delt, useHorizontalLogScale);
+				items.Add(new Line
+				{
+					X1 = x,
+					X2 = x,
+					Y1 = 0,
+					Y2 = width,
+					StrokeThickness = 1d,
+					Stroke = AppPalette.NoteBrush
+				});
+			}
 		}
 
 		public void DrawWave(ICollection<Point> points, IList<Complex> data, double width, double height)
