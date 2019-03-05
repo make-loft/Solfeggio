@@ -1,17 +1,19 @@
-﻿namespace Pitch
+﻿using System.Collections.Generic;
+
+namespace Pitch
 {
 	public static class Extensions
 	{
 		public static void Clear<T>(this T[] buffer, T value = default) => buffer.Clear(0, buffer.Length, value);
 		public static void Clear<T>(this T[] buffer, int start, int length, T value = default)
 		{
-			if (value == default) System.Array.Clear(buffer, start, length);
-			else for (int i = start; i < length; i++) buffer[i] = value;
+			if (EqualityComparer<T>.Default.Equals(value, default)) System.Array.Clear(buffer, start, length);
+			else for (var i = start; i < length; i++) buffer[i] = value;
 		}
 
 		public static void Copy(this float[] fromBuffer, float[] toBuffer, int fromStart, int toStart, int length)
 		{
-			if (toBuffer == null || fromBuffer.Length == 0 || toBuffer.Length == 0)
+			if (toBuffer is null || fromBuffer.Length is 0 || toBuffer.Length is 0)
 				return;
 
 			var fromBegIdx = fromStart;

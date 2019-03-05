@@ -17,23 +17,10 @@
 	<Grid
 		m:Rack.Columns="Auto *"
 		m:Rack.Rows="2* *">
-		<Grid.Resources>
-			<c:SwitchConverter
-				x:Key="MarginConverter">
-				<m:Case
-					Key="False"
-					Value="0 0 0 0" />
-				<m:Case
-					Key="True"
-					Value="0 0 0 0" />
-			</c:SwitchConverter>
-		</Grid.Resources>
 
 		<Canvas
 			m:Rack.Cell="R0 C0 CS2"
-			Name="SpectrumCanvas"
-			HorizontalAlignment="Stretch"
-			Margin="{m:StoreBinding Path=UseHorizontalLogScale, Converter={StaticResource MarginConverter}, StoreKey=p:MusicalPresenter}">
+			Name="SpectrumCanvas">
 			<Canvas.Background>
 				<LinearGradientBrush
 					EndPoint="0,1"
@@ -69,7 +56,6 @@
 		<Canvas
 			m:Rack.Cell="R1 C0 CS2"
 			Name="PianoCanvas"
-			Margin="{m:StoreBinding Path=UseHorizontalLogScale, Converter={StaticResource MarginConverter}, StoreKey=p:MusicalPresenter}"
 			HorizontalAlignment="Stretch"
 			Background="#FF616187" />
 
