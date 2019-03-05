@@ -194,7 +194,7 @@ namespace Solfeggio.Presenters
 			for (var i = startFrequency; i < finishFrequency; i += step)
 			{
 				var x = GetVisualOffset(i, step0, full, delt, frequancyScaleFunc);
-				ConstructVerticalLine(x, height, AppPalette.GridBrush).UncheckedAddTo(items);
+				ConstructVerticalLine(x, height, AppPalette.GridBrush).AddToUntyped(items);
 			}
 		}
 
@@ -221,7 +221,7 @@ namespace Solfeggio.Presenters
 			foreach (var note in EnumerateNotes(topFrequency))
 			{
 				var x = GetVisualOffset(note, step0, full, delt, frequancyScaleFunc);
-				ConstructVerticalLine(x, height, AppPalette.NoteBrush).UncheckedAddTo(items);
+				ConstructVerticalLine(x, height, AppPalette.NoteBrush).AddToUntyped(items);
 			}
 		}
 
@@ -445,7 +445,7 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.7d;
 				var strokeThickness = rightOffset - leftOffset;
 
-				ConstructVerticalLine(middleOffset, actualHeight, strokeThickness).UncheckedAddTo(items);
+				ConstructVerticalLine(middleOffset, actualHeight, gradientBrush, strokeThickness).AddToUntyped(items);
 			}
 
 			return tops;
