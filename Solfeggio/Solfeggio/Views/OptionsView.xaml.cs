@@ -6,9 +6,6 @@ namespace Solfeggio.Views
 	[XamlCompilation(XamlCompilationOptions.Skip)]
 	public partial class OptionsView : ContentView
 	{
-		public OptionsView()
-		{
-			InitializeComponent();
-		}
+		public OptionsView() => InitializeComponent();
 	}
 }

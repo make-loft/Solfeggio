@@ -43,7 +43,7 @@ namespace Solfeggio
             var frame = new Complex[sampleSize];
             for (var i = 0; i < sampleSize; i++)
             {
-                frame[i] = args.Bins[i];
+                frame[i] = (double) args.Bins[i] / short.MaxValue;
             }
 
             DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});

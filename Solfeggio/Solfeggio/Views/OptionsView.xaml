@@ -32,9 +32,9 @@
 					Text="{m:Localizing Key=Whisper}" />
 				<Slider
 					m:Rack.Cell="R1 C1"
-					Maximum="28"
-					Minimum="1"
-					Value="{Binding MaxMagnitude, Mode=TwoWay, Converter={StaticResource PowConverter}, ConverterParameter=2}" />
+					Maximum="1"
+					Minimum="0"
+					Value="{Binding TopMagnitude, Mode=TwoWay}" />
 				<Label
 					m:Rack.Cell="R1 C2"
 					Text="{m:Localizing Key=Cry}" />

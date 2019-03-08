@@ -85,15 +85,6 @@ namespace Solfeggio.Presenters
 			public Complex Peak { get; set; }
 			public int Hits { get; set; }
 
-			public double GetMiddleOffset(double step, double full, double delt, Func<double, double> scaleFunc) =>
-				GetVisualOffset(EthalonFrequency, step, full, delt, scaleFunc);
-
-			public double GetLeftOffset(double step, double full, double delt, Func<double, double> scaleFunc) =>
-				GetVisualOffset(LowFrequency, step, full, delt, scaleFunc);
-
-			public double GetRightOffset(double step, double full, double delt, Func<double, double> scaleFunc) =>
-				GetVisualOffset(TopFrequency, step, full, delt, scaleFunc);
-
 			public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
 			{
 				var lowNoteNumber = 0;
@@ -161,39 +152,45 @@ namespace Solfeggio.Presenters
 
 		private double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 
-		[DataMember] public double MaxMagnitude { get; set; } = 1d;
+		[DataMember] public double LowMagnitude { get; set; } = 0d;
+		[DataMember] public double TopMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
 		[DataMember] public double TopFrequency { get; set; } = 9000d;
 
 		private static double ScaleMagnitude(double value, Func<double, double> scaleFunc) => scaleFunc(value);
-		public static double GetVisualOffset(double value, double step, double width, double delta, Func<double, double> scaleFunc) =>
-			scaleFunc(value) * step - delta;
+		public static double GetVisualOffset(double value, double widthStep, double lowWidth, Func<double, double> scaleFunc) =>
+			scaleFunc(value) * widthStep - lowWidth;
 
-		private void Get(double width, double height,
-			out double lowFrequency, out double topFrequency, out double full, out double delt, out double step, out double scale)
+		private void GetVisuals(double width, double height,
+			out double lowFrequency, out double topFrequency,
+			out double topWidth, out double lowWidth,
+			out double widthStep, out double heightScale)
 		{
 			var frequancyScaleFunc = FrequancyScaleFunc;
 			lowFrequency = LowFrequency;
 			topFrequency = TopFrequency;
 
-			var low = frequancyScaleFunc(lowFrequency);
-			var top = frequancyScaleFunc(topFrequency);
-			delt = width * low / (top - low);
-			full = width * top / (top - low);
-			step = full / top;
-			scale = height * 0.8d / MaxMagnitude;
+			var lowOffset = frequancyScaleFunc(lowFrequency);
+			var topOffset = frequancyScaleFunc(topFrequency);
+			lowWidth = width * lowOffset / (topOffset - lowOffset);
+			topWidth = width * topOffset / (topOffset - lowOffset);
+			widthStep = topWidth / topOffset;
+			heightScale = height * 0.8d / TopMagnitude;
 		}
 
 		public void DrawGrid(System.Collections.IList items, double width, double height, double step)
 		{
 			var frequancyScaleFunc = FrequancyScaleFunc;
-			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step0, out var scale);
+			GetVisuals(width, height,
+				out var lowFrequency, out var topFrequency,
+				out var _, out var lowWidth,
+				out var widthStep, out var _);
 
 			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
 			var finishFrequency = TopFrequency;
 			for (var i = startFrequency; i < finishFrequency; i += step)
 			{
-				var x = GetVisualOffset(i, step0, full, delt, frequancyScaleFunc);
+				var x = GetVisualOffset(i, widthStep, lowWidth, frequancyScaleFunc);
 				ConstructVerticalLine(x, height, AppPalette.GridBrush).AddToUntyped(items);
 			}
 		}
@@ -214,13 +211,16 @@ namespace Solfeggio.Presenters
 		public void DrawNotes(System.Collections.IList items, double width, double height, double step)
 		{
 			var frequancyScaleFunc = FrequancyScaleFunc;
-			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step0, out var scale);
+			GetVisuals(width, height,
+				out var lowFrequency, out var topFrequency,
+				out var _, out var lowWidth,
+				out var widthStep, out var _);
 
 			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
 
 			foreach (var note in EnumerateNotes(topFrequency))
 			{
-				var x = GetVisualOffset(note, step0, full, delt, frequancyScaleFunc);
+				var x = GetVisualOffset(note, widthStep, lowWidth, frequancyScaleFunc);
 				ConstructVerticalLine(x, height, AppPalette.NoteBrush).AddToUntyped(items);
 			}
 		}
@@ -244,7 +244,10 @@ namespace Solfeggio.Presenters
 			var magnitudeScaleFunc = MagnitudeScaleFunc;
 			var autoSensitive = AutoSensitive;
 
-			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step, out var scale);
+			GetVisuals(width, height,
+				out var lowFrequency, out var topFrequency,
+				out var _, out var lowWidth,
+				out var widthStep, out var heightScale);
 
 			points.Add(new Point(0d, height));
 
@@ -254,29 +257,29 @@ namespace Solfeggio.Presenters
 				if (topFrequency < sampleFrequency) break;
 				var sampleValue = pair.Imaginary;
 				var magnitude = ScaleMagnitude(sampleValue, magnitudeScaleFunc);
-				var x = GetVisualOffset(sampleFrequency, step, full, delt, frequancyScaleFunc);
-				var y = height - magnitude * scale;
+				var x = GetVisualOffset(sampleFrequency, widthStep, lowWidth, frequancyScaleFunc);
+				var y = height - magnitude * heightScale;
 
 				points.Add(new Point(x, y));
 
 				if (autoSensitive)
 				{
-					if (magnitude > 0.7d * MaxMagnitude)
+					if (magnitude > 0.7d * TopMagnitude)
 					{
 						AutoSensitiveTimestamp = DateTime.Now;
 					}
 
-					if (magnitude > MaxMagnitude)
+					if (magnitude > TopMagnitude)
 					{
 						AutoSensitiveTimestamp = DateTime.Now;
-						MaxMagnitude *= (1 + AutoSensitiveStep * 9);
-						EvokePropertyChanged(nameof(MaxMagnitude));
+						TopMagnitude *= (1 + AutoSensitiveStep * 9);
+						EvokePropertyChanged(nameof(TopMagnitude));
 					}
 					else if (AutoSensitiveTimestamp.AddSeconds(AutoSensitiveDelayInSeconds) < DateTime.Now)
 					{
 						AutoSensitiveTimestamp = DateTime.Now;
-						MaxMagnitude *= (1 - AutoSensitiveStep);
-						EvokePropertyChanged(nameof(MaxMagnitude));
+						TopMagnitude *= (1 - AutoSensitiveStep);
+						EvokePropertyChanged(nameof(TopMagnitude));
 					}
 				}
 			}
@@ -288,13 +291,16 @@ namespace Solfeggio.Presenters
 		{	
 			var showHz = ShowHz;
 			var showNotes = ShowNotes;
-			var maxMagnitude = MaxMagnitude;
+			var maxMagnitude = TopMagnitude;
 
 			var frequancyScaleFunc = FrequancyScaleFunc;
 			var magnitudeScaleFunc = MagnitudeScaleFunc;
 			var autoSensitive = AutoSensitive;
 
-			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step, out var scale);
+			GetVisuals(width, height,
+				out var lowFrequency, out var topFrequency,
+				out var _, out var lowWidth,
+				out var widthStep, out var heightScale);
 
 			foreach (var key in keys)
 			{
@@ -303,7 +309,7 @@ namespace Solfeggio.Presenters
 				if (topFrequency < sampleFrequency) break;
 				var sampleValue = key.Peak.Imaginary;
 				var magnitude = ScaleMagnitude(sampleValue, magnitudeScaleFunc);
-				var x = GetVisualOffset(sampleFrequency, step, full, delt, frequancyScaleFunc);
+				var x = GetVisualOffset(sampleFrequency, widthStep, lowWidth, frequancyScaleFunc);
 
 				if (showNotes.Not() && showHz.Not()) return;
 
@@ -317,7 +323,7 @@ namespace Solfeggio.Presenters
 				// todo
 				items.Add(panel);
 #endif
-				var expressionLevel = (1d + sampleValue / MaxMagnitude);
+				var expressionLevel = (1d + sampleValue / TopMagnitude);
 
 				if (showHz)
 				{
@@ -352,7 +358,7 @@ namespace Solfeggio.Presenters
 					});
 				}
 
-				var y = magnitude * scale / 2;
+				var y = magnitude * heightScale / 2;
 				//y = sampleValue / MaxMagnitude;
 				panel.UpdateLayout();
 				if (double.IsInfinity(y)) continue;
@@ -364,9 +370,12 @@ namespace Solfeggio.Presenters
 		{
 			var frequancyScaleFunc = FrequancyScaleFunc;
 			var useNoteFilter = UseNoteFilter;
-			var maxMagnitude0 = MaxMagnitude;
+			var maxMagnitude0 = TopMagnitude;
 
-			Get(width, height, out var lowFrequency, out var topFrequency, out var full, out var delt, out var step, out var scale);
+			GetVisuals(width, height,
+				out var lowFrequency, out var topFrequency,
+				out var _, out var lowWidth,
+				out var widthStep, out var heightScale);
 
 			var keys = new List<PianoKey>();
 			var oktavesCount = HalfTonesCount + 1;
@@ -439,13 +448,13 @@ namespace Solfeggio.Presenters
 					new GradientStop {Color = pressColor, Offset = 0.5d}
 				);
 
-				var leftOffset = key.GetLeftOffset(step, full, delt, frequancyScaleFunc);
-				var rightOffset = key.GetRightOffset(step, full, delt, frequancyScaleFunc);
-				var middleOffset = key.GetMiddleOffset(step, full, delt, frequancyScaleFunc);
+				var lowOffset = GetVisualOffset(key.LowFrequency, widthStep, lowWidth, frequancyScaleFunc);
+				var topOffset = GetVisualOffset(key.TopFrequency, widthStep, lowWidth, frequancyScaleFunc);
+				var ethalonOffset = GetVisualOffset(key.EthalonFrequency, widthStep, lowWidth, frequancyScaleFunc);
 				var actualHeight = isTone ? height : height * 0.7d;
-				var strokeThickness = rightOffset - leftOffset;
+				var strokeThickness = topOffset - lowOffset;
 
-				ConstructVerticalLine(middleOffset, actualHeight, gradientBrush, strokeThickness).AddToUntyped(items);
+				ConstructVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).AddToUntyped(items);
 			}
 
 			return tops;
