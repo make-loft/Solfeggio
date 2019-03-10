@@ -67,9 +67,9 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public ShowOptions Show { get; set; } = new ShowOptions();
 
-		public Func<double, double> FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
-		public Func<double, double> MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
-		public Func<double, double> PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public Func<double, double> FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
+		[DataMember] public Func<double, double> MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public Func<double, double> PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
 
 		public SmartSet<Func<double, double>> FrequancyScaleFuncs { get; set; } = new Func<double, double>[]
 		{
