@@ -37,15 +37,26 @@ namespace Solfeggio.Views
 
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
-				presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
-				presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);
-				presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
-				var tops = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
-				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height);
+
+				if (presenter.Show.Spectrum)
+					presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
-				presenter.DrawGrid(SpectrumCanvas.Children, width, height, step);
-				presenter.DrawNotes(SpectrumCanvas.Children, width, height, step);
+
+				if (presenter.Show.DiscreteFourierGrid)
+					presenter.DrawGrid(SpectrumCanvas.Children, width, height, step);
+
+				if (presenter.Show.NotesGrid)
+					presenter.DrawNotes(SpectrumCanvas.Children, width, height, step);
+
+				if (presenter.Show.Wave)
+					presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);
+
+				if (presenter.Show.Wave && spectralViewModel.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+					presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
+
+				var tops = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
+				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height, presenter.Show.PeakHz, presenter.Show.Notes);
 			};
 
 			timer.Start();

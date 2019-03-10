@@ -54,22 +54,77 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenterOptions : ContextObject
 	{
-		[DataMember] public bool ShowHz { get; set; } = true;
-		[DataMember] public bool ShowNotes { get; set; } = true;
-		[DataMember] public bool ShowWave { get; set; } = true;
-		[DataMember] public bool ShowSpectrum { get; set; } = true;
-		[DataMember] public bool ShowNotesGrid { get; set; } = true;
-		[DataMember] public bool ShowDiscreteFourierGrid { get; set; } = true;
+		[DataContract]
+		public class ShowOptions
+		{
+			[DataMember] public bool PeakHz { get; set; } = true;
+			[DataMember] public bool Notes { get; set; } = true;
+			[DataMember] public bool Wave { get; set; } = true;
+			[DataMember] public bool Spectrum { get; set; } = true;
+			[DataMember] public bool NotesGrid { get; set; } = true;
+			[DataMember] public bool DiscreteFourierGrid { get; set; } = true;
+		}
+
+		[DataMember] public ShowOptions Show { get; set; } = new ShowOptions();
 
 		public Func<double, double> FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
 		public Func<double, double> MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
 		public Func<double, double> PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
+
+		public SmartSet<Func<double, double>> FrequancyScaleFuncs { get; set; } = new Func<double, double>[]
+		{
+			ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp
+		}.ToSet();
+
+		[DataMember] public double LowMagnitude { get; set; } = 0d;
+		[DataMember] public double TopMagnitude { get; set; } = 1d;
+		[DataMember] public double LowFrequency { get; set; } = 20d;
+		[DataMember] public double TopFrequency { get; set; } = 9000d;
 
 		[DataMember] public bool UseNoteFilter { get; set; }
 		[DataMember] public bool AutoSensitive { get; set; } = true;
 		[DataMember] public double AutoSensitiveStep { get; set; } = 0.02d;
 		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
+
+		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d }.ToSet();
+		public static double DefaultPitchStandard = 440d;
+
+		[DataMember]
+		public double ActivePitchStandard
+		{
+			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
+			set
+			{
+				Set(() => ActivePitchStandard, value);
+				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
+			}
+		}
+
+		protected static readonly string[] DiesNotation =
+			{"C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"};
+
+		protected static readonly string[] BemoleNotation =
+			{"C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"};
+
+		protected static readonly string[] Notes =
+			{"C|B♯","C♯|D♭","D","D♯|E♭","E|F♭","F|E♯","F♯|G♭","G","G♯|A♭","A","A♯|B♭","B|C♭"};
+
+		protected static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
+		protected static readonly Brush[] OktaveBrushes =
+			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
+
+		protected static double HalfTonesCount { get; } = 12;
+		private static double GetBaseFrequancy(double pitchStandard) => pitchStandard / 16d;
+		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
+
+		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
+			GetBaseOktaveFrequencySet(GetBaseFrequancy(pitchStandard), GetHalftoneStep(HalfTonesCount));
+
+		private static double[] GetBaseOktaveFrequencySet(double baseFrequancy, double halftoneStep) =>
+			Enumerable.Range(-9, 12).Select(dt => baseFrequancy * Math.Pow(halftoneStep, dt)).ToArray();
+
+		protected double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 	}
 
 	[DataContract]
@@ -113,50 +168,6 @@ namespace Solfeggio.Presenters
 				};
 			}
 		}
-
-		private static readonly string[] DiesNotation =
-			{"C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"};
-
-		private static readonly string[] BemoleNotation =
-			{"C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"};
-
-		private static readonly string[] Notes =
-			{"C|B♯","C♯|D♭","D","D♯|E♭","E|F♭","F|E♯","F♯|G♭","G","G♯|A♭","A","A♯|B♭","B|C♭"};
-
-		private static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
-		private static readonly Brush[] OktaveBrushes =
-			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
-
-		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d }.ToSet();
-		public static double DefaultPitchStandard = 440d;
-
-		[DataMember]
-		public double ActivePitchStandard
-		{
-			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
-			set
-			{
-				Set(() => ActivePitchStandard, value);
-				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
-			}
-		}
-
-		private static double HalfTonesCount { get; } = 12;
-		private static double GetBaseFrequancy(double pitchStandard) => pitchStandard / 16d;
-		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
-
-		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
-			GetBaseOktaveFrequencySet(GetBaseFrequancy(pitchStandard), GetHalftoneStep(HalfTonesCount));
-
-		private static double[] GetBaseOktaveFrequencySet(double baseFrequancy, double halftoneStep) =>
-			Enumerable.Range(-9, 12).Select(dt => baseFrequancy * Math.Pow(halftoneStep, dt)).ToArray();
-
-		private double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
-
-		[DataMember] public double LowMagnitude { get; set; } = 0d;
-		[DataMember] public double TopMagnitude { get; set; } = 1d;
-		[DataMember] public double LowFrequency { get; set; } = 20d;
-		[DataMember] public double TopFrequency { get; set; } = 9000d;
 
 		private void SetVariables(double visualSize, out double visualStretchFactor,
 			out double lowVisualIncrementOffset, out double topVisualIncrementOffset,
@@ -284,14 +295,12 @@ namespace Solfeggio.Presenters
 			points.Add(new Point(width, height));
 		}
 
-		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height)
+		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height, bool showHz, bool showNotes)
 		{
 			SetVariables(width, out var hVisualStretchFactor,
 				out var hVisualDecrementOffset, out var _,
 				out var lowFrequency, out var topFrequency);
 
-			var showHz = ShowHz;
-			var showNotes = ShowNotes;
 			var topMagnitude = TopMagnitude;
 			var vVisualStretchFactor = height.Stretch(0.7d).Squeeze(topMagnitude);
 
@@ -321,6 +330,7 @@ namespace Solfeggio.Presenters
 				items.Add(panel);
 #endif
 				var expressionLevel = (1d + activeMagnitude / topMagnitude);
+				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
 				if (showHz)
 				{
@@ -381,7 +391,7 @@ namespace Solfeggio.Presenters
 				var oktaveNotes = _baseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
 				var notesCount = oktaveNotes.Length;
 				for (var noteIndex = 0; noteIndex < notesCount; noteIndex++)
-					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, DiesNotation[noteIndex]).AddTo(keys);
+					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, DiesNotation[noteIndex]).Use(keys.Add);
 			}
 
 			var m = 0;
@@ -448,7 +458,7 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.7d;
 				var strokeThickness = topOffset - lowOffset;
 
-				ConstructVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).AddToUntyped(items);
+				ConstructVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
 			return tops;

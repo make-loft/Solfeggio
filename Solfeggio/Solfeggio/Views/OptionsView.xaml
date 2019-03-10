@@ -12,12 +12,100 @@
 		<converters:DelegateToNameConverter
 			x:Key="DelegateToNameConverter" />
 		<converters:PowConverter x:Key="PowConverter" />
+
+		<m:Set x:Key="VisualizationOptionsSet">
+			<Picker
+				Tag="{m:Localizing Key=PitchStandard}"
+				ItemsSource="{Binding PitchStandards}"
+				SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
+
+			<Entry
+				Tag="{m:Localizing Key=LowFrequency}"
+				Text="{Binding LowFrequency, Mode=TwoWay}" />
+
+			<Entry
+				Tag="{m:Localizing Key=TopFrequency}"
+				Text="{Binding TopFrequency, Mode=TwoWay}" />
+
+			<Picker
+				Tag="{m:Localizing Key=MagnitudeScaleFunc}"
+				ItemsSource="{Binding FrequancyScaleFuncs}"
+				SelectedItem="{Binding MagnitudeScaleFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+			<Picker
+				Tag="{m:Localizing Key=FrequancyScaleFunc}"
+				ItemsSource="{Binding FrequancyScaleFuncs}"
+				SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+			<Switch
+				Tag="{m:Localizing Key=PeakHz}"
+				IsToggled="{Binding Show.PeakHz, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=Notes}"
+				IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=Spectrum}"
+				IsToggled="{Binding Show.Spectrum, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=Wave}"
+				IsToggled="{Binding Show.Wave, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=NotesGrid}"
+				IsToggled="{Binding Show.NotesGrid, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=DiscreteFourierGrid}"
+				IsToggled="{Binding Show.DiscreteFourierGrid, Mode=TwoWay}" />
+		</m:Set>
+		
+		<m:Set x:Key="AdvancedOptionsSet">
+			<Picker
+				Tag="{m:Localizing Key=Device}"
+				ItemsSource="{Binding Devices}"
+				SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+
+			<Picker
+				Tag="{m:Localizing Key=SampleRate}"
+				ItemsSource="{Binding ActiveDevice.SampleRates}"
+				SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
+			<Picker
+				Tag="{m:Localizing Key=Window}"
+				ItemsSource="{Binding Windows}"
+				SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+			<Picker
+				Tag="{m:Localizing Key=PowOf2}"
+				ItemsSource="{StaticResource AllowedPowsOf2}"
+				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+
+			<Picker
+				Tag="{m:Localizing Key=ShiftSize}"
+				ItemsSource="{StaticResource AllowedPowsOf2}"
+				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+
+			<Entry
+				Tag="{m:Localizing Key=ShiftsPerFrame}"
+				Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />
+
+			<Switch
+				Tag="{m:Localizing Key=UseAliasing}"
+				IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
+		</m:Set>
 	</ContentView.Resources>
 
 	<controls:Pivot>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
+			
 			<Grid
 				m:Rack.Rows="^ ^ ^ ^ ^ ^"
 				m:Rack.Columns="^ * ^"
@@ -51,7 +139,7 @@
 				</StackLayout>
 
 				<Label
-					m:Rack.Cell="R3 C1"
+					m:Rack.Cell="R3 C0 CS3"
 					Text="{m:Localizing Key=TimeFrame}" />
 
 				<StackLayout
@@ -108,151 +196,27 @@
 				</Grid>
 
 			</Grid>
+			
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Visualization}">
-			<Grid
-				m:Rack.Columns="^ ^ *"
-				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
-				BindingContext="{m:Store Key=presenters:MusicalPresenter}">
+			
+			<ItemsView
+				ItemTemplate="{StaticResource OptionTemplate}"
+				ItemsSource="{StaticResource VisualizationOptionsSet}"
+				BindingContext="{m:Store Key=presenters:MusicalPresenter}" />
 
-				<Label
-					m:Rack.Cell="R0 C0"
-					Text="{m:Localizing Key=PitchStandard}" />
-				<Picker
-					m:Rack.Cell="R0 C1"
-					ItemsSource="{Binding PitchStandards}"
-					SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R1 C0"
-					Text="{m:Localizing Key=ShowHz}" />
-				<Switch
-					m:Rack.Cell="R1 C1"
-					IsToggled="{Binding ShowHz, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R2 C0"
-					Text="{m:Localizing Key=ShowNotes}" />
-				<Switch
-					m:Rack.Cell="R2 C1"
-					IsToggled="{Binding ShowNotes, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R3 C0"
-					Text="{m:Localizing Key=UseVerticalLogScale}" />
-				<Switch
-					m:Rack.Cell="R3 C1"
-					IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R4 C0"
-					Text="{m:Localizing Key=UseHorizontalLogScale}" />
-				<Switch
-					m:Rack.Cell="R4 C1"
-					IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R5 C0"
-					Text="{m:Localizing Key=WaveIn}"
-					TextColor="Crimson" />
-				<Switch
-					m:Rack.Cell="R5 C1"
-					IsToggled="{m:Smart Key=ShowWaveIn, DefaultValue=True}" />
-
-				<Label
-					m:Rack.Cell="R6 C0"
-					Text="{m:Localizing Key=WaveOut}"
-					TextColor="YellowGreen" />
-				<Switch
-					m:Rack.Cell="R6 C1"
-					IsToggled="{m:Smart Key=ShowWaveOut, DefaultValue=False}" />
-
-				<Label
-					m:Rack.Cell="R7 C0"
-					Text="{m:Localizing Key=LowFrequency}" />
-				<Entry
-					m:Rack.Cell="R7 C1"
-					Text="{Binding LowFrequency, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R8 C0"
-					Text="{m:Localizing Key=TopFrequency}" />
-				<Entry
-					m:Rack.Cell="R8 C1"
-					Text="{Binding TopFrequency, Mode=TwoWay}" />
-
-				<!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
-
-			</Grid>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Advanced}">
 
-			<Grid
-				m:Rack.Cell="R3 C0 CS5"
-				m:Rack.Rows="^ ^ ^ ^ ^ ^ ^"
-				m:Rack.Columns="^ ^"
-				BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
+			<ItemsView
+				ItemTemplate="{StaticResource OptionTemplate}"
+				ItemsSource="{StaticResource AdvancedOptionsSet}"
+				BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
 
-				<Label
-					m:Rack.Cell="R0 C0"
-					Text="{m:Localizing Key=Device}" />
-				<Picker
-					m:Rack.Cell="R0 C1"
-					ItemsSource="{Binding Devices}"
-					SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R1 C0"
-					Text="{m:Localizing Key=SampleRate}" />
-
-				<Picker
-					m:Rack.Cell="R1 C1"
-					ItemsSource="{Binding ActiveDevice.SampleRates}"
-					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R2 C0"
-					Text="{m:Localizing Key=Window}" />
-				<Picker
-					m:Rack.Cell="R2 C1"
-					ItemsSource="{Binding Windows}"
-					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-
-				<Label
-					m:Rack.Cell="R3 C0"
-					Text="{m:Localizing Key=PowOf2}" />
-				<Picker
-					m:Rack.Cell="R3 C1"
-					ItemsSource="{StaticResource AllowedPowsOf2}"
-					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-				
-				<Label
-					m:Rack.Cell="R4 C0"
-					Text="{m:Localizing Key=ShiftSize}" />
-				<Picker
-					m:Rack.Cell="R4 C1"
-					ItemsSource="{StaticResource AllowedPowsOf2}"
-					SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R5 C0"
-					Text="{m:Localizing Key=ShiftsPerFrame}" />
-				<Entry
-					m:Rack.Cell="R5 C1"
-					Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />
-
-				<Label
-					m:Rack.Cell="R6 C0"
-					Text="{m:Localizing Key=UseAliasing}" />
-				<Switch
-					m:Rack.Cell="R6 C1"
-					IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
-			</Grid>
 		</controls:PivotItem>
 
 	</controls:Pivot>

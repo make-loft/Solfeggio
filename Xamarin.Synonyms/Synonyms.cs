@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace Xamarin.Forms
@@ -20,9 +21,12 @@ namespace Xamarin.Forms
 	}
 
 	public class StackLayout : StackPanel
+	{ }
+
+	public class ItemsView : ItemsControl
 	{
 		public static readonly DependencyProperty BindingContextProperty =
-			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(StackLayout), new PropertyMetadata((o, e)=>
+			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(ItemsView), new PropertyMetadata((o, e)=>
 			{
 				if (o is Control control) control.SetValue(DataContextProperty, e.NewValue);
 			}));
@@ -31,6 +35,14 @@ namespace Xamarin.Forms
 		{
 			get => GetValue(BindingContextProperty);
 			set => SetValue(BindingContextProperty, value);
+		}
+
+		protected override DependencyObject GetContainerForItemOverride() => new ContentControl();
+
+		protected override bool IsItemItsOwnContainerOverride(object item)
+		{
+			if (item is Control c) c.DataContext = DataContext;
+			return false; // wrap always
 		}
 	}
 

@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xamarin="clr-namespace:Xamarin.Forms;assembly=Xamarin.Synonyms"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
+	xmlns:local="clr-namespace:Solfeggio"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	StartupUri="AppView.xaml"
@@ -91,6 +92,21 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
+
+
+			<DataTemplate
+				x:Key="OptionTemplate">
+				<Grid
+					Rack.Columns="7* 5* *">
+					<ContentPresenter
+						Rack.Cell="C0"
+						Content="{Binding Tag}" />
+					<ContentPresenter
+						Rack.Cell="C1"
+						Content="{Binding}" />
+				</Grid>
+			</DataTemplate>
+
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>
