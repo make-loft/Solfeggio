@@ -43,14 +43,12 @@
 				Name="WaveInPolyline"
 				Stroke="Crimson"
 				StrokeThickness="1"
-				DataContext="{m:Store Key=p:MusicalPresenter}"
-				Visibility="{m:Smart Key=ShowWaveIn, Converter={StaticResource TrueToVisibleConverter}}" />
+				DataContext="{m:Store Key=p:MusicalPresenter}" />
 			<Polyline
 				Name="WaveOutPolyline"
 				Stroke="YellowGreen"
 				StrokeThickness="1"
-				DataContext="{m:Store Key=p:MusicalPresenter}"
-				Visibility="{m:Smart Key=ShowWaveOut, Converter={StaticResource TrueToVisibleConverter}}" />
+				DataContext="{m:Store Key=p:MusicalPresenter}" />
 		</Canvas>
 
 		<Canvas

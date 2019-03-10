@@ -51,35 +51,74 @@ namespace Solfeggio.Presenters
 		public static double Exp(double value) => Math.Exp(value);
 	}
 
+	public delegate double ScaleFunc(double v);
+
 	[DataContract]
-	public class MusicalPresenterOptions : ContextObject
+	public class MusicalPresenter : ContextObject
 	{
+		public class PianoKey
+		{
+			public int NoteNumber { get; set; }
+			public string NoteName { get; set; }
+			public double Magnitude { get; set; }
+			public double LowFrequency { get; set; }
+			public double TopFrequency { get; set; }
+			public double EthalonFrequency { get; set; }
+			public Complex Peak { get; set; }
+			public int Hits { get; set; }
+
+			public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
+			{
+				var lowNoteNumber = 0;
+				var topNoteNumber = oktaveNotes.Length - 1;
+
+				var activeNote = oktaveNotes[noteNumber];
+				var lowNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
+				var topNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
+
+				var ethalonOffset = Math.Log(activeNote, 2d);
+				var lowOffset = (Math.Log(lowNote, 2d) + ethalonOffset) / 2d;
+				var topOffset = (ethalonOffset + Math.Log(topNote, 2d)) / 2d;
+
+				var lowFrequency = Math.Pow(2d, lowOffset);
+				var topFrequency = Math.Pow(2d, topOffset);
+				var ethalonFrequency = activeNote; // Math.Pow(2d, ethalonOffset)
+
+				return new PianoKey
+				{
+					NoteNumber = noteNumber,
+					NoteName = note + oktaveNumber,
+					LowFrequency = lowFrequency,
+					TopFrequency = topFrequency,
+					EthalonFrequency = activeNote,
+				};
+			}
+		}
+
 		[DataContract]
-		public class ShowOptions
+		public class VisualStates
 		{
 			[DataMember] public bool PeakHz { get; set; } = true;
 			[DataMember] public bool Notes { get; set; } = true;
-			[DataMember] public bool Wave { get; set; } = true;
+			[DataMember] public bool Wave { get; set; } = false;
 			[DataMember] public bool Spectrum { get; set; } = true;
-			[DataMember] public bool NotesGrid { get; set; } = true;
-			[DataMember] public bool DiscreteFourierGrid { get; set; } = true;
+			[DataMember] public bool NotesGrid { get; set; } = false;
+			[DataMember] public bool DiscreteFourierGrid { get; set; } = false;
 		}
 
-		[DataMember] public ShowOptions Show { get; set; } = new ShowOptions();
+		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 
-		[DataMember] public Func<double, double> FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
-		[DataMember] public Func<double, double> MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
-		[DataMember] public Func<double, double> PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public ScaleFunc FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
+		[DataMember] public ScaleFunc MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public ScaleFunc PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
 
-		public SmartSet<Func<double, double>> FrequancyScaleFuncs { get; set; } = new Func<double, double>[]
-		{
-			ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp
-		}.ToSet();
+		public SmartSet<ScaleFunc> FrequancyScaleFuncs { get; set; } = new ScaleFunc[]
+			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp }.ToSet();
 
 		[DataMember] public double LowMagnitude { get; set; } = 0d;
 		[DataMember] public double TopMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
-		[DataMember] public double TopFrequency { get; set; } = 9000d;
+		[DataMember] public double TopFrequency { get; set; } = 5000d;
 
 		[DataMember] public bool UseNoteFilter { get; set; }
 		[DataMember] public bool AutoSensitive { get; set; } = true;
@@ -125,49 +164,6 @@ namespace Solfeggio.Presenters
 			Enumerable.Range(-9, 12).Select(dt => baseFrequancy * Math.Pow(halftoneStep, dt)).ToArray();
 
 		protected double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
-	}
-
-	[DataContract]
-	public class MusicalPresenter : MusicalPresenterOptions
-	{
-		public class PianoKey
-		{
-			public int NoteNumber { get; set; }
-			public string NoteName { get; set; }
-			public double Magnitude { get; set; }
-			public double LowFrequency { get; set; }
-			public double TopFrequency { get; set; }
-			public double EthalonFrequency { get; set; }
-			public Complex Peak { get; set; }
-			public int Hits { get; set; }
-
-			public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
-			{
-				var lowNoteNumber = 0;
-				var topNoteNumber = oktaveNotes.Length - 1;
-
-				var activeNote = oktaveNotes[noteNumber];
-				var lowNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
-				var topNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
-
-				var ethalonOffset = Math.Log(activeNote, 2d);
-				var lowOffset = (Math.Log(lowNote, 2d) + ethalonOffset) / 2d;
-				var topOffset = (ethalonOffset + Math.Log(topNote, 2d)) / 2d;
-
-				var lowFrequency = Math.Pow(2d, lowOffset);
-				var topFrequency = Math.Pow(2d, topOffset);
-				var ethalonFrequency = activeNote; // Math.Pow(2d, ethalonOffset)
-
-				return new PianoKey
-				{
-					NoteNumber = noteNumber,
-					NoteName = note + oktaveNumber,
-					LowFrequency = lowFrequency,
-					TopFrequency = topFrequency,
-					EthalonFrequency = activeNote,
-				};
-			}
-		}
 
 		private void SetVariables(double visualSize, out double visualStretchFactor,
 			out double lowVisualIncrementOffset, out double topVisualIncrementOffset,
