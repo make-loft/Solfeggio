@@ -235,13 +235,14 @@ namespace Solfeggio.Presenters
 
 		public void DrawWave(ICollection<Point> points, IList<Complex> data, double width, double height)
 		{
-			var step = width / data.Count;
+			var vIncrementOffset = height / 2d;
+			var vStretchFactor = height / 4d;
+			var hStretchFactor = width / data.Count;
 			foreach (var pair in data)
 			{
-				var binIndex = pair.Real;
-				var binValue = pair.Imaginary;
-				var x = binIndex * step;
-				var y = height * (0.5d + binValue / 500000);
+				pair.Deconstruct(out var frequancy, out var magnitude);
+				var x = frequancy.Stretch(hStretchFactor);
+				var y = magnitude.Stretch(vStretchFactor).Increment(vIncrementOffset);
 				points.Add(new Point(x, y));
 			}
 		}
