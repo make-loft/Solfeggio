@@ -43,6 +43,8 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.BlanchedAlmond);
 	}
 
+	public delegate double ScaleFunc(double value);
+
 	public static class ScaleFuncs
 	{
 		public static double Lineal(double value) => value;
@@ -50,8 +52,6 @@ namespace Solfeggio.Presenters
 		public static double Log(double value) => value.Is(0d) ? 0d : Math.Log(value);
 		public static double Exp(double value) => Math.Exp(value);
 	}
-
-	public delegate double ScaleFunc(double v);
 
 	[DataContract]
 	public class MusicalPresenter : ContextObject
@@ -108,13 +108,6 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 
-		[DataMember] public ScaleFunc FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
-		[DataMember] public ScaleFunc MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
-		[DataMember] public ScaleFunc PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
-
-		public SmartSet<ScaleFunc> FrequancyScaleFuncs { get; set; } = new ScaleFunc[]
-			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp }.ToSet();
-
 		[DataMember] public double LowMagnitude { get; set; } = 0d;
 		[DataMember] public double TopMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
@@ -126,7 +119,7 @@ namespace Solfeggio.Presenters
 		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
 
-		public SmartSet<double> PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d }.ToSet();
+		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
 
 		[DataMember]
@@ -139,6 +132,17 @@ namespace Solfeggio.Presenters
 				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
 			}
 		}
+
+		private static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
+			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp };
+
+		[DataMember] public ScaleFunc[] InlinedScaleFuncs { get; set; } = AllScaleFuncs;
+		[DataMember] public ScaleFunc[] FrequancyScaleFuncs { get; set; } = AllScaleFuncs;
+		[DataMember] public ScaleFunc[] MagnitudeScaleFuncs { get; set; } = AllScaleFuncs;
+
+		[DataMember] public ScaleFunc FrequancyScaleFunc { get; set; } = ScaleFuncs.Log2;
+		[DataMember] public ScaleFunc MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public ScaleFunc PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
 
 		protected static readonly string[] DiesNotation =
 			{"C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"};
