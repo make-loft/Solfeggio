@@ -56,7 +56,8 @@ namespace Solfeggio.Views
 					presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
 
 				var tops = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
-				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height, presenter.Show.PeakHz, presenter.Show.Notes);
+				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height,
+					presenter.Show.ActualFrequncy, presenter.Show.EthalonFrequncy, presenter.Show.Notes);
 			};
 
 			timer.Start();

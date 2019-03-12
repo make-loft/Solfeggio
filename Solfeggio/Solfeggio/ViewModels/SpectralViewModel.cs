@@ -162,7 +162,7 @@ namespace Solfeggio.ViewModels
 				if (ActiveDevice.IsNot()) return;
 				SampleRates = ActiveDevice.SampleRates.ToSet();
 				ActiveDevice.DataReady += OnActiveDeviceOnDataReady;
-				ActiveDevice.StartWith();
+				ActiveDevice.StartWith(default, FrameSize);
 			};
 
 			EvokePropertyChanged(() => ActiveDevice);

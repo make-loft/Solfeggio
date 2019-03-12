@@ -25,10 +25,11 @@ namespace Solfeggio
             }
             
             _wi = new WaveIn {DeviceNumber = 0, WaveFormat = new WaveFormat((int) SampleRate, 1)};
-            SampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
+            var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
             var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
-            var milliseconds = 1000d * SampleSize / actualSampleRate;
-            milliseconds = Math.Ceiling(milliseconds / 100) * 100;
+            var milliseconds = 1000d * sampleSize / actualSampleRate;
+            milliseconds = Math.Ceiling(milliseconds / 10) * 10;
+			SampleSize = (int)(milliseconds * actualSampleRate / 1000d);
             _wi.BufferMilliseconds = (int) milliseconds;
             _wi.DataAvailable += OnWiOnDataAvailable;
 

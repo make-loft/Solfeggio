@@ -98,7 +98,8 @@ namespace Solfeggio.Presenters
 		[DataContract]
 		public class VisualStates
 		{
-			[DataMember] public bool PeakHz { get; set; } = true;
+			[DataMember] public bool ActualFrequncy { get; set; } = true;
+			[DataMember] public bool EthalonFrequncy { get; set; } = true;
 			[DataMember] public bool Notes { get; set; } = true;
 			[DataMember] public bool Wave { get; set; } = false;
 			[DataMember] public bool Spectrum { get; set; } = true;
@@ -296,7 +297,8 @@ namespace Solfeggio.Presenters
 			points.Add(new Point(width, height));
 		}
 
-		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height, bool showHz, bool showNotes)
+		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height,
+			bool showActualFrequncy, bool showEthlonFrequncy, bool showNotes)
 		{
 			SetVariables(width, out var hVisualStretchFactor,
 				out var hVisualDecrementOffset, out var _,
@@ -318,7 +320,7 @@ namespace Solfeggio.Presenters
 				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
 				var vVisualOffset = magnitudeScaleFunc(activeMagnitude).Stretch(vVisualStretchFactor);
 
-				if (showNotes.Not() && showHz.Not()) return;
+				if (showActualFrequncy.Not() && showEthlonFrequncy.Not() && showNotes.Not()) return;
 
 				var panel = new StackPanel
 				{
@@ -333,7 +335,7 @@ namespace Solfeggio.Presenters
 				var expressionLevel = (1d + activeMagnitude / topMagnitude);
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
-				if (showHz)
+				if (showActualFrequncy)
 				{
 					panel.Children.Add(new TextBlock
 					{
@@ -344,19 +346,19 @@ namespace Solfeggio.Presenters
 					});
 				}
 
+				if (showEthlonFrequncy)
+				{
+					panel.Children.Add(new TextBlock
+					{
+						Opacity = 0.5 * expressionLevel,
+						FontSize = 8.0 * expressionLevel,
+						Foreground = AppPalette.NoteBrush,
+						Text = key.EthalonFrequency.ToString("F")
+					});
+				}
+
 				if (showNotes)
 				{
-					if (showHz)
-					{
-						panel.Children.Add(new TextBlock
-						{
-							Opacity = 0.5 * expressionLevel,
-							FontSize = 8.0 * expressionLevel,
-							Foreground = AppPalette.NoteBrush,
-							Text = key.EthalonFrequency.ToString("F")
-						});
-					}
-
 					panel.Children.Add(new TextBlock
 					{
 						Opacity = 0.5 * expressionLevel,
@@ -425,7 +427,7 @@ namespace Solfeggio.Presenters
 			}
 
 			averageMagnitude /= m;
-			var minMagnitude = averageMagnitude * 0.40;
+			var minMagnitude = TopMagnitude * 0.2;
 			var tops = keys.OrderByDescending(k => k.Magnitude).Take(10).Where(k => k.Magnitude > minMagnitude).ToList();
 
 			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);

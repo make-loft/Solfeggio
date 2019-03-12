@@ -2,10 +2,8 @@
 	x:Class="Solfeggio.Views.SolfeggioView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:c="clr-namespace:Ace.Converters;assembly=Ace"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	xmlns:views="clr-namespace:Solfeggio.Views"
 	DataContext="{m:Store Key=vm:SpectralViewModel}"
 	HorizontalContentAlignment="Stretch"
@@ -13,6 +11,21 @@
 	HorizontalAlignment="Stretch"
 	VerticalAlignment="Stretch"
 	Background="DimGray">
+
+	<ContentControl.Resources>
+		<Style
+			TargetType="Canvas">
+			<Setter
+				Property="CacheMode"
+				Value="BitmapCache" />
+		</Style>
+		<Style
+			TargetType="Polyline">
+			<Setter
+				Property="CacheMode"
+				Value="BitmapCache" />
+		</Style>
+	</ContentControl.Resources>
 
 	<Grid
 		m:Rack.Columns="Auto *"
@@ -42,13 +55,11 @@
 			<Polyline
 				Name="WaveInPolyline"
 				Stroke="Crimson"
-				StrokeThickness="1"
-				DataContext="{m:Store Key=p:MusicalPresenter}" />
+				StrokeThickness="1" />
 			<Polyline
 				Name="WaveOutPolyline"
 				Stroke="YellowGreen"
-				StrokeThickness="1"
-				DataContext="{m:Store Key=p:MusicalPresenter}" />
+				StrokeThickness="1" />
 		</Canvas>
 
 		<Canvas
