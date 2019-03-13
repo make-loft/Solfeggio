@@ -13,18 +13,18 @@ namespace Solfeggio
         public double SampleRate => 44100;
         public int SampleSize { get; private set; }
         public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(_wi.BufferMilliseconds);
-        private WaveIn _wi;
+        private readonly WaveIn _wi = new WaveIn();
         
         public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
             if (_wi.Is())
             {
-                Stop();
-                _wi.DataAvailable -= OnWiOnDataAvailable;
+				Stop();
+				_wi.DataAvailable -= OnWiOnDataAvailable;
                 _wi.Dispose();
-            }
-            
-            _wi = new WaveIn {DeviceNumber = 0, WaveFormat = new WaveFormat((int) SampleRate, 1)};
+			}
+
+			_wi.With(_wi.DeviceNumber = 0, _wi.WaveFormat = new WaveFormat((int)SampleRate, 1));
             var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
             var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
             var milliseconds = 1000d * sampleSize / actualSampleRate;
@@ -50,22 +50,9 @@ namespace Solfeggio
             DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
         }
 
-        private bool _inRecording;
+		public void Start() => _wi.StartRecording();
+		public void Stop() => _wi.StopRecording();
 
-        public void Start()
-        {
-            if (_inRecording.Is(true)) return;
-            _wi.StartRecording();
-            _inRecording = true;
-        }
-
-        public void Stop()
-        {
-            if (_inRecording.Is(false)) return;
-            _wi.StopRecording();
-            _inRecording = false;
-        }
-
-        public event EventHandler<AudioInputEventArgs> DataReady;
+		public event EventHandler<AudioInputEventArgs> DataReady;
     }
 }

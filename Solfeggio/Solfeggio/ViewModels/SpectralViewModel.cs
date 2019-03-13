@@ -83,7 +83,7 @@ namespace Solfeggio.ViewModels
 
 		[DataMember] public bool UseAliasing { get; set; } = true;
 		[DataMember] public double ShiftsPerFrame { get; set; } = 0;
-		private int ShiftSize => (int)(FrameSize / ShiftsPerFrame);
+		private int ShiftSize => ShiftsPerFrame.Is(0d) ? 0 : (int)(FrameSize / ShiftsPerFrame);
 
 		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
 
@@ -93,7 +93,7 @@ namespace Solfeggio.ViewModels
 
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
-				ActiveDevice.StartWith(ActiveDevice.SampleRate, (int)(FrameSize * (1d + 1d / ShiftsPerFrame)));
+				ActiveDevice.StartWith(ActiveDevice.SampleRate, FrameSize + ShiftSize);
 				EvokePropertyChanged(nameof(FrameDuration));
 				EvokePropertyChanged(nameof(FrameSize));
 			};
@@ -139,7 +139,9 @@ namespace Solfeggio.ViewModels
 				WaveInData = args.Frame.Take(outSample.Length).Select(c => new Complex(j++, c.Real)).ToArray();
 				WaveOutData = outSample.Select(c => new Complex(k++, c.Real)).ToArray();
 
-				var spectrum = Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
+				var spectrum = ShiftsPerFrame.Is(0d)
+					? Filtering.GetSpectrum(spectrum0, SampleRate)
+					: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
 				if (UseAliasing) spectrum = Filtering.Correct(spectrum);
 				foreach (var pitch in Pitches.ToArray())
 				{

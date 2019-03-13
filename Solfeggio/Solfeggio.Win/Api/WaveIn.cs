@@ -217,28 +217,19 @@ namespace Solfeggio.Api
         public Guid ProductGuid { get; }
         public Guid ManufacturerGuid { get; }
 
-        public bool SupportsWaveFormat(SupportedWaveFormat waveFormat)
-        {
-            return (supportedFormats & waveFormat) == waveFormat;
-        }
-
-    }
+		public bool SupportsWaveFormat(SupportedWaveFormat waveFormat) => (supportedFormats & waveFormat) == waveFormat;
+	}
     
     public class WaveIn : IWaveIn
     {
-        private IntPtr waveInHandle;
-        private volatile bool recording;
+		public bool IsInRecording { get; set; }
+
+		private IntPtr waveInHandle;
         private WaveInBuffer[] buffers;
         private readonly WaveInterop.WaveCallback callback;
         private int lastReturnedBufferIndex;
-        /// <summary>
-        /// Indicates recorded data is available 
-        /// </summary>
-        public event EventHandler<WaveInEventArgs> DataAvailable;
 
-        /// <summary>
-        /// Indicates that all recorded data has now been received.
-        /// </summary>
+        public event EventHandler<WaveInEventArgs> DataAvailable;
         public event EventHandler<StoppedEventArgs> RecordingStopped;
 
         public WaveIn()
@@ -265,16 +256,8 @@ namespace Solfeggio.Api
             return result;
         }
 
-        /// <summary>
-        /// Returns the number of Wave In devices available in the system
-        /// </summary>
         public static int DeviceCount => WaveInterop.waveInGetNumDevs();
 
-        /// <summary>
-        /// Retrieves the capabilities of a waveIn device
-        /// </summary>
-        /// <param name="devNumber">Device to test</param>
-        /// <returns>The WaveIn device capabilities</returns>
         public static WaveInCapabilities GetCapabilities(int devNumber)
         {
             var caps = new WaveInCapabilities();
@@ -283,9 +266,6 @@ namespace Solfeggio.Api
             return caps;
         }
 
-        /// <summary>
-        /// Milliseconds for the buffer. Recommended value is 100ms
-        /// </summary>
         public int BufferMilliseconds { get; set; }
         public int NumberOfBuffers { get; set; }
         public int DeviceNumber { get; set; }
@@ -313,7 +293,7 @@ namespace Solfeggio.Api
         {
             if (message == WaveInterop.WaveMessage.WaveInData)
             {
-                if (recording)
+                if (IsInRecording)
                 {
                     var hBuffer = (GCHandle)waveHeader.userData;
                     var buffer = (WaveInBuffer)hBuffer.Target;
@@ -327,7 +307,7 @@ namespace Solfeggio.Api
                     }
                     catch (Exception e)
                     {
-                        recording = false;
+                        IsInRecording = false;
                     }
                 }
             }
@@ -344,19 +324,14 @@ namespace Solfeggio.Api
             CreateBuffers();
         }
 
-        /// <summary>
-        /// Start recording
-        /// </summary>
         public void StartRecording()
         {
-            if (recording)
-            {
-                throw new InvalidOperationException("Already recording");
-            }
+			if (IsInRecording) return;
+
             OpenWaveInDevice();
             EnqueueBuffers();
             MmException.Try(WaveInterop.waveInStart(waveInHandle), "waveInStart");
-            recording = true;
+            IsInRecording = true;
         }
 
         private void EnqueueBuffers()
@@ -374,32 +349,31 @@ namespace Solfeggio.Api
         /// Stop recording
         /// </summary>
         public void StopRecording()
-        {
-            if (recording)
-            {
-                recording = false;
-                MmException.Try(WaveInterop.waveInStop(waveInHandle), "waveInStop");
-                // report the last buffers, sometimes more than one, so taking care to report them in the right order
-                for (int n = 0; n < buffers.Length; n++)
-                {
-                    int index = (n + lastReturnedBufferIndex + 1) % buffers.Length;
-                    var buffer = buffers[index];
-                    if (buffer.Done)
-                    {
-                        RaiseDataAvailable(buffer);
-                    }
-                }
-            }
-            //MmException.Try(WaveInterop.waveInReset(waveInHandle), "waveInReset");      
-            // Don't actually close yet so we get the last buffer
-        }
+		{
+			if (!IsInRecording) return;
+			IsInRecording = false;
+			Console.Beep();
+			MmException.Try(WaveInterop.waveInStop(waveInHandle), "waveInStop");
+			// report the last buffers, sometimes more than one, so taking care to report them in the right order
+			for (int n = 0; n < buffers.Length; n++)
+			{
+				int index = (n + lastReturnedBufferIndex + 1) % buffers.Length;
+				var buffer = buffers[index];
+				if (buffer.Done)
+				{
+					RaiseDataAvailable(buffer);
+				}
+			}
+			//MmException.Try(WaveInterop.waveInReset(waveInHandle), "waveInReset");      
+			// Don't actually close yet so we get the last buffer
+		}
 
-        /// <summary>
-        /// Gets the current position in bytes from the wave input device.
-        /// it calls directly into waveInGetPosition)
-        /// </summary>
-        /// <returns>Position in bytes</returns>
-        public long GetPosition()
+		/// <summary>
+		/// Gets the current position in bytes from the wave input device.
+		/// it calls directly into waveInGetPosition)
+		/// </summary>
+		/// <returns>Position in bytes</returns>
+		public long GetPosition()
         {
             MmTime mmTime = new MmTime();
             mmTime.wType = MmTime.TIME_BYTES; // request results in bytes, TODO: perhaps make this a little more flexible and support the other types?
@@ -416,7 +390,7 @@ namespace Solfeggio.Api
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
-            if (recording) StopRecording();
+            if (IsInRecording) StopRecording();
             CloseWaveInDevice();
         }
 

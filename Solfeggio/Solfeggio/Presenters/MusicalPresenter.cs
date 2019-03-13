@@ -37,6 +37,7 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush FullToneKeyBrush = new SolidColorBrush(Colors.White);
 		public static SolidColorBrush HalfToneKeyBrush = new SolidColorBrush(Colors.Black);
 
+		public static SolidColorBrush MarkerBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.3d };
 		public static SolidColorBrush ButterflyGridBrush = new SolidColorBrush(Colors.Violet) { Opacity = 0.3d };
 		public static SolidColorBrush NoteGridBrush = new SolidColorBrush(Colors.Purple) { Opacity = 0.3d };
 		public static SolidColorBrush NoteBrush = new SolidColorBrush(Colors.Purple);
@@ -184,6 +185,23 @@ namespace Solfeggio.Presenters
 			lowVisualIncrementOffset = visualSize * lowLogicalOffset / (topLogicalOffset - lowLogicalOffset);
 			topVisualIncrementOffset = visualSize * topLogicalOffset / (topLogicalOffset - lowLogicalOffset);
 			visualStretchFactor = topVisualIncrementOffset / topLogicalOffset;
+		}
+
+		public void DrawMarkers(System.Collections.IList items, double width, double height, double step, double[] markers)
+		{
+			SetVariables(width, out var hVisualStretchFactor,
+				out var hVisualDecrementOffset, out var _,
+				out var lowFrequency, out var topFrequency);
+
+			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
+			var finishFrequency = TopFrequency;
+			var frequancyScaleFunc = FrequancyScaleFunc;
+
+			foreach (var activeFrequency in markers)
+			{
+				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
+				ConstructVerticalLine(hVisualOffset, height, AppPalette.MarkerBrush).Use(items.Add);
+			}
 		}
 
 		public void DrawGrid(System.Collections.IList items, double width, double height, double step)

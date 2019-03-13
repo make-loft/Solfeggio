@@ -107,6 +107,16 @@
 			<Switch
 				Tag="{m:Localizing Key=UseAliasing}"
 				IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
+
+			<ItemsView>
+				<Entry
+					Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+				<Slider
+					Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
+					Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
+					Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+
+			</ItemsView>
 		</m:Set>
 	</ContentView.Resources>
 
@@ -238,6 +248,16 @@
 					Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
 					Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
 					Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+
+				<Switch
+					Tag="{m:Localizing Key=UseAliasing}"
+					IsToggled="{m:StoreBinding Path=UseAliasing, StoreKey=viewModels:SpectralViewModel}" />
+				<Picker
+					DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+					Tag="{m:Localizing Key=Device}"
+					ItemsSource="{Binding Devices}"
+					SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+
 			</ItemsView>
 
 		</controls:PivotItem>

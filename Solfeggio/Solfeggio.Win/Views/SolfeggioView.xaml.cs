@@ -15,6 +15,7 @@ namespace Solfeggio.Views
 			InitializeComponent();
 
 			var spectralViewModel = Store.Get<SpectralViewModel>();
+			var generator = spectralViewModel.Devices[1].To<Generator>();
 			var presenter = Store.Get<MusicalPresenter>();
 			var timer = new DispatcherTimer();
 			timer.Tick += (o, e) =>
@@ -45,6 +46,9 @@ namespace Solfeggio.Views
 
 				if (presenter.Show.DiscreteFourierGrid)
 					presenter.DrawGrid(SpectrumCanvas.Children, width, height, step);
+
+				if (presenter.Show.DiscreteFourierGrid)
+					presenter.DrawMarkers(SpectrumCanvas.Children, width, height, step, new[] {generator.Frequancy });
 
 				if (presenter.Show.NotesGrid)
 					presenter.DrawNotes(SpectrumCanvas.Children, width, height, step);
