@@ -62,6 +62,15 @@
 			<Switch
 				Tag="{m:Localizing Key=DiscreteFourierGrid}"
 				IsToggled="{Binding Show.DiscreteFourierGrid, Mode=TwoWay}" />
+
+			<ItemsView>
+				<Entry
+					Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+				<Slider
+					Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
+					Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
+					Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+			</ItemsView>
 		</m:Set>
 		
 		<m:Set x:Key="AdvancedOptionsSet">
@@ -216,6 +225,20 @@
 				ItemTemplate="{StaticResource OptionTemplate}"
 				ItemsSource="{StaticResource AdvancedOptionsSet}"
 				BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
+
+		</controls:PivotItem>
+
+		<controls:PivotItem
+			Header="{m:Localizing Key=Generator}">
+
+			<ItemsView>
+				<Entry
+					Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+				<Slider
+					Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
+					Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
+					Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+			</ItemsView>
 
 		</controls:PivotItem>
 

@@ -9,7 +9,7 @@ namespace Solfeggio
     {
         public static readonly Microphone Default = new Microphone();
 
-        public double[] SampleRates { get; } = {(double) 44100};
+        public double[] SampleRates { get; } = {44100};
         public double SampleRate => 44100;
         public int SampleSize { get; private set; }
         public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(_wi.BufferMilliseconds);

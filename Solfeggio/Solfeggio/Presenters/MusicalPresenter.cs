@@ -90,7 +90,7 @@ namespace Solfeggio.Presenters
 					NoteName = note + oktaveNumber,
 					LowFrequency = lowFrequency,
 					TopFrequency = topFrequency,
-					EthalonFrequency = activeNote,
+					EthalonFrequency = ethalonFrequency,
 				};
 			}
 		}

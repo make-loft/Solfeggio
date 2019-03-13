@@ -98,6 +98,7 @@
     <Compile Include="Controls\Pivot.cs" />
     <Compile Include="Converters\PowConverter.cs" />
     <Compile Include="Dictionaries\Templates.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="Languages\English.Designer.cs">
       <DependentUpon>English.resx</DependentUpon>
       <AutoGen>True</AutoGen>

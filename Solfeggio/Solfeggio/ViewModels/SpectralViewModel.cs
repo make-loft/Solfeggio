@@ -16,7 +16,7 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveDevice, value);
 		}
 
-		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>() };
+		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>(), new Generator() };
 
 		public delegate double ApodizationFunc(double binIndex, double frameSize);
 
@@ -82,7 +82,7 @@ namespace Solfeggio.ViewModels
 		public double MaxSampleRate => ActiveDevice?.SampleRates.Max() ?? default;
 
 		[DataMember] public bool UseAliasing { get; set; } = true;
-		[DataMember] public double ShiftsPerFrame { get; set; } = 16;
+		[DataMember] public double ShiftsPerFrame { get; set; } = 0;
 		private int ShiftSize => (int)(FrameSize / ShiftsPerFrame);
 
 		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
@@ -162,7 +162,7 @@ namespace Solfeggio.ViewModels
 				if (ActiveDevice.IsNot()) return;
 				SampleRates = ActiveDevice.SampleRates.ToSet();
 				ActiveDevice.DataReady += OnActiveDeviceOnDataReady;
-				ActiveDevice.StartWith(default, FrameSize);
+				ActiveDevice.StartWith(default, FrameSize + ShiftSize);
 			};
 
 			EvokePropertyChanged(() => ActiveDevice);
