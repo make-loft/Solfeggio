@@ -41,7 +41,7 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush ButterflyGridBrush = new SolidColorBrush(Colors.Violet) { Opacity = 0.3d };
 		public static SolidColorBrush NoteGridBrush = new SolidColorBrush(Colors.Purple) { Opacity = 0.3d };
 		public static SolidColorBrush NoteBrush = new SolidColorBrush(Colors.Purple);
-		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.Chocolate);
+		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.LightGreen);
 	}
 
 	public delegate double ScaleFunc(double value);
@@ -196,10 +196,22 @@ namespace Solfeggio.Presenters
 
 			var frequancyScaleFunc = FrequancyScaleFunc;
 
+			var allMarkers = markers.ToArray();
+			var skip = allMarkers.Length > 10 ? allMarkers.Length / 10 : 0;
+			var i = 0;
+			var opacityLineBrush = lineBrush.Clone();
+			opacityLineBrush.Opacity = opacityLineBrush.Opacity * 0.3;
+			opacityLineBrush.Freeze();
+
 			foreach (var activeFrequency in markers)
 			{
+				i++;
+				var cont = skip > 0 && i % skip > 0;
+
 				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
-				ConstructVerticalLine(hVisualOffset, height, lineBrush).Use(items.Add);
+				ConstructVerticalLine(hVisualOffset, height, cont ? opacityLineBrush : lineBrush).Use(items.Add);
+
+				if (cont) continue;
 
 				var panel = new StackPanel
 				{
