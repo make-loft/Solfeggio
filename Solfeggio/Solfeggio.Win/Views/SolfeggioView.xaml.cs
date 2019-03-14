@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Linq;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -34,8 +32,6 @@ namespace Solfeggio.Views
 				SpectrumCanvas.Children.Add(WaveInPolyline);
 				SpectrumCanvas.Children.Add(WaveOutPolyline);
 
-				//var max = spectrum.Values.Max() * 0.7;
-
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
 
@@ -45,13 +41,19 @@ namespace Solfeggio.Views
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
 
 				if (presenter.Show.DiscreteFourierGrid)
-					presenter.DrawGrid(SpectrumCanvas.Children, width, height, step);
+					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
+						presenter.EnumerateGrid(step));
 
 				if (presenter.Show.DiscreteFourierGrid)
-					presenter.DrawMarkers(SpectrumCanvas.Children, width, height, step, new[] {generator.Frequancy });
+					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+						generator.Frequancy.ToEnumerable(), 0.92d);
 
 				if (presenter.Show.NotesGrid)
-					presenter.DrawNotes(SpectrumCanvas.Children, width, height, step);
+					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+						presenter.EnumerateNotes());
 
 				if (presenter.Show.Wave)
 					presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);

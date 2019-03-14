@@ -41,7 +41,7 @@ namespace Solfeggio.Presenters
 		public static SolidColorBrush ButterflyGridBrush = new SolidColorBrush(Colors.Violet) { Opacity = 0.3d };
 		public static SolidColorBrush NoteGridBrush = new SolidColorBrush(Colors.Purple) { Opacity = 0.3d };
 		public static SolidColorBrush NoteBrush = new SolidColorBrush(Colors.Purple);
-		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.BlanchedAlmond);
+		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.Chocolate);
 	}
 
 	public delegate double ScaleFunc(double value);
@@ -187,42 +187,53 @@ namespace Solfeggio.Presenters
 			visualStretchFactor = topVisualIncrementOffset / topLogicalOffset;
 		}
 
-		public void DrawMarkers(System.Collections.IList items, double width, double height, double step, double[] markers)
+		public void DrawMarkers(System.Collections.IList items, double width, double height,
+			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
 		{
 			SetVariables(width, out var hVisualStretchFactor,
 				out var hVisualDecrementOffset, out var _,
 				out var lowFrequency, out var topFrequency);
 
-			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
-			var finishFrequency = TopFrequency;
 			var frequancyScaleFunc = FrequancyScaleFunc;
 
 			foreach (var activeFrequency in markers)
 			{
 				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
-				ConstructVerticalLine(hVisualOffset, height, AppPalette.MarkerBrush).Use(items.Add);
+				ConstructVerticalLine(hVisualOffset, height, lineBrush).Use(items.Add);
+
+				var panel = new StackPanel
+				{
+					HorizontalAlignment = HorizontalAlignment.Left,
+					VerticalAlignment = VerticalAlignment.Top
+				};
+
+				panel.Children.Add(new TextBlock
+				{
+					Foreground = textBrush,
+					Text = activeFrequency.ToString("F")
+				});
+
+				items.Add(panel);
+				panel.UpdateLayout();
+				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth/2d, height * vLabelOffset, 0d, 0d);
 			}
 		}
 
-		public void DrawGrid(System.Collections.IList items, double width, double height, double step)
+		public IEnumerable<double> EnumerateGrid(double frequencyStep)
 		{
-			SetVariables(width, out var hVisualStretchFactor,
-				out var hVisualDecrementOffset, out var _,
-				out var lowFrequency, out var topFrequency);
-
-			var startFrequency = Math.Ceiling(LowFrequency / step) * step;
 			var finishFrequency = TopFrequency;
-			var frequancyScaleFunc = FrequancyScaleFunc;
+			var startFrequency = Math.Ceiling(LowFrequency / frequencyStep) * frequencyStep;
 
-			for (var activeFrequency = startFrequency; activeFrequency < finishFrequency; activeFrequency += step)
+			for (var value = startFrequency; value < finishFrequency; value += frequencyStep)
 			{
-				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
-				ConstructVerticalLine(hVisualOffset, height, AppPalette.ButterflyGridBrush).Use(items.Add);
+				yield return value;
 			}
 		}
 
-		private IEnumerable<double> EnumerateNotes(double breakFrequancy)
+		public IEnumerable<double> EnumerateNotes(double breakFrequancy = default)
 		{
+			breakFrequancy = breakFrequancy.Is(default) ? TopFrequency : breakFrequancy;
+
 			for (var j = 0; ; j++)
 			{
 				for (var i = 0; i < _baseOktaveFrequencySet.Length; i++)
@@ -231,24 +242,6 @@ namespace Solfeggio.Presenters
 					if (note > breakFrequancy) yield break;
 					else yield return note;
 				}
-			}
-		}
-
-		public void DrawNotes(System.Collections.IList items, double width, double height, double step)
-		{
-			SetVariables(width, out var hVisualStretchFactor,
-				out var hVisualDecrementOffset, out var _,
-				out var lowFrequency, out var topFrequency);
-
-			var frequancyScaleFunc = FrequancyScaleFunc;
-
-			foreach (var activeFrequency in EnumerateNotes(topFrequency))
-			{
-				if (activeFrequency < lowFrequency) continue;
-				if (activeFrequency > topFrequency) break;
-
-				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
-				ConstructVerticalLine(hVisualOffset, height, AppPalette.NoteGridBrush).Use(items.Add);
 			}
 		}
 
