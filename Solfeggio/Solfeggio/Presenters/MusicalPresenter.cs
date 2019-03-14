@@ -197,7 +197,7 @@ namespace Solfeggio.Presenters
 			var frequancyScaleFunc = FrequancyScaleFunc;
 
 			var allMarkers = markers.ToArray();
-			var skip = allMarkers.Length > 10 ? allMarkers.Length / 10 : 0;
+			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
 			opacityLineBrush.Opacity = opacityLineBrush.Opacity * 0.3;
@@ -205,13 +205,13 @@ namespace Solfeggio.Presenters
 
 			foreach (var activeFrequency in markers)
 			{
-				i++;
-				var cont = skip > 0 && i % skip > 0;
+				var skipLabel = skip > 0 && i++ % skip > 0;
 
 				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
-				ConstructVerticalLine(hVisualOffset, height, cont ? opacityLineBrush : lineBrush).Use(items.Add);
+				if (hVisualOffset < 0) continue;
+				ConstructVerticalLine(hVisualOffset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
 
-				if (cont) continue;
+				if (skipLabel) continue;
 
 				var panel = new StackPanel
 				{
@@ -219,8 +219,11 @@ namespace Solfeggio.Presenters
 					VerticalAlignment = VerticalAlignment.Top
 				};
 
+				var fontSize = frequancyScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
+				fontSize = fontSize > 20d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
 				{
+					FontSize = fontSize,
 					Foreground = textBrush,
 					Text = activeFrequency.ToString("F")
 				});
@@ -234,7 +237,7 @@ namespace Solfeggio.Presenters
 		public IEnumerable<double> EnumerateGrid(double frequencyStep)
 		{
 			var finishFrequency = TopFrequency;
-			var startFrequency = Math.Ceiling(LowFrequency / frequencyStep) * frequencyStep;
+			var startFrequency = 0d; //Math.Ceiling(LowFrequency / frequencyStep) * frequencyStep;
 
 			for (var value = startFrequency; value < finishFrequency; value += frequencyStep)
 			{
@@ -454,7 +457,7 @@ namespace Solfeggio.Presenters
 			var tops = keys.OrderByDescending(k => k.Magnitude).Take(10).Where(k => k.Magnitude > minMagnitude).ToList();
 
 			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);
-			keys.ForEach(k => k.Magnitude = k.Magnitude * k.Magnitude);
+			keys.ForEach(k => k.Magnitude *= k.Magnitude);
 			var maxMagnitude = topMagnitude * topMagnitude * 0.32; // keys.Max(k => k.Magnitude);
 																	 //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
 
