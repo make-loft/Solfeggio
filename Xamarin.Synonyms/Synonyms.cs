@@ -21,7 +21,12 @@ namespace Xamarin.Forms
 	}
 
 	public class StackLayout : StackPanel
-	{ }
+	{
+	}
+
+	public class ScrollViewer : System.Windows.Controls.ScrollViewer
+	{
+	}
 
 	public class ItemsView : ItemsControl
 	{

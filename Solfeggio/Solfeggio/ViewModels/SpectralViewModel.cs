@@ -89,19 +89,11 @@ namespace Solfeggio.ViewModels
 
 		public void Expose()
 		{
-			var tracker = new Pitch.PitchTracker();
-
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
 				ActiveDevice.StartWith(ActiveDevice.SampleRate, FrameSize + ShiftSize);
 				EvokePropertyChanged(nameof(FrameDuration));
 				EvokePropertyChanged(nameof(FrameSize));
-			};
-
-			tracker.PitchDetected += (t, r) =>
-			{
-				if (r.Pitch == 0f) return;
-				Pitches.Add(r.Pitch);
 			};
 
 			void OnActiveDeviceOnDataReady(object sender, AudioInputEventArgs args)
@@ -122,8 +114,6 @@ namespace Solfeggio.ViewModels
 			SkipApodization:
 
 				var floats = frame0.Select(v => (float)(v.Real/short.MaxValue)).ToArray();
-				tracker.SampleRate = SampleRate;
-				tracker.ProcessBuffer(floats);
 
 				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
 				var spectrum0 = frame0.DecimationInTime(true);
@@ -143,11 +133,6 @@ namespace Solfeggio.ViewModels
 					? Filtering.GetSpectrum(spectrum0, SampleRate)
 					: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
 				if (UseAliasing) spectrum = Filtering.Correct(spectrum);
-				foreach (var pitch in Pitches.ToArray())
-				{
-					Pitches.Remove(pitch);
-					//var index = spectrum.BinarySearch(new Complex(pitch, 0d), Comparer<Complex>.Create());
-				}
 
 				CurrentSpectrum = spectrum;
 			}

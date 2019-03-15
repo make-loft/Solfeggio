@@ -39,6 +39,11 @@
 				SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
 				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 
+			<Picker
+				Tag="{m:Localizing Key=FloatStringFormat}"
+				ItemsSource="{Binding FloatStringFormats}"
+				SelectedItem="{Binding FloatStringFormat, Mode=TwoWay}" />
+
 			<Switch
 				Tag="{m:Localizing Key=PeakHz}"
 				IsToggled="{Binding Show.PeakHz, Mode=TwoWay}" />
@@ -95,14 +100,14 @@
 				ItemsSource="{StaticResource AllowedPowsOf2}"
 				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 
-			<Picker
+			<!--<Picker
 				Tag="{m:Localizing Key=ShiftSize}"
 				ItemsSource="{StaticResource AllowedPowsOf2}"
 				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 
 			<Entry
 				Tag="{m:Localizing Key=ShiftsPerFrame}"
-				Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />
+				Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />-->
 
 			<Switch
 				Tag="{m:Localizing Key=UseAliasing}"
@@ -120,7 +125,7 @@
 		</m:Set>
 	</ContentView.Resources>
 
-	<controls:Pivot>
+	<controls:Pivot VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
@@ -220,46 +225,22 @@
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Visualization}">
-			
-			<ItemsView
-				ItemTemplate="{StaticResource OptionTemplate}"
-				ItemsSource="{StaticResource VisualizationOptionsSet}"
-				BindingContext="{m:Store Key=presenters:MusicalPresenter}" />
-
+			<ScrollViewer>
+				<ItemsView
+					ItemTemplate="{StaticResource OptionTemplate}"
+					ItemsSource="{StaticResource VisualizationOptionsSet}"
+					BindingContext="{m:Store Key=presenters:MusicalPresenter}" />
+			</ScrollViewer>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Advanced}">
-
-			<ItemsView
+			<ScrollViewer>
+				<ItemsView
 				ItemTemplate="{StaticResource OptionTemplate}"
 				ItemsSource="{StaticResource AdvancedOptionsSet}"
 				BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
-
-		</controls:PivotItem>
-
-		<controls:PivotItem
-			Header="{m:Localizing Key=Generator}">
-
-			<ItemsView>
-				<Entry
-					Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-				<Slider
-					Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
-					Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
-					Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-
-				<Switch
-					Tag="{m:Localizing Key=UseAliasing}"
-					IsToggled="{m:StoreBinding Path=UseAliasing, StoreKey=viewModels:SpectralViewModel}" />
-				<Picker
-					DataContext="{m:Store Key=viewModels:SpectralViewModel}"
-					Tag="{m:Localizing Key=Device}"
-					ItemsSource="{Binding Devices}"
-					SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
-
-			</ItemsView>
-
+			</ScrollViewer>
 		</controls:PivotItem>
 
 	</controls:Pivot>

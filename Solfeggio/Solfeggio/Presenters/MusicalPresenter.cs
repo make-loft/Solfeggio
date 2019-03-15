@@ -120,6 +120,9 @@ namespace Solfeggio.Presenters
 		[DataMember] public double AutoSensitiveStep { get; set; } = 0.02d;
 		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
+		[DataMember] public string FloatStringFormat { get; set; } = "F0";
+
+		[DataMember] public string[] FloatStringFormats { get; }  = new[] { "F0", "F1", "F2", "F3" };
 
 		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
@@ -200,7 +203,7 @@ namespace Solfeggio.Presenters
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
-			opacityLineBrush.Opacity = opacityLineBrush.Opacity * 0.3;
+			opacityLineBrush.Opacity *= 0.3;
 			opacityLineBrush.Freeze();
 
 			foreach (var activeFrequency in markers)
@@ -225,7 +228,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString("F")
+					Text = activeFrequency.ToString(FloatStringFormat)
 				});
 
 				items.Add(panel);
@@ -368,7 +371,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString("F")
+						Text = activeFrequency.ToString(FloatStringFormat)
 					});
 				}
 
@@ -379,7 +382,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString("F")
+						Text = key.EthalonFrequency.ToString(FloatStringFormat)
 					});
 				}
 

@@ -10,7 +10,7 @@ namespace Solfeggio
 		public AppView()
 		{
 			InitializeComponent();
-			var optionsView = new Window { Content = new OptionsView(), Width = 350, Height = 400 };
+			var optionsView = new Window { Content = new OptionsView(), Width = 400, Height = 300 };
 			optionsView.Show();
 			Closed += (o, e) =>
 			{
