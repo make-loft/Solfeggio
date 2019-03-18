@@ -99,12 +99,9 @@
     <Compile Include="Converters\PowConverter.cs" />
     <Compile Include="Dictionaries\Templates.cs" />
     <Compile Include="Generator.cs" />
-    <Compile Include="Languages\English.Designer.cs">
-      <DependentUpon>English.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Microphone.cs" />
+    <Compile Include="Palettes\Languages\English.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>
@@ -144,10 +141,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Languages\English.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>English.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

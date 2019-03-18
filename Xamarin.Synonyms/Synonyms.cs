@@ -46,7 +46,7 @@ namespace Xamarin.Forms
 
 		protected override bool IsItemItsOwnContainerOverride(object item)
 		{
-			if (item is Control c) c.DataContext = DataContext;
+			if (item is Control c && c.DataContext is null) c.DataContext = DataContext;
 			return false; // wrap always
 		}
 	}

@@ -80,6 +80,11 @@
 		
 		<m:Set x:Key="AdvancedOptionsSet">
 			<Picker
+				Tag="{m:Localizing Key=Language}"
+				ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
+				SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
+
+			<Picker
 				Tag="{m:Localizing Key=Device}"
 				ItemsSource="{Binding Devices}"
 				SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
@@ -125,7 +130,7 @@
 		</m:Set>
 	</ContentView.Resources>
 
-	<controls:Pivot VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+	<controls:Pivot>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
@@ -237,9 +242,19 @@
 			Header="{m:Localizing Key=Advanced}">
 			<ScrollViewer>
 				<ItemsView
-				ItemTemplate="{StaticResource OptionTemplate}"
-				ItemsSource="{StaticResource AdvancedOptionsSet}"
-				BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
+					ItemTemplate="{StaticResource OptionTemplate}"
+					ItemsSource="{StaticResource AdvancedOptionsSet}"
+					BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
+			</ScrollViewer>
+		</controls:PivotItem>
+
+		<controls:PivotItem
+			Header="{m:Localizing Key=Telemetry}">
+			<ScrollViewer>
+				<ItemsView
+					ItemTemplate="{StaticResource OptionTemplate}"
+					ItemsSource="{StaticResource AdvancedOptionsSet}"
+					BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
 			</ScrollViewer>
 		</controls:PivotItem>
 

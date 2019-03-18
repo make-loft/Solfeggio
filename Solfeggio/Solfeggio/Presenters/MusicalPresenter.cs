@@ -65,6 +65,7 @@ namespace Solfeggio.Presenters
 			public double LowFrequency { get; set; }
 			public double TopFrequency { get; set; }
 			public double EthalonFrequency { get; set; }
+			public double DeltaFrequency => Peak.Real - EthalonFrequency;
 			public Complex Peak { get; set; }
 			public int Hits { get; set; }
 
@@ -110,6 +111,7 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 
+		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 		[DataMember] public double LowMagnitude { get; set; } = 0d;
 		[DataMember] public double TopMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
@@ -457,7 +459,8 @@ namespace Solfeggio.Presenters
 
 			averageMagnitude /= m;
 			var minMagnitude = TopMagnitude * 0.2;
-			var tops = keys.OrderByDescending(k => k.Magnitude).Take(10).Where(k => k.Magnitude > minMagnitude).ToList();
+			var dominants = keys.OrderByDescending(k => k.Magnitude).Take(MaxDominantsCount)
+				.Where(k => k.Magnitude > minMagnitude).ToList();
 
 			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);
 			keys.ForEach(k => k.Magnitude *= k.Magnitude);
@@ -493,7 +496,7 @@ namespace Solfeggio.Presenters
 				ConstructVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
-			return tops;
+			return dominants;
 		}
 
 		private static Line ConstructVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line

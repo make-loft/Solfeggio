@@ -116,6 +116,20 @@
 				</Grid>
 			</DataTemplate>
 
+			<Style
+				TargetType="Canvas">
+				<Setter
+					Property="CacheMode"
+					Value="BitmapCache" />
+			</Style>
+			
+			<Style
+				TargetType="Polyline">
+				<Setter
+					Property="CacheMode"
+					Value="BitmapCache" />
+			</Style>
+
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

@@ -12,23 +12,8 @@
 	VerticalAlignment="Stretch"
 	Background="DimGray">
 
-	<ContentControl.Resources>
-		<Style
-			TargetType="Canvas">
-			<Setter
-				Property="CacheMode"
-				Value="BitmapCache" />
-		</Style>
-		<Style
-			TargetType="Polyline">
-			<Setter
-				Property="CacheMode"
-				Value="BitmapCache" />
-		</Style>
-	</ContentControl.Resources>
-
 	<Grid
-		m:Rack.Columns="Auto *"
+		m:Rack.Columns="* 3*"
 		m:Rack.Rows="2* *">
 
 		<Canvas
@@ -83,14 +68,53 @@
 		<Grid
 			m:Rack.Cell="R0 C0 CS2"
 			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
-			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-				<Grid>
-					<Border
-						Background="DimGray" Opacity=".5" />
-					<views:OptionsView />
-				</Grid>
-			</ScrollViewer>
+			<Grid>
+				<Border
+					Background="DimGray"
+					Opacity=".5" />
+				<views:OptionsView />
+			</Grid>
 		</Grid>
+
+		<ItemsControl
+			Rack.Cell="R0 C0"
+			HorizontalAlignment="Stretch"
+			Name="DominatsItemsControl">
+			<!--<ItemsControl.ItemContainerStyle>
+				<Style
+					TargetType="ContentPresenter">
+					<Setter
+						Property="HorizontalAlignment"
+						Value="Stretch" />
+					--><!--<Setter
+						Property="HorizontalContentAlignment"
+						Value="Stretch" />--><!--
+				</Style>
+			</ItemsControl.ItemContainerStyle>-->
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Grid
+						Opacity="{Binding Peak.Imaginary}"
+						Rack.Columns="* * * * *">
+						<TextBlock
+							Rack.Cell="C0"
+							Text="{Binding Peak.Imaginary, StringFormat=F2}" />
+						<TextBlock
+							Rack.Cell="C1"
+							Text="{Binding Peak.Real, StringFormat=F2}" />
+						<TextBlock
+							Rack.Cell="C2"
+							Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
+						<TextBlock
+							Rack.Cell="C3"
+							Text="{Binding EthalonFrequency, StringFormat=F2}" />
+						<TextBlock
+							Rack.Cell="C4"
+							Text="{Binding NoteName}" />
+					</Grid>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
 	</Grid>
 
 </ContentControl>

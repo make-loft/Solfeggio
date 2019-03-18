@@ -61,9 +61,11 @@ namespace Solfeggio.Views
 				if (presenter.Show.Wave && spectralViewModel.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 					presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
 
-				var tops = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
-				presenter.DrawTops(SpectrumCanvas.Children, tops, width, height,
+				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
+				presenter.DrawTops(SpectrumCanvas.Children, dominanats, width, height,
 					presenter.Show.ActualFrequncy, presenter.Show.EthalonFrequncy, presenter.Show.Notes);
+
+				DominatsItemsControl.ItemsSource = dominanats.OrderByDescending(k => k.Magnitude);
 			};
 
 			timer.Start();
