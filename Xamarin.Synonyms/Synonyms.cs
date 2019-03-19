@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace Xamarin.Forms
@@ -15,6 +14,8 @@ namespace Xamarin.Forms
 	{
 		public XamlCompilationAttribute(Xaml.XamlCompilationOptions options) { }
 	}
+
+	public class ResourceDictionary : System.Windows.ResourceDictionary { }
 
 	public class ContentView : UserControl
 	{

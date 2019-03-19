@@ -1,0 +1,65 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<LinearGradientBrush
+		x:Key="SpectumBackgroundBrush"
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="Violet"
+			Offset="0" />
+		<GradientStop
+			Color="#FF0D0712"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<SolidColorBrush
+		x:Key="MagnitudeSpectrumFillBrush"
+		Color="Yellow" />
+	
+	<SolidColorBrush
+		x:Key="MagnitudeSpectrumStrokeBrush"
+		Color="Gold"/>
+
+	<SolidColorBrush
+		x:Key="WaveInStrokeBrush"
+		Color="Crimson" />
+
+	<SolidColorBrush
+		x:Key="WaveOutStrokeBrush"
+		Color="YellowGreen" />
+
+	<SolidColorBrush
+		x:Key="PianoCanvasBackgroundBrush"
+		Color="#FF616187" />
+
+	<SolidColorBrush
+		x:Key="FullToneKeyBrush"
+		Color="White" />
+
+	<SolidColorBrush
+		x:Key="HalfToneKeyBrush"
+		Color="Black" />
+
+	<SolidColorBrush
+		x:Key="MarkerBrush"
+		Color="Green"
+		Opacity="0.3" />
+
+	<SolidColorBrush
+		x:Key="ButterflyGridBrush"
+		Color="Violet"
+		Opacity="0.3" />
+
+	<SolidColorBrush
+		x:Key="NoteGridBrush"
+		Color="Purple"
+		Opacity="0.3" />
+
+	<SolidColorBrush
+		x:Key="HzBrush"
+		Color="LightGreen"
+		Opacity="0.3" />
+
+</ResourceDictionary>

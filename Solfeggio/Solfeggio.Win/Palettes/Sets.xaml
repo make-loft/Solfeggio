@@ -1,0 +1,130 @@
+﻿<ResourceDictionary
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
+
+	<m:Set
+		x:Key="VisualizationOptionsSet">
+		<Picker
+			Tag="{m:Localizing Key=PitchStandard, StringFormat='{}{0} (Hz)'}"
+			ItemsSource="{Binding PitchStandards}"
+			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
+
+		<Entry
+			Tag="{m:Localizing Key=LowFrequency, StringFormat='{}{0} (Hz)'}"
+			Text="{Binding LowFrequency, Mode=TwoWay}" />
+
+		<Entry
+			Tag="{m:Localizing Key=TopFrequency, StringFormat='{}{0} (Hz)'}"
+			Text="{Binding TopFrequency, Mode=TwoWay}" />
+
+		<Picker
+			Tag="{m:Localizing Key=MagnitudeScaleFunc}"
+			ItemsSource="{Binding FrequancyScaleFuncs}"
+			SelectedItem="{Binding MagnitudeScaleFunc, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+		<Picker
+			Tag="{m:Localizing Key=FrequancyScaleFunc}"
+			ItemsSource="{Binding FrequancyScaleFuncs}"
+			SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+		<Picker
+			Tag="{m:Localizing Key=NumericFormat}"
+			ItemsSource="{Binding NumericFormats}"
+			SelectedItem="{Binding NumericFormat, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=Dominants}"
+			IsToggled="{Binding Show.Dominants, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=PeakHz}"
+			IsToggled="{Binding Show.PeakHz, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=Notes}"
+			IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=Spectrum}"
+			IsToggled="{Binding Show.Spectrum, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=Wave}"
+			IsToggled="{Binding Show.Wave, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=NotesGrid}"
+			IsToggled="{Binding Show.NotesGrid, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=DiscreteGrid}"
+			IsToggled="{Binding Show.DiscreteGrid, Mode=TwoWay}" />
+
+		<ItemsView>
+			<Entry
+				Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+			<Slider
+				Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
+				Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
+				Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+		</ItemsView>
+	</m:Set>
+
+	<m:Set
+		x:Key="AdvancedOptionsSet">
+		<Picker
+			Tag="{m:Localizing Key=Language}"
+			ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
+			SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
+
+		<Picker
+			Tag="{m:Localizing Key=Device}"
+			ItemsSource="{Binding Devices}"
+			SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+
+		<Picker
+			Tag="{m:Localizing Key=SampleRate}"
+			ItemsSource="{Binding ActiveDevice.SampleRates}"
+			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
+		<Picker
+			Tag="{m:Localizing Key=Window}"
+			ItemsSource="{Binding Windows}"
+			SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+		<Picker
+			Tag="{m:Localizing Key=PowOf2}"
+			ItemsSource="{StaticResource AllowedPowsOf2}"
+			SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+
+		<!--<Picker
+				Tag="{m:Localizing Key=ShiftSize}"
+				ItemsSource="{StaticResource AllowedPowsOf2}"
+				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
+
+			<Entry
+				Tag="{m:Localizing Key=ShiftsPerFrame}"
+				Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />-->
+
+		<Switch
+			Tag="{m:Localizing Key=UseAliasing}"
+			IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
+
+		<ItemsView>
+			<Entry
+				Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+			<Slider
+				Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
+				Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
+				Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+
+		</ItemsView>
+	</m:Set>
+
+</ResourceDictionary>

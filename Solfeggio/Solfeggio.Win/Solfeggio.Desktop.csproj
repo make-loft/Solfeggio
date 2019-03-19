@@ -96,11 +96,12 @@
     <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveOutCapabilities.cs" />
     <Compile Include="Controls\Pivot.cs" />
-    <Compile Include="Converters\PowConverter.cs" />
-    <Compile Include="Dictionaries\Templates.cs" />
+    <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="Microphone.cs" />
-    <Compile Include="Palettes\Languages\English.cs" />
+    <Compile Include="Localizator.cs" />
+    <Compile Include="Presenters\AppPalette.cs" />
+    <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
@@ -121,7 +122,34 @@
       <DependentUpon>AppView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Dictionaries\Templates.xaml" />
+    <Page Include="Palettes\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Sets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Templates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Palettes\Values.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SolfeggioView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

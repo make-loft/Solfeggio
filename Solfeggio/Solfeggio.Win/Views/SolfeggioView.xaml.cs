@@ -12,6 +12,7 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 
+			var appViewModel = Store.Get<AppViewModel>();
 			var spectralViewModel = Store.Get<SpectralViewModel>();
 			var generator = spectralViewModel.Devices[1].To<Generator>();
 			var presenter = Store.Get<MusicalPresenter>();
@@ -40,12 +41,12 @@ namespace Solfeggio.Views
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
 
-				if (presenter.Show.DiscreteFourierGrid)
+				if (presenter.Show.DiscreteGrid)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateGrid(step));
 
-				if (presenter.Show.DiscreteFourierGrid)
+				if (presenter.Show.DiscreteGrid)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						generator.Frequancy.ToEnumerable(), 0.92d);
@@ -65,7 +66,7 @@ namespace Solfeggio.Views
 				presenter.DrawTops(SpectrumCanvas.Children, dominanats, width, height,
 					presenter.Show.ActualFrequncy, presenter.Show.EthalonFrequncy, presenter.Show.Notes);
 
-				DominatsItemsControl.ItemsSource = dominanats.OrderByDescending(k => k.Magnitude);
+				appViewModel.Dominants = dominanats.OrderByDescending(k => k.Magnitude).ToArray();
 			};
 
 			timer.Start();

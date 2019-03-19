@@ -18,40 +18,29 @@
 
 		<Canvas
 			m:Rack.Cell="R0 C0 CS2"
-			Name="SpectrumCanvas">
-			<Canvas.Background>
-				<LinearGradientBrush
-					EndPoint="0,1"
-					StartPoint="0,0">
-					<GradientStop
-						Color="Violet"
-						Offset="0" />
-					<GradientStop
-						Color="#FF0D0712"
-						Offset="1" />
-				</LinearGradientBrush>
-			</Canvas.Background>
+			Name="SpectrumCanvas"
+			Background="{DynamicResource SpectumBackgroundBrush}">
 
 			<Polyline
 				Name="MagnitudePolyline"
-				Fill="Yellow"
-				Stroke="Gold"
-				StrokeThickness="1" />
+				Fill="{DynamicResource MagnitudeSpectrumFillBrush}"
+				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush}"
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
 			<Polyline
 				Name="WaveInPolyline"
-				Stroke="Crimson"
-				StrokeThickness="1" />
+				Stroke="{DynamicResource WaveInStrokeBrush}"
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
 			<Polyline
 				Name="WaveOutPolyline"
-				Stroke="YellowGreen"
-				StrokeThickness="1" />
+				Stroke="{DynamicResource WaveOutStrokeBrush}"
+				StrokeThickness="{DynamicResource WaveOutStrokeThickness}" />
 		</Canvas>
 
 		<Canvas
 			m:Rack.Cell="R1 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
-			Background="#FF616187" />
+			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
 
 		<StackPanel
 			m:Rack.Cell="R1 C0"
@@ -79,42 +68,10 @@
 		<ItemsControl
 			Rack.Cell="R0 C0"
 			HorizontalAlignment="Stretch"
-			Name="DominatsItemsControl">
-			<!--<ItemsControl.ItemContainerStyle>
-				<Style
-					TargetType="ContentPresenter">
-					<Setter
-						Property="HorizontalAlignment"
-						Value="Stretch" />
-					--><!--<Setter
-						Property="HorizontalContentAlignment"
-						Value="Stretch" />--><!--
-				</Style>
-			</ItemsControl.ItemContainerStyle>-->
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<Grid
-						Opacity="{Binding Peak.Imaginary}"
-						Rack.Columns="* * * * *">
-						<TextBlock
-							Rack.Cell="C0"
-							Text="{Binding Peak.Imaginary, StringFormat=F2}" />
-						<TextBlock
-							Rack.Cell="C1"
-							Text="{Binding Peak.Real, StringFormat=F2}" />
-						<TextBlock
-							Rack.Cell="C2"
-							Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
-						<TextBlock
-							Rack.Cell="C3"
-							Text="{Binding EthalonFrequency, StringFormat=F2}" />
-						<TextBlock
-							Rack.Cell="C4"
-							Text="{Binding NoteName}" />
-					</Grid>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
+			Name="DominatsItemsControl"
+			ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=vm:AppViewModel}"
+			ItemTemplate="{StaticResource DominantTemplate}" />
+
 	</Grid>
 
 </ContentControl>

@@ -17,33 +17,6 @@ using Point = System.Windows.Point;
 
 namespace Solfeggio.Presenters
 {
-	#if !NETSTANDARD
-	public static class ColorEx
-	{
-		public static byte A(this Color c) => c.A;
-		public static byte R(this Color c) => c.R;
-		public static byte G(this Color c) => c.G;
-		public static byte B(this Color c) => c.B;
-		
-		public static byte Alpha(this Color c) => c.A;
-		public static byte Red(this Color c) => c.R;
-		public static byte Green(this Color c) => c.G;
-		public static byte Blue(this Color c) => c.B;
-	}
-	#endif
-	
-	public static class AppPalette
-	{
-		public static SolidColorBrush FullToneKeyBrush = new SolidColorBrush(Colors.White);
-		public static SolidColorBrush HalfToneKeyBrush = new SolidColorBrush(Colors.Black);
-
-		public static SolidColorBrush MarkerBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.3d };
-		public static SolidColorBrush ButterflyGridBrush = new SolidColorBrush(Colors.Violet) { Opacity = 0.3d };
-		public static SolidColorBrush NoteGridBrush = new SolidColorBrush(Colors.Purple) { Opacity = 0.3d };
-		public static SolidColorBrush NoteBrush = new SolidColorBrush(Colors.Purple);
-		public static SolidColorBrush HzBrush = new SolidColorBrush(Colors.LightGreen);
-	}
-
 	public delegate double ScaleFunc(double value);
 
 	public static class ScaleFuncs
@@ -100,13 +73,14 @@ namespace Solfeggio.Presenters
 		[DataContract]
 		public class VisualStates
 		{
+			[DataMember] public bool Dominants { get; set; } = true;
 			[DataMember] public bool ActualFrequncy { get; set; } = true;
 			[DataMember] public bool EthalonFrequncy { get; set; } = true;
 			[DataMember] public bool Notes { get; set; } = true;
 			[DataMember] public bool Wave { get; set; } = false;
 			[DataMember] public bool Spectrum { get; set; } = true;
 			[DataMember] public bool NotesGrid { get; set; } = false;
-			[DataMember] public bool DiscreteFourierGrid { get; set; } = false;
+			[DataMember] public bool DiscreteGrid { get; set; } = true;
 		}
 
 		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
@@ -115,16 +89,16 @@ namespace Solfeggio.Presenters
 		[DataMember] public double LowMagnitude { get; set; } = 0d;
 		[DataMember] public double TopMagnitude { get; set; } = 1d;
 		[DataMember] public double LowFrequency { get; set; } = 20d;
-		[DataMember] public double TopFrequency { get; set; } = 5000d;
+		[DataMember] public double TopFrequency { get; set; } = 3000d;
 
 		[DataMember] public bool UseNoteFilter { get; set; }
 		[DataMember] public bool AutoSensitive { get; set; } = true;
 		[DataMember] public double AutoSensitiveStep { get; set; } = 0.02d;
 		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
-		[DataMember] public string FloatStringFormat { get; set; } = "F0";
+		[DataMember] public string NumericFormat { get; set; } = "F0";
 
-		[DataMember] public string[] FloatStringFormats { get; }  = new[] { "F0", "F1", "F2", "F3" };
+		[DataMember] public string[] NumericFormats { get; }  = new[] { "F0", "F1", "F2", "F3" };
 
 		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
@@ -230,7 +204,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(FloatStringFormat)
+					Text = activeFrequency.ToString(NumericFormat)
 				});
 
 				items.Add(panel);
@@ -373,7 +347,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString(FloatStringFormat)
+						Text = activeFrequency.ToString(NumericFormat)
 					});
 				}
 
@@ -384,7 +358,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(FloatStringFormat)
+						Text = key.EthalonFrequency.ToString(NumericFormat)
 					});
 				}
 
