@@ -42,16 +42,24 @@
 			IsToggled="{Binding Show.Dominants, Mode=TwoWay}" />
 
 		<Switch
-			Tag="{m:Localizing Key=PeakHz}"
-			IsToggled="{Binding Show.PeakHz, Mode=TwoWay}" />
+			Tag="{m:Localizing Key=ActualFrequncy}"
+			IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=ActualMagnitude}"
+			IsToggled="{Binding Show.ActualMagnitude, Mode=TwoWay}" />
 
 		<Switch
 			Tag="{m:Localizing Key=Notes}"
 			IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
 
 		<Switch
-			Tag="{m:Localizing Key=Spectrum}"
-			IsToggled="{Binding Show.Spectrum, Mode=TwoWay}" />
+			Tag="{m:Localizing Key=MagnitudeSpectrum}"
+			IsToggled="{Binding Show.MagnitudeSpectrum, Mode=TwoWay}" />
+
+		<Switch
+			Tag="{m:Localizing Key=PhaseSpectrum}"
+			IsToggled="{Binding Show.PhaseSpectrum, Mode=TwoWay}" />
 
 		<Switch
 			Tag="{m:Localizing Key=Wave}"

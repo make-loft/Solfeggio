@@ -36,7 +36,7 @@ namespace Solfeggio.Views
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
 
-				if (presenter.Show.Spectrum)
+				if (presenter.Show.MagnitudeSpectrum)
 					presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
@@ -64,9 +64,12 @@ namespace Solfeggio.Views
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
 				presenter.DrawTops(SpectrumCanvas.Children, dominanats, width, height,
-					presenter.Show.ActualFrequncy, presenter.Show.EthalonFrequncy, presenter.Show.Notes);
+					presenter.Show.ActualFrequncy,
+					presenter.Show.ActualMagnitude,
+					presenter.Show.EthalonFrequncy,
+					presenter.Show.Notes);
 
-				appViewModel.Dominants = dominanats.OrderByDescending(k => k.Magnitude).ToArray();
+				appViewModel.Dominants = dominanats.OrderByDescending(k => k.Magnitude).ThenBy(k => k.NoteName).ToArray();
 			};
 
 			timer.Start();

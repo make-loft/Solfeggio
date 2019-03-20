@@ -67,7 +67,8 @@
 
 		<ItemsControl
 			Rack.Cell="R0 C0"
-			HorizontalAlignment="Stretch"
+			Margin="0 32 0 0"
+			Foreground="Violet"
 			Name="DominatsItemsControl"
 			ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=vm:AppViewModel}"
 			ItemTemplate="{StaticResource DominantTemplate}" />

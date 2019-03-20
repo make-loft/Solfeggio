@@ -22,6 +22,7 @@ namespace Solfeggio.Presenters
 	public static class ScaleFuncs
 	{
 		public static double Lineal(double value) => value;
+		public static double _20Log10(double value) => value.Is(0d) ? 0d : 20d * Math.Log(value, 10d);
 		public static double Log2(double value) => value.Is(0d) ? 0d : Math.Log(value, 2d);
 		public static double Log(double value) => value.Is(0d) ? 0d : Math.Log(value);
 		public static double Exp(double value) => Math.Exp(value);
@@ -75,10 +76,12 @@ namespace Solfeggio.Presenters
 		{
 			[DataMember] public bool Dominants { get; set; } = true;
 			[DataMember] public bool ActualFrequncy { get; set; } = true;
+			[DataMember] public bool ActualMagnitude { get; set; } = true;
 			[DataMember] public bool EthalonFrequncy { get; set; } = true;
 			[DataMember] public bool Notes { get; set; } = true;
 			[DataMember] public bool Wave { get; set; } = false;
-			[DataMember] public bool Spectrum { get; set; } = true;
+			[DataMember] public bool PhaseSpectrum { get; set; } = false;
+			[DataMember] public bool MagnitudeSpectrum { get; set; } = true;
 			[DataMember] public bool NotesGrid { get; set; } = false;
 			[DataMember] public bool DiscreteGrid { get; set; } = true;
 		}
@@ -98,7 +101,7 @@ namespace Solfeggio.Presenters
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
 		[DataMember] public string NumericFormat { get; set; } = "F0";
 
-		[DataMember] public string[] NumericFormats { get; }  = new[] { "F0", "F1", "F2", "F3" };
+		[DataMember] public string[] NumericFormats { get; }  = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
 
 		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
@@ -115,7 +118,7 @@ namespace Solfeggio.Presenters
 		}
 
 		private static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
-			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp };
+			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp, ScaleFuncs._20Log10 };
 
 		[DataMember] public ScaleFunc[] InlinedScaleFuncs { get; set; } = AllScaleFuncs;
 		[DataMember] public ScaleFunc[] FrequancyScaleFuncs { get; set; } = AllScaleFuncs;
@@ -126,13 +129,13 @@ namespace Solfeggio.Presenters
 		[DataMember] public ScaleFunc PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
 
 		protected static readonly string[] DiesNotation =
-			{"C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"};
+			{"C ","C♯","D ","D♯","E ","F ","F♯","G ","G♯","A ","A♯","B "};
 
 		protected static readonly string[] BemoleNotation =
-			{"C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"};
+			{"C ","D♭","D ","E♭","E ","F ","G♭","G ","A♭","A ","B♭","B "};
 
 		protected static readonly string[] Notes =
-			{"C|B♯","C♯|D♭","D","D♯|E♭","E|F♭","F|E♯","F♯|G♭","G","G♯|A♭","A","A♯|B♭","B|C♭"};
+			{"C B♯","C♯|D♭","D ","D♯|E♭","E |F♭","F |E♯","F♯|G♭","G ","G♯|A♭","A ","A♯|B♭","B |C♭"};
 
 		protected static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
 		protected static readonly Brush[] OktaveBrushes =
@@ -303,7 +306,7 @@ namespace Solfeggio.Presenters
 		}
 
 		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height,
-			bool showActualFrequncy, bool showEthlonFrequncy, bool showNotes)
+			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
 		{
 			SetVariables(width, out var hVisualStretchFactor,
 				out var hVisualDecrementOffset, out var _,
@@ -325,7 +328,7 @@ namespace Solfeggio.Presenters
 				var hVisualOffset = frequancyScaleFunc(activeFrequency).Stretch(hVisualStretchFactor).Decrement(hVisualDecrementOffset);
 				var vVisualOffset = magnitudeScaleFunc(activeMagnitude).Stretch(vVisualStretchFactor);
 
-				if (showActualFrequncy.Not() && showEthlonFrequncy.Not() && showNotes.Not()) return;
+				if (showActualFrequncy.Not() && showEthalonFrequncy.Not() && showNotes.Not()) return;
 
 				var panel = new StackPanel
 				{
@@ -351,7 +354,18 @@ namespace Solfeggio.Presenters
 					});
 				}
 
-				if (showEthlonFrequncy)
+				if (showActualMagnitude)
+				{
+					panel.Children.Add(new TextBlock
+					{
+						Opacity = 0.5 * expressionLevel,
+						FontSize = 8.0 * expressionLevel,
+						Foreground = AppPalette.HzBrush,
+						Text = activeMagnitude.ToString(NumericFormat)
+					});
+				}
+
+				if (showEthalonFrequncy)
 				{
 					panel.Children.Add(new TextBlock
 					{

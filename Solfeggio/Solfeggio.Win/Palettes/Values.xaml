@@ -13,6 +13,6 @@
 		x:Key="WaveOutStrokeThickness">1</system:Double>
 
 	<system:Double
-		x:Key="MinDominantOpacityLevel">0.7</system:Double>
+		x:Key="MinDominantOpacityLevel">0.3</system:Double>
 
 </ResourceDictionary>
