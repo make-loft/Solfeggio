@@ -22,9 +22,9 @@ namespace Solfeggio.Presenters
 	public static class ScaleFuncs
 	{
 		public static double Lineal(double value) => value;
-		public static double _20Log10(double value) => value.Is(0d) ? 0d : 20d * Math.Log(value, 10d);
-		public static double Log2(double value) => value.Is(0d) ? 0d : Math.Log(value, 2d);
-		public static double Log(double value) => value.Is(0d) ? 0d : Math.Log(value);
+		public static double _20Log10(double value) => value > 0d ? 20d * Math.Log(value, 10d) : value;
+		public static double Log2(double value) => value > 0d ? Math.Log(value, 2d) : value;
+		public static double Log(double value) => value > 0d ? Math.Log(value) : value;
 		public static double Exp(double value) => Math.Exp(value);
 	}
 
@@ -74,14 +74,14 @@ namespace Solfeggio.Presenters
 		[DataContract]
 		public class VisualStates
 		{
+			[DataMember] public bool Wave { get; set; } = false;
+			[DataMember] public bool PhaseSpectrum { get; set; } = false;
+			[DataMember] public bool MagnitudeSpectrum { get; set; } = true;
 			[DataMember] public bool Dominants { get; set; } = true;
 			[DataMember] public bool ActualFrequncy { get; set; } = true;
 			[DataMember] public bool ActualMagnitude { get; set; } = true;
 			[DataMember] public bool EthalonFrequncy { get; set; } = true;
 			[DataMember] public bool Notes { get; set; } = true;
-			[DataMember] public bool Wave { get; set; } = false;
-			[DataMember] public bool PhaseSpectrum { get; set; } = false;
-			[DataMember] public bool MagnitudeSpectrum { get; set; } = true;
 			[DataMember] public bool NotesGrid { get; set; } = false;
 			[DataMember] public bool DiscreteGrid { get; set; } = true;
 		}
@@ -90,7 +90,15 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 		[DataMember] public double LowMagnitude { get; set; } = 0d;
-		[DataMember] public double TopMagnitude { get; set; } = 1d;
+
+		double t;
+		[DataMember]
+		public double TopMagnitude
+		{
+			get => t;
+			set => value.To(out t).Notify(this);
+		}
+
 		[DataMember] public double LowFrequency { get; set; } = 20d;
 		[DataMember] public double TopFrequency { get; set; } = 3000d;
 

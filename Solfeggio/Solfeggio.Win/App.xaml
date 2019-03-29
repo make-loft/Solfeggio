@@ -22,6 +22,8 @@
 				<ResourceDictionary
 					Source="Palettes/Converters.xaml" />
 				<ResourceDictionary
+					Source="Palettes/Templates.Desktop.xaml" />
+				<ResourceDictionary
 					Source="Palettes/Templates.xaml" />
 				<ResourceDictionary
 					Source="Palettes/Styles.xaml" />

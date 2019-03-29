@@ -29,6 +29,19 @@ namespace Xamarin.Forms
 	{
 	}
 
+	public class Expander : System.Windows.Controls.Expander
+	{
+	}
+
+	public class DataTemplate : System.Windows.DataTemplate
+	{
+	}
+
+
+	public class ContentPresenter : System.Windows.Controls.ContentPresenter
+	{
+	}
+
 	public class ItemsView : ItemsControl
 	{
 		public static readonly DependencyProperty BindingContextProperty =

@@ -30,6 +30,11 @@ namespace Solfeggio.Languages
 		public static o Advanced			= _("Advanced",			"Расширенные");
 		public static o Telemetry			= _("Telemetry",		"Телеметрия");
 		public static o Sensitive			= _("Sensitive",		"Чувствительность");
+		public static o Level				= _("Level",			"Уровень");
+		public static o Short				= _("Short",			"Кратко");
+		public static o Long				= _("Long",				"Долго");
+		public static o Speed				= _("Speed",			"Скорость");
+		public static o Accurate			= _("Accurate",			"Точность");
 		public static o Manually			= _("Manually",			"Вручную");
 		public static o Automatically		= _("Automatically",	"Автоматичеки");
 		public static o Whisper				= _("Whisper",			"Шёпот");

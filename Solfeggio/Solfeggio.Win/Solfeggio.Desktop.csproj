@@ -142,6 +142,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Palettes\Templates.Desktop.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Palettes\Templates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

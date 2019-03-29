@@ -10,99 +10,46 @@
 	<controls:Pivot>
 
 		<controls:PivotItem
+			Header="{m:Localizing Key=Telemetry}">
+			<ScrollViewer>
+				<StackLayout>
+					<Expander
+						Header="{m:Localizing Key=Dominants}">
+						<ItemsView
+							Name="DominatsItemsControl"
+							ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
+							ItemTemplate="{StaticResource DominantTemplate}" />
+					</Expander>
+				</StackLayout>
+			</ScrollViewer>
+		</controls:PivotItem>
+
+		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
-			
-			<Grid
-				m:Rack.Rows="^ ^ ^ ^ ^ ^"
-				m:Rack.Columns="^ * ^"
-				BindingContext="{m:Store Key=presenters:MusicalPresenter}">
-
-				<Label
-					m:Rack.Cell="R0 C0"
-					Text="{m:Localizing Key=Sensitive}" />
-
-				<Label
-					m:Rack.Cell="R1 C0"
-					Text="{m:Localizing Key=Whisper}" />
-				<Slider
-					m:Rack.Cell="R1 C1"
-					Maximum="1"
-					Minimum="0"
-					Value="{Binding TopMagnitude, Mode=TwoWay}" />
-				<Label
-					m:Rack.Cell="R1 C2"
-					Text="{m:Localizing Key=Singing}" />
-
-				<StackLayout
-					m:Rack.Cell="R0 C1"
-					Orientation="Horizontal">
-					<Label
-						Text="{m:Localizing Key=Manually}" />
-					<Switch
-						IsToggled="{Binding AutoSensitive, Mode=TwoWay}" />
-					<Label
-						Text="{m:Localizing Key=Automatically}" />
-				</StackLayout>
-
-				<Label
-					m:Rack.Cell="R3 C0 CS3"
-					Text="{m:Localizing Key=Framing}" />
-
-				<StackLayout
-					m:Rack.Cell="R4 C0">
-					<Label
-						Text="{m:Localizing Key=Short-Speed}" />
-				</StackLayout>
-				<Slider
-					m:Rack.Cell="R4 C1"
-					Maximum="13"
-					Minimum="9"				
-					Value="{m:StoreBinding Path=FramePow, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-				<StackLayout
-					m:Rack.Cell="R4 C2">
-					<Label
-						Text="{m:Localizing Key=Long-Accurate}" />
-				</StackLayout>
-
+			<ScrollViewer>
 				<Grid
-					m:Rack.Cell="R5 C1 CS1"
-					m:Rack.Rows="^ ^ ^ ^"
-					m:Rack.Columns="^ ^ ^ ^ ^"
-					BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
+					m:Rack.Rows="^ ^ ^">
 
-					<Label
-						m:Rack.Cell="R0 C0"
-						Text="{m:Localizing Key=Duration}" />
+					<Expander
+						m:Rack.Cell="R0"
+						Header="{m:Localizing Key=Sensitive}"
+						ContentTemplate="{StaticResource SensitiveTemplate}"
+						Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-					<Label
-						m:Rack.Cell="R1 C0"
-						Text="{m:Localizing Key=Sample}" />
-					<Label
-						m:Rack.Cell="R2 C0"
-						Text="{m:Localizing Key=Frame}" />
-					<Label
-						m:Rack.Cell="R0 C2"
-						Text="bins" />
-					<Label
-						m:Rack.Cell="R0 C1"
-						Text="ms" />
+					<Expander
+						m:Rack.Cell="R1"
+						Header="{m:Localizing Key=Framing}"
+						ContentTemplate="{StaticResource FramingTemplate}"
+						Content="{m:Store Key=viewModels:SpectralViewModel}" />
 
-					<Label
-						m:Rack.Cell="R1 C2"
-						Text="{Binding ActiveDevice.SampleSize}" />
-					<Label
-						m:Rack.Cell="R2 C2"
-						Text="{Binding FrameSize}" />
-					<Label
-						m:Rack.Cell="R1 C1"
-						Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}" />
-					<Label
-						m:Rack.Cell="R2 C1"
-						Text="{Binding FrameDuration.TotalMilliseconds}" />
+					<Expander
+						m:Rack.Cell="R2"
+						Header="{m:Localizing Key=Advanced}"
+						ContentTemplate="{StaticResource AdvancedTemplate}"
+						Content="{m:Store Key=viewModels:SpectralViewModel}" />
+
 				</Grid>
-
-			</Grid>
-			
+			</ScrollViewer>
 		</controls:PivotItem>
 
 		<controls:PivotItem
@@ -116,26 +63,9 @@
 		</controls:PivotItem>
 
 		<controls:PivotItem
-			Header="{m:Localizing Key=Advanced}">
+			Header="{m:Localizing Key=About}">
 			<ScrollViewer>
-				<ItemsView
-					ItemTemplate="{StaticResource OptionTemplate}"
-					ItemsSource="{StaticResource AdvancedOptionsSet}"
-					BindingContext="{m:Store Key=viewModels:SpectralViewModel}" />
-			</ScrollViewer>
-		</controls:PivotItem>
-
-		<controls:PivotItem
-			Header="{m:Localizing Key=Telemetry}">
-			<ScrollViewer>
-				<StackLayout>
-					<Label
-						Text="{m:Localizing Key=Dominants}" />
-					<ItemsView
-						Name="DominatsItemsControl"
-						ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
-						ItemTemplate="{StaticResource DominantTemplate}" />
-				</StackLayout>
+				<Label Text="Makeloft Studio" />
 			</ScrollViewer>
 		</controls:PivotItem>
 
