@@ -71,6 +71,13 @@ namespace Solfeggio.Presenters
 			}
 		}
 
+        public class NumericFormatting
+        {
+            [DataMember] public string Frequancy { get; set; } = "F0";
+            [DataMember] public string Magnitude { get; set; } = "F2";
+            [DataMember] public string Phase { get; set; } = "F0";
+        }
+
 		[DataContract]
 		public class VisualStates
 		{
@@ -99,7 +106,9 @@ namespace Solfeggio.Presenters
 			set => value.To(out t).Notify(this);
 		}
 
-		[DataMember] public double LowFrequency { get; set; } = 20d;
+        [DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
+        [DataMember] public NumericFormatting NumericFormat { get; set; } = new NumericFormatting();
+        [DataMember] public double LowFrequency { get; set; } = 20d;
 		[DataMember] public double TopFrequency { get; set; } = 3000d;
 
 		[DataMember] public bool UseNoteFilter { get; set; }
@@ -107,9 +116,6 @@ namespace Solfeggio.Presenters
 		[DataMember] public double AutoSensitiveStep { get; set; } = 0.02d;
 		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
 		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
-		[DataMember] public string NumericFormat { get; set; } = "F0";
-
-		[DataMember] public string[] NumericFormats { get; }  = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
 
 		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
@@ -218,7 +224,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(NumericFormat)
+					Text = activeFrequency.ToString(NumericFormat.Frequancy)
 				});
 
 				items.Add(panel);
@@ -361,7 +367,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString(NumericFormat)
+						Text = activeFrequency.ToString(NumericFormat.Frequancy)
 					});
 				}
 
@@ -372,7 +378,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeMagnitude.ToString(NumericFormat)
+						Text = activeMagnitude.ToString(NumericFormat.Magnitude)
 					});
 				}
 
@@ -383,7 +389,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(NumericFormat)
+						Text = key.EthalonFrequency.ToString(NumericFormat.Frequancy)
 					});
 				}
 

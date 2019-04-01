@@ -9,19 +9,19 @@
         x:Key="NumericFormattingSet">
         
         <Picker
-            Tag="{m:Localizing Key=Default}"
-            ItemsSource="{Binding NumericFormats}"
-            SelectedItem="{Binding NumericFormat, Mode=TwoWay}" />
-
-        <Picker
             Tag="{m:Localizing Key=Magnitude}"
             ItemsSource="{Binding NumericFormats}"
-            SelectedItem="{Binding MagnitudeNumericFormat, Mode=TwoWay}" />
+            SelectedItem="{Binding NumericFormat.Magnitude, Mode=TwoWay}" />
 
         <Picker
             Tag="{m:Localizing Key=Frequancy}"
             ItemsSource="{Binding NumericFormats}"
-            SelectedItem="{Binding FrequancyNumericFormat, Mode=TwoWay}" />
+            SelectedItem="{Binding NumericFormat.Frequancy, Mode=TwoWay}" />
+
+        <Picker
+            Tag="{m:Localizing Key=Frequancy}"
+            ItemsSource="{Binding NumericFormats}"
+            SelectedItem="{Binding NumericFormat.Phase, Mode=TwoWay}" />
 
     </m:Set>
 
