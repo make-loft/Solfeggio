@@ -5,82 +5,88 @@
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
 
+    <m:Set
+        x:Key="NumericFormattingSet">
+        
+        <Picker
+            Tag="{m:Localizing Key=Default}"
+            ItemsSource="{Binding NumericFormats}"
+            SelectedItem="{Binding NumericFormat, Mode=TwoWay}" />
+
+        <Picker
+            Tag="{m:Localizing Key=Magnitude}"
+            ItemsSource="{Binding NumericFormats}"
+            SelectedItem="{Binding MagnitudeNumericFormat, Mode=TwoWay}" />
+
+        <Picker
+            Tag="{m:Localizing Key=Frequancy}"
+            ItemsSource="{Binding NumericFormats}"
+            SelectedItem="{Binding FrequancyNumericFormat, Mode=TwoWay}" />
+
+    </m:Set>
+
+    <m:Set
+        x:Key="ShowStateSet">
+        
+        <Switch
+            Tag="{m:Localizing Key=Dominants}"
+            IsToggled="{Binding Show.Dominants, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=ActualFrequncy}"
+            IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=ActualMagnitude}"
+            IsToggled="{Binding Show.ActualMagnitude, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=Notes}"
+            IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=MagnitudeSpectrum}"
+            IsToggled="{Binding Show.MagnitudeSpectrum, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=PhaseSpectrum}"
+            IsToggled="{Binding Show.PhaseSpectrum, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=Wave}"
+            IsToggled="{Binding Show.Wave, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=NotesGrid}"
+            IsToggled="{Binding Show.NotesGrid, Mode=TwoWay}" />
+
+        <Switch
+            Tag="{m:Localizing Key=DiscreteGrid}"
+            IsToggled="{Binding Show.DiscreteGrid, Mode=TwoWay}" />
+        
+    </m:Set>
+    
 	<m:Set
 		x:Key="VisualizationOptionsSet">
-		<Picker
-			Tag="{m:Localizing Key=PitchStandard, StringFormat='{}{0} (Hz)'}"
-			ItemsSource="{Binding PitchStandards}"
-			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
-		<Entry
-			Tag="{m:Localizing Key=LowFrequency, StringFormat='{}{0} (Hz)'}"
-			Text="{Binding LowFrequency, Mode=TwoWay}" />
+        <Expander
+            Header="{m:Localizing Key=NumericFormatting}"
+            ContentTemplate="{StaticResource NumericFormattingTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-		<Entry
-			Tag="{m:Localizing Key=TopFrequency, StringFormat='{}{0} (Hz)'}"
-			Text="{Binding TopFrequency, Mode=TwoWay}" />
+        <Expander
+            Header="{m:Localizing Key=ShowStates}"
+            ContentTemplate="{StaticResource ShowStateTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-		<Picker
-			Tag="{m:Localizing Key=MagnitudeScaleFunc}"
-			ItemsSource="{Binding FrequancyScaleFuncs}"
-			SelectedItem="{Binding MagnitudeScaleFunc, Mode=TwoWay}"
-			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-
-		<Picker
-			Tag="{m:Localizing Key=FrequancyScaleFunc}"
-			ItemsSource="{Binding FrequancyScaleFuncs}"
-			SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
-			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-
-		<Picker
-			Tag="{m:Localizing Key=NumericFormat}"
-			ItemsSource="{Binding NumericFormats}"
-			SelectedItem="{Binding NumericFormat, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=Dominants}"
-			IsToggled="{Binding Show.Dominants, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=ActualFrequncy}"
-			IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=ActualMagnitude}"
-			IsToggled="{Binding Show.ActualMagnitude, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=Notes}"
-			IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=MagnitudeSpectrum}"
-			IsToggled="{Binding Show.MagnitudeSpectrum, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=PhaseSpectrum}"
-			IsToggled="{Binding Show.PhaseSpectrum, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=Wave}"
-			IsToggled="{Binding Show.Wave, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=NotesGrid}"
-			IsToggled="{Binding Show.NotesGrid, Mode=TwoWay}" />
-
-		<Switch
-			Tag="{m:Localizing Key=DiscreteGrid}"
-			IsToggled="{Binding Show.DiscreteGrid, Mode=TwoWay}" />
-
-		<ItemsView>
+        <!--<ItemsView>
 			<Entry
 				Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
 			<Slider
 				Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
 				Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
 				Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-		</ItemsView>
+		</ItemsView>-->
 	</m:Set>
 
 	<m:Set
@@ -134,5 +140,92 @@
 
 		</ItemsView>
 	</m:Set>
+
+    <m:Set
+        x:Key="BandwidthOptionsSet">
+
+        <Entry
+            Tag="{m:Localizing Key=LowFrequency, StringFormat='{}{0} (Hz)'}"
+            Text="{Binding LowFrequency, Mode=TwoWay}" />
+
+        <Entry
+            Tag="{m:Localizing Key=TopFrequency, StringFormat='{}{0} (Hz)'}"
+            Text="{Binding TopFrequency, Mode=TwoWay}" />
+
+    </m:Set>
+
+    <m:Set
+        x:Key="ScalingOptionsSet">
+
+        <Picker
+			Tag="{m:Localizing Key=Frequancy}"
+			ItemsSource="{Binding FrequancyScaleFuncs}"
+			SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+        <Picker
+			Tag="{m:Localizing Key=Magnitude}"
+			ItemsSource="{Binding MagnitudeScaleFuncs}"
+			SelectedItem="{Binding MagnitudeScaleFunc, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+        <Picker
+			Tag="{m:Localizing Key=Phase}"
+			ItemsSource="{Binding PhaseScaleFuncs}"
+			SelectedItem="{Binding PhaseScaleFunc, Mode=TwoWay}"
+			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+        
+    </m:Set>
+
+    <m:Set
+        x:Key="MusicalStandardsOptionsSet">
+
+        <Picker
+            Tag="{m:Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
+            ItemsSource="{Binding PitchStandards}"
+            SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
+
+        <Picker
+            Tag="{m:Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
+            ItemsSource="{Binding Notations}"
+            SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
+            DisplayMemberPath="Key" />
+
+    </m:Set>
+
+    <m:Set
+        x:Key="CalibrationOptionsSet">
+
+        <Expander
+            Header="{m:Localizing Key=Sensitive}"
+            ContentTemplate="{StaticResource SensitiveTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
+
+        <Expander
+            Header="{m:Localizing Key=Bandwidth}"
+            ContentTemplate="{StaticResource BandwidthTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
+
+        <Expander
+            Header="{m:Localizing Key=Scaling}"
+            ContentTemplate="{StaticResource ScalingTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
+
+        <Expander
+            Header="{m:Localizing Key=MusicalStandards}"
+            ContentTemplate="{StaticResource MusicalStandardsTemplate}"
+            Content="{m:Store Key=presenters:MusicalPresenter}" />
+
+        <Expander
+            Header="{m:Localizing Key=Framing}"
+            ContentTemplate="{StaticResource FramingTemplate}"
+            Content="{m:Store Key=viewModels:SpectralViewModel}" />
+
+        <Expander
+            Header="{m:Localizing Key=Advanced}"
+            ContentTemplate="{StaticResource AdvancedTemplate}"
+            Content="{m:Store Key=viewModels:SpectralViewModel}" />
+
+    </m:Set>
 
 </ResourceDictionary>

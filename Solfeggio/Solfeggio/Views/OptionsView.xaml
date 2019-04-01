@@ -26,37 +26,16 @@
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
-			<ScrollViewer>
-				<Grid
-					m:Rack.Rows="^ ^ ^">
-
-					<Expander
-						m:Rack.Cell="R0"
-						Header="{m:Localizing Key=Sensitive}"
-						ContentTemplate="{StaticResource SensitiveTemplate}"
-						Content="{m:Store Key=presenters:MusicalPresenter}" />
-
-					<Expander
-						m:Rack.Cell="R1"
-						Header="{m:Localizing Key=Framing}"
-						ContentTemplate="{StaticResource FramingTemplate}"
-						Content="{m:Store Key=viewModels:SpectralViewModel}" />
-
-					<Expander
-						m:Rack.Cell="R2"
-						Header="{m:Localizing Key=Advanced}"
-						ContentTemplate="{StaticResource AdvancedTemplate}"
-						Content="{m:Store Key=viewModels:SpectralViewModel}" />
-
-				</Grid>
-			</ScrollViewer>
+            <ScrollViewer>
+                <ItemsView
+                    ItemsSource="{StaticResource CalibrationOptionsSet}" />
+            </ScrollViewer>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Visualization}">
 			<ScrollViewer>
 				<ItemsView
-					ItemTemplate="{StaticResource OptionTemplate}"
 					ItemsSource="{StaticResource VisualizationOptionsSet}"
 					BindingContext="{m:Store Key=presenters:MusicalPresenter}" />
 			</ScrollViewer>

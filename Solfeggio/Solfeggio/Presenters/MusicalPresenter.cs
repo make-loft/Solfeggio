@@ -136,14 +136,17 @@ namespace Solfeggio.Presenters
 		[DataMember] public ScaleFunc MagnitudeScaleFunc { get; set; } = ScaleFuncs.Lineal;
 		[DataMember] public ScaleFunc PhaseScaleFunc { get; set; } = ScaleFuncs.Lineal;
 
-		protected static readonly string[] DiesNotation =
-			{"C ","C♯","D ","D♯","E ","F ","F♯","G ","G♯","A ","A♯","B "};
+        public Dictionary<string, string[]> Notations { get; set; } = new Dictionary<string, string[]>
+        {
+            { "Dies", Notes.Select(n => n.Split('|')[0]).ToArray() },
+            { "Bemole", Notes.Select(n => n.Split('|')[1]).ToArray() },
+            { "Combined", Notes }
+        };
 
-		protected static readonly string[] BemoleNotation =
-			{"C ","D♭","D ","E♭","E ","F ","G♭","G ","A♭","A ","B♭","B "};
-
+        [DataMember] public KeyValuePair<string, string[]> ActiveNotation { get; set; }
+ 
 		protected static readonly string[] Notes =
-			{"C B♯","C♯|D♭","D ","D♯|E♭","E |F♭","F |E♯","F♯|G♭","G ","G♯|A♭","A ","A♯|B♭","B |C♭"};
+			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};
 
 		protected static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
 		protected static readonly Brush[] OktaveBrushes =
@@ -412,6 +415,7 @@ namespace Solfeggio.Presenters
 			var frequancyScaleFunc = FrequancyScaleFunc;
 			var useNoteFilter = UseNoteFilter;
 			var topMagnitude = TopMagnitude;
+            var noteNames = ActiveNotation.Value ?? (ActiveNotation = Notations.First()).Value;
 
 			var keys = new List<PianoKey>();
 			var oktavesCount = HalfTonesCount + 1;
@@ -421,7 +425,7 @@ namespace Solfeggio.Presenters
 				var oktaveNotes = _baseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
 				var notesCount = oktaveNotes.Length;
 				for (var noteIndex = 0; noteIndex < notesCount; noteIndex++)
-					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, DiesNotation[noteIndex]).Use(keys.Add);
+					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]).Use(keys.Add);
 			}
 
 			var m = 0;

@@ -164,4 +164,39 @@
 			ItemsSource="{StaticResource AdvancedOptionsSet}" />
 	</DataTemplate>
 
+    <DataTemplate
+		x:Key="ScalingTemplate">
+        <ItemsView
+			ItemTemplate="{StaticResource OptionTemplate}"
+			ItemsSource="{StaticResource ScalingOptionsSet}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="BandwidthTemplate">
+        <ItemsView
+            ItemTemplate="{StaticResource OptionTemplate}"
+            ItemsSource="{StaticResource BandwidthOptionsSet}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="MusicalStandardsTemplate">
+        <ItemsView
+            ItemTemplate="{StaticResource OptionTemplate}"
+            ItemsSource="{StaticResource MusicalStandardsOptionsSet}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="NumericFormattingTemplate">
+        <ItemsView
+            ItemTemplate="{StaticResource OptionTemplate}"
+            ItemsSource="{StaticResource NumericFormattingSet}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="ShowStateTemplate">
+        <ItemsView
+            ItemTemplate="{StaticResource OptionTemplate}"
+            ItemsSource="{StaticResource ShowStateSet}" />
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -49,22 +49,27 @@ namespace Solfeggio.Languages
 		public static o Dominants			= _("Dominants",		"Доминанты");
 		public static o Notes				= _("Notes",			"Ноты");
 		public static o Sample				= _("Sample",			"Сэмпл");
+        public static o Scaling				= _("Scaling",			"Масштабирование");
+        public static o Frequancy			= _("Frequancy",		"Частота");
+        public static o Magnitude			= _("Magnitude",		"Амплитуда");
+        public static o Phase				= _("Phase",			"Фаза");
+        public static o Bandwidth			= _("Bandwidth",		"Полоса пропускания");
+        public static o Notation			= _("Notation",		    "Нотация");
 
+        public static o MusicalStandards	= _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard		= _("Pitch Standard",	"Частотный стандарт");
 		public static o LowFrequency		= _("Low Frequency",	"Нижняя частота");
 		public static o TopFrequency		= _("Top Frequency",	"Верхняя частота");
-		public static o NumericFormat		= _("Numeric Format",	"Числовой формат");
 		public static o SampleRate			= _("Sample Rate",		"Частота дискретизации");
 		public static o NotesGrid			= _("Notes Grid",		"Нотная сетка");
 		public static o DiscreteGrid		= _("Discrete Grid",	"Дискретная сетка");
 
-		public static o PhaseSpectrum			= _("Phase Spectrum",	"Фазовый спектр");
-		public static o MagnitudeSpectrum		= _("Magnitude Spectrum",		"Амплитудный спектр");
-		public static o MagnitudeScaleFunction	= _("Magnitude Scale Function",	"Масштабирующая функция амплитуды");
-		public static o FrequencyScaleFunction	= _("Frequency Scale Function",	"Масштабирующая функция частоты");
+		public static o PhaseSpectrum			= _("Phase Spectrum",	    "Фазовый спектр");
+		public static o MagnitudeSpectrum		= _("Magnitude Spectrum",	"Амплитудный спектр");
+        public static o NumericFormatting        = _("Numeric Formatting",  "Числовое форматирование");
 
 
-		public static Dictionary<string, o> GetBaseDictionary() =>
+        public static Dictionary<string, o> GetBaseDictionary() =>
 			typeof(Localizator).GetFields(BindingFlags.Static | BindingFlags.Public).
 			ToDictionary(m => m.Name, m => (o)typeof(Localizator).GetField(m.Name).GetValue(null));
 
