@@ -40,6 +40,14 @@
 				<s:Int32>13</s:Int32>
 			</m:Set>
 
+            <Style
+                x:Key="RangeSlider"
+                TargetType="Slider">
+                <Setter
+                    Property="IsSelectionRangeEnabled"
+                    Value="True" />
+            </Style>
+
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

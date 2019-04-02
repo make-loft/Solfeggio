@@ -96,6 +96,9 @@
     <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveOutCapabilities.cs" />
     <Compile Include="Controls\Pivot.cs" />
+    <Compile Include="Controls\RangeBar.xaml.cs">
+      <DependentUpon>RangeBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="Microphone.cs" />
@@ -122,6 +125,10 @@
       <DependentUpon>AppView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\RangeBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Palettes\Brushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

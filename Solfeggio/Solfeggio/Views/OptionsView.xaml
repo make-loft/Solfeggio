@@ -20,7 +20,8 @@
 							ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
 							ItemTemplate="{StaticResource DominantTemplate}" />
 					</Expander>
-				</StackLayout>
+                    <controls:RangeBar />
+                </StackLayout>
 			</ScrollViewer>
 		</controls:PivotItem>
 

@@ -77,12 +77,12 @@
 				<Label
 					m:Rack.Cell="R1 C0"
 					Text="{m:Localizing Key=Level}" />
-				<Entry
-					Width="32"
-					Text="{Binding TopMagnitude, Mode=TwoWay}" />
-			</StackLayout>
+                <Entry
+                    Width="32"
+                    Text="{Binding TopMagnitude, Mode=TwoWay}" />
+            </StackLayout>
 
-			<Label
+            <Label
 				m:Rack.Cell="R1 C0"
 				Text="{m:Localizing Key=Whisper}" />
 			
@@ -90,8 +90,12 @@
 				m:Rack.Cell="R1 C1"
 				Maximum="1"
 				Minimum="0"
-				Value="{Binding TopMagnitude, Mode=TwoWay}" />
-			<Label
+                Value="{Binding TopMagnitude, Mode=TwoWay}"
+                IsSelectionRangeEnabled="True"
+                SelectionStart="0.01"
+				SelectionEnd="{Binding TopMagnitude, Mode=TwoWay}" />
+
+            <Label
 				m:Rack.Cell="R1 C2"
 				Text="{m:Localizing Key=Singing}" />
 

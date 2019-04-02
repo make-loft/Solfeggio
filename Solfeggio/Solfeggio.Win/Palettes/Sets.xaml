@@ -3,9 +3,11 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
+    xmlns:controls="clr-namespace:Solfeggio.Controls">
 
     <m:Set
+        x:Shared="False"
         x:Key="NumericFormattingSet">
         
         <Picker
@@ -19,13 +21,14 @@
             SelectedItem="{Binding NumericFormat.Frequancy, Mode=TwoWay}" />
 
         <Picker
-            Tag="{m:Localizing Key=Frequancy}"
+            Tag="{m:Localizing Key=Phase}"
             ItemsSource="{Binding NumericFormats}"
             SelectedItem="{Binding NumericFormat.Phase, Mode=TwoWay}" />
 
     </m:Set>
 
     <m:Set
+        x:Shared="False"
         x:Key="ShowStateSet">
         
         <Switch
@@ -67,6 +70,7 @@
     </m:Set>
     
 	<m:Set
+        x:Shared="False"
 		x:Key="VisualizationOptionsSet">
 
         <Expander
@@ -90,7 +94,9 @@
 	</m:Set>
 
 	<m:Set
+        x:Shared="False"
 		x:Key="AdvancedOptionsSet">
+        
 		<Picker
 			Tag="{m:Localizing Key=Language}"
 			ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
@@ -142,7 +148,14 @@
 	</m:Set>
 
     <m:Set
+        x:Shared="False"
         x:Key="BandwidthOptionsSet">
+
+        <controls:RangeBar
+            Minimum="0"
+            Maximum="22000"
+            SelectionStart="{Binding LowFrequency, Mode=TwoWay}"
+            SelectionEnd="{Binding TopFrequency, Mode=TwoWay}"/>
 
         <Entry
             Tag="{m:Localizing Key=LowFrequency, StringFormat='{}{0} (Hz)'}"
@@ -155,6 +168,7 @@
     </m:Set>
 
     <m:Set
+        x:Shared="False"
         x:Key="ScalingOptionsSet">
 
         <Picker
@@ -178,6 +192,7 @@
     </m:Set>
 
     <m:Set
+        x:Shared="False"
         x:Key="MusicalStandardsOptionsSet">
 
         <Picker
@@ -194,6 +209,7 @@
     </m:Set>
 
     <m:Set
+        x:Shared="False"
         x:Key="CalibrationOptionsSet">
 
         <Expander

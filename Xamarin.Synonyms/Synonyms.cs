@@ -79,7 +79,12 @@ namespace Xamarin.Forms
 		public StaticResource(object key) : base(key) { }
 	}
 
-	public class Grid : System.Windows.Controls.Grid
+    public class GridSplitter : System.Windows.Controls.GridSplitter
+    {
+    }
+
+
+    public class Grid : System.Windows.Controls.Grid
 	{
 		public static readonly DependencyProperty BindingContextProperty =
 			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(Grid), new PropertyMetadata((o, e)=>

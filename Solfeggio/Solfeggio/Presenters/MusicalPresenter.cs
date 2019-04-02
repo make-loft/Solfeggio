@@ -108,8 +108,18 @@ namespace Solfeggio.Presenters
 
         [DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
         [DataMember] public NumericFormatting NumericFormat { get; set; } = new NumericFormatting();
-        [DataMember] public double LowFrequency { get; set; } = 20d;
-		[DataMember] public double TopFrequency { get; set; } = 3000d;
+        [DataMember] public double LowFrequency
+        {
+            get => Get(() => LowFrequency, 20d);
+            set => Set(() => LowFrequency, value);
+        }
+
+        [DataMember]
+        public double TopFrequency
+        {
+            get => Get(() => TopFrequency, 3000d);
+            set => Set(() => TopFrequency, value);
+        }
 
 		[DataMember] public bool UseNoteFilter { get; set; }
 		[DataMember] public bool AutoSensitive { get; set; } = true;
