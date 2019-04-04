@@ -135,16 +135,6 @@
 		<Switch
 			Tag="{m:Localizing Key=UseAliasing}"
 			IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
-
-		<ItemsView>
-			<Entry
-				Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-			<Slider
-				Minimum="{m:StoreBinding Path=LowFrequency, StoreKey=presenters:MusicalPresenter}"
-				Maximum="{m:StoreBinding Path=TopFrequency, StoreKey=presenters:MusicalPresenter}"
-				Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-
-		</ItemsView>
 	</m:Set>
 
     <m:Set

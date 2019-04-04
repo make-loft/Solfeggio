@@ -27,6 +27,10 @@
 				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush}"
 				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
 			<Polyline
+				Name="PhasePolyline"
+				Stroke="{DynamicResource WaveOutStrokeBrush}"
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
+			<Polyline
 				Name="WaveInPolyline"
 				Stroke="{DynamicResource WaveInStrokeBrush}"
 				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />

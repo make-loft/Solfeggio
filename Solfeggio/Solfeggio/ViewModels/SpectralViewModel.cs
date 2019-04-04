@@ -57,7 +57,8 @@ namespace Solfeggio.ViewModels
 		public int MinFramePow { get; set; }
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
-		public IList<Complex> CurrentSpectrum { get; set; }
+		public IList<Complex> MagnitudeSpectrum { get; set; }
+		public IList<Complex> PhaseSpectrum { get; set; }
 		public IList<Complex> WaveInData { get; set; }
 		public IList<Complex> WaveOutData { get; set; }
 
@@ -132,7 +133,8 @@ namespace Solfeggio.ViewModels
 					: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
 				if (UseAliasing) spectrum = Filtering.Correct(spectrum);
 
-				CurrentSpectrum = spectrum;
+				PhaseSpectrum = Filtering.GetPhaseSpectrum(spectrum0, SampleRate);
+				MagnitudeSpectrum = spectrum;
 			}
 
 			this[() => ActiveDevice].PropertyChanging += (sender, args) =>

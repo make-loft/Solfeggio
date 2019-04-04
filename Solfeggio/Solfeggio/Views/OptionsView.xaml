@@ -20,8 +20,15 @@
 							ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
 							ItemTemplate="{StaticResource DominantTemplate}" />
 					</Expander>
-                    <controls:RangeBar />
-                </StackLayout>
+					<ItemsView>
+						<Entry
+							Text="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+						<Slider
+							Minimum="{m:StoreBinding Path=Frequancy.Limit.Lower, StoreKey=presenters:MusicalPresenter}"
+							Maximum="{m:StoreBinding Path=Frequancy.Limit.Upper, StoreKey=presenters:MusicalPresenter}"
+							Value="{m:StoreBinding Path=ActiveDevice.Frequancy, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
+					</ItemsView>
+				</StackLayout>
 			</ScrollViewer>
 		</controls:PivotItem>
 

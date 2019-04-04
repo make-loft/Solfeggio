@@ -187,13 +187,40 @@ namespace Solfeggio.Presenters
 			var hStretchFactor = width / data.Count;
 			foreach (var pair in data)
 			{
-				pair.Deconstruct(out var frequancy, out var magnitude);
-				var x = frequancy.Stretch(hStretchFactor);
+				pair.Deconstruct(out var bin, out var magnitude);
+				var x = bin.Stretch(hStretchFactor);
 				var y = magnitude.Stretch(vStretchFactor).Increment(vIncrementOffset);
 				points.Add(new Point(x, y));
 			}
 		}
-		
+
+		public void DrawPhase(ICollection<Point> points, IList<Complex> data, double width, double height)
+		{
+			var vIncrementOffset = height / 2d;
+			var vStretchFactor = height / Pi.Double;
+
+			Frequancy.Threshold.Deconstruct(width,
+				Frequancy.VisualScaleFunc.To(out var frequancyVisualScaleFunc),
+				out var lowerFrequency, out var upperFrequency,
+				out var hLowerVisualOffset, out _,
+				out var hVisualLengthStretchFactor);
+
+			foreach (var pair in data)
+			{
+				pair.Deconstruct(out var activeFrequency, out var activePhase);
+				if (activeFrequency < lowerFrequency) continue;
+				if (activeFrequency > upperFrequency) break;
+
+				frequancyVisualScaleFunc(activeFrequency).
+					Stretch(hVisualLengthStretchFactor).
+					Decrement(hLowerVisualOffset).
+					To(out var x);
+
+				var y = activePhase.Stretch(vStretchFactor).Increment(vIncrementOffset);
+				points.Add(new Point(x, y));
+			}
+		}
+
 		public void DrawSpectrum(ICollection<Point> points, IList<Complex> data, double width, double height)
 		{
 			Frequancy.Threshold.Deconstruct(width, 

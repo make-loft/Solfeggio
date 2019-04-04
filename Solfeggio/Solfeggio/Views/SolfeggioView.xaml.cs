@@ -123,7 +123,7 @@ namespace Solfeggio.Views
 		    var canvas = args.Surface.Canvas;
 		    var pianoCanvas = new Panel(args);
 
-		    var spectrum = _spectralViewModel.CurrentSpectrum;
+		    var spectrum = _spectralViewModel.MagnitudeSpectrum;
 		    if (spectrum.IsNot()) return;
 
 		    pianoCanvas.Children.Clear();
@@ -148,7 +148,7 @@ namespace Solfeggio.Views
 	        var canvas = args.Surface.Canvas;
 	        var spectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
 
-			var spectrum = _spectralViewModel.CurrentSpectrum;
+			var spectrum = _spectralViewModel.MagnitudeSpectrum;
 			if (spectrum.IsNot()) return;
 
 	        var waveInData = _spectralViewModel.WaveInData;
