@@ -55,6 +55,12 @@ namespace Solfeggio.Languages
         public static o Phase				= _("Phase",			"Фаза");
         public static o Bandwidth			= _("Bandwidth",		"Полоса пропускания");
         public static o Notation			= _("Notation",		    "Нотация");
+        public static o Threshold			= _("Threshold",		"Порог");
+        public static o Value				= _("Value",			"Значение");
+        public static o Limit				= _("Limit",			"Предел");
+		public static o Lower				= _("Lower",			"Нижний");
+        public static o Upper				= _("Upper",			"Верхний");
+        public static o Length				= _("Length",			"Длина");
 
         public static o MusicalStandards	= _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard		= _("Pitch Standard",	"Частотный стандарт");

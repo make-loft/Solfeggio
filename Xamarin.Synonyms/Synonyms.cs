@@ -42,7 +42,11 @@ namespace Xamarin.Forms
 	{
 	}
 
-	public class ItemsView : ItemsControl
+    public class GroupBox : System.Windows.Controls.GroupBox
+    {
+    }
+
+    public class ItemsView : ItemsControl
 	{
 		public static readonly DependencyProperty BindingContextProperty =
 			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(ItemsView), new PropertyMetadata((o, e)=>

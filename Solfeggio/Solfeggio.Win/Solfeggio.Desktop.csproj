@@ -74,8 +74,14 @@
     <Compile Include="..\Solfeggio\Pitch\PitchTracker.cs">
       <Link>Pitch\PitchTracker.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Calibrations.cs">
+      <Link>Presenters\Calibrations.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Presenters\MusicalPresenter.cs">
       <Link>Presenters\MusicalPresenter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
+      <Link>Presenters\PianoKey.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\SpectralViewModel.cs">
       <Link>ViewModels\SpectralViewModel.cs</Link>
@@ -126,8 +132,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Controls\RangeBar.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Palettes\Brushes.xaml">
       <SubType>Designer</SubType>

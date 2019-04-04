@@ -1,9 +1,9 @@
 ﻿using Ace;
 using Solfeggio.Languages;
+using Solfeggio.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Solfeggio.Presenters.MusicalPresenter;
 
 namespace Solfeggio.ViewModels
 {

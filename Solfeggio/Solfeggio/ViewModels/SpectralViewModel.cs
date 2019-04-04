@@ -18,8 +18,6 @@ namespace Solfeggio.ViewModels
 
 		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>(), new Generator() };
 
-		public delegate double ApodizationFunc(double binIndex, double frameSize);
-
 		public ApodizationFunc ActiveWindow
 		{
 			get => Get(() => ActiveWindow, Rectangle);

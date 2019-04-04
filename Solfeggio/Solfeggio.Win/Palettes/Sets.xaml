@@ -149,44 +149,24 @@
 
     <m:Set
         x:Shared="False"
-        x:Key="BandwidthOptionsSet">
-
-        <controls:RangeBar
-            Minimum="0"
-            Maximum="22000"
-            SelectionStart="{Binding LowFrequency, Mode=TwoWay}"
-            SelectionEnd="{Binding TopFrequency, Mode=TwoWay}"/>
-
-        <Entry
-            Tag="{m:Localizing Key=LowFrequency, StringFormat='{}{0} (Hz)'}"
-            Text="{Binding LowFrequency, Mode=TwoWay}" />
-
-        <Entry
-            Tag="{m:Localizing Key=TopFrequency, StringFormat='{}{0} (Hz)'}"
-            Text="{Binding TopFrequency, Mode=TwoWay}" />
-
-    </m:Set>
-
-    <m:Set
-        x:Shared="False"
         x:Key="ScalingOptionsSet">
 
         <Picker
 			Tag="{m:Localizing Key=Frequancy}"
-			ItemsSource="{Binding FrequancyScaleFuncs}"
-			SelectedItem="{Binding FrequancyScaleFunc, Mode=TwoWay}"
+			ItemsSource="{Binding Frequancy.VisualScaleFuncs}"
+			SelectedItem="{Binding Frequancy.VisualScaleFunc, Mode=TwoWay}"
 			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 
         <Picker
 			Tag="{m:Localizing Key=Magnitude}"
-			ItemsSource="{Binding MagnitudeScaleFuncs}"
-			SelectedItem="{Binding MagnitudeScaleFunc, Mode=TwoWay}"
+			ItemsSource="{Binding Magnitude.VisualScaleFuncs}"
+			SelectedItem="{Binding Magnitude.VisualScaleFunc, Mode=TwoWay}"
 			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 
         <Picker
 			Tag="{m:Localizing Key=Phase}"
-			ItemsSource="{Binding PhaseScaleFuncs}"
-			SelectedItem="{Binding PhaseScaleFunc, Mode=TwoWay}"
+			ItemsSource="{Binding Phase.VisualScaleFuncs}"
+			SelectedItem="{Binding Phase.VisualScaleFunc, Mode=TwoWay}"
 			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
         
     </m:Set>
@@ -217,10 +197,10 @@
             ContentTemplate="{StaticResource SensitiveTemplate}"
             Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-        <Expander
+        <!--<Expander
             Header="{m:Localizing Key=Bandwidth}"
             ContentTemplate="{StaticResource BandwidthTemplate}"
-            Content="{m:Store Key=presenters:MusicalPresenter}" />
+            Content="{m:Store Key=presenters:MusicalPresenter}" />-->
 
         <Expander
             Header="{m:Localizing Key=Scaling}"

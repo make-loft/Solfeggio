@@ -15,4 +15,10 @@
 	<system:Double
 		x:Key="MinDominantOpacityLevel">0.3</system:Double>
 
+	<system:Double
+		x:Key="InfoTextOpacityLevel">0.4</system:Double>
+
+	<system:String
+		x:Key="DefaultStringFormat">F2</system:String>
+
 </ResourceDictionary>

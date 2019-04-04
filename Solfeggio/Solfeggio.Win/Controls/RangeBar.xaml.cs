@@ -1,41 +1,39 @@
-﻿using Ace;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows;
 
 namespace Solfeggio.Controls
 {
-    public partial class RangeBar
-    {
-        public RangeBar() => InitializeComponent();
+	public partial class RangeBar
+	{
+		public RangeBar() => InitializeComponent();
 
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            this.EnumerateSelfAndVisualDescendants().OfType<Grid>().First().To(out Grid grid);
-            Ace.Markup.Rack.GetColumns(grid).Split('*', '^').To(out var columns);
-            var a = double.Parse(columns[0]);
-            var b = double.Parse(columns[2]);
-            var c = double.Parse(columns[4]);
-            var f = (Maximum - Minimum) / (a + b + c);
-            var delta = e.HorizontalChange / (ActualWidth * f);
+		bool _isRangeMoving, _isRangeChanging;
 
-            var l = a + delta;
-            var r = c - delta;
-            l = l < 0d ? 0d : l;
-            r = r < 0d ? 0d : r;
-            Ace.Markup.Rack.SetColumns(grid, $"{l}* ^ {b}* ^ {r}*");
-        }
-        private void Thumb_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            this.EnumerateSelfAndVisualDescendants().OfType<Grid>().First().To(out Grid grid);
-            Ace.Markup.Rack.GetColumns(grid).Split('*', '^').To(out var columns);
-            var a = double.Parse(columns[0]);
-            var b = double.Parse(columns[2]);
-            var c = double.Parse(columns[4]);
-            var f = (Maximum - Minimum) / (a + b + c);
-            SelectionStart = Minimum + a * f;
-            SelectionEnd = Maximum - c * f;
-        }
-    }
+		private void RangeMoved(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			if (_isRangeMoving || _isRangeChanging) return;
+			_isRangeMoving = true;
+			var delta = e.NewValue - e.OldValue;
+			var newSelectionEnd = SelectionEnd += delta;
+			var newSelectionStart = SelectionStart += delta;
+			SelectionEnd = newSelectionEnd < Maximum ? newSelectionEnd : Maximum;
+			SelectionStart = newSelectionStart > Minimum ? newSelectionStart : Minimum;
+			Value = (SelectionStart + SelectionEnd) / 2d;
+			_isRangeMoving = false;
+		}
+
+		private void RangeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			if (_isRangeChanging || _isRangeMoving) return;
+			_isRangeChanging = true;
+			Value += (e.NewValue - e.OldValue) / 2d;
+			_isRangeChanging = false;
+		}
+
+		private void RangeBarLoaded(object sender, RoutedEventArgs e)
+		{
+			_isRangeMoving = true;
+			Value = (SelectionStart + SelectionEnd) / 2d;
+			_isRangeMoving = false;
+		}
+	}
 }

@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace">
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:controls="clr-namespace:Solfeggio.Controls">
 
 	<DataTemplate
 		x:Key="DominantTemplate">
@@ -65,55 +66,6 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="SensitiveTemplate">
-		<Grid
-			m:Rack.Rows="^ ^ ^"
-			m:Rack.Columns="^ * ^">
-
-			<StackLayout
-				m:Rack.Cell="R0 C1"
-				HorizontalAlignment="Center"
-				Orientation="Vertical">
-				<Label
-					m:Rack.Cell="R1 C0"
-					Text="{m:Localizing Key=Level}" />
-                <Entry
-                    Width="32"
-                    Text="{Binding TopMagnitude, Mode=TwoWay}" />
-            </StackLayout>
-
-            <Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=Whisper}" />
-			
-			<Slider
-				m:Rack.Cell="R1 C1"
-				Maximum="1"
-				Minimum="0"
-                Value="{Binding TopMagnitude, Mode=TwoWay}"
-                IsSelectionRangeEnabled="True"
-                SelectionStart="0.01"
-				SelectionEnd="{Binding TopMagnitude, Mode=TwoWay}" />
-
-            <Label
-				m:Rack.Cell="R1 C2"
-				Text="{m:Localizing Key=Singing}" />
-
-			<StackLayout
-				m:Rack.Cell="R2 C1"
-				HorizontalAlignment="Center"
-				Orientation="Horizontal">
-				<Label
-					Text="{m:Localizing Key=Manually}" />
-				<Switch
-					IsToggled="{Binding AutoSensitive, Mode=TwoWay}" />
-				<Label
-					Text="{m:Localizing Key=Automatically}" />
-			</StackLayout>
-		</Grid>
-	</DataTemplate>
-
-	<DataTemplate
 		x:Key="FramingTemplate">
 		<Grid
 			m:Rack.Rows="^ ^"
@@ -126,13 +78,13 @@
 				<Label
 					Text="{m:Localizing Key=Speed}" />
 			</StackLayout>
-			
+
 			<Slider
 				m:Rack.Cell="R0 C1"
 				Maximum="13"
 				Minimum="9"
 				Value="{Binding Path=FramePow, Mode=TwoWay}" />
-			
+
 			<StackLayout
 				m:Rack.Cell="R0 C2">
 				<Label
@@ -168,39 +120,139 @@
 			ItemsSource="{StaticResource AdvancedOptionsSet}" />
 	</DataTemplate>
 
-    <DataTemplate
+	<DataTemplate
 		x:Key="ScalingTemplate">
-        <ItemsView
+		<ItemsView
 			ItemTemplate="{StaticResource OptionTemplate}"
 			ItemsSource="{StaticResource ScalingOptionsSet}" />
-    </DataTemplate>
+	</DataTemplate>
 
-    <DataTemplate
-        x:Key="BandwidthTemplate">
-        <ItemsView
-            ItemTemplate="{StaticResource OptionTemplate}"
-            ItemsSource="{StaticResource BandwidthOptionsSet}" />
-    </DataTemplate>
+	<DataTemplate
+		x:Key="RangeGridTemplate">
 
-    <DataTemplate
-        x:Key="MusicalStandardsTemplate">
-        <ItemsView
-            ItemTemplate="{StaticResource OptionTemplate}"
-            ItemsSource="{StaticResource MusicalStandardsOptionsSet}" />
-    </DataTemplate>
+		<Grid
+			m:Rack.Rows="^ ^ ^ ^"
+			m:Rack.Columns="^ ^ ^"
+			HorizontalAlignment="Center">
 
-    <DataTemplate
-        x:Key="NumericFormattingTemplate">
-        <ItemsView
-            ItemTemplate="{StaticResource OptionTemplate}"
-            ItemsSource="{StaticResource NumericFormattingSet}" />
-    </DataTemplate>
+			<Label
+				m:Rack.Cell="R0 C0"
+				Text="" />
 
-    <DataTemplate
-        x:Key="ShowStateTemplate">
-        <ItemsView
-            ItemTemplate="{StaticResource OptionTemplate}"
-            ItemsSource="{StaticResource ShowStateSet}" />
-    </DataTemplate>
+			<Label
+				m:Rack.Cell="R1 C0"
+				Text="{m:Localizing Key=Upper}" />
+			<Label
+				m:Rack.Cell="R2 C0"
+				Text="{m:Localizing Key=Lower}" />
+			<Label
+				m:Rack.Cell="R3 C0"
+				IsEnabled="False"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{m:Localizing Key=Length}" />
+
+			<Label
+				m:Rack.Cell="R0 C1"
+				Text="{m:Localizing Key=Threshold}" />
+			<Label
+				m:Rack.Cell="R0 C2"
+				Text="{m:Localizing Key=Limit}" />
+
+			<Entry
+				m:Rack.Cell="R1 C1"
+				Text="{Binding Threshold.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+			<Entry
+				m:Rack.Cell="R2 C1"
+				Text="{Binding Threshold.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+			<Entry
+				m:Rack.Cell="R1 C2"
+				Text="{Binding Limit.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+			<Entry
+				m:Rack.Cell="R2 C2"
+				Text="{Binding Limit.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+
+			<Entry
+				m:Rack.Cell="R3 C1"
+				IsEnabled="False"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Binding Threshold.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
+			<Entry
+				m:Rack.Cell="R3 C2"
+				IsEnabled="False"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Binding Limit.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
+		</Grid>
+
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="RangeTemplate">
+		<StackLayout
+			HorizontalAlignment="Stretch">
+
+			<controls:RangeBar
+				Maximum="{Binding Limit.Upper, Mode=TwoWay}"
+				Minimum="{Binding Limit.Lower, Mode=TwoWay}"
+				SelectionEnd="{Binding Threshold.Upper, Mode=TwoWay}"
+				SelectionStart="{Binding Threshold.Lower, Mode=TwoWay}" />
+
+			<ContentPresenter
+				Content="{Binding}"
+				ContentTemplate="{StaticResource RangeGridTemplate}" />
+
+		</StackLayout>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="SensitiveTemplate">
+
+		<Grid
+			m:Rack.Columns="^ ^ ^ ^ ^">
+
+			<GroupBox
+				m:Rack.Cell="C0"
+				Header="{m:Localizing Key=Magnitude}"
+				DataContext="{Binding Magnitude}"
+				ContentTemplate="{StaticResource RangeTemplate}"
+				Content="{Binding}" />
+
+			<GridSplitter
+				m:Rack.Cell="C1"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+			<GroupBox
+				m:Rack.Cell="C2"
+				Header="{m:Localizing Key=Frequancy}"
+				DataContext="{Binding Frequancy}"
+				ContentTemplate="{StaticResource RangeTemplate}"
+				Content="{Binding}" />
+
+			<GridSplitter
+				m:Rack.Cell="C3"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="MusicalStandardsTemplate">
+		<ItemsView
+			ItemTemplate="{StaticResource OptionTemplate}"
+			ItemsSource="{StaticResource MusicalStandardsOptionsSet}" />
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="NumericFormattingTemplate">
+		<ItemsView
+			ItemTemplate="{StaticResource OptionTemplate}"
+			ItemsSource="{StaticResource NumericFormattingSet}" />
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="ShowStateTemplate">
+		<ItemsView
+			ItemTemplate="{StaticResource OptionTemplate}"
+			ItemsSource="{StaticResource ShowStateSet}" />
+	</DataTemplate>
 
 </ResourceDictionary>

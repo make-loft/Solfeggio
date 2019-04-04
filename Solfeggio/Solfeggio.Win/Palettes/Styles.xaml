@@ -14,8 +14,71 @@
 	<Style
 		TargetType="xamarin:Label">
 		<Setter
+			Property="HorizontalAlignment"
+			Value="Right" />
+		<Setter
 			Property="Margin"
 			Value="4" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:Entry">
+		<Setter
+			Property="Margin"
+			Value="4" />
+		<Setter
+			Property="MinWidth"
+			Value="64" />
+		<Setter
+			Property="HorizontalContentAlignment"
+			Value="Right" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:GridSplitter">
+		<Setter
+			Property="MinHeight"
+			Value="4" />
+		<Setter
+			Property="MinWidth"
+			Value="4" />
+	</Style>
+
+	<Style
+		x:Key="VerticalGridSplitter"
+		BasedOn="{StaticResource {x:Type xamarin:GridSplitter}}"
+		TargetType="xamarin:GridSplitter">
+		<Setter
+			Property="HorizontalAlignment"
+			Value="Center" />
+		<Setter
+			Property="VerticalAlignment"
+			Value="Stretch" />
+	</Style>
+
+	<Style
+		x:Key="HorizontalGridSplitter"
+		BasedOn="{StaticResource {x:Type xamarin:GridSplitter}}"
+		TargetType="xamarin:GridSplitter">
+		<Setter
+			Property="HorizontalAlignment"
+			Value="Stretch" />
+		<Setter
+			Property="VerticalAlignment"
+			Value="Center" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:GroupBox">
+		<Setter
+			Property="Margin"
+			Value="4" />
+		<Setter
+			Property="BorderBrush"
+			Value="#55555555" />
+		<Setter
+			Property="BorderThickness"
+			Value="0" />
 	</Style>
 
 	<Style
