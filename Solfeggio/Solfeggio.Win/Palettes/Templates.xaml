@@ -121,13 +121,6 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="ScalingTemplate">
-		<ItemsView
-			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource ScalingOptionsSet}" />
-	</DataTemplate>
-
-	<DataTemplate
 		x:Key="RangeGridTemplate">
 
 		<Grid
@@ -190,6 +183,16 @@
 		<StackLayout
 			HorizontalAlignment="Stretch">
 
+			<Picker
+				ItemsSource="{Binding VisualScaleFuncs}"
+				SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+			<Switch
+				m:Rack.Cell="R0"
+				HorizontalAlignment="Right"
+				IsToggled="{Binding IsVisible, Mode=TwoWay}" />
+
 			<controls:RangeBar
 				Maximum="{Binding Limit.Upper, Mode=TwoWay}"
 				Minimum="{Binding Limit.Lower, Mode=TwoWay}"
@@ -206,32 +209,91 @@
 	<DataTemplate
 		x:Key="SensitiveTemplate">
 
-		<Grid
-			m:Rack.Columns="^ ^ ^ ^ ^">
+		<StackLayout>
+			
+			<Grid
+				m:Rack.Columns="^ ^ ^ ^ ^">
 
-			<GroupBox
-				m:Rack.Cell="C0"
-				Header="{m:Localizing Key=Magnitude}"
-				DataContext="{Binding Magnitude}"
-				ContentTemplate="{StaticResource RangeTemplate}"
-				Content="{Binding}" />
+				<Grid
+					m:Rack.Cell="C0"
+					m:Rack.Rows="^ ^"
+					DataContext="{Binding Magnitude}">
+					<Label
+						m:Rack.Cell="R0"
+						HorizontalAlignment="Center"
+						Text="{m:Localizing Key=Magnitude}" />
+					<ContentPresenter
+						m:Rack.Cell="R1"
+						Content="{Binding}"
+						ContentTemplate="{StaticResource RangeTemplate}" />
+				</Grid>
 
-			<GridSplitter
-				m:Rack.Cell="C1"
-				Style="{StaticResource VerticalGridSplitter}" />
+				<GridSplitter
+					m:Rack.Cell="C1"
+					Style="{StaticResource VerticalGridSplitter}" />
 
-			<GroupBox
-				m:Rack.Cell="C2"
-				Header="{m:Localizing Key=Frequancy}"
-				DataContext="{Binding Frequancy}"
-				ContentTemplate="{StaticResource RangeTemplate}"
-				Content="{Binding}" />
+				<Grid
+					m:Rack.Cell="C2"
+					m:Rack.Rows="^ ^"
+					DataContext="{Binding Frequancy}">
+					<Label
+						m:Rack.Cell="R0"
+						HorizontalAlignment="Center"
+						Text="{m:Localizing Key=Frequancy}" />
+					<ContentPresenter
+						m:Rack.Cell="R1"
+						Content="{Binding}"
+						ContentTemplate="{StaticResource RangeTemplate}" />
+				</Grid>
 
-			<GridSplitter
-				m:Rack.Cell="C3"
-				Style="{StaticResource VerticalGridSplitter}" />
+				<GridSplitter
+					m:Rack.Cell="C3"
+					Style="{StaticResource VerticalGridSplitter}" />
 
-		</Grid>
+			</Grid>
+
+			<Grid
+				m:Rack.Columns="^ ^ ^ ^ ^">
+
+				<Grid
+					m:Rack.Cell="C0"
+					m:Rack.Rows="^ ^"
+					DataContext="{Binding Phase}">
+					<Label
+						m:Rack.Cell="R0"
+						HorizontalAlignment="Center"
+						Text="{m:Localizing Key=Phase}" />
+					<ContentPresenter
+						m:Rack.Cell="R1"
+						Content="{Binding}"
+						ContentTemplate="{StaticResource RangeTemplate}" />
+				</Grid>
+
+				<GridSplitter
+					m:Rack.Cell="C1"
+					Style="{StaticResource VerticalGridSplitter}" />
+
+				<Grid
+					m:Rack.Cell="C2"
+					m:Rack.Rows="^ ^"
+					DataContext="{Binding Wave}">
+					<Label
+						m:Rack.Cell="R0"
+						HorizontalAlignment="Center"
+						Text="{m:Localizing Key=Wave}" />
+					<ContentPresenter
+						m:Rack.Cell="R1"
+						Content="{Binding}"
+						ContentTemplate="{StaticResource RangeTemplate}" />
+				</Grid>
+
+				<GridSplitter
+					m:Rack.Cell="C3"
+					Style="{StaticResource VerticalGridSplitter}" />
+
+			</Grid>
+		</StackLayout>
+		
 	</DataTemplate>
 
 	<DataTemplate

@@ -31,8 +31,8 @@ namespace Solfeggio.Presenters
 		{
 			Limit = ConstructRange(10d, 22000d),
 			Threshold = ConstructRange(20d, 3000d),
-			VisualScaleFuncs = AllScaleFuncs,
 			VisualScaleFunc = ScaleFuncs.Log2,
+			NumericFormat = "F0",
 		};
 
 		[DataMember]
@@ -40,14 +40,27 @@ namespace Solfeggio.Presenters
 		{
 			Limit = ConstructRange(0.01d, 1d),
 			Threshold = ConstructRange(0.01d, 0.4d),
-			VisualScaleFuncs = AllScaleFuncs,
-			VisualScaleFunc = ScaleFuncs.Lineal
+			IsVisible = true
+		};
+
+		[DataMember]
+		public Bandwidth Phase { get; set; } = new Bandwidth
+		{
+			Limit = ConstructRange(-Pi.Single, +Pi.Single),
+			Threshold = ConstructRange(-Pi.Single, +Pi.Single),
+		};
+
+		[DataMember]
+		public Bandwidth Wave { get; set; } = new Bandwidth
+		{
+			Limit = ConstructRange(-1d, +1d),
+			Threshold = ConstructRange(-1d, +1d),
+			VisualScaleFunc = ScaleFuncs.Lineal,
 		};
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 
 		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
-        [DataMember] public NumericFormatting NumericFormat { get; set; } = new NumericFormatting();
 		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 
 		[DataMember] public bool UseNoteFilter { get; set; }
@@ -69,9 +82,6 @@ namespace Solfeggio.Presenters
 				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
 			}
 		}
-
-		private static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
-			{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp, ScaleFuncs._20Log10 };
 
         public Dictionary<string, string[]> Notations { get; set; } = new Dictionary<string, string[]>
         {
@@ -144,7 +154,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(NumericFormat.Frequancy)
+					Text = activeFrequency.ToString(Frequancy.NumericFormat)
 				});
 
 				items.Add(panel);
@@ -338,7 +348,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString(NumericFormat.Frequancy)
+						Text = activeFrequency.ToString(Frequancy.NumericFormat)
 					});
 				}
 
@@ -349,7 +359,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeMagnitude.ToString(NumericFormat.Magnitude)
+						Text = activeMagnitude.ToString(Magnitude.NumericFormat)
 					});
 				}
 
@@ -360,7 +370,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(NumericFormat.Frequancy)
+						Text = key.EthalonFrequency.ToString(Frequancy.NumericFormat)
 					});
 				}
 
