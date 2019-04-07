@@ -9,11 +9,11 @@ namespace Solfeggio.Presenters
 		public int NoteNumber { get; set; }
 		public string NoteName { get; set; }
 		public double Magnitude { get; set; }
-		public double LowerFrequency { get; set; }
-		public double UpperFrequency { get; set; }
-		public double EthalonFrequency { get; set; }
-		public double DeltaFrequency => Peak.Real - EthalonFrequency;
-		public Complex Peak { get; set; }
+		public double LowerFrequancy { get; set; }
+		public double UpperFrequancy { get; set; }
+		public double EthalonFrequancy { get; set; }
+		public double DeltaFrequancy => Peak.Frequancy - EthalonFrequancy;
+		public Bin Peak { get; set; }
 		public int Hits { get; set; }
 
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
@@ -37,9 +37,9 @@ namespace Solfeggio.Presenters
 			{
 				NoteNumber = noteNumber,
 				NoteName = note + oktaveNumber,
-				LowerFrequency = lowFrequency,
-				UpperFrequency = topFrequency,
-				EthalonFrequency = ethalonFrequency,
+				LowerFrequancy = lowFrequency,
+				UpperFrequancy = topFrequency,
+				EthalonFrequancy = ethalonFrequency,
 			};
 		}
 	}

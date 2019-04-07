@@ -19,7 +19,7 @@ namespace Solfeggio.Views
 			var timer = new DispatcherTimer();
 			timer.Tick += (o, e) =>
 			{
-				var spectrum = spectralViewModel.MagnitudeSpectrum;
+				var spectrum = spectralViewModel.Spectrum;
 				if (spectrum.IsNot()) return;
 
 				MagnitudePolyline.Points.Clear();
@@ -59,7 +59,7 @@ namespace Solfeggio.Views
 						presenter.EnumerateNotes());
 
 				if (presenter.Phase.IsVisible)
-					presenter.DrawPhase(PhasePolyline.Points, spectralViewModel.PhaseSpectrum, width, height);
+					presenter.DrawPhase(PhasePolyline.Points, spectralViewModel.Spectrum, width, height);
 
 				if (presenter.Wave.IsVisible)
 					presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);

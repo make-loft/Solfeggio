@@ -197,14 +197,14 @@ namespace Solfeggio.Presenters
 			var hStretchFactor = width / data.Count;
 			foreach (var pair in data)
 			{
-				pair.Deconstruct(out var bin, out var magnitude);
-				var x = bin.Stretch(hStretchFactor);
-				var y = magnitude.Stretch(vStretchFactor).Increment(vIncrementOffset);
+				pair.Deconstruct(out var binOffset, out var magnitude);
+				binOffset.Stretch(hStretchFactor).To(out var x);
+				magnitude.Stretch(vStretchFactor).Increment(vIncrementOffset).To(out var y);
 				points.Add(new Point(x, y));
 			}
 		}
 
-		public void DrawPhase(ICollection<Point> points, IList<Complex> data, double width, double height)
+		public void DrawPhase(ICollection<Point> points, IList<Bin> data, double width, double height)
 		{
 			var vIncrementOffset = height / 2d;
 			var vStretchFactor = height / Pi.Double;
@@ -215,9 +215,9 @@ namespace Solfeggio.Presenters
 				out var hLowerVisualOffset, out _,
 				out var hVisualLengthStretchFactor);
 
-			foreach (var pair in data)
+			foreach (var bin in data)
 			{
-				pair.Deconstruct(out var activeFrequency, out var activePhase);
+				bin.Deconstruct(out var activeFrequency, out _, out var activePhase);
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
@@ -226,12 +226,16 @@ namespace Solfeggio.Presenters
 					Decrement(hLowerVisualOffset).
 					To(out var x);
 
-				var y = activePhase.Stretch(vStretchFactor).Increment(vIncrementOffset);
+				activePhase.
+					Stretch(vStretchFactor).
+					Increment(vIncrementOffset).
+					To(out var y);
+
 				points.Add(new Point(x, y));
 			}
 		}
 
-		public void DrawSpectrum(ICollection<Point> points, IList<Complex> data, double width, double height)
+		public void DrawSpectrum(ICollection<Point> points, IList<Bin> data, double width, double height)
 		{
 			Frequancy.Threshold.Deconstruct(width, 
 				Frequancy.VisualScaleFunc.To(out var frequancyVisualScaleFunc),
@@ -249,9 +253,9 @@ namespace Solfeggio.Presenters
 
 			points.Add(new Point(0d, height));
 
-			foreach (var pair in data)
+			foreach (var bin in data)
 			{
-				pair.Deconstruct(out var activeFrequency, out var activeMagnitude);
+				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
@@ -312,7 +316,7 @@ namespace Solfeggio.Presenters
 
 			foreach (var key in keys)
 			{
-				key.Peak.Deconstruct(out var activeFrequency, out var activeMagnitude);
+				key.Peak.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
@@ -370,7 +374,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(Frequancy.NumericFormat)
+						Text = key.EthalonFrequancy.ToString(Frequancy.NumericFormat)
 					});
 				}
 
@@ -392,7 +396,7 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Complex> data, double width, double height)
+		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height)
 		{
 			Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
 
@@ -419,9 +423,9 @@ namespace Solfeggio.Presenters
 
 			var m = 0;
 			var averageMagnitude = 0d;
-			foreach (var peak in data)
+			foreach (var bin in data)
 			{
-				peak.Deconstruct(out var activeFrequency, out var activeMagnitude);
+				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
@@ -429,12 +433,12 @@ namespace Solfeggio.Presenters
 				averageMagnitude += activeMagnitude;
 
 				var key =
-					keys.FirstOrDefault(k => k.LowerFrequency < activeFrequency && activeFrequency <= k.UpperFrequency);
+					keys.FirstOrDefault(k => k.LowerFrequancy < activeFrequency && activeFrequency <= k.UpperFrequancy);
 				if (key is null) continue;
 				if (useNoteFilter)
 				{
-					var range = key.UpperFrequency - key.LowerFrequency;
-					var half = key.EthalonFrequency - key.LowerFrequency;
+					var range = key.UpperFrequancy - key.LowerFrequancy;
+					var half = key.EthalonFrequancy - key.LowerFrequancy;
 					activeMagnitude = (float)(activeMagnitude * Windowing.Gausse(half, range));
 				}
 
@@ -442,7 +446,7 @@ namespace Solfeggio.Presenters
 				if (activeMagnitude > key.Magnitude)
 				{
 					key.Magnitude = activeMagnitude;
-					key.Peak = peak;
+					key.Peak = bin;
 				}
 			}
 
@@ -456,7 +460,7 @@ namespace Solfeggio.Presenters
 			var maxMagnitude = upperMagnitude * upperMagnitude * 0.32; // keys.Max(k => k.Magnitude);
 																	 //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
 
-			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
+			foreach (var key in keys.Where(k => k.LowerFrequancy < upperFrequency))
 			{
 				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
 				var basicColor = OktaveBrushes[key.NoteNumber].As<SolidColorBrush>()?.Color ?? Colors.Transparent;
@@ -475,9 +479,9 @@ namespace Solfeggio.Presenters
 					new GradientStop {Color = pressColor, Offset = 0.5d}
 				);
 
-				var lowerOffset = frequancyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
-				var upperOffset = frequancyVisualScaleFunc(key.UpperFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
-				var ethalonOffset = frequancyVisualScaleFunc(key.EthalonFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
+				var lowerOffset = frequancyVisualScaleFunc(key.LowerFrequancy).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
+				var upperOffset = frequancyVisualScaleFunc(key.UpperFrequancy).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
+				var ethalonOffset = frequancyVisualScaleFunc(key.EthalonFrequancy).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 
 				var actualHeight = isTone ? height : height * 0.7d;
 				var strokeThickness = upperOffset - lowerOffset;

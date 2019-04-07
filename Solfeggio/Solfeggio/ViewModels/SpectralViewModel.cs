@@ -57,8 +57,7 @@ namespace Solfeggio.ViewModels
 		public int MinFramePow { get; set; }
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
-		public IList<Complex> MagnitudeSpectrum { get; set; }
-		public IList<Complex> PhaseSpectrum { get; set; }
+		public IList<Bin> Spectrum { get; set; }
 		public IList<Complex> WaveInData { get; set; }
 		public IList<Complex> WaveOutData { get; set; }
 
@@ -128,13 +127,13 @@ namespace Solfeggio.ViewModels
 				WaveInData = args.Frame.Take(outSample.Length).Select(c => new Complex(j++, c.Real)).ToArray();
 				WaveOutData = outSample.Select(c => new Complex(k++, c.Real)).ToArray();
 
-				var spectrum = ShiftsPerFrame.Is(0d)
-					? Filtering.GetSpectrum(spectrum0, SampleRate)
-					: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
-				if (UseAliasing) spectrum = Filtering.Correct(spectrum);
+				var spectrum = Filtering.GetSpectrum(spectrum0, SampleRate).ToArray();
+					//ShiftsPerFrame.Is(0d)
+					//? Filtering.GetSpectrum(spectrum0, SampleRate)
+					//: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
+				if (UseAliasing) spectrum = Filtering.Correct(spectrum).ToArray();
 
-				PhaseSpectrum = Filtering.GetPhaseSpectrum(spectrum0, SampleRate);
-				MagnitudeSpectrum = spectrum;
+				Spectrum = spectrum;
 			}
 
 			this[() => ActiveDevice].PropertyChanging += (sender, args) =>

@@ -7,20 +7,20 @@
 	<DataTemplate
 		x:Key="DominantTemplate">
 		<Grid
-			Opacity="{Binding Peak.Imaginary, Converter={StaticResource DominantOpacityConverter}}"
+			Opacity="{Binding Peak.Magnitude, Converter={StaticResource DominantOpacityConverter}}"
 			m:Rack.Columns="* * * * *">
 			<Label
 				m:Rack.Cell="C0"
-				Text="{Binding Peak.Imaginary, StringFormat=F2}" />
+				Text="{Binding Peak.Magnitude, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C1"
-				Text="{Binding Peak.Real, StringFormat=F2}" />
+				Text="{Binding Peak.Frequancy, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C2"
-				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
+				Text="{Binding DeltaFrequancy, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
 				m:Rack.Cell="C3"
-				Text="{Binding EthalonFrequency, StringFormat=F2}" />
+				Text="{Binding EthalonFrequancy, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C4"
 				Text="{Binding NoteName}" />
