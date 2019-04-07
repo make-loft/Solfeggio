@@ -29,23 +29,23 @@ namespace Solfeggio
 
 		public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
 
-		public double Frequancy
+		public double Frequency
 		{
-			get => Get(() => Frequancy, 440d);
-			set => Set(() => Frequancy, value);
+			get => Get(() => Frequency, 440d);
+			set => Set(() => Frequency, value);
 		}
 
 		private readonly DispatcherTimer _timer = new DispatcherTimer();
 
 		public void Start()
 		{
-			this[() => Frequancy].PropertyChanged += (o, e) =>
+			this[() => Frequency].PropertyChanged += (o, e) =>
 			{
-				var step = Frequancy * 2d * Math.PI / SampleRate;
+				var step = Frequency * 2d * Math.PI / SampleRate;
 				_source = EnumerateBins(Signal, 0d, step);
 			};
 
-			EvokePropertyChanged(() => Frequancy);
+			EvokePropertyChanged(() => Frequency);
 
 			var durationInSeconds = SampleSize / SampleRate;
 			_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);

@@ -15,9 +15,9 @@
 			SelectedItem="{Binding Magnitude.NumericFormat, Mode=TwoWay}" />
 
         <Picker
-            Tag="{m:Localizing Key=Frequancy}"
+            Tag="{m:Localizing Key=Frequency}"
             ItemsSource="{Binding NumericFormats}"
-			SelectedItem="{Binding Frequancy.NumericFormat, Mode=TwoWay}" />
+			SelectedItem="{Binding Frequency.NumericFormat, Mode=TwoWay}" />
 
         <Picker
             Tag="{m:Localizing Key=Phase}"

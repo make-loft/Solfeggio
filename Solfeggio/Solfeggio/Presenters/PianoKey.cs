@@ -9,10 +9,10 @@ namespace Solfeggio.Presenters
 		public int NoteNumber { get; set; }
 		public string NoteName { get; set; }
 		public double Magnitude { get; set; }
-		public double LowerFrequancy { get; set; }
-		public double UpperFrequancy { get; set; }
-		public double EthalonFrequancy { get; set; }
-		public double DeltaFrequancy => Peak.Frequancy - EthalonFrequancy;
+		public double LowerFrequency { get; set; }
+		public double UpperFrequency { get; set; }
+		public double EthalonFrequency { get; set; }
+		public double DeltaFrequency => Peak.Frequency - EthalonFrequency;
 		public Bin Peak { get; set; }
 		public int Hits { get; set; }
 
@@ -37,9 +37,9 @@ namespace Solfeggio.Presenters
 			{
 				NoteNumber = noteNumber,
 				NoteName = note + oktaveNumber,
-				LowerFrequancy = lowFrequency,
-				UpperFrequancy = topFrequency,
-				EthalonFrequancy = ethalonFrequency,
+				LowerFrequency = lowFrequency,
+				UpperFrequency = topFrequency,
+				EthalonFrequency = ethalonFrequency,
 			};
 		}
 	}

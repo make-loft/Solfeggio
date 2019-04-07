@@ -50,7 +50,7 @@ namespace Solfeggio.Languages
 		public static o Notes				= _("Notes",			"Ноты");
 		public static o Sample				= _("Sample",			"Сэмпл");
         public static o Scaling				= _("Scaling",			"Масштабирование");
-        public static o Frequancy			= _("Frequancy",		"Частота");
+        public static o Frequency			= _("Frequency",		"Частота");
         public static o Magnitude			= _("Magnitude",		"Амплитуда");
         public static o Phase				= _("Phase",			"Фаза");
         public static o Bandwidth			= _("Bandwidth",		"Полоса пропускания");

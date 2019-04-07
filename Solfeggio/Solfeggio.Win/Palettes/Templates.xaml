@@ -14,13 +14,13 @@
 				Text="{Binding Peak.Magnitude, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C1"
-				Text="{Binding Peak.Frequancy, StringFormat=F2}" />
+				Text="{Binding Peak.Frequency, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C2"
-				Text="{Binding DeltaFrequancy, StringFormat={}({0:+0.00;-0.00;0.00})}" />
+				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
 				m:Rack.Cell="C3"
-				Text="{Binding EthalonFrequancy, StringFormat=F2}" />
+				Text="{Binding EthalonFrequency, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C4"
 				Text="{Binding NoteName}" />
@@ -235,11 +235,11 @@
 				<Grid
 					m:Rack.Cell="C2"
 					m:Rack.Rows="^ ^"
-					DataContext="{Binding Frequancy}">
+					DataContext="{Binding Frequency}">
 					<Label
 						m:Rack.Cell="R0"
 						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Frequancy}" />
+						Text="{m:Localizing Key=Frequency}" />
 					<ContentPresenter
 						m:Rack.Cell="R1"
 						Content="{Binding}"

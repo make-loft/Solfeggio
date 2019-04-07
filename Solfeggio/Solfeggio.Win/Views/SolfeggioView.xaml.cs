@@ -43,15 +43,15 @@ namespace Solfeggio.Views
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
 
-				if (presenter.Frequancy.IsVisible)
+				if (presenter.Frequency.IsVisible)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateGrid(step));
 
-				if (presenter.Frequancy.IsVisible)
+				if (presenter.Frequency.IsVisible)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
-						generator.Frequancy.ToEnumerable(), 0.92d);
+						generator.Frequency.ToEnumerable(), 0.92d);
 
 				if (presenter.Show.NotesGrid)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
