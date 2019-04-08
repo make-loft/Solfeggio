@@ -45,10 +45,14 @@ namespace Solfeggio.Presenters
 
 			var lLogicalOffset = visualScaleFunc(logicalLowerValue);
 			var uLogicalOffset = visualScaleFunc(logicalUpperValue);
+			var logicalLength = (uLogicalOffset - lLogicalOffset);
+			logicalLength = logicalLength == 0d ? 1d : logicalLength;
 
-			visualLowerDecrementOffset = visualLength * lLogicalOffset / (uLogicalOffset - lLogicalOffset);
-			visualUpperDecrementOffset = visualLength * uLogicalOffset / (uLogicalOffset - lLogicalOffset);
-			visualLengthStretchFactor = visualUpperDecrementOffset / uLogicalOffset;
+			visualLowerDecrementOffset = visualLength * lLogicalOffset / logicalLength;
+			visualUpperDecrementOffset = visualLength * uLogicalOffset / logicalLength;
+			visualLengthStretchFactor = uLogicalOffset == 0d
+				? visualUpperDecrementOffset
+				: visualUpperDecrementOffset / uLogicalOffset;
 		}
 	}
 

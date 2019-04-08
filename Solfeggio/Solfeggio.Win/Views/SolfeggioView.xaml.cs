@@ -39,7 +39,9 @@ namespace Solfeggio.Views
 				var height = SpectrumCanvas.ActualHeight;
 
 				if (presenter.Magnitude.IsVisible)
-					presenter.DrawSpectrum(MagnitudePolyline.Points, spectrum, width, height);
+					presenter.DrawSpectrum(spectrum, width, height).
+					Use(MagnitudePolyline.Points.AppendRange);
+				
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
 
@@ -59,13 +61,16 @@ namespace Solfeggio.Views
 						presenter.EnumerateNotes());
 
 				if (presenter.Phase.IsVisible)
-					presenter.DrawPhase(PhasePolyline.Points, spectralViewModel.Spectrum, width, height);
+					presenter.DrawPhase(spectrum, width, height).
+					Use(PhasePolyline.Points.AppendRange);
 
 				if (presenter.Wave.IsVisible)
-					presenter.DrawWave(WaveInPolyline.Points, spectralViewModel.WaveInData, width, height);
+					presenter.DrawWave(spectralViewModel.WaveInData, width, height).
+					Use(WaveInPolyline.Points.AppendRange);
 
 				if (presenter.Show.Wave && spectralViewModel.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
-					presenter.DrawWave(WaveOutPolyline.Points, spectralViewModel.WaveOutData, width, height);
+					presenter.DrawWave(spectralViewModel.WaveOutData, width, height).
+					Use(WaveOutPolyline.Points.AppendRange);
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
 				presenter.DrawTops(SpectrumCanvas.Children, dominanats, width, height,

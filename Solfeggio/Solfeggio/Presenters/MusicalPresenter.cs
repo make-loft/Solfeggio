@@ -38,8 +38,8 @@ namespace Solfeggio.Presenters
 		[DataMember]
 		public Bandwidth Magnitude { get; set; } = new Bandwidth
 		{
-			Limit = ConstructRange(0.01d, 1d),
-			Threshold = ConstructRange(0.01d, 0.4d),
+			Limit = ConstructRange(0.00d, 1d),
+			Threshold = ConstructRange(0.00d, 0.4d),
 			IsVisible = true
 		};
 
@@ -99,7 +99,7 @@ namespace Solfeggio.Presenters
 		protected static readonly Brush[] OktaveBrushes =
 			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
 
-		protected static double HalfTonesCount { get; } = 12;
+		protected static double HalfTonesCount => Notes.Length;
 		private static double GetBaseFrequency(double pitchStandard) => pitchStandard / 16d;
 		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
 
@@ -190,54 +190,71 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public void DrawWave(ICollection<Point> points, IList<Complex> data, double width, double height)
+		public IEnumerable<Point> DrawWave(IList<Complex> data, double width, double height)
 		{
-			var vIncrementOffset = height / 2d;
-			var vStretchFactor = height / 4d;
 			var hStretchFactor = width / data.Count;
+
+			Wave.Threshold.Deconstruct(height,
+				Wave.VisualScaleFunc.To(out var vVisualScaleFunc),
+				out _, out _,
+				out var vLowerVisualOffset, out _,
+				out var vVisualLengthStretchFactor);
+
 			foreach (var pair in data)
 			{
 				pair.Deconstruct(out var binOffset, out var magnitude);
-				binOffset.Stretch(hStretchFactor).To(out var x);
-				magnitude.Stretch(vStretchFactor).Increment(vIncrementOffset).To(out var y);
-				points.Add(new Point(x, y));
+				binOffset.
+					Stretch(hStretchFactor).
+					To(out var hVisualOffset);
+
+				vVisualScaleFunc(magnitude).
+					Stretch(vVisualLengthStretchFactor).
+					Decrement(vLowerVisualOffset).
+					Negation().Increment(height).
+					To(out var vVisualOffset);
+
+				yield return new Point(hVisualOffset, vVisualOffset);
 			}
 		}
 
-		public void DrawPhase(ICollection<Point> points, IList<Bin> data, double width, double height)
+		public IEnumerable<Point> DrawPhase(IEnumerable<Bin> spectrum, double width, double height)
 		{
-			var vIncrementOffset = height / 2d;
-			var vStretchFactor = height / Pi.Double;
-
 			Frequency.Threshold.Deconstruct(width,
-				Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
+				Frequency.VisualScaleFunc.To(out var hVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
 				out var hVisualLengthStretchFactor);
 
-			foreach (var bin in data)
+			Phase.Threshold.Deconstruct(height,
+				Phase.VisualScaleFunc.To(out var vVisualScaleFunc),
+				out var lowerPhase, out var upperPhase,
+				out var vLowerVisualOffset, out _,
+				out var vVisualLengthStretchFactor);
+
+			foreach (var bin in spectrum)
 			{
 				bin.Deconstruct(out var activeFrequency, out _, out var activePhase);
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
-				frequencyVisualScaleFunc(activeFrequency).
+				hVisualScaleFunc(activeFrequency).
 					Stretch(hVisualLengthStretchFactor).
 					Decrement(hLowerVisualOffset).
-					To(out var x);
+					To(out var hVisualOffset);
 
-				activePhase.
-					Stretch(vStretchFactor).
-					Increment(vIncrementOffset).
-					To(out var y);
+				vVisualScaleFunc(activePhase).
+					Stretch(vVisualLengthStretchFactor).
+					Decrement(vLowerVisualOffset).
+					Negation().Increment(height).
+					To(out var vVisualOffset);
 
-				points.Add(new Point(x, y));
+				yield return new Point(hVisualOffset, vVisualOffset);
 			}
 		}
 
-		public void DrawSpectrum(ICollection<Point> points, IList<Bin> data, double width, double height)
+		public IEnumerable<Point> DrawSpectrum(IEnumerable<Bin> spectrum, double width, double height)
 		{
-			Frequency.Threshold.Deconstruct(width, 
+			Frequency.Threshold.Deconstruct(width,
 				Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
@@ -249,11 +266,9 @@ namespace Solfeggio.Presenters
 				out var vLowerVisualOffset, out _,
 				out var vVisualStretchFactor);
 
-			var autoSensitive = AutoSensitive;
+			yield return new Point(0d, height);
 
-			points.Add(new Point(0d, height));
-
-			foreach (var bin in data)
+			foreach (var bin in spectrum)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency) continue;
@@ -270,31 +285,10 @@ namespace Solfeggio.Presenters
 					Negation().Increment(height).
 					To(out var vVisualOffset);
 
-				points.Add(new Point(hVisualOffset, vVisualOffset));
-
-				//if (autoSensitive)
-				//{
-				//	if (activeMagnitude > 0.7d * topMagnitude)
-				//	{
-				//		AutoSensitiveTimestamp = DateTime.Now;
-				//	}
-
-				//	if (activeMagnitude > topMagnitude)
-				//	{
-				//		AutoSensitiveTimestamp = DateTime.Now;
-				//		TopMagnitude *= (1 + AutoSensitiveStep * 9);
-				//		EvokePropertyChanged(nameof(TopMagnitude));
-				//	}
-				//	else if (AutoSensitiveTimestamp.AddSeconds(AutoSensitiveDelayInSeconds) < DateTime.Now)
-				//	{
-				//		AutoSensitiveTimestamp = DateTime.Now;
-				//		TopMagnitude *= (1 - AutoSensitiveStep);
-				//		EvokePropertyChanged(nameof(TopMagnitude));
-				//	}
-				//}
+				yield return new Point(hVisualOffset, vVisualOffset);
 			}
 
-			points.Add(new Point(width, height));
+			yield return new Point(width, height);
 		}
 
 		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height,
@@ -389,7 +383,7 @@ namespace Solfeggio.Presenters
 					});
 				}
 
-				if (double.IsInfinity(vVisualOffset)) continue;
+				if (double.IsInfinity(vVisualOffset) || double.IsNaN(vVisualOffset)) continue;
 
 				panel.UpdateLayout();
 				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth / 2d, vVisualOffset - panel.ActualHeight / 2d, 0d, 0d);
