@@ -51,12 +51,22 @@ namespace Solfeggio.Presenters
 		};
 
 		[DataMember]
-		public Bandwidth Wave { get; set; } = new Bandwidth
+		public Bandwidth Level { get; set; } = new Bandwidth
 		{
 			Limit = ConstructRange(-1d, +1d),
 			Threshold = ConstructRange(-1d, +1d),
 			VisualScaleFunc = ScaleFuncs.Lineal,
 		};
+
+		[DataMember]
+		public Bandwidth Time { get; set; } = new Bandwidth
+		{
+			Limit = ConstructRange(+0d, +1d),
+			Threshold = ConstructRange(+0d, +1d),
+			VisualScaleFunc = ScaleFuncs.Lineal,
+		};
+
+		[DataMember] public MusicalOptions Music { get; set; } = new MusicalOptions();
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 
@@ -64,52 +74,6 @@ namespace Solfeggio.Presenters
 		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 
 		[DataMember] public bool UseNoteFilter { get; set; }
-		[DataMember] public bool AutoSensitive { get; set; } = true;
-		[DataMember] public double AutoSensitiveStep { get; set; } = 0.02d;
-		[DataMember] public double AutoSensitiveDelayInSeconds { get; set; } = 0.03d;
-		[DataMember] public DateTime AutoSensitiveTimestamp { get; set; }
-
-		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
-		public static double DefaultPitchStandard = 440d;
-
-		[DataMember]
-		public double ActivePitchStandard
-		{
-			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
-			set
-			{
-				Set(() => ActivePitchStandard, value);
-				_baseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
-			}
-		}
-
-        public Dictionary<string, string[]> Notations { get; set; } = new Dictionary<string, string[]>
-        {
-            { "Dies", Notes.Select(n => n.Split('|')[0]).ToArray() },
-            { "Bemole", Notes.Select(n => n.Split('|')[1]).ToArray() },
-            { "Combined", Notes }
-        };
-
-        [DataMember] public KeyValuePair<string, string[]> ActiveNotation { get; set; }
- 
-		protected static readonly string[] Notes =
-			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};
-
-		protected static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
-		protected static readonly Brush[] OktaveBrushes =
-			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
-
-		protected static double HalfTonesCount => Notes.Length;
-		private static double GetBaseFrequency(double pitchStandard) => pitchStandard / 16d;
-		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
-
-		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
-			GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalftoneStep(HalfTonesCount));
-
-		private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halftoneStep) =>
-			Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halftoneStep, dt)).ToArray();
-
-		protected double[] _baseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
@@ -181,21 +145,21 @@ namespace Solfeggio.Presenters
 
 			for (var j = 0; ; j++)
 			{
-				for (var i = 0; i < _baseOktaveFrequencySet.Length; i++)
+				for (var i = 0; i < Music.BaseOktaveFrequencySet.Length; i++)
 				{
-					var note = _baseOktaveFrequencySet[i] * Math.Pow(2, j);
+					var note = Music.BaseOktaveFrequencySet[i] * Math.Pow(2, j);
 					if (note > breakFrequency) yield break;
 					else yield return note;
 				}
 			}
 		}
 
-		public IEnumerable<Point> DrawWave(IList<Complex> data, double width, double height)
+		public IEnumerable<Point> DrawFrame(IList<Complex> data, double width, double height)
 		{
 			var hStretchFactor = width / data.Count;
 
-			Wave.Threshold.Deconstruct(height,
-				Wave.VisualScaleFunc.To(out var vVisualScaleFunc),
+			Level.Threshold.Deconstruct(height,
+				Level.VisualScaleFunc.To(out var vVisualScaleFunc),
 				out _, out _,
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
@@ -203,6 +167,7 @@ namespace Solfeggio.Presenters
 			foreach (var pair in data)
 			{
 				pair.Deconstruct(out var binOffset, out var magnitude);
+
 				binOffset.
 					Stretch(hStretchFactor).
 					To(out var hVisualOffset);
@@ -306,8 +271,6 @@ namespace Solfeggio.Presenters
 				out var vLowerVisualOffset, out _,
 				out var vVisualStretchFactor);
 
-			var autoSensitive = AutoSensitive;
-
 			foreach (var key in keys)
 			{
 				key.Peak.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
@@ -397,7 +360,7 @@ namespace Solfeggio.Presenters
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
 			var frequencyVisualScaleFunc = Frequency.VisualScaleFunc;
 			var useNoteFilter = UseNoteFilter;
-            var noteNames = ActiveNotation.Value ?? (ActiveNotation = Notations.First()).Value;
+            var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
 
 			Frequency.Threshold.Deconstruct(width, frequencyVisualScaleFunc,
 				out var lowerFrequency, out var upperFrequency,
@@ -405,11 +368,11 @@ namespace Solfeggio.Presenters
 				out var hVisualStretchFactor);
 
 			var keys = new List<PianoKey>();
-			var oktavesCount = HalfTonesCount + 1;
+			var oktavesCount = MusicalOptions.HalfTonesCount + 1;
 
 			for (var oktaveNumber = 1; oktaveNumber < oktavesCount; oktaveNumber++)
 			{
-				var oktaveNotes = _baseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
+				var oktaveNotes = Music.BaseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
 				var notesCount = oktaveNotes.Length;
 				for (var noteIndex = 0; noteIndex < notesCount; noteIndex++)
 					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]).Use(keys.Add);
@@ -457,11 +420,11 @@ namespace Solfeggio.Presenters
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
 				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
-				var basicColor = OktaveBrushes[key.NoteNumber].As<SolidColorBrush>()?.Color ?? Colors.Transparent;
+				var basicColor = MusicalOptions.OktaveBrushes[key.NoteNumber].As<SolidColorBrush>()?.Color ?? Colors.Transparent;
 				var tmp = 255 * key.Magnitude / maxMagnitude;
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var noteNumber = key.NoteNumber;
-				var isTone = Tones[key.NoteNumber];
+				var isTone = MusicalOptions.Tones[key.NoteNumber];
 				red = isTone ? (byte)(basicColor.Red() - red) : red;
 				var pressColor = isTone
 					? Color.FromArgb(255, basicColor.Red(), red, red)

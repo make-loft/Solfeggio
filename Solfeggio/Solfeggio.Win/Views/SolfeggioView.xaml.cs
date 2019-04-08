@@ -64,12 +64,12 @@ namespace Solfeggio.Views
 					presenter.DrawPhase(spectrum, width, height).
 					Use(PhasePolyline.Points.AppendRange);
 
-				if (presenter.Wave.IsVisible)
-					presenter.DrawWave(spectralViewModel.WaveInData, width, height).
+				if (presenter.Level.IsVisible)
+					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 
 				if (presenter.Show.Wave && spectralViewModel.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
-					presenter.DrawWave(spectralViewModel.WaveOutData, width, height).
+					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);

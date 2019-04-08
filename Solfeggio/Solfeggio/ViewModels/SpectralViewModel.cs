@@ -58,8 +58,8 @@ namespace Solfeggio.ViewModels
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
 		public IList<Bin> Spectrum { get; set; }
-		public IList<Complex> WaveInData { get; set; }
-		public IList<Complex> WaveOutData { get; set; }
+		public IList<Complex> OuterFrame { get; set; }
+		public IList<Complex> InnerFrame { get; set; }
 
 		public double SampleRate
 		{
@@ -123,9 +123,9 @@ namespace Solfeggio.ViewModels
 					spectrum1[i] /= frameSize;
 				}
 
-				var outSample = spectrum0.DecimationInTime(false);
-				WaveInData = args.Frame.Take(outSample.Length).Select(c => new Complex(j++, c.Real)).ToArray();
-				WaveOutData = outSample.Select(c => new Complex(k++, c.Real)).ToArray();
+				var innerFrame = spectrum0.DecimationInTime(false);
+				OuterFrame = args.Frame.Take(innerFrame.Length).Select(c => new Complex(j++, c.Real)).ToArray();
+				InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
 
 				var spectrum = Filtering.GetSpectrum(spectrum0, SampleRate).ToArray();
 					//ShiftsPerFrame.Is(0d)

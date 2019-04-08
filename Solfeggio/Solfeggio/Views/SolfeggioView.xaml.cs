@@ -151,8 +151,8 @@ namespace Solfeggio.Views
 			var spectrum = _spectralViewModel.MagnitudeSpectrum;
 			if (spectrum.IsNot()) return;
 
-	        var waveInData = _spectralViewModel.WaveInData;
-			var waveOutData = _spectralViewModel.WaveOutData;
+	        var waveInData = _spectralViewModel.OuterFrame;
+			var waveOutData = _spectralViewModel.InnerFrame;
 
 			spectrumCanvas.Children.Clear();
 

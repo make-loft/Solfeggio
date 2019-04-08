@@ -1,5 +1,9 @@
 ﻿using Ace;
 using Rainbow;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media;
 
 namespace Solfeggio.Presenters
 {
@@ -80,5 +84,51 @@ namespace Solfeggio.Presenters
 		[DataMember] public bool EthalonFrequncy { get; set; } = true;
 		[DataMember] public bool Notes { get; set; } = true;
 		[DataMember] public bool NotesGrid { get; set; } = false;
+	}
+
+	public class MusicalOptions : ContextObject
+	{
+
+		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
+		public static double DefaultPitchStandard = 440d;
+
+		[DataMember]
+		public double ActivePitchStandard
+		{
+			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
+			set
+			{
+				Set(() => ActivePitchStandard, value);
+				BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
+			}
+		}
+
+		public Dictionary<string, string[]> Notations { get; set; } = new Dictionary<string, string[]>
+		{
+			{ "Dies", Notes.Select(n => n.Split('|')[0]).ToArray() },
+			{ "Bemole", Notes.Select(n => n.Split('|')[1]).ToArray() },
+			{ "Combined", Notes }
+		};
+
+		[DataMember] public KeyValuePair<string, string[]> ActiveNotation { get; set; }
+
+		protected static readonly string[] Notes =
+			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};
+
+		public static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
+		public static readonly Brush[] OktaveBrushes =
+			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
+
+		public static double HalfTonesCount => Notes.Length;
+		private static double GetBaseFrequency(double pitchStandard) => pitchStandard / 16d;
+		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
+
+		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
+			GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalftoneStep(HalfTonesCount));
+
+		private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halftoneStep) =>
+			Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halftoneStep, dt)).ToArray();
+
+		public double[] BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 	}
 }

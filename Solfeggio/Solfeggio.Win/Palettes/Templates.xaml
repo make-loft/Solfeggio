@@ -276,11 +276,11 @@
 				<Grid
 					m:Rack.Cell="C2"
 					m:Rack.Rows="^ ^"
-					DataContext="{Binding Wave}">
+					DataContext="{Binding Level}">
 					<Label
 						m:Rack.Cell="R0"
 						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Wave}" />
+						Text="{m:Localizing Key=Level}" />
 					<ContentPresenter
 						m:Rack.Cell="R1"
 						Content="{Binding}"
