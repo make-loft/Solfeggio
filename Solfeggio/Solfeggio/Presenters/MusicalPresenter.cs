@@ -59,7 +59,7 @@ namespace Solfeggio.Presenters
 		};
 
 		[DataMember]
-		public Bandwidth Time { get; set; } = new Bandwidth
+		public Bandwidth Offset { get; set; } = new Bandwidth
 		{
 			Limit = ConstructRange(+0d, +1d),
 			Threshold = ConstructRange(+0d, +1d),
@@ -156,7 +156,7 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<Point> DrawFrame(IList<Complex> data, double width, double height)
 		{
-			var hStretchFactor = width / data.Count;
+			//var hStretchFactor = width / data.Count;
 
 			Level.Threshold.Deconstruct(height,
 				Level.VisualScaleFunc.To(out var vVisualScaleFunc),
@@ -164,20 +164,30 @@ namespace Solfeggio.Presenters
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
 
+			Offset.Threshold.Deconstruct(width,
+				Offset.VisualScaleFunc.To(out var hVisualScaleFunc),
+				out var lowerOffset, out var upperOffset,
+				out var hLowerVisualOffset, out _,
+				out var hVisualLengthStretchFactor);
+
 			foreach (var pair in data)
 			{
-				pair.Deconstruct(out var binOffset, out var magnitude);
+				pair.Deconstruct(out var activeOffset, out var activeLevel);
+				if (activeOffset < lowerOffset) continue;
+				if (activeOffset > upperOffset) break;
 
-				binOffset.
-					Stretch(hStretchFactor).
+				hVisualScaleFunc(activeOffset).
+					Stretch(hVisualLengthStretchFactor).
+					Decrement(hLowerVisualOffset).
 					To(out var hVisualOffset);
 
-				vVisualScaleFunc(magnitude).
+				vVisualScaleFunc(activeLevel).
 					Stretch(vVisualLengthStretchFactor).
 					Decrement(vLowerVisualOffset).
 					Negation().Increment(height).
 					To(out var vVisualOffset);
 
+				if (hVisualOffset > width) yield break;
 				yield return new Point(hVisualOffset, vVisualOffset);
 			}
 		}

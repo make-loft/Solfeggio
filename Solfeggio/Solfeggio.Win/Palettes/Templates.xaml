@@ -2,7 +2,8 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-	xmlns:controls="clr-namespace:Solfeggio.Controls">
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
 
 	<DataTemplate
 		x:Key="DominantTemplate">
@@ -207,93 +208,118 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="SensitiveTemplate">
+		x:Key="SpectrumTemplate">
 
-		<StackLayout>
-			
-			<Grid
-				m:Rack.Columns="^ ^ ^ ^ ^">
-
-				<Grid
-					m:Rack.Cell="C0"
-					m:Rack.Rows="^ ^"
-					DataContext="{Binding Magnitude}">
-					<Label
-						m:Rack.Cell="R0"
-						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Magnitude}" />
-					<ContentPresenter
-						m:Rack.Cell="R1"
-						Content="{Binding}"
-						ContentTemplate="{StaticResource RangeTemplate}" />
-				</Grid>
-
-				<GridSplitter
-					m:Rack.Cell="C1"
-					Style="{StaticResource VerticalGridSplitter}" />
-
-				<Grid
-					m:Rack.Cell="C2"
-					m:Rack.Rows="^ ^"
-					DataContext="{Binding Frequency}">
-					<Label
-						m:Rack.Cell="R0"
-						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Frequency}" />
-					<ContentPresenter
-						m:Rack.Cell="R1"
-						Content="{Binding}"
-						ContentTemplate="{StaticResource RangeTemplate}" />
-				</Grid>
-
-				<GridSplitter
-					m:Rack.Cell="C3"
-					Style="{StaticResource VerticalGridSplitter}" />
-
-			</Grid>
+		<Grid
+			m:Rack.Columns="^ ^ ^ ^ ^">
 
 			<Grid
-				m:Rack.Columns="^ ^ ^ ^ ^">
-
-				<Grid
-					m:Rack.Cell="C0"
-					m:Rack.Rows="^ ^"
-					DataContext="{Binding Phase}">
-					<Label
-						m:Rack.Cell="R0"
-						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Phase}" />
-					<ContentPresenter
-						m:Rack.Cell="R1"
-						Content="{Binding}"
-						ContentTemplate="{StaticResource RangeTemplate}" />
-				</Grid>
-
-				<GridSplitter
-					m:Rack.Cell="C1"
-					Style="{StaticResource VerticalGridSplitter}" />
-
-				<Grid
-					m:Rack.Cell="C2"
-					m:Rack.Rows="^ ^"
-					DataContext="{Binding Level}">
-					<Label
-						m:Rack.Cell="R0"
-						HorizontalAlignment="Center"
-						Text="{m:Localizing Key=Level}" />
-					<ContentPresenter
-						m:Rack.Cell="R1"
-						Content="{Binding}"
-						ContentTemplate="{StaticResource RangeTemplate}" />
-				</Grid>
-
-				<GridSplitter
-					m:Rack.Cell="C3"
-					Style="{StaticResource VerticalGridSplitter}" />
-
+				m:Rack.Cell="C0"
+				m:Rack.Rows="^ ^"
+				DataContext="{Binding Magnitude}">
+				<Label
+					m:Rack.Cell="R0"
+					HorizontalAlignment="Center"
+					Text="{m:Localizing Key=Magnitude}" />
+				<ContentPresenter
+					m:Rack.Cell="R1"
+					Content="{Binding}"
+					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
-		</StackLayout>
-		
+
+			<GridSplitter
+				m:Rack.Cell="C1"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+			<Grid
+				m:Rack.Cell="C2"
+				m:Rack.Rows="^ ^"
+				DataContext="{Binding Frequency}">
+				<Label
+					m:Rack.Cell="R0"
+					HorizontalAlignment="Center"
+					Text="{m:Localizing Key=Frequency}" />
+				<ContentPresenter
+					m:Rack.Cell="R1"
+					Content="{Binding}"
+					ContentTemplate="{StaticResource RangeTemplate}" />
+			</Grid>
+
+			<GridSplitter
+				m:Rack.Cell="C3"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+			<Grid
+				m:Rack.Cell="C4"
+				m:Rack.Rows="^ ^"
+				DataContext="{Binding Phase}">
+				<Label
+					m:Rack.Cell="R0"
+					HorizontalAlignment="Center"
+					Text="{m:Localizing Key=Phase}" />
+				<ContentPresenter
+					m:Rack.Cell="R1"
+					Content="{Binding}"
+					ContentTemplate="{StaticResource RangeTemplate}" />
+			</Grid>
+
+		</Grid>
+
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="FrameTemplate">
+
+		<Grid
+			m:Rack.Columns="^ ^ ^ ^ ^">
+
+			<Grid
+				m:Rack.Cell="C0"
+				m:Rack.Rows="^ ^"
+				DataContext="{Binding Level}">
+				<Label
+					m:Rack.Cell="R0"
+					HorizontalAlignment="Center"
+					Text="{m:Localizing Key=Level}" />
+				<ContentPresenter
+					m:Rack.Cell="R1"
+					Content="{Binding}"
+					ContentTemplate="{StaticResource RangeTemplate}" />
+			</Grid>
+
+			<GridSplitter
+				m:Rack.Cell="C1"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+			<Grid
+				m:Rack.Cell="C2"
+				m:Rack.Rows="^ ^"
+				DataContext="{Binding Offset}">
+				<Label
+					m:Rack.Cell="R0"
+					HorizontalAlignment="Center"
+					Text="{m:Localizing Key=Offset}" />
+				<ContentPresenter
+					m:Rack.Cell="R1"
+					Content="{Binding}"
+					ContentTemplate="{StaticResource RangeTemplate}" />
+			</Grid>
+
+			<GridSplitter
+				m:Rack.Cell="C3"
+				Style="{StaticResource VerticalGridSplitter}" />
+
+			<StackLayout
+				m:Rack.Cell="C4">
+				<Label
+					Text="{m:Localizing Key=Framing}" />
+				<ContentPresenter
+					Content="{m:Store Key=viewModels:SpectralViewModel}"
+					ContentTemplate="{StaticResource FramingTemplate}" />
+			</StackLayout>
+
+		</Grid>
+
 	</DataTemplate>
 
 	<DataTemplate

@@ -124,7 +124,8 @@ namespace Solfeggio.ViewModels
 				}
 
 				var innerFrame = spectrum0.DecimationInTime(false);
-				OuterFrame = args.Frame.Take(innerFrame.Length).Select(c => new Complex(j++, c.Real)).ToArray();
+				var frameLength = innerFrame.Length;
+				OuterFrame = args.Frame.Take(frameLength).Select(c => new Complex(j++ / frameLength, c.Real)).ToArray();
 				InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
 
 				var spectrum = Filtering.GetSpectrum(spectrum0, SampleRate).ToArray();

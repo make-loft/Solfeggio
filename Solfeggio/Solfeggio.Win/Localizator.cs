@@ -61,6 +61,8 @@ namespace Solfeggio.Languages
 		public static o Lower				= _("Lower",			"Нижний");
         public static o Upper				= _("Upper",			"Верхний");
         public static o Length				= _("Length",			"Длина");
+		public static o Spectrum			= _("Spectrum",			"Спектр");
+		public static o Offset				= _("Offset",			"Смещение");
 
         public static o MusicalStandards	= _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard		= _("Pitch Standard",	"Частотный стандарт");
@@ -70,8 +72,6 @@ namespace Solfeggio.Languages
 		public static o NotesGrid			= _("Notes Grid",		"Нотная сетка");
 		public static o DiscreteGrid		= _("Discrete Grid",	"Дискретная сетка");
 
-		public static o PhaseSpectrum			= _("Phase Spectrum",	    "Фазовый спектр");
-		public static o MagnitudeSpectrum		= _("Magnitude Spectrum",	"Амплитудный спектр");
         public static o NumericFormatting        = _("Numeric Formatting",  "Числовое форматирование");
 
 
