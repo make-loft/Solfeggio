@@ -63,6 +63,7 @@ namespace Solfeggio.Languages
         public static o Length				= _("Length",			"Длина");
 		public static o Spectrum			= _("Spectrum",			"Спектр");
 		public static o Offset				= _("Offset",			"Смещение");
+		public static o Scale				= _("Scale",			"Масштаб");
 
         public static o MusicalStandards	= _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard		= _("Pitch Standard",	"Частотный стандарт");

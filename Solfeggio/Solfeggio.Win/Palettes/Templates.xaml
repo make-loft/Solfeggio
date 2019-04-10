@@ -182,17 +182,17 @@
 	<DataTemplate
 		x:Key="RangeTemplate">
 		<StackLayout
+			Margin="0 -24 0 0"
 			HorizontalAlignment="Stretch">
-
-			<Picker
-				ItemsSource="{Binding VisualScaleFuncs}"
-				SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 
 			<Switch
 				m:Rack.Cell="R0"
 				HorizontalAlignment="Right"
 				IsToggled="{Binding IsVisible, Mode=TwoWay}" />
+
+			<ContentPresenter
+				Content="{Binding}"
+				ContentTemplate="{StaticResource RangeGridTemplate}" />
 
 			<controls:RangeBar
 				Maximum="{Binding Limit.Upper, Mode=TwoWay}"
@@ -200,9 +200,19 @@
 				SelectionEnd="{Binding Threshold.Upper, Mode=TwoWay}"
 				SelectionStart="{Binding Threshold.Lower, Mode=TwoWay}" />
 
-			<ContentPresenter
-				Content="{Binding}"
-				ContentTemplate="{StaticResource RangeGridTemplate}" />
+			<StackLayout
+				Orientation="Horizontal"
+				HorizontalAlignment="Center">
+
+				<Label
+					Text="{m:Localizing Key=Scale}" />
+
+				<Picker
+					ItemsSource="{Binding VisualScaleFuncs}"
+					SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+			</StackLayout>
 
 		</StackLayout>
 	</DataTemplate>

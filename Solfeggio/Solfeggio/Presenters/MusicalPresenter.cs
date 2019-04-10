@@ -115,30 +115,37 @@ namespace Solfeggio.Presenters
 		public static IEnumerable<Point> Draw<TPoint>(
 			IEnumerable<TPoint> points, Deconstruct<TPoint, double> deconstruct,
 			Bandwidth hBand, Bandwidth vBand,
-			double width, double height) where TPoint : struct
+			double hLength, double vLength) where TPoint : struct
 		{
-			hBand.Threshold.Deconstruct(width,
+			hBand.Threshold.Deconstruct(hLength,
 				hBand.VisualScaleFunc.To(out var hVisualScaleFunc),
 				out var hLowerValue, out var hUpperValue,
 				out var hLowerVisualOffset, out _,
 				out var hVisualLengthStretchFactor);
 
-			vBand.Threshold.Deconstruct(height,
+			vBand.Threshold.Deconstruct(vLength,
 				vBand.VisualScaleFunc.To(out var vVisualScaleFunc),
 				out _, out _,
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
 
-			vLowerVisualOffset.Negation().Increment(height).To(out var vZeroLevel);
+			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
 
 			yield return new Point(0d, vZeroLevel);
 
-			foreach (var point in points)
+			default(TPoint).To(out var startPoint);
+			points.GetEnumerator().To(out var enumerator);
+			while (enumerator.MoveNext())
 			{
-				deconstruct(in point, out var hActiveValue, out var vActiveValue);
+				var currentPoint = enumerator.Current;
+				deconstruct(in currentPoint, out var hActiveValue, out var vActiveValue);
+				if (hActiveValue >= hLowerValue) break;
+				startPoint = currentPoint;
+			}
 
-				if (hActiveValue < hLowerValue) continue;
-				if (hActiveValue > hUpperValue) break;
+			for (var currentPoint = startPoint; enumerator.MoveNext(); currentPoint = enumerator.Current)
+			{
+				deconstruct(in currentPoint, out var hActiveValue, out var vActiveValue);
 
 				hVisualScaleFunc(hActiveValue).
 					Stretch(hVisualLengthStretchFactor).
@@ -148,13 +155,15 @@ namespace Solfeggio.Presenters
 				vVisualScaleFunc(vActiveValue).
 					Stretch(vVisualLengthStretchFactor).
 					Decrement(vLowerVisualOffset).
-					Negation().Increment(height).
+					Negation().Increment(vLength).
 					To(out var vVisualOffset);
 
 				yield return new Point(hVisualOffset, vVisualOffset);
+
+				if (hActiveValue > hUpperValue) break;
 			}
 
-			yield return new Point(width, vZeroLevel);
+			yield return new Point(hLength, vZeroLevel);
 		}
 
 		public IEnumerable<Point> DrawFrame(IEnumerable<Complex> frame, double width, double height) => Draw
