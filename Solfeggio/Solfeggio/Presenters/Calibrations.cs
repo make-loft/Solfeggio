@@ -58,6 +58,12 @@ namespace Solfeggio.Presenters
 				? visualUpperDecrementOffset
 				: visualUpperDecrementOffset / uLogicalOffset;
 		}
+
+		public static SmartRange Create(double lower, double upper) => new SmartRange
+		{
+			Lower = lower,
+			Upper = upper
+		};
 	}
 
 	[DataContract]
@@ -86,6 +92,55 @@ namespace Solfeggio.Presenters
 		[DataMember] public bool NotesGrid { get; set; } = false;
 	}
 
+	[DataContract]
+	public class SpectralOptions
+	{
+		[DataMember]
+		public Bandwidth Frequency { get; set; } = new Bandwidth
+		{
+			Limit = SmartRange.Create(10d, 22000d),
+			Threshold = SmartRange.Create(20d, 3000d),
+			VisualScaleFunc = ScaleFuncs.Log2,
+			NumericFormat = "F0",
+		};
+
+		[DataMember]
+		public Bandwidth Magnitude { get; set; } = new Bandwidth
+		{
+			Limit = SmartRange.Create(0.00d, 1d),
+			Threshold = SmartRange.Create(0.00d, 0.4d),
+			IsVisible = true
+		};
+
+		[DataMember]
+		public Bandwidth Phase { get; set; } = new Bandwidth
+		{
+			Limit = SmartRange.Create(-Pi.Single, +Pi.Single),
+			Threshold = SmartRange.Create(-Pi.Single, +Pi.Single),
+		};
+	}
+
+	[DataContract]
+	public class FrameOptions
+	{
+		[DataMember]
+		public Bandwidth Level { get; set; } = new Bandwidth
+		{
+			Limit = SmartRange.Create(-1d, +1d),
+			Threshold = SmartRange.Create(-1d, +1d),
+			VisualScaleFunc = ScaleFuncs.Lineal,
+		};
+
+		[DataMember]
+		public Bandwidth Offset { get; set; } = new Bandwidth
+		{
+			Limit = SmartRange.Create(+0d, +1d),
+			Threshold = SmartRange.Create(+0d, +1d),
+			VisualScaleFunc = ScaleFuncs.Lineal,
+		};
+	}
+
+	[DataContract]
 	public class MusicalOptions : ContextObject
 	{
 

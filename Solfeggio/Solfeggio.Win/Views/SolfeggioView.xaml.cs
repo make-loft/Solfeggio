@@ -38,19 +38,19 @@ namespace Solfeggio.Views
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
 
-				if (presenter.Magnitude.IsVisible)
-					presenter.DrawSpectrum(spectrum, width, height).
+				if (presenter.Spectrum.Magnitude.IsVisible)
+					presenter.DrawMagnitude(spectrum, width, height).
 					Use(MagnitudePolyline.Points.AppendRange);
 				
 
 				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
 
-				if (presenter.Frequency.IsVisible)
+				if (presenter.Spectrum.Frequency.IsVisible)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateGrid(step));
 
-				if (presenter.Frequency.IsVisible)
+				if (presenter.Spectrum.Frequency.IsVisible)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						generator.Frequency.ToEnumerable(), 0.92d);
@@ -60,11 +60,11 @@ namespace Solfeggio.Views
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateNotes());
 
-				if (presenter.Phase.IsVisible)
+				if (presenter.Spectrum.Phase.IsVisible)
 					presenter.DrawPhase(spectrum, width, height).
 					Use(PhasePolyline.Points.AppendRange);
 
-				if (presenter.Level.IsVisible)
+				if (presenter.Frame.Level.IsVisible)
 					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 

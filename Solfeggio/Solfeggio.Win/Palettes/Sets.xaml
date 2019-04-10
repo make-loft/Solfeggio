@@ -122,13 +122,13 @@
 
         <Picker
             Tag="{m:Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
-			ItemsSource="{Binding Music.PitchStandards}"
-			SelectedItem="{Binding Music.ActivePitchStandard, Mode=TwoWay}" />
+			ItemsSource="{Binding PitchStandards}"
+			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
         <Picker
             Tag="{m:Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
-			ItemsSource="{Binding Music.Notations}"
-			SelectedItem="{Binding Music.ActiveNotation, Mode=TwoWay}"
+			ItemsSource="{Binding Notations}"
+			SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
             DisplayMemberPath="Key" />
 
     </m:Set>
@@ -140,22 +140,22 @@
 		<Expander
 			Header="{m:Localizing Key=Spectrum}"
 			ContentTemplate="{StaticResource SpectrumTemplate}"
-			Content="{m:Store Key=presenters:MusicalPresenter}" />
+			Content="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum}" />
 
 		<Expander
 			Header="{m:Localizing Key=Frame}"
 			ContentTemplate="{StaticResource FrameTemplate}"
-			Content="{m:Store Key=presenters:MusicalPresenter}" />
+			Content="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Frame}" />
 
 		<Expander
 			Header="{m:Localizing Key=MusicalStandards}"
 			ContentTemplate="{StaticResource MusicalStandardsTemplate}"
-			Content="{m:Store Key=presenters:MusicalPresenter}" />
+			Content="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Music}" />
 
 		<Expander
             Header="{m:Localizing Key=Advanced}"
             ContentTemplate="{StaticResource AdvancedTemplate}"
-            Content="{m:Store Key=viewModels:SpectralViewModel}" />
+			Content="{m:Store Key=viewModels:SpectralViewModel}" />
 
     </m:Set>
 

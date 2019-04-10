@@ -20,53 +20,9 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenter : ContextObject
 	{
-		private static SmartRange ConstructRange(double lower, double upper) => new SmartRange
-		{
-			Lower = lower,
-			Upper = upper
-		};
-
-		[DataMember]
-		public Bandwidth Frequency { get; set; } = new Bandwidth
-		{
-			Limit = ConstructRange(10d, 22000d),
-			Threshold = ConstructRange(20d, 3000d),
-			VisualScaleFunc = ScaleFuncs.Log2,
-			NumericFormat = "F0",
-		};
-
-		[DataMember]
-		public Bandwidth Magnitude { get; set; } = new Bandwidth
-		{
-			Limit = ConstructRange(0.00d, 1d),
-			Threshold = ConstructRange(0.00d, 0.4d),
-			IsVisible = true
-		};
-
-		[DataMember]
-		public Bandwidth Phase { get; set; } = new Bandwidth
-		{
-			Limit = ConstructRange(-Pi.Single, +Pi.Single),
-			Threshold = ConstructRange(-Pi.Single, +Pi.Single),
-		};
-
-		[DataMember]
-		public Bandwidth Level { get; set; } = new Bandwidth
-		{
-			Limit = ConstructRange(-1d, +1d),
-			Threshold = ConstructRange(-1d, +1d),
-			VisualScaleFunc = ScaleFuncs.Lineal,
-		};
-
-		[DataMember]
-		public Bandwidth Offset { get; set; } = new Bandwidth
-		{
-			Limit = ConstructRange(+0d, +1d),
-			Threshold = ConstructRange(+0d, +1d),
-			VisualScaleFunc = ScaleFuncs.Lineal,
-		};
-
 		[DataMember] public MusicalOptions Music { get; set; } = new MusicalOptions();
+		[DataMember] public SpectralOptions Spectrum { get; set; } = new SpectralOptions();
+		[DataMember] public FrameOptions Frame { get; set; } = new FrameOptions();
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 
@@ -78,8 +34,8 @@ namespace Solfeggio.Presenters
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
 		{
-			Frequency.Threshold.Deconstruct(width,
-				Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
+			Spectrum.Frequency.Threshold.Deconstruct(width,
+				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
 				out var hVisualStretchFactor);
@@ -102,7 +58,7 @@ namespace Solfeggio.Presenters
 					Decrement(hLowerVisualOffset).
 					To(out var hVisualOffset);
 
-				ConstructVerticalLine(hVisualOffset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
+				CreateVerticalLine(hVisualOffset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
 
 				if (skipLabel) continue;
 
@@ -118,7 +74,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(Frequency.NumericFormat)
+					Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
 				});
 
 				items.Add(panel);
@@ -129,7 +85,7 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<double> EnumerateGrid(double frequencyStep)
 		{
-			Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
+			Spectrum.Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
 			var startFrequency = 0d; //Math.Ceiling(lowerFrequency / frequencyStep) * frequencyStep;
 
 			for (var value = startFrequency; value < upperFrequency; value += frequencyStep)
@@ -140,7 +96,7 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<double> EnumerateNotes(double breakFrequency = default)
 		{
-			Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
+			Spectrum.Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
 			breakFrequency = breakFrequency.Is(default) ? upperFrequency : breakFrequency;
 
 			for (var j = 0; ; j++)
@@ -154,70 +110,42 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public IEnumerable<Point> DrawFrame(IList<Complex> data, double width, double height)
-		{
-			//var hStretchFactor = width / data.Count;
+		public delegate void Deconstruct<TIn, TOut>(in TIn p, out TOut h, out TOut v);
 
-			Level.Threshold.Deconstruct(height,
-				Level.VisualScaleFunc.To(out var vVisualScaleFunc),
+		public static IEnumerable<Point> Draw<TPoint>(
+			IEnumerable<TPoint> points, Deconstruct<TPoint, double> deconstruct,
+			Bandwidth hBand, Bandwidth vBand,
+			double width, double height) where TPoint : struct
+		{
+			hBand.Threshold.Deconstruct(width,
+				hBand.VisualScaleFunc.To(out var hVisualScaleFunc),
+				out var hLowerValue, out var hUpperValue,
+				out var hLowerVisualOffset, out _,
+				out var hVisualLengthStretchFactor);
+
+			vBand.Threshold.Deconstruct(height,
+				vBand.VisualScaleFunc.To(out var vVisualScaleFunc),
 				out _, out _,
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
 
-			Offset.Threshold.Deconstruct(width,
-				Offset.VisualScaleFunc.To(out var hVisualScaleFunc),
-				out var lowerOffset, out var upperOffset,
-				out var hLowerVisualOffset, out _,
-				out var hVisualLengthStretchFactor);
+			vLowerVisualOffset.Negation().Increment(height).To(out var vZeroLevel);
 
-			foreach (var pair in data)
+			yield return new Point(0d, vZeroLevel);
+
+			foreach (var point in points)
 			{
-				pair.Deconstruct(out var activeOffset, out var activeLevel);
-				if (activeOffset < lowerOffset) continue;
-				if (activeOffset > upperOffset) break;
+				deconstruct(in point, out var hActiveValue, out var vActiveValue);
 
-				hVisualScaleFunc(activeOffset).
+				if (hActiveValue < hLowerValue) continue;
+				if (hActiveValue > hUpperValue) break;
+
+				hVisualScaleFunc(hActiveValue).
 					Stretch(hVisualLengthStretchFactor).
 					Decrement(hLowerVisualOffset).
 					To(out var hVisualOffset);
 
-				vVisualScaleFunc(activeLevel).
-					Stretch(vVisualLengthStretchFactor).
-					Decrement(vLowerVisualOffset).
-					Negation().Increment(height).
-					To(out var vVisualOffset);
-
-				if (hVisualOffset > width) yield break;
-				yield return new Point(hVisualOffset, vVisualOffset);
-			}
-		}
-
-		public IEnumerable<Point> DrawPhase(IEnumerable<Bin> spectrum, double width, double height)
-		{
-			Frequency.Threshold.Deconstruct(width,
-				Frequency.VisualScaleFunc.To(out var hVisualScaleFunc),
-				out var lowerFrequency, out var upperFrequency,
-				out var hLowerVisualOffset, out _,
-				out var hVisualLengthStretchFactor);
-
-			Phase.Threshold.Deconstruct(height,
-				Phase.VisualScaleFunc.To(out var vVisualScaleFunc),
-				out var lowerPhase, out var upperPhase,
-				out var vLowerVisualOffset, out _,
-				out var vVisualLengthStretchFactor);
-
-			foreach (var bin in spectrum)
-			{
-				bin.Deconstruct(out var activeFrequency, out _, out var activePhase);
-				if (activeFrequency < lowerFrequency) continue;
-				if (activeFrequency > upperFrequency) break;
-
-				hVisualScaleFunc(activeFrequency).
-					Stretch(hVisualLengthStretchFactor).
-					Decrement(hLowerVisualOffset).
-					To(out var hVisualOffset);
-
-				vVisualScaleFunc(activePhase).
+				vVisualScaleFunc(vActiveValue).
 					Stretch(vVisualLengthStretchFactor).
 					Decrement(vLowerVisualOffset).
 					Negation().Increment(height).
@@ -225,58 +153,42 @@ namespace Solfeggio.Presenters
 
 				yield return new Point(hVisualOffset, vVisualOffset);
 			}
+
+			yield return new Point(width, vZeroLevel);
 		}
 
-		public IEnumerable<Point> DrawSpectrum(IEnumerable<Bin> spectrum, double width, double height)
-		{
-			Frequency.Threshold.Deconstruct(width,
-				Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
-				out var lowerFrequency, out var upperFrequency,
-				out var hLowerVisualOffset, out _,
-				out var hVisualLengthStretchFactor);
+		public IEnumerable<Point> DrawFrame(IEnumerable<Complex> frame, double width, double height) => Draw
+		(
+			frame, (in Complex p, out double h, out double v) => p.Deconstruct(out h, out v),
+			Frame.Offset, Frame.Level,
+			width, height
+		);
 
-			Magnitude.Threshold.Deconstruct(height,
-				Magnitude.VisualScaleFunc.To(out var magnitudeVisualScaleFunc),
-				out var lowerMagnitude, out var upperMagnitude,
-				out var vLowerVisualOffset, out _,
-				out var vVisualStretchFactor);
+		public IEnumerable<Point> DrawPhase(IEnumerable<Bin> spectrum, double width, double height) => Draw
+		(
+			spectrum, (in Bin p, out double h, out double v) => p.Deconstruct(out h, out _, out v),
+			Spectrum.Frequency,	Spectrum.Phase,
+			width, height
+		);
 
-			yield return new Point(0d, height);
-
-			foreach (var bin in spectrum)
-			{
-				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
-				if (activeFrequency < lowerFrequency) continue;
-				if (activeFrequency > upperFrequency) break;
-
-				frequencyVisualScaleFunc(activeFrequency).
-					Stretch(hVisualLengthStretchFactor).
-					Decrement(hLowerVisualOffset).
-					To(out var hVisualOffset);
-
-				magnitudeVisualScaleFunc(activeMagnitude).
-					Stretch(vVisualStretchFactor).
-					Decrement(vLowerVisualOffset).
-					Negation().Increment(height).
-					To(out var vVisualOffset);
-
-				yield return new Point(hVisualOffset, vVisualOffset);
-			}
-
-			yield return new Point(width, height);
-		}
-
+		public IEnumerable<Point> DrawMagnitude(IEnumerable<Bin> spectrum, double width, double height) => Draw
+		(
+			spectrum, (in Bin p, out double h, out double v) => p.Deconstruct(out h, out v, out _),
+			Spectrum.Frequency, Spectrum.Magnitude,
+			width, height
+		);
+	
 		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height,
 			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
 		{
-			Frequency.Threshold.Deconstruct(width,
-				Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
+			Spectrum.Frequency.Threshold.Deconstruct(width,
+				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
 				out var hVisualStretchFactor);
 
-			Magnitude.Threshold.Deconstruct(height,
-				Magnitude.VisualScaleFunc.To(out var magnitudeVisualScaleFunc),
+			Spectrum.Magnitude.Threshold.Deconstruct(height,
+				Spectrum.Magnitude.VisualScaleFunc.To(out var magnitudeVisualScaleFunc),
 				out var lowerMagnitude, out var upperMagnitude,
 				out var vLowerVisualOffset, out _,
 				out var vVisualStretchFactor);
@@ -319,7 +231,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString(Frequency.NumericFormat)
+						Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
 					});
 				}
 
@@ -330,7 +242,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.HzBrush,
-						Text = activeMagnitude.ToString(Magnitude.NumericFormat)
+						Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat)
 					});
 				}
 
@@ -341,7 +253,7 @@ namespace Solfeggio.Presenters
 						Opacity = 0.5 * expressionLevel,
 						FontSize = 8.0 * expressionLevel,
 						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(Frequency.NumericFormat)
+						Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat)
 					});
 				}
 
@@ -365,14 +277,14 @@ namespace Solfeggio.Presenters
 
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height)
 		{
-			Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
+			Spectrum.Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
 
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
-			var frequencyVisualScaleFunc = Frequency.VisualScaleFunc;
 			var useNoteFilter = UseNoteFilter;
             var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
 
-			Frequency.Threshold.Deconstruct(width, frequencyVisualScaleFunc,
+			Spectrum.Frequency.Threshold.Deconstruct(width,
+				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
 				out var hVisualStretchFactor);
@@ -453,13 +365,13 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.7d;
 				var strokeThickness = upperOffset - lowerOffset;
 
-				ConstructVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
+				CreateVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
 			return dominants;
 		}
 
-		private static Line ConstructVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line
+		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line
 		{
 			Y1 = 0d,
 			Y2 = length,
