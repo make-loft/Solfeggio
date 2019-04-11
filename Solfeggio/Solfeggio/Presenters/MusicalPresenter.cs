@@ -133,19 +133,19 @@ namespace Solfeggio.Presenters
 
 			yield return new Point(0d, vZeroLevel);
 
-			default(TPoint).To(out var startPoint);
+			default(TPoint).To(out var activePoint);
 			points.GetEnumerator().To(out var enumerator);
 			while (enumerator.MoveNext())
 			{
 				var currentPoint = enumerator.Current;
 				deconstruct(in currentPoint, out var hActiveValue, out var vActiveValue);
 				if (hActiveValue >= hLowerValue) break;
-				startPoint = currentPoint;
+				activePoint = currentPoint;
 			}
 
-			for (var currentPoint = startPoint; enumerator.MoveNext(); currentPoint = enumerator.Current)
+			do
 			{
-				deconstruct(in currentPoint, out var hActiveValue, out var vActiveValue);
+				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
 				hVisualScaleFunc(hActiveValue).
 					Stretch(hVisualLengthStretchFactor).
@@ -160,8 +160,10 @@ namespace Solfeggio.Presenters
 
 				yield return new Point(hVisualOffset, vVisualOffset);
 
-				if (hActiveValue > hUpperValue) break;
-			}
+				if (hActiveValue >= hUpperValue) break;
+				activePoint = enumerator.Current;
+
+			} while (enumerator.MoveNext());
 
 			yield return new Point(hLength, vZeroLevel);
 		}
