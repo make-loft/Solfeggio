@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -73,13 +75,20 @@ namespace Solfeggio.Views
 					Use(WaveOutPolyline.Points.AppendRange);
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
-				presenter.DrawTops(SpectrumCanvas.Children, dominanats, width, height,
-					presenter.Show.ActualFrequncy,
-					presenter.Show.ActualMagnitude,
-					presenter.Show.EthalonFrequncy,
-					presenter.Show.Notes);
+				if (presenter.Show.ActualFrequncy || presenter.Show.ActualMagnitude || presenter.Show.EthalonFrequncy || presenter.Show.Notes)
+					presenter.DrawTops(dominanats, width, height,
+						presenter.Show.ActualFrequncy,
+						presenter.Show.ActualMagnitude,
+						presenter.Show.EthalonFrequncy,
+						presenter.Show.Notes).
+						ForEach(p =>
+						{
+							SpectrumCanvas.Children.Add(p);
+							p.UpdateLayout();
+							p.Margin = new Thickness(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 2d, 0d, 0d);
+						});
 
-				appViewModel.Dominants = dominanats.OrderByDescending(k => k.Magnitude).ThenBy(k => k.NoteName).ToArray();
+				appViewModel.Dominants = dominanats.OrderBy(k => Math.Abs(k.DeltaFrequency)).ToArray();
 			};
 
 			timer.Start();

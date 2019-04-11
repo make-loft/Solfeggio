@@ -79,7 +79,7 @@ namespace Solfeggio.Presenters
 
 				items.Add(panel);
 				panel.UpdateLayout();
-				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth/2d, height * vLabelOffset, 0d, 0d);
+				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
 			}
 		}
 
@@ -110,12 +110,47 @@ namespace Solfeggio.Presenters
 			}
 		}
 
+		public delegate TOut Create<TOut>(in double x, in double y);
+		public delegate TOut CreateWithContent<TIn, TOut>(in double x, in double y,
+			TIn item, double activeMagnitude, double activeFreqency, double upperMagnitude);
+
 		public delegate void Deconstruct<TIn, TOut>(in TIn p, out TOut h, out TOut v);
 
-		public static IEnumerable<Point> Draw<TPoint>(
-			IEnumerable<TPoint> points, Deconstruct<TPoint, double> deconstruct,
+		private static bool TryMoveToStartPoint<TIn>(
+			IEnumerator<TIn> enumerator,
+			Deconstruct<TIn, double> deconstruct,
+			double hLowerValue,
+			double hUpperValue,
+			out TIn startPoint)
+		{
+			startPoint = default;
+
+			while (enumerator.MoveNext())
+			{
+				var currentPoint = enumerator.Current;
+				deconstruct(in currentPoint, out var hActiveValue, out _);
+				if (hActiveValue > hUpperValue) return false;
+				if (hActiveValue >= hLowerValue)
+				{
+					if (startPoint.Is(default)) startPoint = currentPoint;
+					return true;
+				}
+
+				startPoint = currentPoint;
+			}
+
+			return false;
+		}
+
+		public static IEnumerable<TOut> Draw<TIn, TOut>(
+			IEnumerable<TIn> points,
+			Create<TOut> create,
+			CreateWithContent<TIn, TOut> createWithContent,
+			Deconstruct<TIn, double> deconstruct,
 			Bandwidth hBand, Bandwidth vBand,
-			double hLength, double vLength) where TPoint : struct
+			double hLength, double vLength,
+			ScaleFunc hCorrection,
+			ScaleFunc vCorrection)
 		{
 			hBand.Threshold.Deconstruct(hLength,
 				hBand.VisualScaleFunc.To(out var hVisualScaleFunc),
@@ -125,23 +160,17 @@ namespace Solfeggio.Presenters
 
 			vBand.Threshold.Deconstruct(vLength,
 				vBand.VisualScaleFunc.To(out var vVisualScaleFunc),
-				out _, out _,
+				out _, out var vUpperValue,
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
 
-			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
-
-			yield return new Point(0d, vZeroLevel);
-
-			default(TPoint).To(out var activePoint);
 			points.GetEnumerator().To(out var enumerator);
-			while (enumerator.MoveNext())
-			{
-				var currentPoint = enumerator.Current;
-				deconstruct(in currentPoint, out var hActiveValue, out var vActiveValue);
-				if (hActiveValue >= hLowerValue) break;
-				activePoint = currentPoint;
-			}
+
+			if (TryMoveToStartPoint(enumerator, deconstruct, hLowerValue, hUpperValue, out var activePoint).Not())
+				yield break;
+
+			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
+			if (createWithContent is null) yield return create(0d, in vZeroLevel);
 
 			do
 			{
@@ -150,140 +179,123 @@ namespace Solfeggio.Presenters
 				hVisualScaleFunc(hActiveValue).
 					Stretch(hVisualLengthStretchFactor).
 					Decrement(hLowerVisualOffset).
+					Scale(hCorrection).
 					To(out var hVisualOffset);
 
-				vVisualScaleFunc(vActiveValue).
+				vActiveValue.Scale(vVisualScaleFunc).
 					Stretch(vVisualLengthStretchFactor).
 					Decrement(vLowerVisualOffset).
-					Negation().Increment(vLength).
+					Scale(vCorrection).
 					To(out var vVisualOffset);
 
-				yield return new Point(hVisualOffset, vVisualOffset);
+				yield return createWithContent is null
+					? create(in hVisualOffset, in vVisualOffset)
+					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
 
 				if (hActiveValue >= hUpperValue) break;
 				activePoint = enumerator.Current;
 
 			} while (enumerator.MoveNext());
 
-			yield return new Point(hLength, vZeroLevel);
+			if (createWithContent is null) yield return create(in hLength, in vZeroLevel);
 		}
 
 		public IEnumerable<Point> DrawFrame(IEnumerable<Complex> frame, double width, double height) => Draw
 		(
-			frame, (in Complex p, out double h, out double v) => p.Deconstruct(out h, out v),
+			frame,
+			(in double x, in double y) => new Point(x, y), default,
+			(in Complex p, out double h, out double v) => p.Deconstruct(out h, out v),
 			Frame.Offset, Frame.Level,
-			width, height
+			width, height,
+			default,
+			v => v.Negation().Increment(height)
 		);
 
 		public IEnumerable<Point> DrawPhase(IEnumerable<Bin> spectrum, double width, double height) => Draw
 		(
-			spectrum, (in Bin p, out double h, out double v) => p.Deconstruct(out h, out _, out v),
-			Spectrum.Frequency,	Spectrum.Phase,
-			width, height
+			spectrum,
+			(in double x, in double y) => new Point(x, y), default,
+			(in Bin p, out double h, out double v) => p.Deconstruct(out h, out _, out v),
+			Spectrum.Frequency, Spectrum.Phase,
+			width, height,
+			default,
+			v => v.Negation().Increment(height)
 		);
 
 		public IEnumerable<Point> DrawMagnitude(IEnumerable<Bin> spectrum, double width, double height) => Draw
 		(
-			spectrum, (in Bin p, out double h, out double v) => p.Deconstruct(out h, out v, out _),
+			spectrum,
+			(in double x, in double y) => new Point(x, y), default,
+			(in Bin p, out double h, out double v) => p.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
-			width, height
+			width, height,
+			default,
+			v => v.Negation().Increment(height)
 		);
-	
-		public void DrawTops(System.Collections.IList items, IList<PianoKey> keys, double width, double height,
-			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
-		{
-			Spectrum.Frequency.Threshold.Deconstruct(width,
-				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
-				out var lowerFrequency, out var upperFrequency,
-				out var hLowerVisualOffset, out _,
-				out var hVisualStretchFactor);
 
-			Spectrum.Magnitude.Threshold.Deconstruct(height,
-				Spectrum.Magnitude.VisualScaleFunc.To(out var magnitudeVisualScaleFunc),
-				out var lowerMagnitude, out var upperMagnitude,
-				out var vLowerVisualOffset, out _,
-				out var vVisualStretchFactor);
-
-			foreach (var key in keys)
+		public IEnumerable<StackPanel> DrawTops(IList<PianoKey> keys, double width, double height,
+			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes) => Draw
+		(
+			keys, default,
+			(in double x, in double y,
+				PianoKey item, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
 			{
-				key.Peak.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
-				if (activeFrequency < lowerFrequency) continue;
-				if (activeFrequency > upperFrequency) break;
-
-				frequencyVisualScaleFunc(activeFrequency).
-					Stretch(hVisualStretchFactor).
-					Decrement(hLowerVisualOffset).
-					To(out var hVisualOffset);
-
-				magnitudeVisualScaleFunc(activeMagnitude).
-					Stretch(vVisualStretchFactor).
-					Decrement(vLowerVisualOffset).
-					To(out var vVisualOffset);
-
-				if (showActualFrequncy.Not() && showEthalonFrequncy.Not() && showNotes.Not()) return;
-
 				var panel = new StackPanel
 				{
 					HorizontalAlignment = HorizontalAlignment.Left,
 					VerticalAlignment = VerticalAlignment.Top
 				};
 
-#if !NETSTANDARD
-				// todo
-				items.Add(panel);
-#endif
-				var expressionLevel = (1d + activeMagnitude / upperMagnitude);
+				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
-				if (showActualFrequncy)
-				{
-					panel.Children.Add(new TextBlock
-					{
-						Opacity = 0.5 * expressionLevel,
-						FontSize = 8.0 * expressionLevel,
-						Foreground = AppPalette.HzBrush,
-						Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
-					});
-				}
+				EnumeratePanelContent(item, activeFrequency, activeMagnitude, expressionLevel,
+					showActualFrequncy, showActualMagnitude, showEthalonFrequncy, showNotes).
+					ForEach(panel.Children.Add);
 
-				if (showActualMagnitude)
-				{
-					panel.Children.Add(new TextBlock
-					{
-						Opacity = 0.5 * expressionLevel,
-						FontSize = 8.0 * expressionLevel,
-						Foreground = AppPalette.HzBrush,
-						Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat)
-					});
-				}
+				panel.Margin = new Thickness(x, y, 0d, 0d);
+				return panel;
+			},
+			(in PianoKey p, out double h, out double v) => p.Peak.Deconstruct(out h, out v, out _),
+			Spectrum.Frequency, Spectrum.Magnitude,
+			width, height, default, default
+		);
 
-				if (showEthalonFrequncy)
-				{
-					panel.Children.Add(new TextBlock
-					{
-						Opacity = 0.5 * expressionLevel,
-						FontSize = 8.0 * expressionLevel,
-						Foreground = AppPalette.NoteBrush,
-						Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat)
-					});
-				}
+		private IEnumerable<TextBlock> EnumeratePanelContent(
+			PianoKey key, double activeFrequency, double activeMagnitude, double expressionLevel,
+			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
+		{
+			if (showActualFrequncy) yield return new TextBlock
+			{
+				Opacity = 0.5 * expressionLevel,
+				FontSize = 8.0 * expressionLevel,
+				Foreground = AppPalette.HzBrush,
+				Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
+			};
 
-				if (showNotes)
-				{
-					panel.Children.Add(new TextBlock
-					{
-						Opacity = 0.5 * expressionLevel,
-						FontSize = 12.0 * expressionLevel,
-						Foreground = AppPalette.NoteBrush,
-						Text = key.NoteName
-					});
-				}
+			if (showActualMagnitude) yield return new TextBlock
+			{
+				Opacity = 0.5 * expressionLevel,
+				FontSize = 8.0 * expressionLevel,
+				Foreground = AppPalette.HzBrush,
+				Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat)
+			};
 
-				if (double.IsInfinity(vVisualOffset) || double.IsNaN(vVisualOffset)) continue;
+			if (showEthalonFrequncy) yield return new TextBlock
+			{
+				Opacity = 0.5 * expressionLevel,
+				FontSize = 8.0 * expressionLevel,
+				Foreground = AppPalette.NoteBrush,
+				Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat)
+			};
 
-				panel.UpdateLayout();
-				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth / 2d, vVisualOffset - panel.ActualHeight / 2d, 0d, 0d);
-			}
+			if (showNotes) yield return new TextBlock
+			{
+				Opacity = 0.5 * expressionLevel,
+				FontSize = 12.0 * expressionLevel,
+				Foreground = AppPalette.NoteBrush,
+				Text = key.NoteName
+			};
 		}
 
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height)
@@ -292,7 +304,7 @@ namespace Solfeggio.Presenters
 
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
 			var useNoteFilter = UseNoteFilter;
-            var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
+			var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
 
 			Spectrum.Frequency.Threshold.Deconstruct(width,
 				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
@@ -324,7 +336,7 @@ namespace Solfeggio.Presenters
 
 				var key =
 					keys.FirstOrDefault(k => k.LowerFrequency < activeFrequency && activeFrequency <= k.UpperFrequency);
-				if (key is null) continue;
+				if (key.Is(default)) continue;
 				if (useNoteFilter)
 				{
 					var range = key.UpperFrequency - key.LowerFrequency;
@@ -348,7 +360,7 @@ namespace Solfeggio.Presenters
 			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);
 			keys.ForEach(k => k.Magnitude *= k.Magnitude);
 			var maxMagnitude = upperMagnitude * upperMagnitude * 0.32; // keys.Max(k => k.Magnitude);
-																	 //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
+																	   //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
 
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
@@ -365,8 +377,8 @@ namespace Solfeggio.Presenters
 
 				gradientBrush.GradientStops.Merge
 				(
-					new GradientStop {Color = basicColor, Offset = 0.0d},
-					new GradientStop {Color = pressColor, Offset = 0.5d}
+					new GradientStop { Color = basicColor, Offset = 0.0d },
+					new GradientStop { Color = pressColor, Offset = 0.5d }
 				);
 
 				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
