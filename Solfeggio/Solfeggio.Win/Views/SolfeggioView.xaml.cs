@@ -52,10 +52,10 @@ namespace Solfeggio.Views
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateGrid(step));
 
-				if (presenter.Spectrum.Frequency.IsVisible)
-					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
-						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
-						generator.Frequency.ToEnumerable(), 0.92d);
+				//if (presenter.Spectrum.Frequency.IsVisible)
+				//	presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+				//		AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+				//		generator.Frequency.ToEnumerable(), 0.92d);
 
 				if (presenter.Show.NotesGrid)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
