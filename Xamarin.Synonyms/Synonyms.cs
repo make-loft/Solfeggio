@@ -33,6 +33,10 @@ namespace Xamarin.Forms
 	{
 	}
 
+	public class Button : System.Windows.Controls.Button
+	{
+	}
+
 	public class DataTemplate : System.Windows.DataTemplate
 	{
 	}

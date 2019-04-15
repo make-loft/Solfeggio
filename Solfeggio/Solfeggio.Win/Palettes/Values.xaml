@@ -4,6 +4,18 @@
 	xmlns:system="clr-namespace:System;assembly=mscorlib">
 
 	<system:Double
+		x:Key="PlusSinglePi">+3.1415926535897931</system:Double>
+	
+	<system:Double
+		x:Key="MinusSinglePi">-3.1415926535897931</system:Double>
+
+	<system:Double
+		x:Key="PlusSingleE">+2.7182818284590451</system:Double>
+
+	<system:Double
+		x:Key="MinusSingleE">-2.7182818284590451</system:Double>
+
+	<system:Double
 		x:Key="MagnitideSpectrumStrokeThickness">1</system:Double>
 
 	<system:Double

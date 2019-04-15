@@ -5,7 +5,8 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
-	xmlns:controls="clr-namespace:Solfeggio.Controls">
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
+	xmlns:local="clr-namespace:Solfeggio">
 
 	<controls:Pivot>
 
@@ -13,6 +14,20 @@
 			Header="{m:Localizing Key=Telemetry}">
 			<ScrollViewer>
 				<StackLayout>
+					
+					<Expander
+						Header="{m:Localizing Key=Generator}">
+						<StackLayout>
+							<Button
+								Content="{m:Localizing Key=Add}"
+								Command="{m:Context Key=Set.Add, StoreKey=local:Generator}"/>
+
+							<ItemsView
+								ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=local:Generator}"
+								ItemTemplate="{StaticResource HarmonicTemplate}" />
+						</StackLayout>
+					</Expander>
+
 					<Expander
 						Header="{m:Localizing Key=Dominants}">
 						<ItemsView
@@ -20,32 +35,16 @@
 							ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
 							ItemTemplate="{StaticResource DominantTemplate}" />
 					</Expander>
-					<ItemsView>
-						<Entry
-							Text="{m:StoreBinding Path=ActiveDevice.Frequency, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-						<Slider
-							Minimum="{m:StoreBinding Path=Frequency.Limit.Lower, StoreKey=presenters:MusicalPresenter}"
-							Maximum="{m:StoreBinding Path=Frequency.Limit.Upper, StoreKey=presenters:MusicalPresenter}"
-							Value="{m:StoreBinding Path=ActiveDevice.Frequency, Mode=TwoWay, StoreKey=viewModels:SpectralViewModel}" />
-					</ItemsView>
+			
 				</StackLayout>
 			</ScrollViewer>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
-            <ScrollViewer>
-                <ItemsView
-                    ItemsSource="{StaticResource CalibrationOptionsSet}" />
-            </ScrollViewer>
-		</controls:PivotItem>
-
-		<controls:PivotItem
-			Header="{m:Localizing Key=Visualization}">
 			<ScrollViewer>
 				<ItemsView
-					ItemsSource="{StaticResource VisualizationOptionsSet}"
-					BindingContext="{m:Store Key=presenters:MusicalPresenter}" />
+					ItemsSource="{StaticResource CalibrationOptionsSet}" />
 			</ScrollViewer>
 		</controls:PivotItem>
 

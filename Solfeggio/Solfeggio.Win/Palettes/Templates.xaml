@@ -3,7 +3,54 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
+	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
+
+	<DataTemplate
+		x:Key="HarmonicTemplate">
+		<Grid
+			Opacity="{Binding Magnitude, Converter={StaticResource DominantOpacityConverter}}"
+			m:Rack.Columns="* * * * *"
+			m:Rack.Rows="* *">
+			<Entry
+				m:Rack.Cell="C0 R0"
+				Text="{Binding Magnitude, StringFormat=F2}" />
+			<Entry
+				m:Rack.Cell="C1 R0"
+				Text="{Binding Frequency, StringFormat=F2}" />
+			<Entry
+				m:Rack.Cell="C2 R0"
+				Text="{Binding Phase, StringFormat=F2}" />
+
+			<Slider
+				m:Rack.Cell="C0 R1"
+				Minimum="+0.0"
+				Maximum="+1.0"
+				TickFrequency="0.01"
+				TickPlacement="TopLeft"
+				Value="{Binding Magnitude, StringFormat=F2}" />
+			<Slider
+				m:Rack.Cell="C1 R1"
+				TickFrequency="100"
+				TickPlacement="TopLeft"
+				Minimum="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
+				Maximum="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
+				Value="{Binding Frequency, StringFormat=F2}" />
+			<Slider
+				m:Rack.Cell="C2 R1"
+				TickFrequency="0.207"
+				TickPlacement="TopLeft"
+				Minimum="{StaticResource MinusSinglePi}"
+				Maximum="{StaticResource PlusSinglePi}"
+				Value="{Binding Phase, StringFormat=F2}" />
+
+			<Button
+				m:Rack.Cell="C3 R0"
+				Content="✗"
+				CommandParameter="{Binding}"
+				Command="{m:Context Key=Set.Remove, StoreKey=local:Generator}" />
+		</Grid>
+	</DataTemplate>
 
 	<DataTemplate
 		x:Key="DominantTemplate">

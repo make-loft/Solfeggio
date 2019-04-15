@@ -5,6 +5,7 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
 	DataContext="{m:Store Key=vm:SpectralViewModel}"
 	HorizontalContentAlignment="Stretch"
 	VerticalContentAlignment="Stretch"
@@ -66,6 +67,12 @@
 					Background="DimGray"
 					Opacity=".5" />
 				<views:OptionsView />
+				<xamarin:Picker
+					VerticalAlignment="Top"
+					HorizontalAlignment="Right"
+					Tag="{m:Localizing Key=Language}"
+					ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
+					SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
 			</Grid>
 		</Grid>
 

@@ -20,22 +20,20 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenter : ContextObject
 	{
+		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
+		[DataMember] public FrameOptions Frame { get; set; } = new FrameOptions();
 		[DataMember] public MusicalOptions Music { get; set; } = new MusicalOptions();
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new SpectralOptions();
-		[DataMember] public FrameOptions Frame { get; set; } = new FrameOptions();
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
-
 		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
-		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
-
-		[DataMember] public bool UseNoteFilter { get; set; }
+		[DataMember] public bool UseNoteFilter { get; set; } = true;
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
 		{
 			Spectrum.Frequency.Threshold.Deconstruct(width,
-				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
+				Spectrum.Frequency.VisualScaleFunc.To(out var hVisualScaleFunc),
 				out var lowerFrequency, out var upperFrequency,
 				out var hLowerVisualOffset, out _,
 				out var hVisualStretchFactor);
@@ -53,7 +51,8 @@ namespace Solfeggio.Presenters
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
-				frequencyVisualScaleFunc(activeFrequency).
+				activeFrequency.
+					Scale(hVisualScaleFunc).
 					Stretch(hVisualStretchFactor).
 					Decrement(hLowerVisualOffset).
 					To(out var hVisualOffset);
@@ -62,13 +61,9 @@ namespace Solfeggio.Presenters
 
 				if (skipLabel) continue;
 
-				var panel = new StackPanel
-				{
-					HorizontalAlignment = HorizontalAlignment.Left,
-					VerticalAlignment = VerticalAlignment.Top
-				};
+				var panel = new StackPanel();
 
-				var fontSize = frequencyVisualScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
+				var fontSize = hVisualScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
 				fontSize = fontSize > 20d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
 				{
@@ -176,26 +171,27 @@ namespace Solfeggio.Presenters
 			{
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
-				hVisualScaleFunc(hActiveValue).
+				var hVisualOffset = hActiveValue.
+					Scale(hVisualScaleFunc).
 					Stretch(hVisualLengthStretchFactor).
 					Decrement(hLowerVisualOffset).
-					Scale(hCorrection).
-					To(out var hVisualOffset);
+					Scale(hCorrection);
 
-				vActiveValue.Scale(vVisualScaleFunc).
+				var vVisualOffset = vActiveValue.
+					Scale(vVisualScaleFunc).
 					Stretch(vVisualLengthStretchFactor).
 					Decrement(vLowerVisualOffset).
-					Scale(vCorrection).
-					To(out var vVisualOffset);
+					Scale(vCorrection);
 
 				yield return createWithContent is null
 					? create(in hVisualOffset, in vVisualOffset)
 					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
 
-				if (hActiveValue >= hUpperValue) break;
-				activePoint = enumerator.Current;
+				if (hActiveValue <= hUpperValue && enumerator.MoveNext())
+					activePoint = enumerator.Current;
+				else break;
 
-			} while (enumerator.MoveNext());
+			} while (true);
 
 			if (createWithContent is null) yield return create(in hLength, in vZeroLevel);
 		}
@@ -240,12 +236,7 @@ namespace Solfeggio.Presenters
 			(in double x, in double y,
 				PianoKey item, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
 			{
-				var panel = new StackPanel
-				{
-					HorizontalAlignment = HorizontalAlignment.Left,
-					VerticalAlignment = VerticalAlignment.Top
-				};
-
+				var panel = new StackPanel();
 				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 

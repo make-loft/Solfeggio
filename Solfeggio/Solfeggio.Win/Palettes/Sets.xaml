@@ -5,28 +5,7 @@
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
 
-    <m:Set
-        x:Shared="False"
-        x:Key="NumericFormattingSet">
-        
-        <Picker
-            Tag="{m:Localizing Key=Magnitude}"
-			ItemsSource="{Binding NumericFormats}"
-			SelectedItem="{Binding Magnitude.NumericFormat, Mode=TwoWay}" />
-
-        <Picker
-            Tag="{m:Localizing Key=Frequency}"
-            ItemsSource="{Binding NumericFormats}"
-			SelectedItem="{Binding Frequency.NumericFormat, Mode=TwoWay}" />
-
-        <Picker
-            Tag="{m:Localizing Key=Phase}"
-            ItemsSource="{Binding NumericFormats}"
-			SelectedItem="{Binding Phase.NumericFormat, Mode=TwoWay}" />
-
-    </m:Set>
-
-    <m:Set
+	<m:Set
         x:Shared="False"
         x:Key="ShowStateSet">
         
@@ -55,31 +34,10 @@
             IsToggled="{Binding Show.DiscreteGrid, Mode=TwoWay}" />
         
     </m:Set>
-    
-	<m:Set
-        x:Shared="False"
-		x:Key="VisualizationOptionsSet">
-
-        <Expander
-            Header="{m:Localizing Key=NumericFormatting}"
-            ContentTemplate="{StaticResource NumericFormattingTemplate}"
-            Content="{m:Store Key=presenters:MusicalPresenter}" />
-
-        <Expander
-            Header="{m:Localizing Key=ShowStates}"
-            ContentTemplate="{StaticResource ShowStateTemplate}"
-            Content="{m:Store Key=presenters:MusicalPresenter}" />
-
-	</m:Set>
 
 	<m:Set
 		x:Shared="False"
 		x:Key="AdvancedOptionsSet">
-
-		<Picker
-			Tag="{m:Localizing Key=Language}"
-			ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
-			SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
 
 		<Picker
 			Tag="{m:Localizing Key=Device}"
@@ -151,6 +109,11 @@
 			Header="{m:Localizing Key=MusicalStandards}"
 			ContentTemplate="{StaticResource MusicalStandardsTemplate}"
 			Content="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Music}" />
+
+		<Expander
+			Header="{m:Localizing Key=Visualization}"
+			ContentTemplate="{StaticResource ShowStateTemplate}"
+			Content="{m:Store Key=presenters:MusicalPresenter}" />
 
 		<Expander
             Header="{m:Localizing Key=Advanced}"

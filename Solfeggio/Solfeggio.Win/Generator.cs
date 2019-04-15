@@ -9,24 +9,24 @@ namespace Solfeggio
 {
 	public class Harmonic
 	{
-		public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
-		public double Magnitude { get; set; } = 0.3d;
-		public double Frequency { get; set; } = 440d;
-		public double Phase { get; set; } = 0d;
+		[DataMember] public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
+		[DataMember] public double Magnitude { get; set; } = 0.3d;
+		[DataMember] public double Frequency { get; set; } = 440d;
+		[DataMember] public double Phase { get; set; } = 0d;
 
-		private double value;
+		private double offset;
 
 		public IEnumerable<double> EnumerateBins(double sampleRate)
 		{
 			var step = Frequency * Pi.Double / sampleRate;
-			for (; ; value += step)
+			for (; ; offset += step)
 			{
-				yield return Magnitude * Signal(value + Phase);
+				yield return 2d * Magnitude * Signal(offset + Phase);
 			}
 		}
 	}
 
-	public class Generator : ContextObject, IAudioInputDevice
+	public class Generator : ContextObject, IAudioInputDevice, IExposable
 	{
 		public double[] SampleRates { get; } = { 44100 };
 
@@ -81,5 +81,11 @@ namespace Solfeggio
 		}
 
 		public void Stop() => _timer.Stop();
+
+		public void Expose()
+		{
+			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic().Use(Harmonics.Add);
+			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
+		}
 	}
 }

@@ -16,7 +16,7 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveDevice, value);
 		}
 
-		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>(), new Generator() };
+		public IAudioInputDevice[] Devices { get; } = { Store.Get<IAudioInputDevice>(), Store.Get<Generator>() };
 
 		public ApodizationFunc ActiveWindow
 		{
