@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="Api\IAudioClient.cs" />
     <Compile Include="Api\IWaveIn.cs" />
+    <Compile Include="Api\IWaveOut.cs" />
     <Compile Include="Api\MmResult.cs" />
     <Compile Include="Api\WaveFormat.cs" />
     <Compile Include="Api\WaveFormatEncoding.cs">
@@ -100,6 +101,8 @@
     <Compile Include="Api\WaveIn.cs" />
     <Compile Include="Api\WaveInBuffer.cs" />
     <Compile Include="Api\WaveInterop.cs" />
+    <Compile Include="Api\WaveOut.cs" />
+    <Compile Include="Api\WaveOutBuffer.cs" />
     <Compile Include="Api\WaveOutCapabilities.cs" />
     <Compile Include="Controls\Pivot.cs" />
     <Compile Include="Controls\RangeBar.xaml.cs">

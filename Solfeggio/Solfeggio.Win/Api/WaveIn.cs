@@ -240,23 +240,12 @@ namespace Solfeggio.Api
             NumberOfBuffers = 3;
             callback = Callback;
         }
-        
-        internal MmResult WaveOutOpen(out IntPtr waveOutHandle, int deviceNumber, WaveFormat waveFormat, WaveInterop.WaveCallback callback)
-        {
-            var result = WaveInterop.waveOutOpen(out waveOutHandle, (IntPtr) deviceNumber, waveFormat, callback,
-                IntPtr.Zero, WaveInterop.WaveInOutOpenFlags.CallbackFunction);
-            return result;
-        }
 
-        internal MmResult WaveInOpen(out IntPtr waveInHandle, int deviceNumber, WaveFormat waveFormat,
-            WaveInterop.WaveCallback callback)
-        {
-            var result = WaveInterop.waveInOpen(out waveInHandle, (IntPtr) deviceNumber, waveFormat, callback, IntPtr.Zero,
-                WaveInterop.WaveInOutOpenFlags.CallbackFunction);
-            return result;
-        }
+		internal MmResult WaveInOpen(out IntPtr waveInHandle, int deviceNumber, WaveFormat waveFormat, WaveInterop.WaveCallback callback) =>
+			WaveInterop.waveInOpen(out waveInHandle, (IntPtr)deviceNumber, waveFormat, callback, IntPtr.Zero,
+				WaveInterop.WaveInOutOpenFlags.CallbackFunction);
 
-        public static int DeviceCount => WaveInterop.waveInGetNumDevs();
+		public static int DeviceCount => WaveInterop.waveInGetNumDevs();
 
         public static WaveInCapabilities GetCapabilities(int devNumber)
         {
