@@ -21,6 +21,9 @@
 			<Entry
 				m:Rack.Cell="C2 R0"
 				Text="{Binding Phase, StringFormat=F2}" />
+			<Switch
+				m:Rack.Cell="C3 R0"
+				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
 
 			<Slider
 				m:Rack.Cell="C0 R1"
@@ -45,7 +48,7 @@
 				Value="{Binding Phase, StringFormat=F2}" />
 
 			<Button
-				m:Rack.Cell="C3 R0"
+				m:Rack.Cell="C3 R1"
 				Content="✗"
 				CommandParameter="{Binding}"
 				Command="{m:Context Key=Set.Remove, StoreKey=local:Generator}" />

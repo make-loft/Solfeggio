@@ -14,7 +14,13 @@
 			Header="{m:Localizing Key=Telemetry}">
 			<ScrollViewer>
 				<StackLayout>
-					
+
+					<Picker
+						Tag="{m:Localizing Key=Device}"
+						DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+						ItemsSource="{Binding Devices}"
+						SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+
 					<Expander
 						Header="{m:Localizing Key=Generator}">
 						<StackLayout>

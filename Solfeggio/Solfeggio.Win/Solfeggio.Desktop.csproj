@@ -91,19 +91,13 @@
       <DependentUpon>OptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Api\IAudioClient.cs" />
-    <Compile Include="Api\IWaveIn.cs" />
-    <Compile Include="Api\IWaveOut.cs" />
+    <Compile Include="Api\IWave.cs" />
     <Compile Include="Api\MmResult.cs" />
+    <Compile Include="Api\Wave.cs" />
+    <Compile Include="Api\WaveBuffer.cs" />
     <Compile Include="Api\WaveFormat.cs" />
-    <Compile Include="Api\WaveFormatEncoding.cs">
-      <DependentUpon>WaveIn.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Api\WaveIn.cs" />
-    <Compile Include="Api\WaveInBuffer.cs" />
     <Compile Include="Api\WaveInterop.cs" />
-    <Compile Include="Api\WaveOut.cs" />
-    <Compile Include="Api\WaveOutBuffer.cs" />
-    <Compile Include="Api\WaveOutCapabilities.cs" />
+    <Compile Include="Api\WaveCapabilities.cs" />
     <Compile Include="Controls\Pivot.cs" />
     <Compile Include="Controls\RangeBar.xaml.cs">
       <DependentUpon>RangeBar.xaml</DependentUpon>

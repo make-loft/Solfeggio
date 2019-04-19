@@ -13,7 +13,7 @@ namespace Solfeggio
         public double SampleRate => 44100;
         public int SampleSize { get; private set; }
         public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(_wi.BufferMilliseconds);
-        private readonly WaveIn _wi = new WaveIn();
+        private readonly Wave _wi = new Wave(DirectionKind.In);
         
         public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
@@ -50,8 +50,8 @@ namespace Solfeggio
             DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
         }
 
-		public void Start() => _wi.StartRecording();
-		public void Stop() => _wi.StopRecording();
+		public void Start() => _wi.Wake();
+		public void Stop() => _wi.Free();
 
 		public event EventHandler<AudioInputEventArgs> DataReady;
     }

@@ -14,7 +14,8 @@ namespace Solfeggio
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
 		[DataMember] public double Phase { get; set; } = 0d;
-		[DataMember] public bool IsStatic { get; set; }
+		[DataMember] public bool IsEnabled { get; set; } = true;
+		[DataMember] public bool IsStatic { get; set; } = false;
 
 		private double offset;
 
@@ -29,7 +30,7 @@ namespace Solfeggio
 	}
 	
 	[DataContract]
-	public class Generator : ContextObject, IAudioInputDevice, IExposable, IWaveProvider
+	public class Generator : ContextObject, IAudioInputDevice, IExposable, IWaveProvider<short>
 	{
 		public double[] SampleRates { get; } = { 44100 };
 		public double SampleRate
@@ -47,6 +48,7 @@ namespace Solfeggio
 		public bool SoundOn { get; set; } = true;
 
 		public event EventHandler<AudioInputEventArgs> DataReady;
+		public event EventHandler<WaveInEventArgs> DataAvailable;
 
 		[DataMember] public bool IsStatic { get; set; }
 
@@ -63,7 +65,7 @@ namespace Solfeggio
 
 		public void Start()
 		{
-			waveOut.Play();
+			waveOut.Wake();
 
 			var durationInSeconds = SampleSize / SampleRate;
 			_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
@@ -72,12 +74,12 @@ namespace Solfeggio
 			{
 				if (SoundOn)
 				{
-					if (waveOut.PlaybackState.IsNot(PlaybackState.Playing))  waveOut.Play();
+					if (waveOut.State.IsNot(ProcessingState.Processing))  waveOut.Wake();
 					return;
 				}
 				else
 				{
-					if (waveOut.PlaybackState.Is(PlaybackState.Playing)) waveOut.Stop();
+					if (waveOut.State.Is(ProcessingState.Processing)) waveOut.Free();
 				}
 
 				durationInSeconds = SampleSize / SampleRate;
@@ -94,7 +96,7 @@ namespace Solfeggio
 			};
 		}
 
-		WaveOut waveOut;
+		Wave waveOut;
 
 		public void StartWith(double sampleRate = 0, int desiredFrameSize = 0)
 		{
@@ -110,15 +112,16 @@ namespace Solfeggio
 			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic().Use(Harmonics.Add);
 			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
 
-			this[() => SampleSize].PropertyChanged += (o, e) =>	waveOut.Init(this, SampleSize * 4);
+			this[() => SampleSize].PropertyChanged += (o, e) =>	waveOut.Init(this, SampleSize * _binSize);
 
-			waveOut = new WaveOut { Volume = 1f };
+			waveOut = new Wave(DirectionKind.Out);
 		}
 
 		private Complex[] GenerateSignal()
 		{
 			var signal = new Complex[SampleSize];
 			var harmonics = Harmonics.
+				Where(h => h.IsEnabled).
 				Select(h => h.EnumerateBins(SampleRate, IsStatic).Take(SampleSize).ToArray()).
 				ToArray();
 
@@ -133,7 +136,9 @@ namespace Solfeggio
 			return signal;
 		}
 
-		public int Read(byte[] buffer, int offset, int count)
+		private readonly int _binSize = sizeof(short);
+
+		public int Read(short[] buffer, int offset, int count)
 		{
 			var signal = GenerateSignal();
 			var args = new AudioInputEventArgs()
@@ -146,19 +151,13 @@ namespace Solfeggio
 
 			for (var i = 0; i < signal.Length; i++)
 			{
-				//var bytes = BitConverter.GetBytes((short)(256d * signal[i].Real));
-				var bytes = BitConverter.GetBytes((float)signal[i].Real);
-
-				var j = 4 * (offset + i);
-				buffer[j + 0] = bytes[0];
-				buffer[j + 1] = bytes[1];
-				buffer[j + 2] = bytes[2];
-				buffer[j + 3] = bytes[3];
+				var j = _binSize * (offset + i);
+				buffer[j] = (short)(signal[i].Real * short.MaxValue / 2d);
 			}
 
-			return signal.Length * sizeof(float);
+			return signal.Length * _binSize;
 		}
 
-		public WaveFormat WaveFormat => new WaveFormat((int)SampleRate, 32, 1);
+		public WaveFormat WaveFormat => new WaveFormat((int)SampleRate, 16, 1);
 	}
 }
