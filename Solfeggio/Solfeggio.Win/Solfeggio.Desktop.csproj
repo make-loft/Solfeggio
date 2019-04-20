@@ -93,15 +93,16 @@
       <Link>Views\OptionsView.xaml.cs</Link>
       <DependentUpon>OptionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Api\IAudioClient.cs" />
     <Compile Include="Api\IWave.cs" />
     <Compile Include="Api\MmResult.cs" />
+    <Compile Include="Api\MmTime.cs" />
+    <Compile Include="Api\Wave.In.Imports.cs" />
+    <Compile Include="Api\Wave.Out.Imports.cs" />
     <Compile Include="Api\Wave.Processor.cs" />
     <Compile Include="Api\Wave.cs" />
     <Compile Include="Api\Wave.Out.cs" />
     <Compile Include="Api\Wave.Buffer.cs" />
     <Compile Include="Api\WaveFormat.cs" />
-    <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveCapabilities.cs" />
     <Compile Include="Controls\Pivot.cs" />
     <Compile Include="Controls\RangeBar.xaml.cs">
@@ -193,6 +194,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Api\Wave.In.cs" />
+    <Compile Include="Api\Wave.Header.cs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

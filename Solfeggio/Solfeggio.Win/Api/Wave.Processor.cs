@@ -10,7 +10,7 @@ namespace Solfeggio.Api
 		public abstract class Processor<TDeviceInfo> : IDisposable, IExposable
 		{
 			IDataSource<short> dataSource;
-			WaveInterop.WaveCallback callback;
+			Callback callback;
 
 			public Processor(ASession session, IDataSource<short> source = default)
 			{
@@ -18,7 +18,7 @@ namespace Solfeggio.Api
 				this.session = session;
 				if (source.Is()) BufferSize = source.SampleSize;
 				BufferMilliseconds = 100;
-				NumberOfBuffers = 10;
+				NumberOfBuffers = 3;
 				callback = Callback;
 
 				Expose();
@@ -103,13 +103,13 @@ namespace Solfeggio.Api
 				}
 			}
 
-			private void Callback(IntPtr waveHandle, WaveInterop.WaveMessage message, IntPtr userData, WaveHeader waveHeader, IntPtr reserved)
+			private void Callback(IntPtr waveHandle, Message message, IntPtr userData, Header header, IntPtr reserved)
 			{
 				if (State.IsNot(Processing)) return;
 
-				if (message.Is(WaveInterop.WaveMessage.WaveInData))
+				if (message.Is(Message.WaveInData))
 				{
-					GCHandle hBuffer = (GCHandle)waveHeader.userData;
+					GCHandle hBuffer = (GCHandle)header.userData;
 					var buffer = (Buffer)hBuffer.Target;
 					if (buffer.IsDone)
 					{
@@ -120,9 +120,9 @@ namespace Solfeggio.Api
 				}
 
 
-				if (message.Is(WaveInterop.WaveMessage.WaveOutDone))
+				if (message.Is(Message.WaveOutDone))
 				{
-					GCHandle hBuffer = (GCHandle)waveHeader.userData;
+					GCHandle hBuffer = (GCHandle)header.userData;
 					var buffer = (Buffer)hBuffer.Target;
 					if (buffer.InQueue) return;
 					{

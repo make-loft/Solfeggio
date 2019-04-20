@@ -1,79 +1,71 @@
+using System;
+using System.Runtime.CompilerServices;
+
 namespace Solfeggio.Api
 {
-    public enum MmResult
-    {
-        /// <summary>no error, MMSYSERR_NOERROR</summary>
-        NoError = 0,
-        /// <summary>unspecified error, MMSYSERR_ERROR</summary>
-        UnspecifiedError = 1,
-        /// <summary>device ID out of range, MMSYSERR_BADDEVICEID</summary>
-        BadDeviceId = 2,
-        /// <summary>driver failed enable, MMSYSERR_NOTENABLED</summary>
-        NotEnabled = 3,
-        /// <summary>device already allocated, MMSYSERR_ALLOCATED</summary>
-        AlreadyAllocated = 4,
-        /// <summary>device handle is invalid, MMSYSERR_INVALHANDLE</summary>
-        InvalidHandle = 5,
-        /// <summary>no device driver present, MMSYSERR_NODRIVER</summary>
-        NoDriver = 6,
-        /// <summary>memory allocation error, MMSYSERR_NOMEM</summary>
-        MemoryAllocationError = 7,
-        /// <summary>function isn't supported, MMSYSERR_NOTSUPPORTED</summary>
-        NotSupported = 8,
-        /// <summary>error value out of range, MMSYSERR_BADERRNUM</summary>
-        BadErrorNumber = 9,
-        /// <summary>invalid flag passed, MMSYSERR_INVALFLAG</summary>
-        InvalidFlag = 10,
-        /// <summary>invalid parameter passed, MMSYSERR_INVALPARAM</summary>
-        InvalidParameter = 11,
-        /// <summary>handle being used simultaneously on another thread (eg callback),MMSYSERR_HANDLEBUSY</summary>
-        HandleBusy = 12,
-        /// <summary>specified alias not found, MMSYSERR_INVALIDALIAS</summary>
-        InvalidAlias = 13,
-        /// <summary>bad registry database, MMSYSERR_BADDB</summary>
-        BadRegistryDatabase = 14,
-        /// <summary>registry key not found, MMSYSERR_KEYNOTFOUND</summary>
-        RegistryKeyNotFound = 15,
-        /// <summary>registry read error, MMSYSERR_READERROR</summary>
-        RegistryReadError = 16,
-        /// <summary>registry write error, MMSYSERR_WRITEERROR</summary>
-        RegistryWriteError = 17,
-        /// <summary>registry delete error, MMSYSERR_DELETEERROR</summary>
-        RegistryDeleteError = 18,
-        /// <summary>registry value not found, MMSYSERR_VALNOTFOUND</summary>
-        RegistryValueNotFound = 19,
-        /// <summary>driver does not call DriverCallback, MMSYSERR_NODRIVERCB</summary>
-        NoDriverCallback = 20,
-        /// <summary>more data to be returned, MMSYSERR_MOREDATA</summary>
-        MoreData = 21,
+	public enum MmResult
+	{
+		NoError = 0,
+		UnspecifiedError = 1,
+		BadDeviceId = 2,
+		NotEnabled = 3,
+		AlreadyAllocated = 4,
+		InvalidHandle = 5,
+		NoDriver = 6,
+		MemoryAllocationError = 7,
+		NotSupported = 8,
+		BadErrorNumber = 9,
+		InvalidFlag = 10,
+		InvalidParameter = 11,
+		HandleBusy = 12,
+		InvalidAlias = 13,
+		BadRegistryDatabase = 14,
+		RegistryKeyNotFound = 15,
+		RegistryReadError = 16,
+		RegistryWriteError = 17,
+		RegistryDeleteError = 18,
+		RegistryValueNotFound = 19,
+		NoDriverCallback = 20,
+		MoreData = 21,
 
-        /// <summary>unsupported wave format, WAVERR_BADFORMAT</summary>
-        WaveBadFormat = 32,
-        /// <summary>still something playing, WAVERR_STILLPLAYING</summary>
-        WaveStillPlaying = 33,
-        /// <summary>header not prepared, WAVERR_UNPREPARED</summary>
-        WaveHeaderUnprepared = 34,
-        /// <summary>device is synchronous, WAVERR_SYNC</summary>
-        WaveSync = 35,
+		WaveBadFormat = 32,
+		WaveStillPlaying = 33,
+		WaveHeaderUnprepared = 34,
+		WaveSync = 35,
 
-        // ACM error codes, found in msacm.h
+		// ACM error codes, found in msacm.h
+		AcmNotPossible = 512,
+		AcmBusy = 513,
+		AcmHeaderUnprepared = 514,
+		AcmCancelled = 515,
 
-        /// <summary>Conversion not possible (ACMERR_NOTPOSSIBLE)</summary>
-        AcmNotPossible = 512,
-        /// <summary>Busy (ACMERR_BUSY)</summary>
-        AcmBusy = 513,
-        /// <summary>Header Unprepared (ACMERR_UNPREPARED)</summary>
-        AcmHeaderUnprepared = 514,
-        /// <summary>Cancelled (ACMERR_CANCELED)</summary>
-        AcmCancelled = 515,
+		// Mixer error codes, found in mmresult.h
+		MixerInvalidLine = 1024,
+		MixerInvalidControl = 1025,
+		MixerInvalidValue = 1026,
+	}
 
-        // Mixer error codes, found in mmresult.h
+	public static class MmControl
+	{
+		public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null) => result == MmResult.NoError
+			? result
+			: throw new MmException(result, source);
+	}
 
-        /// <summary>invalid line (MIXERR_INVALLINE)</summary>
-        MixerInvalidLine = 1024,
-        /// <summary>invalid control (MIXERR_INVALCONTROL)</summary>
-        MixerInvalidControl = 1025,
-        /// <summary>invalid value (MIXERR_INVALVALUE)</summary>
-        MixerInvalidValue = 1026,
-    }
+	public class MmException : Exception
+	{
+		public MmException(MmResult result, string function)
+			: base(ErrorMessage(result, function))
+		{
+			Result = result;
+			Source = function;
+		}
+
+		private static string ErrorMessage(MmResult result, string function) =>
+			string.Format("{0} calling {1}", result, function);
+
+
+		public MmResult Result { get; }
+		public new string Source { get; }
+	}
 }

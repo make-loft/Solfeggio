@@ -19,13 +19,13 @@ namespace Solfeggio.Api
 			protected GCHandle hBuffer;
 			protected GCHandle hHeader; // we need to pin the header structure
 			protected GCHandle hThis; // for the user callback
-			protected WaveHeader header;
+			protected Header header;
 
 			public T[] Data { get; }
 
 			public ASession session { get; }
-			public bool IsDone => (header.flags & WaveHeaderFlags.Done) == WaveHeaderFlags.Done;
-			public bool InQueue => (header.flags & WaveHeaderFlags.InQueue) == WaveHeaderFlags.InQueue;
+			public bool IsDone => (header.flags & Header.Flags.Done) == Header.Flags.Done;
+			public bool InQueue => (header.flags & Header.Flags.InQueue) == Header.Flags.InQueue;
 			public int BinsCount => header.bytesRecorded / SizeOfBin;
 
 			public Buffer(ASession session, int binsCount)
@@ -45,7 +45,7 @@ namespace Solfeggio.Api
 			{
 				hThis = GCHandle.Alloc(this);
 				hBuffer = GCHandle.Alloc(Data, GCHandleType.Pinned);
-				header = new WaveHeader
+				header = new Header
 				{
 					dataBuffer = hBuffer.AddrOfPinnedObject(),
 					bufferLength = SizeOfBin * Data.Length,

@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 namespace Solfeggio.Api
 {
 	public partial class Wave
-    {
-		public static class In
+	{
+		public static partial class In
 		{
 			public class DeviceInfo : ADeviceInfo<WaveInCapabilities>
 			{
@@ -14,14 +14,14 @@ namespace Solfeggio.Api
 
 				public override ref WaveInCapabilities Fill(ref WaveInCapabilities capabilities)
 				{
-					WaveInterop.waveInGetDevCaps((IntPtr)_number, out capabilities, Marshal.SizeOf(capabilities)).Verify();
+					waveInGetDevCaps((IntPtr)_number, out capabilities, Marshal.SizeOf(capabilities)).Verify();
 					return ref capabilities;
 				}
 
 				public Session CreateSession() => new Session(this);
 			}
 
-			public static int GetDevicesCount() => WaveInterop.waveInGetNumDevs();
+			public static int GetDevicesCount() => waveInGetNumDevs();
 
 			public static IEnumerable<DeviceInfo> EnumerateDevices()
 			{
@@ -36,21 +36,21 @@ namespace Solfeggio.Api
 			{
 				public Session(DeviceInfo deviceInfo) => deviceNumber = deviceInfo.Number;
 
-				public override MmResult Lull() => WaveInterop.waveInStop(handle).Verify(); /* waveOutPause */
-				public override MmResult Wake() => WaveInterop.waveInStart(handle).Verify(); /* waveOutRestart */
+				public override MmResult Lull() => waveInStop(handle).Verify(); /* waveOutPause */
+				public override MmResult Wake() => waveInStart(handle).Verify(); /* waveOutRestart */
 
-				public override MmResult Close() => WaveInterop.waveInClose(handle).Verify();
-				public override MmResult Reset() => WaveInterop.waveInReset(handle).Verify();
-				public override MmResult Open(WaveInterop.WaveCallback callback) =>
-					WaveInterop.waveInOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, WaveOpenFlags.CallbackFunction).Verify();
+				public override MmResult Close() => waveInClose(handle).Verify();
+				public override MmResult Reset() => waveInReset(handle).Verify();
+				public override MmResult Open(Callback callback) =>
+					waveInOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
 
 				public override MmResult GetPosition(out MmTime time, int size) =>
-					 WaveInterop.waveInGetPosition(handle, out time, size).Verify();
+					 waveInGetPosition(handle, out time, size).Verify();
 
-				public override MmResult PrepareHeader(WaveHeader header) => WaveInterop.waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult UnprepareHeader(WaveHeader header) => WaveInterop.waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult MarkAsProcessed(WaveHeader header) =>
-					WaveInterop.waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult MarkAsProcessed(Header header) =>
+					waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 			}
 
 			public class Processor : Processor<DeviceInfo>

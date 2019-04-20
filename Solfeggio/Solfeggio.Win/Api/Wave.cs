@@ -5,6 +5,32 @@ namespace Solfeggio.Api
 {
 	public partial class Wave
 	{
+		public enum Message
+		{
+			WaveInOpen = 0x3BE,
+			WaveInClose = 0x3BF,
+			WaveInData = 0x3C0,
+			WaveOutClose = 0x3BC,
+			WaveOutDone = 0x3BD,
+			WaveOutOpen = 0x3BB
+		}
+
+		[Flags]
+		public enum OpenFlags
+		{
+			CallbackNull = 0,
+			CallbackFunction = 0x30000,
+			CallbackEvent = 0x50000,
+			CallbackWindow = 0x10000,
+			CallbackThread = 0x20000,
+			/*
+			WAVE_FORMAT_QUERY = 1,
+			WAVE_MAPPED = 4,
+			WAVE_FORMAT_DIRECT = 8*/
+		}
+
+		public delegate void Callback(IntPtr hWaveOut, Message message, IntPtr dwInstance, Wave.Header wavhdr, IntPtr dwReserved);
+
 		public abstract class ADeviceInfo<TCapabilities>
 			where TCapabilities : new()
 		{
@@ -32,7 +58,7 @@ namespace Solfeggio.Api
 
 			public abstract MmResult Close();
 			public abstract MmResult Reset();
-			public abstract MmResult Open(WaveInterop.WaveCallback callback);
+			public abstract MmResult Open(Callback callback);
 
 			public abstract MmResult GetPosition(out MmTime time, int size);
 
@@ -48,9 +74,9 @@ namespace Solfeggio.Api
 				return mmTime.cb;
 			}
 
-			public abstract MmResult PrepareHeader(WaveHeader header);
-			public abstract MmResult UnprepareHeader(WaveHeader header);
-			public abstract MmResult MarkAsProcessed(WaveHeader header);
+			public abstract MmResult PrepareHeader(Header header);
+			public abstract MmResult UnprepareHeader(Header header);
+			public abstract MmResult MarkAsProcessed(Header header);
 		}
 	}
 }

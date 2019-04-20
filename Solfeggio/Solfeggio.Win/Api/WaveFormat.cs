@@ -16,8 +16,8 @@ namespace Solfeggio.Api
 		public static readonly Guid MEDIASUBTYPE_MPEG1Payload = new Guid("e436eb81-524f-11ce-9f53-0020af0ba770"); // MPEG1 Audio Payload. 
 		public static readonly Guid MEDIASUBTYPE_MPEG2_AUDIO = new Guid("e06d802b-db46-11cf-b4d1-00805f6cbbea"); // MPEG-2 audio data  
 		public static readonly Guid MEDIASUBTYPE_DVD_LPCM_AUDIO = new Guid("e06d8032-db46-11cf-b4d1-00805f6cbbea"); // DVD audio data  
-		public static readonly Guid MEDIASUBTYPE_DRM_Audio = new Guid("00000009-0000-0010-8000-00aa00389b71"); // Corresponds to WAVE_FORMAT_DRM. 
-		public static readonly Guid MEDIASUBTYPE_IEEE_FLOAT = new Guid("00000003-0000-0010-8000-00aa00389b71"); // Corresponds to WAVE_FORMAT_IEEE_FLOAT 
+		public static readonly Guid MEDIASUBTYPE_DRM_Audio = new Guid("00000009-0000-0010-8000-00aa00389b71"); // Corresponds to _DRM. 
+		public static readonly Guid MEDIASUBTYPE_IEEE_FLOAT = new Guid("00000003-0000-0010-8000-00aa00389b71"); // Corresponds to _IEEE_FLOAT 
 		public static readonly Guid MEDIASUBTYPE_DOLBY_AC3 = new Guid("e06d802c-db46-11cf-b4d1-00805f6cbbea"); // Dolby data  
 		public static readonly Guid MEDIASUBTYPE_DOLBY_AC3_SPDIF = new Guid("00000092-0000-0010-8000-00aa00389b71"); // Dolby AC3 over SPDIF.  
 		public static readonly Guid MEDIASUBTYPE_RAW_SPORT = new Guid("00000240-0000-0010-8000-00aa00389b71"); // Equivalent to MEDIASUBTYPE_DOLBY_AC3_SPDIF. 
@@ -265,55 +265,11 @@ namespace Solfeggio.Api
 		}
 	}
 
-	public static class MmControl
-	{
-		public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null) => result.Is(MmResult.NoError)
-			? result
-			: throw new MmException(result, source);
-	}
-
-	public class MmException : Exception
-	{
-		public MmException(MmResult result, string function)
-			: base(ErrorMessage(result, function))
-		{
-			Result = result;
-			Source = function;
-		}
-
-		private static string ErrorMessage(MmResult result, string function) =>
-			string.Format("{0} calling {1}", result, function);
-
-
-		public MmResult Result { get; }
-		public new string Source { get; }
-	}
-
 	public static class MarshalHelpers
 	{
-		/// <summary>
-		/// SizeOf a structure
-		/// </summary>
-		public static int SizeOf<T>()
-		{
-			return Marshal.SizeOf(typeof(T));
-		}
-
-		/// <summary>
-		/// Offset of a field in a structure
-		/// </summary>
-		//public static IntPtr OffsetOf<T>(string fieldName)
-		//{
-		//    return Marshal.OffsetOf(typeof(T), fieldName);
-		//}
-
-		/// <summary>
-		/// Pointer to Structure
-		/// </summary>
-		public static T PtrToStructure<T>(IntPtr pointer)
-		{
-			return (T)Marshal.PtrToStructure(pointer, typeof(T));
-		}
+		public static int SizeOf<T>() => Marshal.SizeOf(typeof(T));
+		public static IntPtr OffsetOf<T>(string fieldName) => Marshal.OffsetOf(typeof(T), fieldName);
+		public static T PtrToStructure<T>(IntPtr pointer) => (T)Marshal.PtrToStructure(pointer, typeof(T));
 	}
 
 	public enum WaveFormatEncoding : ushort
@@ -331,45 +287,24 @@ namespace Solfeggio.Api
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 	public class WaveFormat
 	{
-		/// <summary>format type</summary>
 		protected WaveFormatEncoding waveFormatTag;
-		/// <summary>number of channels</summary>
 		protected short channels;
-		/// <summary>sample rate</summary>
 		protected int sampleRate;
-		/// <summary>for buffer estimation</summary>
 		protected int averageBytesPerSecond;
-		/// <summary>block size of data</summary>
 		protected short blockAlign;
-		/// <summary>number of bits per sample of mono data</summary>
 		protected short bitsPerSample;
-		/// <summary>number of following bytes</summary>
 		protected short extraSize;
 
-		/// <summary>
-		/// Creates a new PCM 44.1Khz stereo 16 bit format
-		/// </summary>
 		public WaveFormat() : this(44100, 16, 2)
 		{
 
 		}
 
-		/// <summary>
-		/// Creates a new 16 bit wave format with the specified sample
-		/// rate and channel count
-		/// </summary>
-		/// <param name="sampleRate">Sample Rate</param>
-		/// <param name="channels">Number of channels</param>
 		public WaveFormat(int sampleRate, int channels)
 			: this(sampleRate, 16, channels)
 		{
 		}
 
-		/// <summary>
-		/// Gets the size of a wave buffer equivalent to the latency in milliseconds.
-		/// </summary>
-		/// <param name="milliseconds">The milliseconds.</param>
-		/// <returns></returns>
 		public int ConvertLatencyToByteSize(int milliseconds)
 		{
 			int bytes = (int)((AverageBytesPerSecond / 1000.0) * milliseconds);
@@ -381,16 +316,6 @@ namespace Solfeggio.Api
 			return bytes;
 		}
 
-		/// <summary>
-		/// Creates a WaveFormat with custom members
-		/// </summary>
-		/// <param name="tag">The encoding</param>
-		/// <param name="sampleRate">Sample Rate</param>
-		/// <param name="channels">Number of channels</param>
-		/// <param name="averageBytesPerSecond">Average Bytes Per Second</param>
-		/// <param name="blockAlign">Block Align</param>
-		/// <param name="bitsPerSample">Bits Per Sample</param>
-		/// <returns></returns>
 		public static WaveFormat CreateCustomFormat(WaveFormatEncoding tag, int sampleRate, int channels, int averageBytesPerSecond, int blockAlign, int bitsPerSample) => new WaveFormat
 		{
 			waveFormatTag = tag,
@@ -402,31 +327,16 @@ namespace Solfeggio.Api
 			extraSize = 0
 		};
 
-		/// <summary>
-		/// Creates an A-law wave format
-		/// </summary>
-		/// <param name="sampleRate">Sample Rate</param>
-		/// <param name="channels">Number of Channels</param>
-		/// <returns>Wave Format</returns>
 		public static WaveFormat CreateALawFormat(int sampleRate, int channels)
 		{
 			return CreateCustomFormat(WaveFormatEncoding.ALaw, sampleRate, channels, sampleRate * channels, channels, 8);
 		}
 
-		/// <summary>
-		/// Creates a Mu-law wave format
-		/// </summary>
-		/// <param name="sampleRate">Sample Rate</param>
-		/// <param name="channels">Number of Channels</param>
-		/// <returns>Wave Format</returns>
 		public static WaveFormat CreateMuLawFormat(int sampleRate, int channels)
 		{
 			return CreateCustomFormat(WaveFormatEncoding.MuLaw, sampleRate, channels, sampleRate * channels, channels, 8);
 		}
 
-		/// <summary>
-		/// Creates a new PCM format with the specified sample rate, bit depth and channels
-		/// </summary>
 		public WaveFormat(int rate, int bits, int channels)
 		{
 			if (channels < 1)
@@ -444,11 +354,6 @@ namespace Solfeggio.Api
 			averageBytesPerSecond = sampleRate * blockAlign;
 		}
 
-		/// <summary>
-		/// Creates a new 32 bit IEEE floating point wave format
-		/// </summary>
-		/// <param name="sampleRate">sample rate</param>
-		/// <param name="channels">number of channels</param>
 		public static WaveFormat CreateIeeeFloatWaveFormat(int sampleRate, int channels) => new WaveFormat
 		{
 			waveFormatTag = WaveFormatEncoding.IeeeFloat,
@@ -460,11 +365,6 @@ namespace Solfeggio.Api
 			extraSize = 0
 		};
 
-		/// <summary>
-		/// Helper function to retrieve a WaveFormat structure from a pointer
-		/// </summary>
-		/// <param name="pointer">WaveFormat structure</param>
-		/// <returns></returns>
 		public static WaveFormat MarshalFromPtr(IntPtr pointer)
 		{
 			var waveFormat = MarshalHelpers.PtrToStructure<WaveFormat>(pointer);
@@ -494,11 +394,6 @@ namespace Solfeggio.Api
 			return waveFormat;
 		}
 
-		/// <summary>
-		/// Helper function to marshal WaveFormat to an IntPtr
-		/// </summary>
-		/// <param name="format">WaveFormat</param>
-		/// <returns>IntPtr to WaveFormat structure (needs to be freed by callee)</returns>
 		public static IntPtr MarshalToPtr(WaveFormat format)
 		{
 			IntPtr formatPointer = default; //= Marshal.AllocHGlobal(formatSize);
@@ -506,13 +401,6 @@ namespace Solfeggio.Api
 			return formatPointer;
 		}
 
-		/// <summary>
-		/// Reads in a WaveFormat (with extra data) from a fmt chunk (chunk identifier and
-		/// length should already have been read)
-		/// </summary>
-		/// <param name="br">Binary reader</param>
-		/// <param name="formatChunkLength">Format chunk length</param>
-		/// <returns>A WaveFormatExtraData</returns>
 		public static WaveFormat FromFormatChunk(BinaryReader br, int formatChunkLength)
 		{
 			var waveFormat = new WaveFormatExtraData();
@@ -569,38 +457,6 @@ namespace Solfeggio.Api
 			}
 		}
 
-		/// <summary>
-		/// Compares with another WaveFormat object
-		/// </summary>
-		/// <param name="obj">Object to compare to</param>
-		/// <returns>True if the objects are the same</returns>
-		public override bool Equals(object obj)
-		{
-			if (obj is WaveFormat other)
-			{
-				return waveFormatTag == other.waveFormatTag &&
-					channels == other.channels &&
-					sampleRate == other.sampleRate &&
-					averageBytesPerSecond == other.averageBytesPerSecond &&
-					blockAlign == other.blockAlign &&
-					bitsPerSample == other.bitsPerSample;
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Provides a Hashcode for this WaveFormat
-		/// </summary>
-		/// <returns>A hashcode</returns>
-		public override int GetHashCode()
-		{
-			return (int)waveFormatTag ^
-				(int)channels ^
-				sampleRate ^
-				averageBytesPerSecond ^
-				(int)blockAlign ^
-				(int)bitsPerSample;
-		}
 
 		/// <summary>
 		/// Returns the encoding type used
@@ -654,5 +510,38 @@ namespace Solfeggio.Api
 		/// except for compressed formats which store extra data after the WAVEFORMATEX header
 		/// </summary>
 		public int ExtraSize => extraSize;
+	}
+
+	public enum SupportedWaveFormat
+	{
+		_1M08 = 0x00000001,
+		_1S08 = 0x00000002,
+		_1M16 = 0x00000004,
+		_1S16 = 0x00000008,
+		_2M08 = 0x00000010,
+		_2S08 = 0x00000020,
+		_2M16 = 0x00000040,
+		_2S16 = 0x00000080,
+		_4M08 = 0x00000100,
+		_4S08 = 0x00000200,
+		_4M16 = 0x00000400,
+		_4S16 = 0x00000800,
+		_44M08 = 0x00000100,
+		_44S08 = 0x00000200,
+		_44M16 = 0x00000400,
+		_44S16 = 0x00000800,
+		_48M08 = 0x00001000,
+		_48S08 = 0x00002000,
+		_48M16 = 0x00004000,
+		_48S16 = 0x00008000,
+		_96M08 = 0x00010000,
+		_96S08 = 0x00020000,
+		_96M16 = 0x00040000,
+		_96S16 = 0x00080000,
+	}
+
+	public class WaveInterop
+	{
+		[DllImport("winmm.dll")] public static extern Int32 mmioStringToFOURCC([MarshalAs(UnmanagedType.LPStr)] String s, int flags);
 	}
 }
