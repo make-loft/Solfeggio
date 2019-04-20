@@ -17,32 +17,23 @@ namespace Solfeggio.Api
 
 		ProcessingState State { get; }
 
-		void Init(IWaveProvider<T> waveProvider, int bufferSize);
+		void Init(IDataSource<T> dataSource, int bufferSize);
 	}
 
-	public enum DirectionKind
-	{
-		In, Out
-	}
-
-	public interface IWavePosition
-	{
-		long GetPosition();
-		WaveFormat WaveFormat { get; }
-	}
-
-	public interface IWaveProvider<T>
+	public interface IDataSource<T>
 	{
 		WaveFormat WaveFormat { get; }
 
-		event EventHandler<WaveInEventArgs> DataAvailable;
+		int SampleSize { get; }
 
-		int Read(T[] buffer, int offset, int count);
+		event EventHandler<ProcessingEventArgs> DataProcessed;
+
+		T[] Fill(in T[] buffer, int offset, int count);
 	}
 
-	public class WaveInEventArgs : EventArgs
+	public class ProcessingEventArgs : EventArgs
 	{
-		public WaveInEventArgs(short[] buffer, int binsCount)
+		public ProcessingEventArgs(short[] buffer, int binsCount)
 		{
 			Bins = buffer;
 			BinsCount = binsCount;

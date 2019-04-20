@@ -12,33 +12,33 @@ namespace Solfeggio
         public double[] SampleRates { get; } = {44100};
         public double SampleRate => 44100;
         public int SampleSize { get; private set; }
-        public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(_wi.BufferMilliseconds);
-        private readonly Wave _wi = new Wave(DirectionKind.In);
-        
-        public void StartWith(double sampleRate = default, int desiredFrameSize = default)
+        public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(processor.BufferMilliseconds);
+		private Wave.In.Processor processor = new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession());
+
+		public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
-            if (_wi.Is())
+            if (processor.Is())
             {
 				Stop();
-				_wi.DataAvailable -= OnWiOnDataAvailable;
-                _wi.Dispose();
+				processor.DataAvailable -= OnWiOnDataAvailable;
+				processor.Dispose();
+				processor = new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession());
 			}
 
-			_wi.With(_wi.DeviceNumber = 0, _wi.WaveFormat = new WaveFormat((int)SampleRate, 1));
             var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
             var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
             var milliseconds = 1000d * sampleSize / actualSampleRate;
             milliseconds = Math.Ceiling(milliseconds / 10) * 10;
 			SampleSize = (int)(milliseconds * actualSampleRate / 1000d);
-            _wi.BufferMilliseconds = (int) milliseconds;
-            _wi.DataAvailable += OnWiOnDataAvailable;
+			processor.BufferMilliseconds = (int) milliseconds;
+			processor.DataAvailable += OnWiOnDataAvailable;
 
             Start();
             EvokePropertyChanged(nameof(SampleSize));
             EvokePropertyChanged(nameof(SampleDuration));
         }
 
-        private void OnWiOnDataAvailable(object sender, WaveInEventArgs args)
+        private void OnWiOnDataAvailable(object sender, ProcessingEventArgs args)
         {
             var sampleSize = args.Bins.Length;
             var frame = new Complex[sampleSize];
@@ -50,8 +50,8 @@ namespace Solfeggio
             DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
         }
 
-		public void Start() => _wi.Wake();
-		public void Stop() => _wi.Free();
+		public void Start() => processor.Wake();
+		public void Stop() => processor.Free();
 
 		public event EventHandler<AudioInputEventArgs> DataReady;
     }

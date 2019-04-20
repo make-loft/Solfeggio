@@ -59,6 +59,9 @@
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Models\Harmonic.cs">
+      <Link>Models\Harmonic.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Pitch\CircularBuffer.cs">
       <Link>Pitch\CircularBuffer.cs</Link>
     </Compile>
@@ -93,8 +96,10 @@
     <Compile Include="Api\IAudioClient.cs" />
     <Compile Include="Api\IWave.cs" />
     <Compile Include="Api\MmResult.cs" />
+    <Compile Include="Api\Wave.Processor.cs" />
     <Compile Include="Api\Wave.cs" />
-    <Compile Include="Api\WaveBuffer.cs" />
+    <Compile Include="Api\Wave.Out.cs" />
+    <Compile Include="Api\Wave.Buffer.cs" />
     <Compile Include="Api\WaveFormat.cs" />
     <Compile Include="Api\WaveInterop.cs" />
     <Compile Include="Api\WaveCapabilities.cs" />
@@ -187,6 +192,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Include="Api\Wave.In.cs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -5,32 +5,12 @@ using System.Windows.Threading;
 using Ace;
 using Rainbow;
 using Solfeggio.Api;
+using Solfeggio.Models;
 
 namespace Solfeggio
 {
-	public class Harmonic
-	{
-		[DataMember] public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
-		[DataMember] public double Magnitude { get; set; } = 0.3d;
-		[DataMember] public double Frequency { get; set; } = 440d;
-		[DataMember] public double Phase { get; set; } = 0d;
-		[DataMember] public bool IsEnabled { get; set; } = true;
-		[DataMember] public bool IsStatic { get; set; } = false;
-
-		private double offset;
-
-		public IEnumerable<double> EnumerateBins(double sampleRate, bool isStatic)
-		{
-			var step = Frequency * Pi.Double / sampleRate;
-			for (offset = IsStatic || isStatic ? 0d : offset; ; offset += step)
-			{
-				yield return 2d * Magnitude * Signal(offset + Phase);
-			}
-		}
-	}
-	
 	[DataContract]
-	public class Generator : ContextObject, IAudioInputDevice, IExposable, IWaveProvider<short>
+	public class Generator : ContextObject, IAudioInputDevice, IExposable, IDataSource<short>
 	{
 		public double[] SampleRates { get; } = { 44100 };
 		public double SampleRate
@@ -48,7 +28,7 @@ namespace Solfeggio
 		public bool SoundOn { get; set; } = true;
 
 		public event EventHandler<AudioInputEventArgs> DataReady;
-		public event EventHandler<WaveInEventArgs> DataAvailable;
+		public event EventHandler<ProcessingEventArgs> DataProcessed;
 
 		[DataMember] public bool IsStatic { get; set; }
 
@@ -63,45 +43,40 @@ namespace Solfeggio
 
 		private readonly DispatcherTimer _timer = new DispatcherTimer();
 
+		private Wave.Out.Processor processor;
+
 		public void Start()
 		{
-			waveOut.Wake();
+			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(), this);
 
 			var durationInSeconds = SampleSize / SampleRate;
 			_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
-			//_timer.Start();
+			_timer.Start();
 			_timer.Tick += (o, e) =>
 			{
 				if (SoundOn)
 				{
-					if (waveOut.State.IsNot(ProcessingState.Processing))  waveOut.Wake();
+					if (processor.State.IsNot(ProcessingState.Processing))  processor.Wake();
 					return;
 				}
 				else
 				{
-					if (waveOut.State.Is(ProcessingState.Processing)) waveOut.Free();
+					if (processor.State.Is(ProcessingState.Processing)) processor.Free();
 				}
 
 				durationInSeconds = SampleSize / SampleRate;
 				_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
 
-				var signal = GenerateSignal();
-				var args = new AudioInputEventArgs()
-				{
-					Frame = signal,
-					Source = this
-				};
-
-				DataReady?.Invoke(this, args);
+				var signal = GenerateSignalSample(Harmonics, SampleSize, SampleRate, IsStatic);
+				EvokeDataReady(signal);
 			};
 		}
-
-		Wave waveOut;
 
 		public void StartWith(double sampleRate = 0, int desiredFrameSize = 0)
 		{
 			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
 			SampleSize = desiredFrameSize.Is(default) ? SampleSize : desiredFrameSize;
+
 			Start();
 		}
 
@@ -112,50 +87,55 @@ namespace Solfeggio
 			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic().Use(Harmonics.Add);
 			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
 
-			this[() => SampleSize].PropertyChanged += (o, e) =>	waveOut.Init(this, SampleSize * _binSize);
-
-			waveOut = new Wave(DirectionKind.Out);
+			this[() => SampleSize].PropertyChanged += (o, e) =>
+			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(), this);
 		}
 
-		private Complex[] GenerateSignal()
+		private static Complex[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool isStatic)
 		{
-			var signal = new Complex[SampleSize];
-			var harmonics = Harmonics.
+			var signalSample = new Complex[length];
+			var harmonicSamples = harmonics.
 				Where(h => h.IsEnabled).
-				Select(h => h.EnumerateBins(SampleRate, IsStatic).Take(SampleSize).ToArray()).
+				Select(h => h.EnumerateBins(rate, isStatic).Take(length).ToArray()).
 				ToArray();
 
-			foreach (var harmonic in harmonics)
+			foreach (var harmonicSample in harmonicSamples)
 			{
-				for (var i = 0; i < SampleSize; i++)
+				for (var i = 0; i < length; i++)
 				{
-					signal[i] += harmonic[i];
+					signalSample[i] += harmonicSample[i];
 				}
 			}
 
-			return signal;
+			return signalSample;
 		}
 
-		private readonly int _binSize = sizeof(short);
-
-		public int Read(short[] buffer, int offset, int count)
+		public void EvokeDataReady(Complex[] frame) => DataReady?.Invoke(this, new AudioInputEventArgs()
 		{
-			var signal = GenerateSignal();
-			var args = new AudioInputEventArgs()
-			{
-				Frame = signal,
-				Source = this
-			};
+			Frame = frame,
+			Source = this
+		});
 
-			DataReady?.Invoke(this, args);
+		//private readonly int _binSize = sizeof(short);
 
-			for (var i = 0; i < signal.Length; i++)
+		public short[] Fill(in short[] buffer, int offset, int count)
+		{
+			var signal = GenerateSignalSample(Harmonics, SampleSize, SampleRate, IsStatic);
+			EvokeDataReady(signal);
+
+			for (var n = 0; n < offset; n++)
+				buffer[n] = default;
+
+			for (var i = offset; i < count; i++)
 			{
-				var j = _binSize * (offset + i);
-				buffer[j] = (short)(signal[i].Real * short.MaxValue / 2d);
+				//var j = _binSize * (offset + i);
+				buffer[i] = (short)(signal[i].Real * short.MaxValue / 2d);
 			}
 
-			return signal.Length * _binSize;
+			for (var n = offset + count; n < buffer.Length; n++)
+				buffer[n] = default;
+
+			return buffer;
 		}
 
 		public WaveFormat WaveFormat => new WaveFormat((int)SampleRate, 16, 1);

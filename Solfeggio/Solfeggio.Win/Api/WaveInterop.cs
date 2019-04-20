@@ -194,21 +194,22 @@ namespace Solfeggio.Api
 		Prepared = 0x00000002
 	}
 
+	[Flags]
+	public enum WaveOpenFlags
+	{
+		CallbackNull = 0,
+		CallbackFunction = 0x30000,
+		CallbackEvent = 0x50000,
+		CallbackWindow = 0x10000,
+		CallbackThread = 0x20000,
+		/*
+		WAVE_FORMAT_QUERY = 1,
+		WAVE_MAPPED = 4,
+		WAVE_FORMAT_DIRECT = 8*/
+	}
+
 	public class WaveInterop
 	{
-		[Flags]
-		public enum WaveInOutOpenFlags
-		{
-			CallbackNull = 0,
-			CallbackFunction = 0x30000,
-			CallbackEvent = 0x50000,
-			CallbackWindow = 0x10000,
-			CallbackThread = 0x20000,
-			/*
-            WAVE_FORMAT_QUERY = 1,
-            WAVE_MAPPED = 4,
-            WAVE_FORMAT_DIRECT = 8*/
-		}
 
 		//public const int TIME_MS = 0x0001;  // time in milliseconds 
 		//public const int TIME_SAMPLES = 0x0002;  // number of wave samples 
@@ -236,9 +237,9 @@ namespace Solfeggio.Api
 		[DllImport("winmm.dll")] public static extern MmResult waveOutWrite(IntPtr hWaveOut, WaveHeader lpWaveOutHdr, int uSize);
 
 		// http://msdn.microsoft.com/en-us/library/dd743866%28VS.85%29.aspx
-		[DllImport("winmm.dll")] public static extern MmResult waveOutOpen(out IntPtr hWaveOut, IntPtr uDeviceID, WaveFormat lpFormat, WaveCallback dwCallback, IntPtr dwInstance, WaveInOutOpenFlags dwFlags);
+		[DllImport("winmm.dll")] public static extern MmResult waveOutOpen(out IntPtr hWaveOut, IntPtr uDeviceID, WaveFormat lpFormat, WaveCallback dwCallback, IntPtr dwInstance, WaveOpenFlags dwFlags);
 		[DllImport("winmm.dll", EntryPoint = "waveOutOpen")]
-		public static extern MmResult waveOutOpenWindow(out IntPtr hWaveOut, IntPtr uDeviceID, WaveFormat lpFormat, IntPtr callbackWindowHandle, IntPtr dwInstance, WaveInOutOpenFlags dwFlags);
+		public static extern MmResult waveOutOpenWindow(out IntPtr hWaveOut, IntPtr uDeviceID, WaveFormat lpFormat, IntPtr callbackWindowHandle, IntPtr dwInstance, WaveOpenFlags dwFlags);
 
 		[DllImport("winmm.dll")] public static extern MmResult waveOutReset(IntPtr hWaveOut);
 		[DllImport("winmm.dll")] public static extern MmResult waveOutClose(IntPtr hWaveOut);
@@ -268,9 +269,9 @@ namespace Solfeggio.Api
 
 		// http://msdn.microsoft.com/en-us/library/dd743847%28VS.85%29.aspx
 		[DllImport("winmm.dll")]
-		public static extern MmResult waveInOpen(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, WaveCallback dwCallback, IntPtr dwInstance, WaveInOutOpenFlags dwFlags);
+		public static extern MmResult waveInOpen(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, WaveCallback dwCallback, IntPtr dwInstance, WaveOpenFlags dwFlags);
 		[DllImport("winmm.dll", EntryPoint = "waveInOpen")]
-		public static extern MmResult waveInOpenWindow(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, IntPtr callbackWindowHandle, IntPtr dwInstance, WaveInOutOpenFlags dwFlags);
+		public static extern MmResult waveInOpenWindow(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, IntPtr callbackWindowHandle, IntPtr dwInstance, WaveOpenFlags dwFlags);
 
 		// http://msdn.microsoft.com/en-us/library/dd743848%28VS.85%29.aspx
 		[DllImport("winmm.dll")] public static extern MmResult waveInPrepareHeader(IntPtr hWaveIn, WaveHeader lpWaveInHdr, int uSize);
