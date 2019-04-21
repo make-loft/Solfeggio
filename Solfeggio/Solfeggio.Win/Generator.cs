@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Threading;
 using Ace;
 using Rainbow;
@@ -33,11 +31,18 @@ namespace Solfeggio
 		[DataMember] public bool IsStatic { get; set; }
 
 		[DataMember]
-		public SmartSet<Harmonic> Harmonics { get; } = new SmartSet<Harmonic>
+		public SmartSet<Harmonic.Profile> Profiles { get; } = new SmartSet<Harmonic.Profile>
 		{
-			new Harmonic {Frequency = 220d},
-			new Harmonic {Frequency = 440d}
+			new Harmonic.Profile { Title = "Profile 1" },
+			new Harmonic.Profile { Title = "Profile 2" }
 		};
+
+		[DataMember]
+		public Harmonic.Profile ActiveProfile
+		{
+			get => Get(() => ActiveProfile, Profiles[0]);
+			set => Set(() => ActiveProfile, value);
+		}
 
 		public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
 
@@ -67,7 +72,7 @@ namespace Solfeggio
 				durationInSeconds = SampleSize / SampleRate;
 				_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
 
-				var signal = GenerateSignalSample(Harmonics, SampleSize, SampleRate, IsStatic);
+				var signal = ActiveProfile.GenerateSignalSample(SampleSize, SampleRate, IsStatic);
 				EvokeDataReady(signal);
 			};
 		}
@@ -84,31 +89,13 @@ namespace Solfeggio
 
 		public void Expose()
 		{
-			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic().Use(Harmonics.Add);
-			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
+			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic.Profile().Use(Profiles.Add);
+			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic.Profile>().Use(Profiles.Remove);
 
 			this[() => SampleSize].PropertyChanged += (o, e) =>
 			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(), this);
 		}
 
-		private static Complex[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool isStatic)
-		{
-			var signalSample = new Complex[length];
-			var harmonicSamples = harmonics.
-				Where(h => h.IsEnabled).
-				Select(h => h.EnumerateBins(rate, isStatic).Take(length).ToArray()).
-				ToArray();
-
-			foreach (var harmonicSample in harmonicSamples)
-			{
-				for (var i = 0; i < length; i++)
-				{
-					signalSample[i] += harmonicSample[i];
-				}
-			}
-
-			return signalSample;
-		}
 
 		public void EvokeDataReady(Complex[] frame) => DataReady?.Invoke(this, new AudioInputEventArgs()
 		{
@@ -120,7 +107,8 @@ namespace Solfeggio
 
 		public short[] Fill(in short[] buffer, int offset, int count)
 		{
-			var signal = GenerateSignalSample(Harmonics, SampleSize, SampleRate, IsStatic);
+			if (ActiveProfile.IsNot()) return new short[0];
+			var signal = ActiveProfile.GenerateSignalSample(SampleSize, SampleRate, IsStatic);
 			EvokeDataReady(signal);
 
 			for (var n = 0; n < offset; n++)

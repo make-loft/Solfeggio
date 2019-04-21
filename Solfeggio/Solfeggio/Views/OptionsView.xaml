@@ -24,12 +24,30 @@
 					<Expander
 						Header="{m:Localizing Key=Generator}">
 						<StackLayout>
-							<Button
-								Content="{m:Localizing Key=Add}"
-								Command="{m:Context Key=Set.Add, StoreKey=local:Generator}"/>
+
+							<StackLayout
+								DataContext="{m:Store Key=local:Generator}"
+								Orientation="Horizontal">
+								<Label
+									Text="{m:Localizing Key=Profile}" />
+								<Picker
+									ItemsSource="{m:StoreBinding Path=Profiles, StoreKey=local:Generator}"
+									SelectedItem="{m:StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=local:Generator}" />
+								<Button
+									Content="{m:Localizing Key=Add}"
+									Command="{m:Context Key=Set.Add, StoreKey=local:Generator}" />
+								<Button
+									Content="{m:Localizing Key=Remove}"
+									CommandParameter="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
+									Command="{m:Context Key=Set.Remove, StoreKey=local:Generator}" />
+								<Button
+									DataContext="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
+									Content="{m:Localizing Key=AddHarmonic}"
+									Command="{m:Context Key=Set.Add, TrackContextChanges=True, Mode=OneWay}" />
+							</StackLayout>
 
 							<ItemsView
-								ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=local:Generator}"
+								ItemsSource="{m:StoreBinding Path=ActiveProfile.Harmonics, StoreKey=local:Generator}"
 								ItemTemplate="{StaticResource HarmonicTemplate}" />
 						</StackLayout>
 					</Expander>

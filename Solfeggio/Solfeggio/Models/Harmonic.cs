@@ -6,12 +6,15 @@ using Rainbow;
 namespace Solfeggio.Models
 {
 	[DataContract]
-	public class Harmonic
+	public partial class Harmonic
 	{
-		[DataMember] public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
+		public delegate double Basis(double v);
+		[DataMember] public Basis[] BasisFuncs { get; } = { Math.Sin, Math.Cos, Math.Tan, Math.Sqrt };
+
+		[DataMember] public Basis BasisFunc { get; set; } = Math.Sin;
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
-		[DataMember] public double Phase { get; set; } = 0d;
+		[DataMember] public double PhaseShift { get; set; } = 0d;
 		[DataMember] public bool IsEnabled { get; set; } = true;
 		[DataMember] public bool IsStatic { get; set; } = false;
 
@@ -22,7 +25,7 @@ namespace Solfeggio.Models
 			var step = Frequency * Pi.Double / sampleRate;
 			for (offset = IsStatic || isStatic ? 0d : offset; ; offset += step)
 			{
-				yield return 2d * Magnitude * Signal(offset + Phase);
+				yield return 2d * Magnitude * BasisFunc(offset + PhaseShift);
 			}
 		}
 	}

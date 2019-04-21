@@ -20,9 +20,14 @@
 				Text="{Binding Frequency, StringFormat=F2}" />
 			<Entry
 				m:Rack.Cell="C2 R0"
-				Text="{Binding Phase, StringFormat=F2}" />
-			<Switch
+				Text="{Binding PhaseShift, StringFormat=F2}" />
+			<Picker
 				m:Rack.Cell="C3 R0"
+				ItemsSource="{Binding BasisFuncs}"
+				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+			<Switch
+				m:Rack.Cell="C4 R0"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
 
 			<Slider
@@ -45,13 +50,13 @@
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding Phase, StringFormat=F2}" />
+				Value="{Binding PhaseShift, StringFormat=F2}" />
 
 			<Button
-				m:Rack.Cell="C3 R1"
+				m:Rack.Cell="C4 R1"
 				Content="✗"
 				CommandParameter="{Binding}"
-				Command="{m:Context Key=Set.Remove, StoreKey=local:Generator}" />
+				Command="{m:Context Key=Set.Remove, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
 		</Grid>
 	</DataTemplate>
 

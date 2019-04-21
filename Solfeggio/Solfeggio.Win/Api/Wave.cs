@@ -10,9 +10,10 @@ namespace Solfeggio.Api
 			WaveInOpen = 0x3BE,
 			WaveInClose = 0x3BF,
 			WaveInData = 0x3C0,
+
+			WaveOutOpen = 0x3BB,
 			WaveOutClose = 0x3BC,
 			WaveOutDone = 0x3BD,
-			WaveOutOpen = 0x3BB
 		}
 
 		[Flags]

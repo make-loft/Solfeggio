@@ -9,8 +9,8 @@ namespace Solfeggio.Api
 	{
 		public abstract class Processor<TDeviceInfo> : IDisposable, IExposable
 		{
-			IDataSource<short> dataSource;
-			Callback callback;
+			private readonly IDataSource<short> dataSource;
+			private readonly Callback callback;
 
 			public Processor(ASession session, IDataSource<short> source = default)
 			{
@@ -107,24 +107,11 @@ namespace Solfeggio.Api
 			{
 				if (State.IsNot(Processing)) return;
 
-				if (message.Is(Message.WaveInData))
+				if (message.Is(Message.WaveInData) || message.Is(Message.WaveOutDone))
 				{
 					GCHandle hBuffer = (GCHandle)header.userData;
 					var buffer = (Buffer)hBuffer.Target;
 					if (buffer.IsDone)
-					{
-						if (dataSource.Is()) Fill(in buffer, dataSource);
-						buffer.MarkAsProcessed();
-						RaiseDataAvailable(buffer);
-					}
-				}
-
-
-				if (message.Is(Message.WaveOutDone))
-				{
-					GCHandle hBuffer = (GCHandle)header.userData;
-					var buffer = (Buffer)hBuffer.Target;
-					if (buffer.InQueue) return;
 					{
 						if (dataSource.Is()) Fill(in buffer, dataSource);
 						buffer.MarkAsProcessed();
