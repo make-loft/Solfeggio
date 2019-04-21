@@ -18,7 +18,7 @@ namespace Solfeggio.Api
 					return ref capabilities;
 				}
 
-				public Session CreateSession() => new Session(this);
+				public Session CreateSession(WaveFormat format) => new Session(_number, format);
 			}
 
 			public static int GetDevicesCount() => waveInGetNumDevs();
@@ -34,7 +34,11 @@ namespace Solfeggio.Api
 
 			public class Session : ASession
 			{
-				public Session(DeviceInfo deviceInfo) => deviceNumber = deviceInfo.Number;
+				public Session(int deviceNumber, WaveFormat format)
+				{
+					this.deviceNumber = deviceNumber;
+					WaveFormat = format;
+				}
 
 				public override MmResult Lull() => waveInStop(handle).Verify(); /* waveOutPause */
 				public override MmResult Wake() => waveInStart(handle).Verify(); /* waveOutRestart */

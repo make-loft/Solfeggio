@@ -52,7 +52,7 @@ namespace Solfeggio.Api
 			protected IntPtr handle;
 			protected int deviceNumber;
 			public IntPtr Handle => handle;
-			public WaveFormat WaveFormat { get; set; } = new WaveFormat(16000, 16, 1);
+			public WaveFormat WaveFormat { get; protected set; }
 
 			public abstract MmResult Wake();
 			public abstract MmResult Lull();

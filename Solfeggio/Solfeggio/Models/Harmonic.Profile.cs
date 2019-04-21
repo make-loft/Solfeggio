@@ -38,8 +38,10 @@ namespace Solfeggio.Models
 					Select(h => h.EnumerateBins(rate, isStatic).Take(length).ToArray()).
 					ToArray();
 
-				foreach (var harmonicSample in harmonicSamples)
+				/* harmonicSamples may be modified during enumeration */
+				for (var j = 0; j < harmonicSamples.Length; j++)
 				{
+					var harmonicSample = harmonicSamples[j];
 					for (var i = 0; i < length; i++)
 					{
 						signalSample[i] += harmonicSample[i];
@@ -51,3 +53,4 @@ namespace Solfeggio.Models
 		}
 	}
 }
+ 

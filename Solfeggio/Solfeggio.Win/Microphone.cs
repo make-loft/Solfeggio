@@ -9,11 +9,12 @@ namespace Solfeggio
     {
         public static readonly Microphone Default = new Microphone();
 
-        public double[] SampleRates { get; } = {44100};
+		public WaveFormat WaveFormat => new WaveFormat((int)SampleRate, 16, 1);
+		public double[] SampleRates { get; } = {44100};
         public double SampleRate => 44100;
         public int SampleSize { get; private set; }
         public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(processor.BufferMilliseconds);
-		private Wave.In.Processor processor = new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession());
+		private Wave.In.Processor processor;
 
 		public void StartWith(double sampleRate = default, int desiredFrameSize = default)
         {
@@ -22,10 +23,11 @@ namespace Solfeggio
 				Stop();
 				processor.DataAvailable -= OnWiOnDataAvailable;
 				processor.Dispose();
-				processor = new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession());
 			}
 
-            var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
+			processor = new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat));
+
+			var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
             var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
             var milliseconds = 1000d * sampleSize / actualSampleRate;
             milliseconds = Math.Ceiling(milliseconds / 10) * 10;

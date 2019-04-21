@@ -18,7 +18,7 @@ namespace Solfeggio.Api
 					return ref capabilities;
 				}
 
-				public Session CreateSession() => new Session(this);
+				public Session CreateSession(WaveFormat format) => new Session(_number, format);
 			}
 
 			public static int GetDevicesCount() => waveOutGetNumDevs();
@@ -34,7 +34,11 @@ namespace Solfeggio.Api
 
 			public class Session : ASession
 			{
-				public Session(DeviceInfo deviceInfo) => deviceNumber = deviceInfo.Number;
+				public Session(int deviceNumber, WaveFormat format)
+				{
+					this.deviceNumber = deviceNumber;
+					WaveFormat = format;
+				}
 
 				public override MmResult Lull() => waveOutPause(handle).Verify(); /* waveInStop */
 				public override MmResult Wake() => waveOutRestart(handle).Verify(); /* waveInStart */
@@ -52,13 +56,13 @@ namespace Solfeggio.Api
 				public override MmResult MarkAsProcessed(Header header) =>
 					waveOutWrite(handle, header, Marshal.SizeOf(header)).Verify();
 
-				internal static float GetVolume(IntPtr hWaveOut)
+				public float GetVolume()
 				{
-					waveOutGetVolume(hWaveOut, out var stereoVolume).Verify();
+					waveOutGetVolume(handle, out var stereoVolume).Verify();
 					return (stereoVolume & 0xFFFF) / (float)0xFFFF;
 				}
 
-				internal static void SetVolume(float value, IntPtr hWaveOut)
+				public void SetVolume(float value)
 				{
 					if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Volume must be between 0.0 and 1.0");
 					if (value > 1) throw new ArgumentOutOfRangeException(nameof(value), "Volume must be between 0.0 and 1.0");
@@ -67,7 +71,7 @@ namespace Solfeggio.Api
 					float right = value;
 
 					var stereoVolume = (int)(left * 0xFFFF) + ((int)(right * 0xFFFF) << 16);
-					waveOutSetVolume(hWaveOut, stereoVolume).Verify();
+					waveOutSetVolume(handle, stereoVolume).Verify();
 				}
 			}
 

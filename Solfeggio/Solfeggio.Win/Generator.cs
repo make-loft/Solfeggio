@@ -52,7 +52,7 @@ namespace Solfeggio
 
 		public void Start()
 		{
-			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(), this);
+			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
 
 			var durationInSeconds = SampleSize / SampleRate;
 			_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
@@ -93,9 +93,8 @@ namespace Solfeggio
 			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic.Profile>().Use(Profiles.Remove);
 
 			this[() => SampleSize].PropertyChanged += (o, e) =>
-			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(), this);
+			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
 		}
-
 
 		public void EvokeDataReady(Complex[] frame) => DataReady?.Invoke(this, new AudioInputEventArgs()
 		{

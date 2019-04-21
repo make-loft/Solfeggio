@@ -20,6 +20,7 @@ namespace Solfeggio.Api
 				BufferMilliseconds = 100;
 				NumberOfBuffers = 3;
 				callback = Callback;
+				session.As<Out.Session>()?.SetVolume(1f);
 
 				Expose();
 			}
