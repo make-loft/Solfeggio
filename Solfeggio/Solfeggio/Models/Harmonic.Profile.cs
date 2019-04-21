@@ -28,7 +28,7 @@ namespace Solfeggio.Models
 			}
 
 			public Complex[] GenerateSignalSample(int length, double rate, bool isStatic) =>
-				GenerateSignalSample(Harmonics, length, rate, isStatic);
+				GenerateSignalSample(Harmonics.ToArray(), length, rate, isStatic); /* Harmonics may be modified during enumeration */
 
 			private static Complex[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool isStatic)
 			{
@@ -38,10 +38,8 @@ namespace Solfeggio.Models
 					Select(h => h.EnumerateBins(rate, isStatic).Take(length).ToArray()).
 					ToArray();
 
-				/* harmonicSamples may be modified during enumeration */
-				for (var j = 0; j < harmonicSamples.Length; j++)
+				foreach (var harmonicSample in harmonicSamples)
 				{
-					var harmonicSample = harmonicSamples[j];
 					for (var i = 0; i < length; i++)
 					{
 						signalSample[i] += harmonicSample[i];
@@ -53,4 +51,3 @@ namespace Solfeggio.Models
 		}
 	}
 }
- 
