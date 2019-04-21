@@ -31,7 +31,7 @@ namespace Solfeggio
 		[DataMember] public bool IsStatic { get; set; }
 
 		[DataMember]
-		public SmartSet<Harmonic.Profile> Profiles { get; } = new SmartSet<Harmonic.Profile>
+		public SmartSet<Harmonic.Profile> Profiles { get; set; } = new SmartSet<Harmonic.Profile>
 		{
 			new Harmonic.Profile { Title = "Profile 1" },
 			new Harmonic.Profile { Title = "Profile 2" }

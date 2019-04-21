@@ -5,6 +5,11 @@ using Rainbow;
 
 namespace Solfeggio.Models
 {
+	public enum PhaseMode
+	{
+		Flow, Loop
+	}
+
 	[DataContract]
 	public partial class Harmonic
 	{
@@ -15,16 +20,18 @@ namespace Solfeggio.Models
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
 		[DataMember] public double PhaseShift { get; set; } = 0d;
+		[DataMember] public PhaseMode PhaseMode { get; set; } = PhaseMode.Flow;
 		[DataMember] public bool IsEnabled { get; set; } = true;
-		[DataMember] public bool IsStatic { get; set; } = false;
 
 		private double offset;
 
-		public IEnumerable<double> EnumerateBins(double sampleRate, bool isStatic)
+		public IEnumerable<double> EnumerateBins(double sampleRate, bool globalLoop = false)
 		{
 			var step = Frequency * Pi.Double / sampleRate;
-			for (offset = IsStatic || isStatic ? 0d : offset; ; offset += step)
+			offset = PhaseMode.Is(PhaseMode.Loop) || globalLoop ? -step : offset;
+			while (true)
 			{
+				offset += step;
 				yield return 2d * Magnitude * BasisFunc(offset + PhaseShift);
 			}
 		}

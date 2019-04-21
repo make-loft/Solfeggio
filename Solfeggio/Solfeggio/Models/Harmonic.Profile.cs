@@ -7,12 +7,13 @@ namespace Solfeggio.Models
 {
 	public partial class Harmonic
 	{
+		[DataContract]
 		public class Profile : ContextObject, IExposable
 		{
 			[DataMember] public string Title { get; set; } = "Profile Name";
 
 			[DataMember]
-			public SmartSet<Harmonic> Harmonics { get; } = new SmartSet<Harmonic>
+			public SmartSet<Harmonic> Harmonics { get; set; } = new SmartSet<Harmonic>
 			{
 				new Harmonic {Frequency = 220d},
 				new Harmonic {Frequency = 440d}
