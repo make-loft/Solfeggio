@@ -46,7 +46,30 @@
 									Command="{m:Context Key=Set.Add, TrackContextChanges=True, Mode=OneWay}" />
 							</StackLayout>
 
-							<ItemsView
+							<Grid
+								m:Rack.Columns="* * * * * *"
+								m:Rack.Rows="* *">
+								<Label
+									m:Rack.Cell="C0"
+									Text="{m:Localizing Key=Magnitude}" />
+								<Label
+									m:Rack.Cell="C1"
+									Text="{m:Localizing Key=Frequency}" />
+								<Label
+									m:Rack.Cell="C2"
+									Text="{m:Localizing Key=PhaseShift}" />
+								<Label
+									m:Rack.Cell="C3"
+									Text="{m:Localizing Key=PhaseMode}" />
+								<Label
+									m:Rack.Cell="C4"
+									Text="{m:Localizing Key=Basis}" />
+								<Label
+									m:Rack.Cell="C5"
+									Text="{m:Localizing Key=IsEnabled}" />
+							</Grid>
+
+								<ItemsView
 								ItemsSource="{m:StoreBinding Path=ActiveProfile.Harmonics, StoreKey=local:Generator}"
 								ItemTemplate="{StaticResource HarmonicTemplate}" />
 						</StackLayout>

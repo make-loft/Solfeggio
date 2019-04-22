@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Ace;
 using Rainbow;
+using static System.Math;
+using static Rainbow.HarmonicFuncs;
 
 namespace Solfeggio.Models
 {
@@ -14,7 +16,7 @@ namespace Solfeggio.Models
 	public partial class Harmonic
 	{
 		public delegate double Basis(double v);
-		[DataMember] public Basis[] BasisFuncs { get; } = { Math.Sin, Math.Cos, Math.Tan, Math.Sqrt };
+		[DataMember] public Basis[] BasisFuncs { get; } = { Sin, Cos, Dirac, Impulse, Triangle, Identity, Negation };
 
 		[DataMember] public Basis BasisFunc { get; set; } = Math.Sin;
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
