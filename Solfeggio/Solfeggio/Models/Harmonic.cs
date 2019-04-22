@@ -16,9 +16,9 @@ namespace Solfeggio.Models
 	public partial class Harmonic
 	{
 		public delegate double Basis(double v);
-		[DataMember] public Basis[] BasisFuncs { get; } = { Sin, Cos, Dirac, Impulse, Triangle, Identity, Negation };
+		[DataMember] public Basis[] BasisFuncs { get; } = { Sin, Rectangle, Triangle, Sawtooth };
 
-		[DataMember] public Basis BasisFunc { get; set; } = Math.Sin;
+		[DataMember] public Basis BasisFunc { get; set; } = Sin;
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
 		[DataMember] public double PhaseShift { get; set; } = 0d;
