@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28306.52
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Droid", "Solfeggio\Solfeggio.Android\Solfeggio.Droid.csproj", "{EC64A689-1014-44FD-9AC5-6FFA02EC9F44}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ace.Core.Standard2.0", "Ace
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rainbow.Standard1.0", "Rainbow\Rainbow\Rainbow.Standard1.0.csproj", "{6F747757-053C-4F64-8722-B1745EFAE275}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Desktop", "Solfeggio\Solfeggio.Win\Solfeggio.Desktop.csproj", "{425EB3A9-48C8-48F4-A32E-D3B466406E07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Win", "Solfeggio\Solfeggio.Win\Solfeggio.Win.csproj", "{425EB3A9-48C8-48F4-A32E-D3B466406E07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ace.Zest.Desktop", "Ace\Ace.Zest\Ace.Zest.Desktop.csproj", "{A78C2D1C-9446-4B87-915B-2615F98F63C1}"
 EndProject

@@ -33,4 +33,7 @@
 	<system:String
 		x:Key="DefaultStringFormat">F2</system:String>
 
+	<Thickness
+		x:Key="RegularMargin">4</Thickness>
+
 </ResourceDictionary>

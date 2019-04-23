@@ -96,9 +96,36 @@
 		</controls:PivotItem>
 
 		<controls:PivotItem
-			Header="{m:Localizing Key=About}">
+			Header="{m:Localizing Key=Policy}">
 			<ScrollViewer>
-				<Label Text="Makeloft Studio" />
+				<StackLayout>
+					<StackLayout
+						Orientation="Horizontal"
+						HorizontalAlignment="Center">
+						<Label
+							Text="{m:Localizing Key=Language}" />
+						<Picker
+							VerticalAlignment="Top"
+							HorizontalAlignment="Right"
+							Tag="{m:Localizing Key=Language}"
+							ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
+							SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
+					</StackLayout>
+					
+					<Label
+						FontSize="14"
+						FontWeight="Medium"
+						TextWrapping="Wrap"
+						HorizontalAlignment="Center"
+						Text="{m:Localizing Key=PolicyMessage}" />
+
+					<Button
+						HorizontalAlignment="Center"
+						Content="{m:Localizing Key=IAmReadyToHelpMessage}"/>
+					
+					<Label
+						Text="{m:Localizing Key=DesignedByMessage}" />
+				</StackLayout>
 			</ScrollViewer>
 		</controls:PivotItem>
 

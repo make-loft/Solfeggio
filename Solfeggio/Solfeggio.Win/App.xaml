@@ -1,4 +1,4 @@
-﻿<Application 
+﻿<Application
 	x:Class="Solfeggio.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +7,7 @@
 	StartupUri="AppView.xaml"
 	Startup="App_OnStartup"
 	Exit="App_OnExit">
-	
+
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -40,13 +40,20 @@
 				<s:Int32>13</s:Int32>
 			</m:Set>
 
-            <Style
-                x:Key="RangeSlider"
-                TargetType="Slider">
-                <Setter
-                    Property="IsSelectionRangeEnabled"
-                    Value="True" />
-            </Style>
+			<Style
+				x:Key="RangeSlider"
+				TargetType="Slider">
+				<Setter
+					Property="IsSelectionRangeEnabled"
+					Value="True" />
+			</Style>
+
+			<Style
+				TargetType="TextBlock">
+				<Setter
+					Property="Margin"
+					Value="4 0" />
+			</Style>
 
 		</ResourceDictionary>
 	</Application.Resources>

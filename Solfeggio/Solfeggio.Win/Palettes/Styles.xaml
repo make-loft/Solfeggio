@@ -14,18 +14,21 @@
 	<Style
 		TargetType="xamarin:Label">
 		<Setter
+			Property="VerticalAlignment"
+			Value="Center" />
+		<Setter
 			Property="HorizontalAlignment"
 			Value="Right" />
 		<Setter
 			Property="Margin"
-			Value="4" />
+			Value="{StaticResource RegularMargin}" />
 	</Style>
 
 	<Style
 		TargetType="xamarin:Entry">
 		<Setter
 			Property="Margin"
-			Value="4" />
+			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="MinWidth"
 			Value="64" />
@@ -72,23 +75,13 @@
 		TargetType="xamarin:GroupBox">
 		<Setter
 			Property="Margin"
-			Value="4" />
+			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="BorderBrush"
 			Value="#55555555" />
 		<Setter
 			Property="BorderThickness"
 			Value="0" />
-	</Style>
-
-	<Style
-		TargetType="TextBlock">
-		<Setter
-			Property="HorizontalAlignment"
-			Value="Center" />
-		<Setter
-			Property="Margin"
-			Value="5 0" />
 	</Style>
 
 	<Style
@@ -111,10 +104,31 @@
 			Value="16" />
 		<Setter
 			Property="Margin"
-			Value="4" />
+			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="Template"
 			Value="{StaticResource SwitchControlTemplate}" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:Picker">
+		<Setter
+			Property="Margin"
+			Value="{StaticResource RegularMargin}" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:Expander">
+		<Setter
+			Property="Margin"
+			Value="{StaticResource RegularMargin}" />
+	</Style>
+
+	<Style
+		TargetType="xamarin:Button">
+		<Setter
+			Property="Margin"
+			Value="{StaticResource RegularMargin}" />
 	</Style>
 
 	<DataTemplate
