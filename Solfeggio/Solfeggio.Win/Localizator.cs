@@ -67,6 +67,8 @@ namespace Solfeggio.Languages
 		public static o Profile = _("Profile", "Профиль");
 		public static o Generator = _("Generator", "Генератор");
 		public static o Policy = _("Policy", "Политика");
+		public static o Create = _("Create", "Создать");
+		public static o Delete = _("Delete", "Удалить");
 
 		public static o MusicalStandards = _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard = _("Pitch Standard", "Частотный стандарт");

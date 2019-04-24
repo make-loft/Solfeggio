@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Threading;
 using Ace;
 using Rainbow;
@@ -33,14 +34,13 @@ namespace Solfeggio
 		[DataMember]
 		public SmartSet<Harmonic.Profile> Profiles { get; set; } = new SmartSet<Harmonic.Profile>
 		{
-			new Harmonic.Profile { Title = "Profile 1" },
-			new Harmonic.Profile { Title = "Profile 2" }
+			Create(), Create()
 		};
 
 		[DataMember]
 		public Harmonic.Profile ActiveProfile
 		{
-			get => Get(() => ActiveProfile, Profiles[0]);
+			get => Get(() => ActiveProfile, Profiles.LastOrDefault());
 			set => Set(() => ActiveProfile, value);
 		}
 
@@ -89,12 +89,16 @@ namespace Solfeggio
 
 		public void Expose()
 		{
-			this[Context.Set.Add].Executed += (o, e) =>	new Harmonic.Profile().Use(Profiles.Add);
-			this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic.Profile>().Use(Profiles.Remove);
+			this[Context.Set.Create].Executed += (o, e) => Create().Use(Profiles.Add);
+			this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic.Profile>().Use(Profiles.Remove);
 
 			this[() => SampleSize].PropertyChanged += (o, e) =>
-			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
+				processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
+
+			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}
+
+		private static Harmonic.Profile Create() => new Harmonic.Profile { Title = DateTime.Now.ToShortDateString() };
 
 		public void EvokeDataReady(Complex[] frame) => DataReady?.Invoke(this, new AudioInputEventArgs()
 		{

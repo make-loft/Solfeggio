@@ -30,6 +30,8 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveLanguage].PropertyChanged += (o, e) =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
+			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());
+
 			EvokePropertyChanged(nameof(ActiveLanguage));
 		}
 	}

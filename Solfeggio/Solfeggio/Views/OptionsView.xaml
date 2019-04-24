@@ -3,7 +3,6 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:local="clr-namespace:Solfeggio">
@@ -23,55 +22,35 @@
 
 					<Expander
 						Header="{m:Localizing Key=Generator}">
-						<StackLayout>
+						<StackLayout
+							DataContext="{m:Store Key=local:Generator}">
 
 							<StackLayout
-								DataContext="{m:Store Key=local:Generator}"
+								HorizontalAlignment="Center"
 								Orientation="Horizontal">
+
 								<Label
 									Text="{m:Localizing Key=Profile}" />
+								<Button
+									Content="+"
+									Command="{m:Context Key=Set.Create, StoreKey=local:Generator}" />
+								<!--<Button
+									Content="{m:Localizing Key=Delete}"
+									CommandParameter="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
+									Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}" />-->
 								<Picker
+									DisplayMemberPath="Title"
 									ItemsSource="{m:StoreBinding Path=Profiles, StoreKey=local:Generator}"
 									SelectedItem="{m:StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=local:Generator}" />
-								<Button
-									Content="{m:Localizing Key=Add}"
-									Command="{m:Context Key=Set.Add, StoreKey=local:Generator}" />
-								<Button
-									Content="{m:Localizing Key=Remove}"
-									CommandParameter="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
-									Command="{m:Context Key=Set.Remove, StoreKey=local:Generator}" />
-								<Button
-									DataContext="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
-									Content="{m:Localizing Key=AddHarmonic}"
-									Command="{m:Context Key=Set.Add, TrackContextChanges=True, Mode=OneWay}" />
+
 							</StackLayout>
 
-							<Grid
-								m:Rack.Columns="* * * * * *"
-								m:Rack.Rows="* *">
-								<Label
-									m:Rack.Cell="C0"
-									Text="{m:Localizing Key=Magnitude}" />
-								<Label
-									m:Rack.Cell="C1"
-									Text="{m:Localizing Key=Frequency}" />
-								<Label
-									m:Rack.Cell="C2"
-									Text="{m:Localizing Key=PhaseShift}" />
-								<Label
-									m:Rack.Cell="C3"
-									Text="{m:Localizing Key=PhaseMode}" />
-								<Label
-									m:Rack.Cell="C4"
-									Text="{m:Localizing Key=Basis}" />
-								<Label
-									m:Rack.Cell="C5"
-									Text="{m:Localizing Key=IsEnabled}" />
-							</Grid>
+							<controls:Pivot
+								ItemsSource="{Binding Profiles}"
+								SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+								ContentTemplate="{StaticResource ProfileTemplate}" />
 
-								<ItemsView
-								ItemsSource="{m:StoreBinding Path=ActiveProfile.Harmonics, StoreKey=local:Generator}"
-								ItemTemplate="{StaticResource HarmonicTemplate}" />
 						</StackLayout>
 					</Expander>
 
@@ -121,6 +100,8 @@
 
 					<Button
 						HorizontalAlignment="Center"
+						CommandParameter="http://makeloft.xyz/workroom/solfeggio"
+						Command="{m:Context Key=Navigate, StoreKey=viewModels:AppViewModel}"
 						Content="{m:Localizing Key=IAmReadyToHelpMessage}"/>
 					
 					<Label

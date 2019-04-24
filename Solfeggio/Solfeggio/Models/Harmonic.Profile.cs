@@ -1,5 +1,7 @@
 ﻿using Ace;
 using Rainbow;
+using Solfeggio.Presenters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,22 +12,35 @@ namespace Solfeggio.Models
 		[DataContract]
 		public class Profile : ContextObject, IExposable
 		{
-			[DataMember] public string Title { get; set; } = "Profile Name";
+			private static readonly MusicalPresenter presenter = Store.Get<MusicalPresenter>();
 
-			[DataMember]
+			[DataMember] public string Title
+			{
+				get => Get(() => Title, DateTime.Now.ToString());
+				set => Set(() => Title, value);
+			}
+
+[DataMember]
 			public SmartSet<Harmonic> Harmonics { get; set; } = new SmartSet<Harmonic>
 			{
-				new Harmonic {Frequency = 220d},
-				new Harmonic {Frequency = 440d}
+				new Harmonic {Frequency = presenter.Music.ActivePitchStandard},
+				new Harmonic {Frequency = presenter.Music.ActivePitchStandard + 2},
 			};
 
 			public Profile() => Expose();
 
 			public void Expose()
 			{
-				this[Context.Set.Add].Executed += (o, e) => new Harmonic().Use(Harmonics.Add);
-				this[Context.Set.Remove].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
+				this[Context.Set.Create].Executed += (o, e) => CreateFor(Harmonics).Use(Harmonics.Add);
+				this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
 			}
+
+			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics) => new Harmonic
+			{
+				Frequency = harmonics.LastOrDefault().Is(out var harmonic)
+					? harmonic.Frequency + 2
+					: presenter.Music.ActivePitchStandard
+			};
 
 			public Complex[] GenerateSignalSample(int length, double rate, bool isStatic) =>
 				GenerateSignalSample(Harmonics.ToArray(), length, rate, isStatic); /* Harmonics may be modified during enumeration */

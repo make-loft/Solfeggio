@@ -62,8 +62,70 @@
 				m:Rack.Cell="C4 R1"
 				Content="✗"
 				CommandParameter="{Binding}"
-				Command="{m:Context Key=Set.Remove, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
+				Command="{m:Context Key=Set.Delete, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
 		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="ProfileHeaderTemplate">
+		<StackLayout
+			Orientation="Horizontal">
+			<Label
+				Text="{Binding Title}" />
+			<!--<Button
+				Content="x"
+				Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
+				CommandParameter="{Binding}" />-->
+		</StackLayout>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="ProfileTemplate">
+		<StackLayout>
+			<StackLayout
+				Orientation="Horizontal">
+				<Label
+					Text="{m:Localizing Key=Title}" />
+				<Entry
+					Text="{Binding Title}" />
+				<Button
+					Content="x"
+					Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
+					CommandParameter="{Binding}" />
+			</StackLayout>
+
+			<Grid
+				m:Rack.Columns="* * * * * *"
+				m:Rack.Rows="* *">
+				<Label
+					m:Rack.Cell="C0"
+					Text="{m:Localizing Key=Magnitude}" />
+				<Label
+					m:Rack.Cell="C1"
+					Text="{m:Localizing Key=Frequency}" />
+				<Label
+					m:Rack.Cell="C2"
+					Text="{m:Localizing Key=PhaseShift}" />
+				<Label
+					m:Rack.Cell="C3"
+					Text="{m:Localizing Key=PhaseMode}" />
+				<Label
+					m:Rack.Cell="C4"
+					Text="{m:Localizing Key=Basis}" />
+				<Label
+					m:Rack.Cell="C5"
+					Text="{m:Localizing Key=IsEnabled}" />
+			</Grid>
+
+			<ItemsView
+				ItemsSource="{Binding Harmonics}"
+				ItemTemplate="{StaticResource HarmonicTemplate}" />
+			
+			<Button
+				HorizontalAlignment="Center"
+				Content="{m:Localizing Key=Create}"
+				Command="{m:Context Key=Set.Create, TrackContextChanges=True, Mode=OneWay}" />
+		</StackLayout>
 	</DataTemplate>
 
 	<DataTemplate

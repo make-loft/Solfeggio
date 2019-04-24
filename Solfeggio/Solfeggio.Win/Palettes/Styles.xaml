@@ -22,6 +22,9 @@
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
+		<Setter
+			Property="MinWidth"
+			Value="{StaticResource MinWidth}" />
 	</Style>
 
 	<Style
@@ -35,6 +38,9 @@
 		<Setter
 			Property="HorizontalContentAlignment"
 			Value="Right" />
+		<Setter
+			Property="MinWidth"
+			Value="{StaticResource MinWidth}" />
 	</Style>
 
 	<Style
