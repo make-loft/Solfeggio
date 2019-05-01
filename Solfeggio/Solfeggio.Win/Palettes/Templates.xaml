@@ -12,30 +12,9 @@
 		x:Key="HarmonicTemplate">
 		<Grid
 			Opacity="{Binding Magnitude, Converter={StaticResource DominantOpacityConverter}}"
-			m:Rack.Columns="* * * * * *"
+			m:Rack.Columns="2* 2* 2* * * * *"
 			m:Rack.Rows="* *">
-			<Entry
-				m:Rack.Cell="C0 R0"
-				Text="{Binding Magnitude, StringFormat=F2}" />
-			<Entry
-				m:Rack.Cell="C1 R0"
-				Text="{Binding Frequency, StringFormat=F2}" />
-			<Entry
-				m:Rack.Cell="C2 R0"
-				Text="{Binding PhaseShift, StringFormat=F2}" />
-			<Picker
-				m:Rack.Cell="C3 R0"
-				ItemsSource="{m:Enum Type=models:PhaseMode}"
-				SelectedItem="{Binding PhaseMode, Mode=TwoWay}" />
-			<Picker
-				m:Rack.Cell="C4 R0"
-				ItemsSource="{Binding BasisFuncs}"
-				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-			<Switch
-				m:Rack.Cell="C5 R0"
-				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
-
+			
 			<Slider
 				m:Rack.Cell="C0 R1"
 				Minimum="+0.0"
@@ -58,11 +37,39 @@
 				Maximum="{StaticResource PlusSinglePi}"
 				Value="{Binding PhaseShift, StringFormat=F2}" />
 
-			<Button
-				m:Rack.Cell="C4 R1"
-				Content="✗"
-				CommandParameter="{Binding}"
-				Command="{m:Context Key=Set.Delete, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
+			<Entry
+				m:Rack.Cell="C0 R0"
+				Text="{Binding Magnitude, StringFormat=F2}" />
+			<Entry
+				m:Rack.Cell="C1 R0"
+				Text="{Binding Frequency, StringFormat=F2}" />
+			<Entry
+				m:Rack.Cell="C2 R0"
+				Text="{Binding PhaseShift, StringFormat=F2}" />
+			<Picker
+				m:Rack.Cell="C3 R0"
+				ItemsSource="{Binding BasisFuncs}"
+				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+			<Picker
+				m:Rack.Cell="C4 R0"
+				ItemsSource="{m:Enum Type=models:PhaseMode}"
+				SelectedItem="{Binding PhaseMode, Mode=TwoWay}" />
+
+			<Switch
+				m:Rack.Cell="C5 R0"
+				HorizontalAlignment="Right"
+				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
+			
+			<StackLayout
+				m:Rack.Cell="C6 R0"
+				Orientation="Horizontal"
+				HorizontalAlignment="Right">
+				<Button
+					Content="✗"
+					CommandParameter="{Binding}"
+					Command="{m:Context Key=Set.Delete, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
+			</StackLayout>
 		</Grid>
 	</DataTemplate>
 
@@ -73,7 +80,7 @@
 			<Label
 				Text="{Binding Title}" />
 			<!--<Button
-				Content="x"
+				Content="✗"
 				Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
 				CommandParameter="{Binding}" />-->
 		</StackLayout>
@@ -89,13 +96,13 @@
 				<Entry
 					Text="{Binding Title}" />
 				<Button
-					Content="x"
+					Content="✗"
 					Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
 					CommandParameter="{Binding}" />
 			</StackLayout>
 
 			<Grid
-				m:Rack.Columns="* * * * * *"
+				m:Rack.Columns="2* 2* 2* * * * *"
 				m:Rack.Rows="* *">
 				<Label
 					m:Rack.Cell="C0"
@@ -108,13 +115,16 @@
 					Text="{m:Localizing Key=PhaseShift}" />
 				<Label
 					m:Rack.Cell="C3"
-					Text="{m:Localizing Key=PhaseMode}" />
-				<Label
-					m:Rack.Cell="C4"
 					Text="{m:Localizing Key=Basis}" />
 				<Label
+					m:Rack.Cell="C4"
+					Text="{m:Localizing Key=Mode}" />
+				<Label
 					m:Rack.Cell="C5"
-					Text="{m:Localizing Key=IsEnabled}" />
+					Text="{m:Localizing Key=Sound}" />
+				<Label
+					m:Rack.Cell="C6"
+					Text="{m:Localizing Key=Action}" />
 			</Grid>
 
 			<ItemsView
@@ -344,7 +354,7 @@
 		x:Key="SpectrumTemplate">
 
 		<Grid
-			m:Rack.Columns="^ ^ ^ ^ ^">
+			m:Rack.Columns="{m:Smart Key=Columns, DefaultValue='^ ^ ^ ^ ^'}">
 
 			<Grid
 				m:Rack.Cell="C0"

@@ -31,6 +31,7 @@ namespace Solfeggio.ViewModels
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
 			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());
+			this[Context.Navigate].Executed += (o, e) => Yandex.Metrica.YandexMetrica.ReportEvent($"{e.Parameter}");
 
 			EvokePropertyChanged(nameof(ActiveLanguage));
 		}

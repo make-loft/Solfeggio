@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:converters="clr-namespace:Solfeggio.Converters">
+	xmlns:converters="clr-namespace:Solfeggio.Converters"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:c="clr-namespace:Ace.Converters;assembly=Ace">
 
 	<converters:DelegateToNameConverter
 		x:Key="DelegateToNameConverter" />
@@ -10,5 +12,15 @@
 		x:Key="DominantOpacityConverter"
 		Operation="Increment"
 		Parameter="{StaticResource MinDominantOpacityLevel}"/>
+
+	<c:SwitchConverter
+		x:Key="ModeToTitleConverter">
+		<m:Case
+			Key="Flow"
+			Value="{m:Localizing Key=Flow}" />
+		<m:Case
+			Key="Loop"
+			Value="{m:Localizing Key=Loop}" />
+	</c:SwitchConverter>
 	
 </ResourceDictionary>

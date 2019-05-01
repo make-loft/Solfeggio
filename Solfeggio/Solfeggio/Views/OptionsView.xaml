@@ -7,7 +7,8 @@
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:local="clr-namespace:Solfeggio">
 
-	<controls:Pivot>
+	<controls:Pivot
+		SelectedIndex="2">
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Telemetry}">
@@ -99,12 +100,14 @@
 						Text="{m:Localizing Key=PolicyMessage}" />
 
 					<Button
+						FontSize="13"
 						HorizontalAlignment="Center"
-						CommandParameter="http://makeloft.xyz/workroom/solfeggio"
+						CommandParameter="{m:Localizing Key=IAmReadyToHelpLink}"
 						Command="{m:Context Key=Navigate, StoreKey=viewModels:AppViewModel}"
 						Content="{m:Localizing Key=IAmReadyToHelpMessage}"/>
 					
 					<Label
+						FontSize="10"
 						Text="{m:Localizing Key=DesignedByMessage}" />
 				</StackLayout>
 			</ScrollViewer>

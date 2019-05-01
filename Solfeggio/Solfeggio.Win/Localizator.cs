@@ -69,12 +69,21 @@ namespace Solfeggio.Languages
 		public static o Policy = _("Policy", "Политика");
 		public static o Create = _("Create", "Создать");
 		public static o Delete = _("Delete", "Удалить");
+		public static o Basis = _("Basis", "Базис");
+		public static o Mode = _("Mode", "Режим");
+		public static o Title = _("Title", "Заголовок");
+		public static o Command = _("Command", "Команда");
+		public static o Action = _("Action", "Действие");
+		public static o Flow = _("Flow", "Поток");
+		public static o Loop = _("Loop", "Петля");
+		public static o Sound = _("Sound", "Звук");
 
 		public static o MusicalStandards = _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard = _("Pitch Standard", "Частотный стандарт");
 		public static o LowFrequency = _("Low Frequency", "Нижняя частота");
 		public static o TopFrequency = _("Top Frequency", "Верхняя частота");
 		public static o SampleRate = _("Sample Rate", "Частота дискретизации");
+		public static o PhaseShift = _("Phase shift", "Фазовый сдвиг");
 		public static o NotesGrid = _("Notes Grid", "Нотная сетка");
 		public static o DiscreteGrid = _("Discrete Grid", "Дискретная сетка");
 
@@ -84,6 +93,7 @@ namespace Solfeggio.Languages
 		public static o PolicyMessage = _(Messages.Policy.English, Messages.Policy.Russian);
 		public static o DesignedByMessage = _(Messages.DesignedBy.English, Messages.DesignedBy.Russian);
 		public static o IAmReadyToHelpMessage = _(Messages.IAmReadyToHelpMessage.English, Messages.IAmReadyToHelpMessage.Russian);
+		public static o IAmReadyToHelpLink = _(Messages.IAmReadyToHelpLink.English, Messages.IAmReadyToHelpLink.Russian);
 
 		public static Dictionary<string, o> GetBaseDictionary() =>
 			typeof(Localizator).GetFields(BindingFlags.Static | BindingFlags.Public).
@@ -127,15 +137,19 @@ Your help is needed and priceless!";
 		public static class DesignedBy
 		{
 			public const string English = @"Developed by Makeloft Sientific Research Studio";
-
 			public const string Russian = @"Разработано научно-исследовательской студией Makeloft";
 		}
 
 		public static class IAmReadyToHelpMessage
 		{
 			public const string English = @"I am ready to help!";
-
 			public const string Russian = @"Я готов помочь!";
+		}
+
+		public static class IAmReadyToHelpLink
+		{
+			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
+			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";
 		}
 	}
 }
