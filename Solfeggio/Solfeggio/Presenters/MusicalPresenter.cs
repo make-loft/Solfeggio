@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Ace;
 using Rainbow;
+using Solfeggio.Models;
 #if NETSTANDARD
 using Colors = SkiaSharp.SKColors;
 using Thickness = Xamarin.Forms.Thickness;
@@ -247,7 +248,7 @@ namespace Solfeggio.Presenters
 				panel.Margin = new Thickness(x, y, 0d, 0d);
 				return panel;
 			},
-			(in PianoKey p, out double h, out double v) => p.Peak.Deconstruct(out h, out v, out _),
+			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
 			width, height, default, default
 		);
@@ -339,7 +340,7 @@ namespace Solfeggio.Presenters
 				if (activeMagnitude > key.Magnitude)
 				{
 					key.Magnitude = activeMagnitude;
-					key.Peak = bin;
+					key.Harmonic = bin;
 				}
 			}
 

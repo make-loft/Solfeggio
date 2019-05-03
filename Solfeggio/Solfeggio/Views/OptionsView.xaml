@@ -15,11 +15,21 @@
 			<ScrollViewer>
 				<StackLayout>
 
-					<Picker
-						Tag="{m:Localizing Key=Device}"
-						DataContext="{m:Store Key=viewModels:SpectralViewModel}"
-						ItemsSource="{Binding Devices}"
-						SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+					<StackLayout
+						Orientation="Horizontal">
+						<Label
+							Text="{m:Localizing Key=Device}" />
+						<Picker
+							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+							ItemsSource="{Binding Devices}"
+							SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+						<Label
+							Text="{m:Localizing Key=SampleRate}" />
+						<Picker
+							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+							ItemsSource="{Binding SampleRates}"
+							SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+					</StackLayout>
 
 					<Expander
 						Header="{m:Localizing Key=Generator}">
@@ -32,9 +42,6 @@
 
 								<Label
 									Text="{m:Localizing Key=Profile}" />
-								<Button
-									Content="+"
-									Command="{m:Context Key=Set.Create, StoreKey=local:Generator}" />
 								<!--<Button
 									Content="{m:Localizing Key=Delete}"
 									CommandParameter="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
@@ -43,6 +50,9 @@
 									DisplayMemberPath="Title"
 									ItemsSource="{m:StoreBinding Path=Profiles, StoreKey=local:Generator}"
 									SelectedItem="{m:StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=local:Generator}" />
+								<Button
+									Content="➕"
+									Command="{m:Context Key=Set.Create, StoreKey=local:Generator}" />
 
 							</StackLayout>
 

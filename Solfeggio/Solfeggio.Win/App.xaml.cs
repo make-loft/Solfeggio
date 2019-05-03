@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using Ace;
+using Solfeggio.Processors;
 using Yandex.Metrica;
 
 namespace Solfeggio

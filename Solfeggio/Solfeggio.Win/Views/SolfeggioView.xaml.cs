@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
+using Solfeggio.Processors;
 using Solfeggio.ViewModels;
 
 namespace Solfeggio.Views

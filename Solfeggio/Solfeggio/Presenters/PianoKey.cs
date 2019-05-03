@@ -2,7 +2,7 @@
 using System;
 using Rainbow;
 
-namespace Solfeggio.Presenters
+namespace Solfeggio.Models
 {
 	public class PianoKey
 	{
@@ -12,8 +12,8 @@ namespace Solfeggio.Presenters
 		public double LowerFrequency { get; set; }
 		public double UpperFrequency { get; set; }
 		public double EthalonFrequency { get; set; }
-		public double DeltaFrequency => Peak.Frequency - EthalonFrequency;
-		public Bin Peak { get; set; }
+		public double DeltaFrequency => Harmonic.Frequency - EthalonFrequency;
+		public Bin Harmonic { get; set; }
 		public int Hits { get; set; }
 
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)

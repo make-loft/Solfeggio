@@ -90,7 +90,7 @@
       <Link>Presenters\MusicalPresenter.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
-      <Link>Presenters\PianoKey.cs</Link>
+      <Link>Models\PianoKey.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\SpectralViewModel.cs">
       <Link>ViewModels\SpectralViewModel.cs</Link>
@@ -115,8 +115,8 @@
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MathConverter.cs" />
-    <Compile Include="Generator.cs" />
-    <Compile Include="Microphone.cs" />
+    <Compile Include="Processors\Generator.cs" />
+    <Compile Include="Processors\Microphone.cs" />
     <Compile Include="Localizator.cs" />
     <Compile Include="Presenters\AppPalette.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />

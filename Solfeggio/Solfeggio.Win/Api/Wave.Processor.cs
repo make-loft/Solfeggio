@@ -1,5 +1,6 @@
 ﻿using Ace;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using static Solfeggio.Api.ProcessingState;
 
@@ -32,15 +33,13 @@ namespace Solfeggio.Api
 				session.Open(callback);
 
 				CreateBuffers();
-				ProcessBuffers();
+				Debug.WriteLine($"{session.Handle}.Expose()");
 			}
 
 			public void Dispose()
 			{
+				Debug.WriteLine($"{session.Handle}.Dispose()");
 				GC.SuppressFinalize(this);
-
-				session.Lull();
-				session.Reset();
 
 				for (var n = 0; n < buffers.Length; n++)
 				{
@@ -52,7 +51,7 @@ namespace Solfeggio.Api
 
 			public ProcessingState State { get; private set; }
 
-			private ASession session;
+			private readonly ASession session;
 			protected Buffer[] buffers;
 
 			public event EventHandler<ProcessingEventArgs> DataAvailable;
@@ -74,25 +73,15 @@ namespace Solfeggio.Api
 				}
 
 				buffers = new Buffer[NumberOfBuffers];
-				for (int n = 0; n < buffers.Length; n++)
+				for (var n = 0; n < buffers.Length; n++)
 				{
-					buffers[n] = new Buffer(session, bufferSize);
+					var buffer = buffers[n] = new Buffer(session, bufferSize);
+					buffer.MarkAsProcessed();
 				}
 			}
 
 			private void RaiseDataAvailable(Buffer buffer) =>
 				DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
-
-			private void ProcessBuffers()
-			{
-				foreach (var buffer in buffers)
-				{
-					if (buffer.InQueue)
-						continue;
-
-					buffer.MarkAsProcessed();
-				}
-			}
 
 			private Buffer Fill(in Buffer buffer, IDataSource<short> source)
 			{
@@ -126,7 +115,8 @@ namespace Solfeggio.Api
 				if (State.Is(Processing)) return;
 				State = Processing;
 
-				session.Wake();
+				session.Wake().Verify();
+				Debug.WriteLine($"{session.Handle}.Wake()");
 			}
 
 			public void Lull()
@@ -134,7 +124,8 @@ namespace Solfeggio.Api
 				if (State.Is(Suspending)) return;
 				State = Suspending;
 
-				session.Lull();
+				session.Lull().Verify();
+				Debug.WriteLine($"{session.Handle}.Lull()");
 			}
 
 			public void Free()
@@ -142,8 +133,10 @@ namespace Solfeggio.Api
 				if (State.Is(Hibernation)) return;
 				State = Hibernation;
 
+				Lull();
 				Console.Beep();
-				session.Reset();
+				session.Reset().Verify();
+				Debug.WriteLine($"{session.Handle}.Reset()");
 			}
 		}
 	}

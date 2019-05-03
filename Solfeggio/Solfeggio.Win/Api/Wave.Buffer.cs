@@ -54,15 +54,14 @@ namespace Solfeggio.Api
 				};
 				hHeader = GCHandle.Alloc(header, GCHandleType.Pinned);
 
-				session.PrepareHeader(header);
+				session.PrepareHeader(header).Verify();
 			}
 
 			public void Dispose()
 			{
 				GC.SuppressFinalize(this);
 
-				session.Reset();
-				session.UnprepareHeader(header);
+				session.UnprepareHeader(header).Verify();
 
 				if (hHeader.IsAllocated) hHeader.Free();
 				if (hBuffer.IsAllocated) hBuffer.Free();
@@ -71,7 +70,7 @@ namespace Solfeggio.Api
 				header = default;
 			}
 
-			public void MarkAsProcessed() => session.MarkAsProcessed(header);
+			public MmResult MarkAsProcessed() => session.MarkAsProcessed(header).Verify();
 		}
 	}
 }

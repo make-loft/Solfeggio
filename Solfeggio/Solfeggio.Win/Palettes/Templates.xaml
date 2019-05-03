@@ -141,14 +141,14 @@
 	<DataTemplate
 		x:Key="DominantTemplate">
 		<Grid
-			Opacity="{Binding Peak.Magnitude, Converter={StaticResource DominantOpacityConverter}}"
+			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource DominantOpacityConverter}}"
 			m:Rack.Columns="* * * * *">
 			<Label
 				m:Rack.Cell="C0"
-				Text="{Binding Peak.Magnitude, StringFormat=F2}" />
+				Text="{Binding Harmonic.Magnitude, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C1"
-				Text="{Binding Peak.Frequency, StringFormat=F2}" />
+				Text="{Binding Harmonic.Frequency, StringFormat=F2}" />
 			<Label
 				m:Rack.Cell="C2"
 				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />

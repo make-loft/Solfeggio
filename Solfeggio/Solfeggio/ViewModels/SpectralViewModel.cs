@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ace;
 using Rainbow;
+using Solfeggio.Processors;
 using static Rainbow.Windowing;
 
 namespace Solfeggio.ViewModels
@@ -66,15 +67,12 @@ namespace Solfeggio.ViewModels
 			get => ActiveDevice?.SampleRate ?? default;
 			set
 			{
-				if (value <= 0) return;
-				SampleRates.Remove(value);
 				ActiveDevice.StartWith(value, FrameSize);
-				SampleRates.Insert(0, value);
-				EvokePropertyChanged(() => SampleRate);
+				EvokePropertyChanged(nameof(SampleRate));
 			}
 		}
 
-		public SmartSet<double> SampleRates { get; private set; }
+		public double[] SampleRates => ActiveDevice.SampleRates;
 
 		public double MinSampleRate => ActiveDevice?.SampleRates.Min() ?? default;
 		public double MaxSampleRate => ActiveDevice?.SampleRates.Max() ?? default;
@@ -140,19 +138,21 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveDevice].PropertyChanging += (sender, args) =>
 			{
 				if (ActiveDevice.IsNot()) return;
-				ActiveDevice.Stop();
 				ActiveDevice.DataReady -= OnActiveDeviceOnDataReady;
+				ActiveDevice.Stop();
 			};
 
 			this[() => ActiveDevice].PropertyChanged += (sender, args) =>
 			{
 				if (ActiveDevice.IsNot()) return;
-				SampleRates = ActiveDevice.SampleRates.ToSet();
 				ActiveDevice.DataReady += OnActiveDeviceOnDataReady;
 				ActiveDevice.StartWith(default, FrameSize + ShiftSize);
+
+				EvokePropertyChanged(nameof(SampleRates));
+				EvokePropertyChanged(nameof(SampleRate));
 			};
 
-			EvokePropertyChanged(() => ActiveDevice);
+			EvokePropertyChanged(nameof(ActiveDevice));
 		}
 	}
 }

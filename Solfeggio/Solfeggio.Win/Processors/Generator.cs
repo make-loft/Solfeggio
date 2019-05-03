@@ -1,20 +1,21 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Threading;
-using Ace;
+﻿using Ace;
 using Rainbow;
 using Solfeggio.Api;
 using Solfeggio.Models;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Threading;
 
-namespace Solfeggio
+namespace Solfeggio.Processors
 {
 	[DataContract]
 	public class Generator : ContextObject, IAudioInputDevice, IExposable, IDataSource<short>
 	{
-		public double[] SampleRates { get; } = { 44100 };
+		public double[] SampleRates { get; } = AudioInputDevice.StandardSampleRates;
 		public double SampleRate
 		{
-			get => Get(() => SampleRate, 44100);
+			get => Get(() => SampleRate, AudioInputDevice.DefaultSampleRate);
 			set => Set(() => SampleRate, value);
 		}
 
@@ -46,58 +47,50 @@ namespace Solfeggio
 
 		public Func<double, double> Signal { get; set; } = v => Math.Sin(v);
 
-		private readonly DispatcherTimer _timer = new DispatcherTimer();
+		private DispatcherTimer _timer;
 
-		private Wave.Out.Processor processor;
-
-		public void Start()
-		{
-			processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
-
-			var durationInSeconds = SampleSize / SampleRate;
-			_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
-			_timer.Start();
-			_timer.Tick += (o, e) =>
-			{
-				if (SoundOn)
-				{
-					if (processor.State.IsNot(ProcessingState.Processing)) processor.Wake();
-					return;
-				}
-				else
-				{
-					if (processor.State.Is(ProcessingState.Processing)) processor.Free();
-				}
-
-				durationInSeconds = SampleSize / SampleRate;
-				_timer.Interval = TimeSpan.FromSeconds(durationInSeconds);
-
-				var signal = ActiveProfile.GenerateSignalSample(SampleSize, SampleRate, IsStatic);
-				EvokeDataReady(signal);
-			};
-		}
+		private Wave.Out.Processor outputProcessor;
 
 		public void StartWith(double sampleRate = 0, int desiredFrameSize = 0)
 		{
 			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
 			SampleSize = desiredFrameSize.Is(default) ? SampleSize : desiredFrameSize;
 
+			if (outputProcessor.Is() && outputProcessor.State.IsNot(ProcessingState.Hibernation)) outputProcessor.Free();
+			outputProcessor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
+			var durationInSeconds = SampleSize / SampleRate;
+			_timer = new DispatcherTimer
+			{
+				Interval = TimeSpan.FromSeconds(durationInSeconds)
+			};
+
+			_timer.Tick += (o, e) =>
+			{
+				var signal = ActiveProfile.GenerateSignalSample(SampleSize, SampleRate, IsStatic);
+				EvokeDataReady(signal);
+			};
+
 			Start();
+		}
+
+		public void Start()
+		{
+			_timer.Start();
+			outputProcessor.Wake();
+			Debug.WriteLine($"Started {this}");
 		}
 
 		public void Stop()
 		{
 			_timer.Stop();
-			if (processor.State.Is(ProcessingState.Processing)) processor.Free();
+			outputProcessor.Free();
+			Debug.WriteLine($"Stopped {this}");
 		}
 
 		public void Expose()
 		{
 			this[Context.Set.Create].Executed += (o, e) => Create().Use(Profiles.Add);
 			this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic.Profile>().Use(Profiles.Remove);
-
-			this[() => SampleSize].PropertyChanged += (o, e) =>
-				processor = new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
 
 			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}
