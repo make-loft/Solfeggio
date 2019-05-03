@@ -6,9 +6,20 @@ using static Solfeggio.Api.ProcessingState;
 
 namespace Solfeggio.Api
 {
+	public interface IProcessor
+	{
+		void Wake();
+		void Lull();
+		void Free();
+
+		int BufferMilliseconds { get; set; }
+
+		event EventHandler<ProcessingEventArgs> DataAvailable;
+	}
+
 	public partial class Wave
 	{
-		public abstract class Processor<TDeviceInfo> : IDisposable, IExposable
+		public abstract class Processor<TDeviceInfo> : IDisposable, IExposable, IProcessor
 		{
 			private readonly IDataSource<short> dataSource;
 			private readonly Callback callback;

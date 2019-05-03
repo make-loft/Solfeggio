@@ -68,7 +68,7 @@
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{m:Context Key=Set.Delete, StoreKey=local:Generator, SourcePath=ActiveProfile}" />
+					Command="{m:Context Key=Set.Delete, StoreKey=models:Harmonic.Manager, SourcePath=ActiveProfile}" />
 			</StackLayout>
 		</Grid>
 	</DataTemplate>
@@ -97,7 +97,7 @@
 					Text="{Binding Title}" />
 				<Button
 					Content="✗"
-					Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
+					Command="{m:Context Key=Set.Delete, StoreKey=models:Harmonic.Manager}"
 					CommandParameter="{Binding}" />
 			</StackLayout>
 

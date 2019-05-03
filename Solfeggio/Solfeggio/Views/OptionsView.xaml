@@ -3,9 +3,8 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
-	xmlns:local="clr-namespace:Solfeggio">
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
 
 	<controls:Pivot
 		SelectedIndex="2">
@@ -34,7 +33,7 @@
 					<Expander
 						Header="{m:Localizing Key=Generator}">
 						<StackLayout
-							DataContext="{m:Store Key=local:Generator}">
+							DataContext="{m:Store Key=viewModels:HarmonicManager}">
 
 							<StackLayout
 								HorizontalAlignment="Center"
@@ -48,11 +47,11 @@
 									Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}" />-->
 								<Picker
 									DisplayMemberPath="Title"
-									ItemsSource="{m:StoreBinding Path=Profiles, StoreKey=local:Generator}"
-									SelectedItem="{m:StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=local:Generator}" />
+									ItemsSource="{m:StoreBinding Path=Profiles, StoreKey=viewModels:HarmonicManager}"
+									SelectedItem="{m:StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=viewModels:HarmonicManager}" />
 								<Button
 									Content="➕"
-									Command="{m:Context Key=Set.Create, StoreKey=local:Generator}" />
+									Command="{m:Context Key=Set.Create, StoreKey=viewModels:HarmonicManager}" />
 
 							</StackLayout>
 

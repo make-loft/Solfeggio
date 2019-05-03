@@ -115,11 +115,12 @@
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MathConverter.cs" />
-    <Compile Include="Processors\Generator.cs" />
+    <Compile Include="ViewModels\AManager.cs" />
     <Compile Include="Processors\Microphone.cs" />
     <Compile Include="Localizator.cs" />
     <Compile Include="Presenters\AppPalette.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />
+    <Compile Include="Processors\SignalProcessor.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>

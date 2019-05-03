@@ -43,15 +43,15 @@ namespace Solfeggio.Models
 					: presenter.Music.ActivePitchStandard
 			};
 
-			public Complex[] GenerateSignalSample(int length, double rate, bool isStatic) =>
+			public double[] GenerateSignalSample(int length, double rate, bool isStatic) =>
 				GenerateSignalSample(Harmonics.ToArray(), length, rate, isStatic); /* Harmonics may be modified during enumeration */
 
-			private static Complex[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool isStatic)
+			private static double[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool gobalLoop)
 			{
-				var signalSample = new Complex[length];
+				var signalSample = new double[length];
 				var harmonicSamples = harmonics.
 					Where(h => h.IsEnabled).
-					Select(h => h.EnumerateBins(rate, isStatic).Take(length).ToArray()).
+					Select(h => h.EnumerateBins(rate, gobalLoop).Take(length).ToArray()).
 					ToArray();
 
 				foreach (var harmonicSample in harmonicSamples)
