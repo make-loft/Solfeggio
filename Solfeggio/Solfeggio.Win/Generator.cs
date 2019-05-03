@@ -61,7 +61,7 @@ namespace Solfeggio
 			{
 				if (SoundOn)
 				{
-					if (processor.State.IsNot(ProcessingState.Processing))  processor.Wake();
+					if (processor.State.IsNot(ProcessingState.Processing)) processor.Wake();
 					return;
 				}
 				else
@@ -85,7 +85,11 @@ namespace Solfeggio
 			Start();
 		}
 
-		public void Stop() => _timer.Stop();
+		public void Stop()
+		{
+			_timer.Stop();
+			if (processor.State.Is(ProcessingState.Processing)) processor.Free();
+		}
 
 		public void Expose()
 		{

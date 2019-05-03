@@ -14,13 +14,14 @@ namespace Solfeggio.Models
 		{
 			private static readonly MusicalPresenter presenter = Store.Get<MusicalPresenter>();
 
-			[DataMember] public string Title
+			[DataMember]
+			public string Title
 			{
 				get => Get(() => Title, DateTime.Now.ToString());
 				set => Set(() => Title, value);
 			}
 
-[DataMember]
+			[DataMember]
 			public SmartSet<Harmonic> Harmonics { get; set; } = new SmartSet<Harmonic>
 			{
 				new Harmonic {Frequency = presenter.Music.ActivePitchStandard},
