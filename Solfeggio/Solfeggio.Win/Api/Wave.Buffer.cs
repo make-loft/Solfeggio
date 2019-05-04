@@ -52,14 +52,16 @@ namespace Solfeggio.Api
 				};
 				_headerHandle = GCHandle.Alloc(_header, GCHandleType.Pinned);
 
-				_session.PrepareHeader(_header).Verify();
+				if (_header.Is())
+					_session.PrepareHeader(_header).Verify();
 			}
 
 			public void Dispose()
 			{
 				GC.SuppressFinalize(this);
 
-				_session.UnprepareHeader(_header).Verify();
+				if (_header.Is())
+					_session.UnprepareHeader(_header).Verify();
 
 				if (_headerHandle.IsAllocated) _headerHandle.Free();
 				if (_bufferHandle.IsAllocated) _bufferHandle.Free();

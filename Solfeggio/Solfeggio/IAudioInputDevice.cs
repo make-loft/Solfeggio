@@ -20,7 +20,7 @@ namespace Solfeggio
 		public static TimeSpan GetBufferDuration(this IAudioInputDevice device) =>
 			TimeSpan.FromSeconds(device.SampleSize / device.SampleRate);
 
-		public static double DefaultSampleRate = 44100d;
+		public static double DefaultSampleRate = 16000d;
 
 		public static readonly double[] StandardSampleRates =
 		{

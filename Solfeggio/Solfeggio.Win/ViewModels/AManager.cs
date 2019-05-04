@@ -13,8 +13,11 @@ namespace Solfeggio.ViewModels
 		public override void Expose()
 		{
 			base.Expose();
-			Profiles.Add(Create());
-			Profiles.Add(Create());
+			if (Profiles.Count.Is(0))
+			{
+				Profiles.Add(Create());
+				Profiles.Add(Create());
+			}
 		}
 	}
 
