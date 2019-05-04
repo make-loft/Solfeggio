@@ -12,8 +12,6 @@ namespace Solfeggio.Api
 		void Lull();
 		void Free();
 
-		int BufferMilliseconds { get; set; }
-
 		event EventHandler<ProcessingEventArgs> DataAvailable;
 	}
 
@@ -24,12 +22,11 @@ namespace Solfeggio.Api
 			private readonly IDataSource<short> dataSource;
 			private readonly Callback callback;
 
-			public Processor(ASession session, IDataSource<short> source = default)
+			public Processor(ASession session, int bufferSize, IDataSource<short> source = default)
 			{
 				dataSource = source;
 				this.session = session;
-				if (source.Is()) BufferSize = source.SampleSize;
-				BufferMilliseconds = 100;
+				BufferSize = bufferSize;
 				NumberOfBuffers = 3;
 				callback = Callback;
 				session.As<Out.Session>()?.SetVolume(1f);
@@ -65,19 +62,14 @@ namespace Solfeggio.Api
 			private readonly ASession session;
 			protected Buffer[] buffers;
 
-			public event EventHandler<ProcessingEventArgs> DataAvailable;
-
-
-			public int BufferMilliseconds { get; set; }
 			public int NumberOfBuffers { get; set; }
 
 			public int BufferSize { get; set; }
 
 			protected void CreateBuffers()
 			{
-				// Default to three buffers of 100ms each
 				var waveFormat = session.WaveFormat;
-				int bufferSize = BufferSize.Is(default) ? BufferMilliseconds * waveFormat.AverageBytesPerSecond / 1000 : BufferSize;
+				int bufferSize = BufferSize;
 				if (bufferSize % waveFormat.BlockAlign != 0)
 				{
 					bufferSize -= bufferSize % waveFormat.BlockAlign;
@@ -91,9 +83,6 @@ namespace Solfeggio.Api
 				}
 			}
 
-			private void RaiseDataAvailable(Buffer buffer) =>
-				DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
-
 			private Buffer Fill(in Buffer buffer, IDataSource<short> source)
 			{
 				lock (source)
@@ -103,6 +92,11 @@ namespace Solfeggio.Api
 					return buffer;
 				}
 			}
+
+			public event EventHandler<ProcessingEventArgs> DataAvailable;
+
+			private void RaiseDataAvailable(Buffer buffer) =>
+				DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
 
 			private void Callback(IntPtr waveHandle, Message message, IntPtr userData, Header header, IntPtr reserved)
 			{

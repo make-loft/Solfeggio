@@ -21,23 +21,21 @@ namespace Solfeggio.Processors
 		private DispatcherTimer _timer = new DispatcherTimer();
 		private HarmonicManager _manager = Store.Get<HarmonicManager>();
 		private Generator _generator;
-		public GenerationProcessor(Generator waveFormat)
+		public GenerationProcessor(Generator generator)
 		{
+			_timer.Interval = TimeSpan.FromSeconds(generator.SampleSize / generator.SampleRate);
 			_timer.Tick += OnTimerTick;
-			_generator = waveFormat;
+			_generator = generator;
 		}
 
 		private void OnTimerTick(object sender, EventArgs e)
 		{
 			var signal = _manager.ActiveProfile.GenerateSignalSample(_generator.SampleSize, _generator.SampleRate, false);
-			_generator._signal = signal.Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
-			_generator.EvokeDataReady(signal.Select(d => (Complex)d).ToArray());
+			var bins = signal.Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
+			DataAvailable?.Invoke(this, new ProcessingEventArgs(bins, bins.Length));
 		}
 
-		public void Free()
-		{
-			//_timer.Reset();
-		}
+		public void Free() => _timer.Stop();
 
 		public void Lull() => _timer.Stop();
 
@@ -46,29 +44,19 @@ namespace Solfeggio.Processors
 
 	class Generator : SignalProcessor, IDataSource<short>
 	{
-		public static readonly Microphone Default = new Microphone();
-
-		public event EventHandler<ProcessingEventArgs> DataProcessed;
-
 		protected override IProcessor CreateInputProcessor() =>
 			new GenerationProcessor(this);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, this);
 	}
 
 	class Microphone : SignalProcessor, IAudioInputDevice, IDataSource<short>
 	{
-		public static readonly Microphone Default = new Microphone();
-
-
-		public event EventHandler<AudioInputEventArgs> DataReady;
-		public event EventHandler<ProcessingEventArgs> DataProcessed;
-
 		protected override IProcessor CreateInputProcessor() =>
-			new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat));
+			new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat), SampleSize);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), this);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, this);
 	}
 }

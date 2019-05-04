@@ -42,24 +42,19 @@ namespace Solfeggio.Api
 
 				public override MmResult Lull() => waveInStop(handle).Verify(); /* waveOutPause */
 				public override MmResult Wake() => waveInStart(handle).Verify(); /* waveOutRestart */
-
+				public override MmResult GetPosition(out MmTime time, int size) => waveInGetPosition(handle, out time, size).Verify();
+				public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult MarkAsProcessed(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 				public override MmResult Close() => waveInClose(handle).Verify();
 				public override MmResult Reset() => waveInReset(handle).Verify();
 				public override MmResult Open(Callback callback) =>
 					waveInOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
-
-				public override MmResult GetPosition(out MmTime time, int size) =>
-					 waveInGetPosition(handle, out time, size).Verify();
-
-				public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult MarkAsProcessed(Header header) =>
-					waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 			}
 
 			public class Processor : Processor<DeviceInfo>
 			{
-				public Processor(Session session) : base(session) { }
+				public Processor(Session session, int bufferSize) : base(session, bufferSize) { }
 			}
 		}
 	}

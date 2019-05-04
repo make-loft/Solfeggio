@@ -12,7 +12,7 @@ namespace Solfeggio.Processors
 		public double[] SampleRates { get; } = AudioInputDevice.StandardSampleRates;
 		public double SampleRate { get; set; } = AudioInputDevice.DefaultSampleRate;
 		public int SampleSize { get; protected set; }
-		public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(inputProcessor.BufferMilliseconds);
+		//public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(inputProcessor.BufferMilliseconds);
 
 		private IProcessor inputProcessor;
 		private IProcessor outputProcessor;
@@ -24,28 +24,26 @@ namespace Solfeggio.Processors
 		{
 			if (inputProcessor.Is())
 			{
+				inputProcessor.DataAvailable -= OnInputDataAvailable;
 				Stop();
-				inputProcessor.DataAvailable -= OnWiOnDataAvailable;
 			}
-
-			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
-			inputProcessor = CreateInputProcessor();
-			outputProcessor = CreateOutputProcessor();
 
 			var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
 			var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
 			var milliseconds = 1000d * sampleSize / actualSampleRate;
 			milliseconds = Math.Ceiling(milliseconds / 10) * 10;
 			SampleSize = (int)(milliseconds * actualSampleRate / 1000d);
-			inputProcessor.BufferMilliseconds = (int)milliseconds;
-			inputProcessor.DataAvailable += OnWiOnDataAvailable;
+			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
+			inputProcessor = CreateInputProcessor();
+			outputProcessor = CreateOutputProcessor();
+			inputProcessor.DataAvailable += OnInputDataAvailable;
 
 			Start();
+			EvokePropertyChanged(nameof(SampleRate));
 			EvokePropertyChanged(nameof(SampleSize));
-			EvokePropertyChanged(nameof(SampleDuration));
 		}
 
-		private void OnWiOnDataAvailable(object sender, ProcessingEventArgs args)
+		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)
 		{
 			_signal = args.Bins;
 			var sampleSize = args.Bins.Length;
@@ -84,7 +82,7 @@ namespace Solfeggio.Processors
 		public short[] Fill(in short[] buffer, int offset, int count)
 		{
 			var signal = _signal;
-			if (signal.IsNot() || _signal.Length < count - offset) return new short[0];
+			if (signal.IsNot() || _signal.Length < count - offset) return default;
 
 			for (var n = 0; n < offset; n++)
 				buffer[n] = default;

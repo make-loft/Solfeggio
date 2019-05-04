@@ -18,10 +18,9 @@ namespace Solfeggio
 			YandexMetrica.Activate("4722c611-c016-4e44-943b-05f9c56968d6");
 
 			Store.Get<ViewModels.AppViewModel>();
-			Store.Set<IAudioInputDevice>(Microphone.Default);
+			Store.Set<IAudioInputDevice>(Store.Get<Microphone>());
 		}
 
-		private void App_OnExit(object sender, ExitEventArgs e) =>
-			Store.Snapshot();
+		private void App_OnExit(object sender, ExitEventArgs e) => Store.Snapshot();
 	}
 }

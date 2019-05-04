@@ -26,8 +26,6 @@ namespace Solfeggio.Api
 
 		int SampleSize { get; }
 
-		event EventHandler<ProcessingEventArgs> DataProcessed;
-
 		T[] Fill(in T[] buffer, int offset, int count);
 	}
 

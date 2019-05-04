@@ -77,7 +77,7 @@ namespace Solfeggio.Api
 
 			public class Processor : Processor<DeviceInfo>
 			{
-				public Processor(Session session, IDataSource<short> source) : base(session, source) { }
+				public Processor(Session session, int bufferSize, IDataSource<short> source) : base(session, bufferSize, source) { }
 			}
 		}
 	}
