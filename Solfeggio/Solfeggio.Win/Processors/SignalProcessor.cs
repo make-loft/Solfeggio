@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Solfeggio.Processors
 {
-	public abstract class SignalProcessor : ContextObject, IAudioInputDevice
+	public abstract class SignalProcessor : ContextObject, IAudioInputDevice, IExposable, IDisposable
 	{
 		public WaveFormat WaveFormat => new WaveFormat((int)SampleRate, 16, 1);
 		public double[] SampleRates { get; } = AudioInputDevice.StandardSampleRates;
@@ -20,32 +20,50 @@ namespace Solfeggio.Processors
 		protected abstract IProcessor CreateInputProcessor();
 		protected abstract IProcessor CreateOutputProcessor();
 
-		public void StartWith(double sampleRate = default, int desiredFrameSize = default)
+		public void Expose()
 		{
-			if (inputProcessor.Is())
-			{
-				inputProcessor.DataAvailable -= OnInputDataAvailable;
-				Stop();
-			}
+			if (inputProcessor.Is() || SampleSize.Is(default) || SampleRate.Is(default))
+				return;
 
-			var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
-			var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
-			var milliseconds = 1000d * sampleSize / actualSampleRate;
-			milliseconds = Math.Ceiling(milliseconds / 10) * 10;
-			SampleSize = (int)(milliseconds * actualSampleRate / 1000d);
-			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
 			inputProcessor = CreateInputProcessor();
 			outputProcessor = CreateOutputProcessor();
-			inputProcessor.DataAvailable += OnInputDataAvailable;
 
+			inputProcessor.DataAvailable += OnInputDataAvailable;
 			Start();
+		}
+
+		public void Dispose()
+		{
+			if (inputProcessor.IsNot())
+				return;
+
+			Stop();
+			inputProcessor.DataAvailable -= OnInputDataAvailable;
+
+			outputProcessor = default;
+			inputProcessor = default;
+		}
+
+		public void StartWith(double sampleRate = default, int desiredFrameSize = default)
+		{
+			var sampleSize = desiredFrameSize.Is(default) ? 4096 : desiredFrameSize;
+			//var actualSampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
+			//var milliseconds = 1000d * sampleSize / actualSampleRate;
+			//milliseconds = Math.Ceiling(milliseconds / 10) * 10;
+			//SampleSize = (int)(milliseconds * actualSampleRate / 1000d);
+			SampleSize = sampleSize;
+			SampleRate = sampleRate.Is(default) ? SampleRate : sampleRate;
+
+			Dispose();
+			Expose();
+
 			EvokePropertyChanged(nameof(SampleRate));
 			EvokePropertyChanged(nameof(SampleSize));
 		}
 
 		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)
 		{
-			_signal = args.Bins;
+			 _signal = args.Bins;
 			var sampleSize = args.Bins.Length;
 			var frame = new Complex[sampleSize];
 			for (var i = 0; i < sampleSize; i++)
@@ -57,12 +75,6 @@ namespace Solfeggio.Processors
 		}
 
 		public event EventHandler<AudioInputEventArgs> DataReady;
-
-		public void EvokeDataReady(Complex[] frame) => DataReady?.Invoke(this, new AudioInputEventArgs()
-		{
-			Frame = frame,
-			Source = this
-		});
 
 		public short[] _signal;
 
@@ -84,16 +96,14 @@ namespace Solfeggio.Processors
 			var signal = _signal;
 			if (signal.IsNot() || _signal.Length < count - offset) return default;
 
-			for (var n = 0; n < offset; n++)
-				buffer[n] = default;
+			for (var i = 0; i < offset; i++)
+				buffer[i] = default;
 
 			for (var i = offset; i < count; i++)
-			{
 				buffer[i] = signal[i];
-			}
 
-			for (var n = offset + count; n < buffer.Length; n++)
-				buffer[n] = default;
+			for (var i = offset + count; i < buffer.Length; i++)
+				buffer[i] = default;
 
 			return buffer;
 		}

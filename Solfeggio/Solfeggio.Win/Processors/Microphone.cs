@@ -28,7 +28,7 @@ namespace Solfeggio.Processors
 			_generator = generator;
 		}
 
-		private void OnTimerTick(object sender, EventArgs e)
+		public void OnTimerTick(object sender, EventArgs e)
 		{
 			var signal = _manager.ActiveProfile.GenerateSignalSample(_generator.SampleSize, _generator.SampleRate, false);
 			var bins = signal.Select(d => (short)(d * short.MaxValue / 2d)).ToArray();

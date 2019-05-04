@@ -15,19 +15,30 @@
 				<StackLayout>
 
 					<StackLayout
+						DataContext="{m:Store Key=viewModels:SpectralViewModel}"
 						Orientation="Horizontal">
 						<Label
 							Text="{m:Localizing Key=Device}" />
 						<Picker
-							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
 							ItemsSource="{Binding Devices}"
 							SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
 						<Label
 							Text="{m:Localizing Key=SampleRate}" />
 						<Picker
-							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
 							ItemsSource="{Binding SampleRates}"
 							SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
+
+						<Picker
+							Tag="{m:Localizing Key=Window}"
+							ItemsSource="{Binding Windows}"
+							SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+							ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+
+						<Picker
+							Tag="{m:Localizing Key=PowOf2}"
+							ItemsSource="{StaticResource AllowedPowsOf2}"
+							SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 					</StackLayout>
 
 					<Expander

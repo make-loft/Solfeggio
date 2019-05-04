@@ -68,12 +68,12 @@ namespace Solfeggio.Api
 
 			protected void CreateBuffers()
 			{
-				var waveFormat = session.WaveFormat;
-				int bufferSize = BufferSize;
-				if (bufferSize % waveFormat.BlockAlign != 0)
-				{
-					bufferSize -= bufferSize % waveFormat.BlockAlign;
-				}
+				var bufferSize = BufferSize;
+				//var waveFormat = session.WaveFormat;
+				//if (bufferSize % waveFormat.BlockAlign != 0)
+				//{
+				//	bufferSize -= bufferSize % waveFormat.BlockAlign;
+				//}
 
 				buffers = new Buffer[NumberOfBuffers];
 				for (var n = 0; n < buffers.Length; n++)
@@ -85,7 +85,7 @@ namespace Solfeggio.Api
 
 			private Buffer Fill(in Buffer buffer, IDataSource<short> source)
 			{
-				lock (source)
+				//lock (source)
 				{
 					var data = buffer.Data;
 					source.Fill(data, 0, data.Length);
@@ -95,22 +95,19 @@ namespace Solfeggio.Api
 
 			public event EventHandler<ProcessingEventArgs> DataAvailable;
 
-			private void RaiseDataAvailable(Buffer buffer) =>
-				DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
-
 			private void Callback(IntPtr waveHandle, Message message, IntPtr userData, Header header, IntPtr reserved)
 			{
 				if (State.IsNot(Processing)) return;
 
 				if (message.Is(Message.WaveInData) || message.Is(Message.WaveOutDone))
 				{
-					GCHandle hBuffer = (GCHandle)header.userData;
-					var buffer = (Buffer)hBuffer.Target;
+					var handle = (GCHandle)header.userData;
+					var buffer = (Buffer)handle.Target;
 					if (buffer.IsDone)
 					{
 						if (dataSource.Is()) Fill(in buffer, dataSource);
+						DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
 						buffer.MarkAsProcessed();
-						RaiseDataAvailable(buffer);
 					}
 				}
 			}

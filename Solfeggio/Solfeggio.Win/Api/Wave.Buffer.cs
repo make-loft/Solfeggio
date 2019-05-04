@@ -1,6 +1,7 @@
 ﻿using Ace;
 using System;
 using System.Runtime.InteropServices;
+using static Solfeggio.Api.Wave.Header.Flags;
 
 namespace Solfeggio.Api
 {
@@ -12,65 +13,62 @@ namespace Solfeggio.Api
 				base(session, binsCount) { }
 		}
 
-		public class Buffer<T> : IDisposable, IExposable where T : struct
+		public class Buffer<TBin> : IDisposable, IExposable where TBin : struct
 		{
-			private static readonly int SizeOfBin = Marshal.SizeOf(typeof(T));
+			private static readonly int SizeOfBin = Marshal.SizeOf(typeof(TBin));
 
-			protected GCHandle hBuffer;
-			protected GCHandle hHeader; // we need to pin the header structure
-			protected GCHandle hThis; // for the user callback
-			protected Header header;
+			private GCHandle _bufferHandle;
+			private GCHandle _headerHandle; // we need to pin the header structure
+			private GCHandle _thisHandle; // for the user callback
+			private Header _header;
+			private readonly ASession _session;
 
-			public T[] Data { get; }
+			public TBin[] Data { get; }
 
-			public ASession session { get; }
-			public bool IsDone => (header.flags & Header.Flags.Done) == Header.Flags.Done;
-			public bool InQueue => (header.flags & Header.Flags.InQueue) == Header.Flags.InQueue;
-			public int BinsCount => header.bytesRecorded / SizeOfBin;
+			public bool IsDone => (_header.flags & Done) == Done;
+			public bool IsInQueue => (_header.flags & InQueue) == InQueue;
+			public int BinsCount => _header.bytesRecorded / SizeOfBin;
 
 			public Buffer(ASession session, int binsCount)
 			{
-				this.session = session;
-				Data = new T[binsCount];
+				_session = session;
+				Data = new TBin[binsCount];
 
 				Expose();
 			}
 
-			~Buffer()
-			{
-				Dispose();
-			}
+			~Buffer() => Dispose();
 
 			public void Expose()
 			{
-				hThis = GCHandle.Alloc(this);
-				hBuffer = GCHandle.Alloc(Data, GCHandleType.Pinned);
-				header = new Header
+				_thisHandle = GCHandle.Alloc(this);
+				_bufferHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
+				_header = new Header
 				{
-					dataBuffer = hBuffer.AddrOfPinnedObject(),
+					dataBuffer = _bufferHandle.AddrOfPinnedObject(),
 					bufferLength = SizeOfBin * Data.Length,
-					userData = (IntPtr)hThis,
+					userData = (IntPtr)_thisHandle,
 					loops = 1
 				};
-				hHeader = GCHandle.Alloc(header, GCHandleType.Pinned);
+				_headerHandle = GCHandle.Alloc(_header, GCHandleType.Pinned);
 
-				session.PrepareHeader(header).Verify();
+				_session.PrepareHeader(_header).Verify();
 			}
 
 			public void Dispose()
 			{
 				GC.SuppressFinalize(this);
 
-				session.UnprepareHeader(header).Verify();
+				_session.UnprepareHeader(_header).Verify();
 
-				if (hHeader.IsAllocated) hHeader.Free();
-				if (hBuffer.IsAllocated) hBuffer.Free();
-				if (hThis.IsAllocated) hThis.Free();
+				if (_headerHandle.IsAllocated) _headerHandle.Free();
+				if (_bufferHandle.IsAllocated) _bufferHandle.Free();
+				if (_thisHandle.IsAllocated) _thisHandle.Free();
 
-				header = default;
+				_header = default;
 			}
 
-			public MmResult MarkAsProcessed() => session.MarkAsProcessed(header).Verify();
+			public MmResult MarkAsProcessed() => _session.MarkAsProcessed(_header).Verify();
 		}
 	}
 }
