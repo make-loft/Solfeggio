@@ -1,40 +1,61 @@
 ﻿using Ace;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using static Solfeggio.Api.ProcessingState;
 
 namespace Solfeggio.Api
 {
-	public interface IProcessor
+	public interface IProcessor : IDataSource
 	{
 		void Wake();
 		void Lull();
 		void Free();
+	}
+
+	public interface IDataSource
+	{
+		short[] Next();
 
 		event EventHandler<ProcessingEventArgs> DataAvailable;
 	}
 
 	public partial class Wave
 	{
-		public abstract class Processor<TDeviceInfo> : IDisposable, IExposable, IProcessor
+		public abstract class Processor<TDeviceInfo> : IProcessor, IExposable, IDisposable
 		{
-			private readonly IDataSource<short> dataSource;
+			private readonly IProcessor dataSource;
 			private readonly Callback callback;
 
-			public Processor(ASession session, int bufferSize, IDataSource<short> source = default)
+			public Processor(ASession session, int bufferSize, IProcessor source = default)
 			{
 				dataSource = source;
 				this.session = session;
 				BufferSize = bufferSize;
 				NumberOfBuffers = 3;
-				callback = Callback;
+				callback = ProcessingCallback;
 				session.As<Out.Session>()?.SetVolume(1f);
+
+				if (source.Is())
+				{
+					source.DataAvailable += (o, e) =>
+					{
+						var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
+						if (buffer.Is())
+						{
+							Array.Copy(e.Bins, buffer.Data, e.BinsCount);
+							if (State.Is(Processing)) buffer.MarkForProcessing();
+						}
+					};
+				}
 
 				Expose();
 			}
 
 			~Processor() => Dispose();
+
+			public short[] Next() => default;
 
 			public void Expose()
 			{
@@ -71,31 +92,19 @@ namespace Solfeggio.Api
 				var bufferSize = BufferSize;
 				//var waveFormat = session.WaveFormat;
 				//if (bufferSize % waveFormat.BlockAlign != 0)
-				//{
 				//	bufferSize -= bufferSize % waveFormat.BlockAlign;
-				//}
 
 				buffers = new Buffer[NumberOfBuffers];
 				for (var n = 0; n < buffers.Length; n++)
 				{
 					var buffer = buffers[n] = new Buffer(session, bufferSize);
-					buffer.MarkAsProcessed();
-				}
-			}
-
-			private Buffer Fill(in Buffer buffer, IDataSource<short> source)
-			{
-				//lock (source)
-				{
-					var data = buffer.Data;
-					source.Fill(data, 0, data.Length);
-					return buffer;
+					buffer.MarkForProcessing();
 				}
 			}
 
 			public event EventHandler<ProcessingEventArgs> DataAvailable;
 
-			private void Callback(IntPtr waveHandle, Message message, IntPtr userData, Header header, IntPtr reserved)
+			private void ProcessingCallback(IntPtr waveHandle, Message message, IntPtr userData, Header header, IntPtr reserved)
 			{
 				if (State.IsNot(Processing)) return;
 
@@ -105,9 +114,11 @@ namespace Solfeggio.Api
 					var buffer = (Buffer)handle.Target;
 					if (buffer.IsDone)
 					{
-						if (dataSource.Is()) Fill(in buffer, dataSource);
-						DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
-						buffer.MarkAsProcessed();
+						if (message.Is(Message.WaveInData))
+						{
+							DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
+							if (State.Is(Processing)) buffer.MarkForProcessing();
+						}
 					}
 				}
 			}

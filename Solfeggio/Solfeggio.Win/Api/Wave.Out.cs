@@ -53,7 +53,7 @@ namespace Solfeggio.Api
 
 				public override MmResult PrepareHeader(Header header) => waveOutPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
 				public override MmResult UnprepareHeader(Header header) => waveOutUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult MarkAsProcessed(Header header) =>
+				public override MmResult MarkForProcessing(Header header) =>
 					waveOutWrite(handle, header, Marshal.SizeOf(header)).Verify();
 
 				public float GetVolume()
@@ -77,7 +77,7 @@ namespace Solfeggio.Api
 
 			public class Processor : Processor<DeviceInfo>
 			{
-				public Processor(Session session, int bufferSize, IDataSource<short> source) : base(session, bufferSize, source) { }
+				public Processor(Session session, int bufferSize, IProcessor source) : base(session, bufferSize, source) { }
 			}
 		}
 	}

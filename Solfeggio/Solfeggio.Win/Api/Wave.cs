@@ -77,7 +77,7 @@ namespace Solfeggio.Api
 
 			public abstract MmResult PrepareHeader(Header header);
 			public abstract MmResult UnprepareHeader(Header header);
-			public abstract MmResult MarkAsProcessed(Header header);
+			public abstract MmResult MarkForProcessing(Header header);
 		}
 	}
 }

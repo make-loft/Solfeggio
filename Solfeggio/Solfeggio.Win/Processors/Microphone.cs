@@ -23,16 +23,25 @@ namespace Solfeggio.Processors
 		private Generator _generator;
 		public GenerationProcessor(Generator generator)
 		{
-			_timer.Interval = TimeSpan.FromSeconds(generator.SampleSize / generator.SampleRate);
-			_timer.Tick += OnTimerTick;
 			_generator = generator;
+			_timer.Interval = TimeSpan.FromSeconds(0.5 * generator.SampleSize / generator.SampleRate);
+			_timer.Tick += OnTimerTick;
+			_bins = Next();
 		}
 
-		public void OnTimerTick(object sender, EventArgs e)
+		public short[] Next()
 		{
 			var signal = _manager.ActiveProfile.GenerateSignalSample(_generator.SampleSize, _generator.SampleRate, false);
 			var bins = signal.Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
-			DataAvailable?.Invoke(this, new ProcessingEventArgs(bins, bins.Length));
+			return bins;
+		}
+
+		short[] _bins;
+
+		private void OnTimerTick(object sender, EventArgs e)
+		{
+			DataAvailable?.Invoke(this, new ProcessingEventArgs(_bins, _bins.Length));
+			_bins = Next();
 		}
 
 		public void Free() => _timer.Stop();
@@ -42,21 +51,21 @@ namespace Solfeggio.Processors
 		public void Wake() => _timer.Start();
 	}
 
-	class Generator : SignalProcessor, IDataSource<short>
+	class Generator : SignalProcessor
 	{
 		protected override IProcessor CreateInputProcessor() =>
 			new GenerationProcessor(this);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, this);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, inputProcessor);
 	}
 
-	class Microphone : SignalProcessor, IAudioInputDevice, IDataSource<short>
+	class Microphone : SignalProcessor, IAudioInputDevice
 	{
 		protected override IProcessor CreateInputProcessor() =>
 			new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat), SampleSize);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, this);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, inputProcessor);
 	}
 }

@@ -45,7 +45,7 @@ namespace Solfeggio.Api
 				public override MmResult GetPosition(out MmTime time, int size) => waveInGetPosition(handle, out time, size).Verify();
 				public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
 				public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult MarkAsProcessed(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
+				public override MmResult MarkForProcessing(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 				public override MmResult Close() => waveInClose(handle).Verify();
 				public override MmResult Reset() => waveInReset(handle).Verify();
 				public override MmResult Open(Callback callback) =>

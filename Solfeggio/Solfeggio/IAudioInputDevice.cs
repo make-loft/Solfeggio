@@ -12,7 +12,7 @@ namespace Solfeggio
 		void StartWith(double sampleRate = default, int desiredFrameSize = default);
 		void Start();
 		void Stop();
-		event EventHandler<AudioInputEventArgs> DataReady;
+		event EventHandler<AudioInputEventArgs> SampleReady;
 	}
 
 	public static class AudioInputDevice
@@ -38,6 +38,6 @@ namespace Solfeggio
 	public class AudioInputEventArgs : EventArgs
 	{
 		public IAudioInputDevice Source { get; set; }
-		public Complex[] Frame { get; set; }
+		public Complex[] Sample { get; set; }
 	}
 }

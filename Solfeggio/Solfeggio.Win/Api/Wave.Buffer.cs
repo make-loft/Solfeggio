@@ -17,10 +17,10 @@ namespace Solfeggio.Api
 		{
 			private static readonly int SizeOfBin = Marshal.SizeOf(typeof(TBin));
 
-			private GCHandle _bufferHandle;
-			private GCHandle _headerHandle; // we need to pin the header structure
-			private GCHandle _thisHandle; // for the user callback
 			private Header _header;
+			private GCHandle _thisHandle;	// we need to pin the header structure
+			private GCHandle _bufferHandle;	// for the user callback
+			private GCHandle _headerHandle;
 			private readonly ASession _session;
 
 			public TBin[] Data { get; }
@@ -68,7 +68,7 @@ namespace Solfeggio.Api
 				_header = default;
 			}
 
-			public MmResult MarkAsProcessed() => _session.MarkAsProcessed(_header).Verify();
+			public MmResult MarkForProcessing() => _session.MarkForProcessing(_header).Verify();
 		}
 	}
 }

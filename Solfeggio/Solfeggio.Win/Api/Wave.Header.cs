@@ -11,11 +11,11 @@ namespace Solfeggio.Api
 			[Flags]
 			public enum Flags
 			{
-				BeginLoop = 0x00000004,
 				Done = 0x00000001,
+				Prepared = 0x00000002,
+				BeginLoop = 0x00000004,
 				EndLoop = 0x00000008,
 				InQueue = 0x00000010,
-				Prepared = 0x00000002
 			}
 
 			public IntPtr dataBuffer;

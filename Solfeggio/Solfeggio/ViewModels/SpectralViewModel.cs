@@ -97,8 +97,8 @@ namespace Solfeggio.ViewModels
 				var (j, k) = 0d;
 				var frameSize = FrameSize;
 
-				var frame0 = args.Frame.Skip(0).Take(FrameSize).ToArray();
-				var frame1 = args.Frame.Skip(ShiftSize).Take(FrameSize).ToArray();
+				var frame0 = args.Sample.Skip(0).Take(FrameSize).ToArray();
+				var frame1 = args.Sample.Skip(ShiftSize).Take(FrameSize).ToArray();
 				var activeWindow = ActiveWindow;
 				if (activeWindow.Is(Rectangle)) goto SkipApodization;
 				for (var i = 0; i < frameSize; i++)
@@ -111,7 +111,7 @@ namespace Solfeggio.ViewModels
 
 				var floats = frame0.Select(v => (float)(v.Real/short.MaxValue)).ToArray();
 
-				if (IsPaused || args.Frame.Length < frameSize + ShiftSize) return;
+				if (IsPaused || args.Sample.Length < frameSize + ShiftSize) return;
 				var spectrum0 = frame0.DecimationInTime(true);
 				var spectrum1 = frame1.DecimationInTime(true);
 
@@ -123,7 +123,7 @@ namespace Solfeggio.ViewModels
 
 				var innerFrame = spectrum0.DecimationInTime(false);
 				var frameLength = innerFrame.Length;
-				OuterFrame = args.Frame.Take(frameLength).Select(c => new Complex(j++ / frameLength, c.Real)).ToArray();
+				OuterFrame = args.Sample.Take(frameLength).Select(c => new Complex(j++ / frameLength, c.Real)).ToArray();
 				InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
 
 				var spectrum = Filtering.GetSpectrum(spectrum0, SampleRate).ToArray();
@@ -138,14 +138,14 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveDevice].PropertyChanging += (sender, args) =>
 			{
 				if (ActiveDevice.IsNot()) return;
-				ActiveDevice.DataReady -= OnActiveDeviceOnDataReady;
+				ActiveDevice.SampleReady -= OnActiveDeviceOnDataReady;
 				ActiveDevice.Stop();
 			};
 
 			this[() => ActiveDevice].PropertyChanged += (sender, args) =>
 			{
 				if (ActiveDevice.IsNot()) return;
-				ActiveDevice.DataReady += OnActiveDeviceOnDataReady;
+				ActiveDevice.SampleReady += OnActiveDeviceOnDataReady;
 				ActiveDevice.StartWith(default, FrameSize + ShiftSize);
 
 				EvokePropertyChanged(nameof(SampleRates));

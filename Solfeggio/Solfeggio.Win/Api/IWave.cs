@@ -9,26 +9,6 @@ namespace Solfeggio.Api
 		Suspending
 	}
 
-	interface IWaveState<T>
-	{
-		void Free();
-		void Wake();
-		void Lull();
-
-		ProcessingState State { get; }
-
-		void Init(IDataSource<T> dataSource, int bufferSize);
-	}
-
-	public interface IDataSource<T>
-	{
-		WaveFormat WaveFormat { get; }
-
-		int SampleSize { get; }
-
-		T[] Fill(in T[] buffer, int offset, int count);
-	}
-
 	public class ProcessingEventArgs : EventArgs
 	{
 		public ProcessingEventArgs(short[] buffer, int binsCount)
