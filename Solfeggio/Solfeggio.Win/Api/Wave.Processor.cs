@@ -26,16 +26,16 @@ namespace Solfeggio.Api
 	{
 		public abstract class Processor<TDeviceInfo> : IProcessor, IExposable, IDisposable
 		{
-			private readonly IProcessor dataSource;
-			private readonly Callback callback;
+			private readonly IProcessor _source;
+			private readonly Callback _callback;
 
-			public Processor(ASession session, int bufferSize, IProcessor source = default)
+			public Processor(ASession session, int bufferSize, int buffersCount = 4, IProcessor source = default)
 			{
-				dataSource = source;
-				this.session = session;
+				NumberOfBuffers = buffersCount;
+				_source = source;
+				this._session = session;
 				BufferSize = bufferSize;
-				NumberOfBuffers = 4;
-				callback = ProcessingCallback;
+				_callback = ProcessingCallback;
 				session.As<Out.Session>()?.SetVolume(1f);
 
 				if (source.Is())
@@ -62,15 +62,15 @@ namespace Solfeggio.Api
 
 			public void Expose()
 			{
-				session.Open(callback);
+				_session.Open(_callback);
 
 				CreateBuffers();
-				Debug.WriteLine($"{session.Handle}.Expose()");
+				Debug.WriteLine($"{_session.Handle}.Expose()");
 			}
 
 			public void Dispose()
 			{
-				Debug.WriteLine($"{session.Handle}.Dispose()");
+				Debug.WriteLine($"{_session.Handle}.Dispose()");
 				GC.SuppressFinalize(this);
 
 				for (var n = 0; n < buffers.Length; n++)
@@ -78,12 +78,12 @@ namespace Solfeggio.Api
 					buffers[n].Dispose();
 				}
 
-				session.Close();
+				_session.Close();
 			}
 
 			public ProcessingState State { get; private set; }
 
-			private readonly ASession session;
+			private readonly ASession _session;
 			protected Buffer[] buffers;
 
 			public int NumberOfBuffers { get; set; }
@@ -100,7 +100,7 @@ namespace Solfeggio.Api
 				buffers = new Buffer[NumberOfBuffers];
 				for (var n = 0; n < buffers.Length; n++)
 				{
-					var buffer = buffers[n] = new Buffer(session, bufferSize);
+					var buffer = buffers[n] = new Buffer(_session, bufferSize);
 					buffer.MarkForProcessing();
 				}
 			}
@@ -125,7 +125,7 @@ namespace Solfeggio.Api
 
 						if (message.Is(Message.WaveOutDone))
 						{
-							dataSource.Tick();
+							_source.Tick();
 						}
 					}
 				}
@@ -136,8 +136,8 @@ namespace Solfeggio.Api
 				if (State.Is(Processing)) return;
 				State = Processing;
 
-				session.Wake().Verify();
-				Debug.WriteLine($"{session.Handle}.Wake()");
+				_session.Wake().Verify();
+				Debug.WriteLine($"{_session.Handle}.Wake()");
 			}
 
 			public void Lull()
@@ -145,8 +145,8 @@ namespace Solfeggio.Api
 				if (State.Is(Suspending)) return;
 				State = Suspending;
 
-				session.Lull().Verify();
-				Debug.WriteLine($"{session.Handle}.Lull()");
+				_session.Lull().Verify();
+				Debug.WriteLine($"{_session.Handle}.Lull()");
 			}
 
 			public void Free()
@@ -156,8 +156,8 @@ namespace Solfeggio.Api
 
 				Lull();
 				Console.Beep();
-				session.Reset().Verify();
-				Debug.WriteLine($"{session.Handle}.Reset()");
+				_session.Reset().Verify();
+				Debug.WriteLine($"{_session.Handle}.Reset()");
 			}
 		}
 	}

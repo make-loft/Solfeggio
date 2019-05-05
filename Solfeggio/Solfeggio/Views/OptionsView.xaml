@@ -14,32 +14,33 @@
 			<ScrollViewer>
 				<StackLayout>
 
-					<StackLayout
-						DataContext="{m:Store Key=viewModels:SpectralViewModel}"
-						Orientation="Horizontal">
-						<Label
-							Text="{m:Localizing Key=Device}" />
-						<Picker
-							ItemsSource="{Binding Devices}"
-							SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
-						<Label
-							Text="{m:Localizing Key=SampleRate}" />
-						<Picker
-							ItemsSource="{Binding SampleRates}"
-							SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+					<Expander>
+						<Expander.HeaderTemplate>
+							<DataTemplate>
+								<StackLayout
+									DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+									Orientation="Horizontal">
+									<Label
+										Text="{m:Localizing Key=Signal}" />
+									<Picker
+										ItemsSource="{Binding Devices}"
+										SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+									<!--<Label
+										Text="{m:Localizing Key=Mute}" />
+									<Switch />
+									<Label
+										Text="{m:Localizing Key=Loudness}" />
+									<Slider />-->
+								</StackLayout>
+							</DataTemplate>
+						</Expander.HeaderTemplate>
 
+						<ItemsView
+							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+							ItemsSource="{StaticResource SignalSourceOptionsSet}"
+							ItemTemplate="{StaticResource OptionTemplate}" />
 
-						<Picker
-							Tag="{m:Localizing Key=Window}"
-							ItemsSource="{Binding Windows}"
-							SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-							ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-
-						<Picker
-							Tag="{m:Localizing Key=PowOf2}"
-							ItemsSource="{StaticResource AllowedPowsOf2}"
-							SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-					</StackLayout>
+					</Expander>
 
 					<Expander
 						Header="{m:Localizing Key=Generator}">

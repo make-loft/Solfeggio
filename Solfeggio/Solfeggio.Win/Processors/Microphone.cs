@@ -60,19 +60,27 @@ namespace Solfeggio.Processors
 
 	class Generator : SignalProcessor
 	{
+		public int BuffersCount { get; set; } = 4;
+
 		protected override IProcessor CreateInputProcessor() =>
 			new GenerationProcessor(this);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, inputProcessor);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, BuffersCount, inputProcessor);
+
+		public override string ToString() => "Ideal";
 	}
 
-	class Microphone : SignalProcessor, IAudioInputDevice
+	class Microphone : SignalProcessor
 	{
+		public int BuffersCount { get; set; } = 4;
+
 		protected override IProcessor CreateInputProcessor() =>
-			new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat), SampleSize);
+			new Wave.In.Processor(Wave.In.DefaultDevice.CreateSession(WaveFormat), SampleSize, BuffersCount);
 
 		protected override IProcessor CreateOutputProcessor() =>
-			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, inputProcessor);
+			new Wave.Out.Processor(Wave.Out.DefaultDevice.CreateSession(WaveFormat), SampleSize, BuffersCount, inputProcessor);
+
+		public override string ToString() => "Real";
 	}
 }

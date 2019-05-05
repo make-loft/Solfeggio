@@ -248,13 +248,6 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="AdvancedTemplate">
-		<ItemsView
-			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource AdvancedOptionsSet}" />
-	</DataTemplate>
-
-	<DataTemplate
 		x:Key="RangeGridTemplate">
 
 		<Grid

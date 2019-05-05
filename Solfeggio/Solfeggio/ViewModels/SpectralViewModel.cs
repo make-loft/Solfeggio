@@ -77,7 +77,7 @@ namespace Solfeggio.ViewModels
 		public double MinSampleRate => ActiveDevice?.SampleRates.Min() ?? default;
 		public double MaxSampleRate => ActiveDevice?.SampleRates.Max() ?? default;
 
-		[DataMember] public bool UseAliasing { get; set; } = true;
+		[DataMember] public bool UseSpectralInterpolation { get; set; } = true;
 		[DataMember] public double ShiftsPerFrame { get; set; } = 0;
 		private int ShiftSize => ShiftsPerFrame.Is(0d) ? 0 : (int)(FrameSize / ShiftsPerFrame);
 
@@ -130,7 +130,7 @@ namespace Solfeggio.ViewModels
 					//ShiftsPerFrame.Is(0d)
 					//? Filtering.GetSpectrum(spectrum0, SampleRate)
 					//: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
-				if (UseAliasing) spectrum = Filtering.Correct(spectrum).ToArray();
+				if (UseSpectralInterpolation) spectrum = Filtering.Interpolate(spectrum).ToArray();
 
 				Spectrum = spectrum;
 			}

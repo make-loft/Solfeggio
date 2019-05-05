@@ -1,14 +1,14 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Solfeggio.Languages
 {
-	using o = Dictionary<LanguageCodes, string>;
 	using static LanguageCodes;
+	using o = Dictionary<LanguageCodes, string>;
 
 	public enum LanguageCodes { English, Russian, Belorussian };
 
@@ -86,7 +86,8 @@ namespace Solfeggio.Languages
 		public static o PhaseShift = _("Phase shift", "Фазовый сдвиг");
 		public static o NotesGrid = _("Notes Grid", "Нотная сетка");
 		public static o DiscreteGrid = _("Discrete Grid", "Дискретная сетка");
-
+		public static o SpectralInterpolation = _("Spectral Interpolation", "Спектральная интерполяция");
+		
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");
 
 

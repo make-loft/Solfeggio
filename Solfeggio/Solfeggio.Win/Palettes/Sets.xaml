@@ -37,16 +37,19 @@
 
 	<m:Set
 		x:Shared="False"
-		x:Key="AdvancedOptionsSet">
+		x:Key="SignalSourceOptionsSet">
 
 		<Picker
-			Tag="{m:Localizing Key=Device}"
-			ItemsSource="{Binding Devices}"
-			SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+			Tag="{m:Localizing Key=Input}"
+			m:Rack.Cell="R1 C1" />
+
+		<Picker
+			Tag="{m:Localizing Key=Output}"
+			m:Rack.Cell="R1 C1" />
 
 		<Picker
 			Tag="{m:Localizing Key=SampleRate}"
-			ItemsSource="{Binding ActiveDevice.SampleRates}"
+			ItemsSource="{Binding SampleRates}"
 			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
 
 		<Picker
@@ -59,19 +62,9 @@
 			Tag="{m:Localizing Key=PowOf2}"
 			ItemsSource="{StaticResource AllowedPowsOf2}"
 			SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-
-		<!--<Picker
-				Tag="{m:Localizing Key=ShiftSize}"
-				ItemsSource="{StaticResource AllowedPowsOf2}"
-				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-
-			<Entry
-				Tag="{m:Localizing Key=ShiftsPerFrame}"
-				Text="{Binding ShiftsPerFrame, Mode=TwoWay}" />-->
-
 		<Switch
-			Tag="{m:Localizing Key=UseAliasing}"
-			IsToggled="{Binding UseAliasing, Mode=TwoWay}" />
+			Tag="{m:Localizing Key=SpectralInterpolation}"
+			IsToggled="{Binding UseSpectralInterpolation, Mode=TwoWay}" />
 	</m:Set>
 
 	<m:Set
@@ -115,11 +108,6 @@
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-		<Expander
-            Header="{m:Localizing Key=Advanced}"
-            ContentTemplate="{StaticResource AdvancedTemplate}"
-			Content="{m:Store Key=viewModels:SpectralViewModel}" />
-
-    </m:Set>
+	</m:Set>
 
 </ResourceDictionary>
