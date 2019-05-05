@@ -29,11 +29,8 @@ namespace Solfeggio.Processors
 			_bins = Next();
 		}
 
-		private DateTime _timestamp = DateTime.Now;
-
 		public void Tick()
 		{
-			_timestamp = DateTime.Now;
 			DataAvailable?.Invoke(this, new ProcessingEventArgs(_bins, _bins.Length));
 			_bins = Next();
 		}
@@ -47,9 +44,11 @@ namespace Solfeggio.Processors
 
 		short[] _bins;
 
+		public bool IsTimerEnabled { get; set; }
+
 		private void OnTimerTick(object sender, EventArgs e)
 		{
-			if (DateTime.Now - _timestamp > _timer.Interval) Tick();
+			if (IsTimerEnabled) Tick();
 		}
 
 		public void Free() => _timer.Stop();

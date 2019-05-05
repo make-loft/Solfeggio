@@ -12,7 +12,6 @@ namespace Solfeggio.Api
 		void Wake();
 		void Lull();
 		void Free();
-
 		void Tick();
 	}
 
@@ -35,7 +34,7 @@ namespace Solfeggio.Api
 				dataSource = source;
 				this.session = session;
 				BufferSize = bufferSize;
-				NumberOfBuffers = 3;
+				NumberOfBuffers = 4;
 				callback = ProcessingCallback;
 				session.As<Out.Session>()?.SetVolume(1f);
 
