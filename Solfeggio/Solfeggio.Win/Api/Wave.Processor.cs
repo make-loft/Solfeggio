@@ -12,6 +12,8 @@ namespace Solfeggio.Api
 		void Wake();
 		void Lull();
 		void Free();
+
+		void Tick();
 	}
 
 	public interface IDataSource
@@ -56,6 +58,8 @@ namespace Solfeggio.Api
 			~Processor() => Dispose();
 
 			public short[] Next() => default;
+
+			public void Tick() { }
 
 			public void Expose()
 			{
@@ -118,6 +122,11 @@ namespace Solfeggio.Api
 						{
 							DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
 							if (State.Is(Processing)) buffer.MarkForProcessing();
+						}
+
+						if (message.Is(Message.WaveOutDone))
+						{
+							dataSource.Tick();
 						}
 					}
 				}
