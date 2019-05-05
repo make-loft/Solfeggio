@@ -55,7 +55,6 @@ namespace Solfeggio.ViewModels
 			set => Set(() => IsPaused, value);
 		}
 
-		public int MinFramePow { get; set; }
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
 		public IList<Bin> Spectrum { get; set; }
@@ -112,8 +111,8 @@ namespace Solfeggio.ViewModels
 				var floats = frame0.Select(v => (float)(v.Real/short.MaxValue)).ToArray();
 
 				if (IsPaused || args.Sample.Length < frameSize + ShiftSize) return;
-				var spectrum0 = frame0.DecimationInTime(true);
-				var spectrum1 = frame1.DecimationInTime(true);
+				var spectrum0 = frame0.Decimation(true);
+				var spectrum1 = frame1.Decimation(true);
 
 				for (var i = 0; i < frameSize; i++)
 				{
@@ -121,7 +120,7 @@ namespace Solfeggio.ViewModels
 					spectrum1[i] /= frameSize;
 				}
 
-				var innerFrame = spectrum0.DecimationInTime(false);
+				var innerFrame = spectrum0.Decimation(false);
 				var frameLength = innerFrame.Length;
 				OuterFrame = args.Sample.Take(frameLength).Select(c => new Complex(j++ / frameLength, c.Real)).ToArray();
 				InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
