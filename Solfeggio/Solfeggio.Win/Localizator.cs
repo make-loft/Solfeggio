@@ -77,6 +77,7 @@ namespace Solfeggio.Languages
 		public static o Flow = _("Flow", "Поток");
 		public static o Loop = _("Loop", "Петля");
 		public static o Sound = _("Sound", "Звук");
+		public static o Signal = _("Signal", "Сигнал");
 
 		public static o MusicalStandards = _("MusicalStandards", "Музыкальные стандарты");
 		public static o PitchStandard = _("Pitch Standard", "Частотный стандарт");
@@ -89,7 +90,6 @@ namespace Solfeggio.Languages
 		public static o SpectralInterpolation = _("Spectral Interpolation", "Спектральная интерполяция");
 		
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");
-
 
 		public static o PolicyMessage = _(Messages.Policy.English, Messages.Policy.Russian);
 		public static o DesignedByMessage = _(Messages.DesignedBy.English, Messages.DesignedBy.Russian);

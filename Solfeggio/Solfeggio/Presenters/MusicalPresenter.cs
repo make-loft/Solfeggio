@@ -126,16 +126,52 @@ namespace Solfeggio.Presenters
 				var currentPoint = enumerator.Current;
 				deconstruct(in currentPoint, out var hActiveValue, out _);
 				if (hActiveValue > hUpperValue) return false;
-				if (hActiveValue >= hLowerValue)
+				if (hActiveValue < hLowerValue)
 				{
-					if (startPoint.Is(default)) startPoint = currentPoint;
-					return true;
+					startPoint = currentPoint;
+					continue;
 				}
 
-				startPoint = currentPoint;
+				if (startPoint.Is(default)) startPoint = currentPoint;
+				return true;
 			}
 
 			return false;
+		}
+
+		private static IEnumerable<TIn> EnuerateActivePoints<TIn>(
+			IEnumerable<TIn> items,
+			Deconstruct<TIn, double> deconstruct,
+			double hLowerValue,
+			double hUpperValue)
+		{
+			var enumerator = items.GetEnumerator();
+			var startPoint = default(TIn);
+
+			while (enumerator.MoveNext())
+			{
+				var currentPoint = enumerator.Current;
+				deconstruct(in currentPoint, out var hActiveValue, out _);
+				if (hActiveValue > hUpperValue) yield break;
+				if (hActiveValue < hLowerValue)
+				{
+					startPoint = currentPoint;
+					continue;
+				}
+
+				if (startPoint.IsNot(default))
+					yield return startPoint;
+				yield return currentPoint;
+				break;
+			}
+
+			while (enumerator.MoveNext())
+			{
+				var currentPoint = enumerator.Current;
+				yield return currentPoint;
+				deconstruct(in currentPoint, out var hActiveValue, out _);
+				if (hActiveValue > hUpperValue) yield break;
+			}
 		}
 
 		public static IEnumerable<TOut> Draw<TIn, TOut>(
@@ -160,15 +196,10 @@ namespace Solfeggio.Presenters
 				out var vLowerVisualOffset, out _,
 				out var vVisualLengthStretchFactor);
 
-			points.GetEnumerator().To(out var enumerator);
-
-			if (TryMoveToStartPoint(enumerator, deconstruct, hLowerValue, hUpperValue, out var activePoint).Not())
-				yield break;
-
 			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
 			if (createWithContent is null) yield return create(0d, in vZeroLevel);
 
-			do
+			foreach(var activePoint in EnuerateActivePoints(points, deconstruct, hLowerValue, hUpperValue))
 			{
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
@@ -187,12 +218,7 @@ namespace Solfeggio.Presenters
 				yield return createWithContent is null
 					? create(in hVisualOffset, in vVisualOffset)
 					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
-
-				if (hActiveValue <= hUpperValue && enumerator.MoveNext())
-					activePoint = enumerator.Current;
-				else break;
-
-			} while (true);
+			}
 
 			if (createWithContent is null) yield return create(in hLength, in vZeroLevel);
 		}

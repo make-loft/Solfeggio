@@ -108,7 +108,7 @@ namespace Solfeggio.Presenters
 		public Bandwidth Magnitude { get; set; } = new Bandwidth
 		{
 			Limit = SmartRange.Create(0.00d, 1d),
-			Threshold = SmartRange.Create(0.00d, 0.4d),
+			Threshold = SmartRange.Create(0.00d, 1d),
 			IsVisible = true
 		};
 
