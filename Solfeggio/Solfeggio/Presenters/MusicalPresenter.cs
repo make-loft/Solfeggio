@@ -203,17 +203,17 @@ namespace Solfeggio.Presenters
 			{
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
-				var hVisualOffset = hActiveValue.
-					Scale(hVisualScaleFunc).
-					Stretch(hVisualLengthStretchFactor).
-					Decrement(hLowerVisualOffset).
-					Scale(hCorrection);
+				var hVisualOffset = hActiveValue
+					.Scale(hVisualScaleFunc)
+					.Stretch(hVisualLengthStretchFactor)
+					.Decrement(hLowerVisualOffset)
+					.Scale(hCorrection);
 
-				var vVisualOffset = vActiveValue.
-					Scale(vVisualScaleFunc).
-					Stretch(vVisualLengthStretchFactor).
-					Decrement(vLowerVisualOffset).
-					Scale(vCorrection);
+				var vVisualOffset = vActiveValue
+					.Scale(vVisualScaleFunc)
+					.Stretch(vVisualLengthStretchFactor)
+					.Decrement(vLowerVisualOffset)
+					.Scale(vCorrection);
 
 				yield return createWithContent is null
 					? create(in hVisualOffset, in vVisualOffset)
@@ -341,9 +341,11 @@ namespace Solfeggio.Presenters
 					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]).Use(keys.Add);
 			}
 
+			var peaks = data.EnumeratePeaks().OrderByDescending(p => p.Magnitude).Take(10).ToArray();
+
 			var m = 0;
 			var averageMagnitude = 0d;
-			foreach (var bin in data)
+			foreach (var bin in peaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency) continue;
@@ -371,7 +373,7 @@ namespace Solfeggio.Presenters
 			}
 
 			averageMagnitude /= m;
-			var minMagnitude = upperMagnitude * 0.2;
+			var minMagnitude = upperMagnitude * 0.03;
 			var dominants = keys.OrderByDescending(k => k.Magnitude).Take(MaxDominantsCount)
 				.Where(k => k.Magnitude > minMagnitude).ToList();
 

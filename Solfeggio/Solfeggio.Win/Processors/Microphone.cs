@@ -18,9 +18,9 @@ namespace Solfeggio.Processors
 
 		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
-		private DispatcherTimer _timer = new DispatcherTimer();
-		private HarmonicManager _manager = Store.Get<HarmonicManager>();
-		private Generator _generator;
+		private readonly DispatcherTimer _timer = new DispatcherTimer();
+		private readonly HarmonicManager _manager = Store.Get<HarmonicManager>();
+		private readonly Generator _generator;
 		public GenerationProcessor(Generator generator)
 		{
 			_generator = generator;

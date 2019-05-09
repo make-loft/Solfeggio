@@ -3,6 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace Solfeggio.Api
 {
+	public static class MmControl
+	{
+		public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null) =>
+			result == MmResult.NoError ? result : throw new Exception($"{result} calling {source}");
+	}
+
 	public enum MmResult
 	{
 		NoError = 0,
@@ -43,29 +49,5 @@ namespace Solfeggio.Api
 		MixerInvalidLine = 1024,
 		MixerInvalidControl = 1025,
 		MixerInvalidValue = 1026,
-	}
-
-	public static class MmControl
-	{
-		public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null) => result == MmResult.NoError
-			? result
-			: throw new MmException(result, source);
-	}
-
-	public class MmException : Exception
-	{
-		public MmException(MmResult result, string function)
-			: base(ErrorMessage(result, function))
-		{
-			Result = result;
-			Source = function;
-		}
-
-		private static string ErrorMessage(MmResult result, string function) =>
-			string.Format("{0} calling {1}", result, function);
-
-
-		public MmResult Result { get; }
-		public new string Source { get; }
 	}
 }
