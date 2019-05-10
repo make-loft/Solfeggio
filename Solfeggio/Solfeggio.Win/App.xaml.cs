@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Ace;
 using Solfeggio.Processors;
@@ -22,5 +25,17 @@ namespace Solfeggio
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e) => Store.Snapshot();
+
+		#region Launching
+		/* should not directly use nested assemblies into this region */
+
+		private static readonly Type ArrayOfBytesType = typeof(byte[]);
+
+		public static IEnumerable<byte[]> EnumerateNestedRawAssemblies() => typeof(Properties.Assemblies)
+				.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+				.Where(p => p.PropertyType == ArrayOfBytesType)
+				.Select(p => p.GetValue(null, null))
+				.Cast<byte[]>();
+		#endregion
 	}
 }

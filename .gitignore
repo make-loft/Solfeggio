@@ -19,3 +19,5 @@ _ReSharper.*
 /*.DotSettings
 */project.lock.json
 *.svn
+*.dll
+*.compressed
