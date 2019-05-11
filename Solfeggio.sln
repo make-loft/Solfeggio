@@ -59,7 +59,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Synonyms", "Xamarin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compressor", "Compressor\Compressor.csproj", "{9015E0D4-AA7D-4864-912D-56DFF8FC258E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Launcher", "Solfeggio.Launcher\Solfeggio.Launcher.csproj", "{0CA27886-5B17-4E6D-B025-1DA0953839F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solfeggio.Win.Launcher", "Solfeggio\Solfeggio.Win.Launcher\Solfeggio.Win.Launcher.csproj", "{0CA27886-5B17-4E6D-B025-1DA0953839F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
