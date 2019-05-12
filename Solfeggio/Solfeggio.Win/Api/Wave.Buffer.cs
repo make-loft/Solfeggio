@@ -61,7 +61,11 @@ namespace Solfeggio.Api
 				GC.SuppressFinalize(this);
 
 				if (_header.Is())
+				{
+					_session.Lull().Verify();
+					_session.Reset().Verify();
 					_session.UnprepareHeader(_header).Verify();
+				}
 
 				if (_headerHandle.IsAllocated) _headerHandle.Free();
 				if (_bufferHandle.IsAllocated) _bufferHandle.Free();

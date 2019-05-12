@@ -56,7 +56,6 @@
     <Compile Include="..\Solfeggio.Win\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyResolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -82,15 +81,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
+    <Content Include="ReadMe.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy "$(SolutionDir)\Solfeggio\Solfeggio.Win\bin\Solfeggio.exe" "$(ProjectDir)\Assemblies\Solfeggio.exe"
 
-..\..\Compressor\bin\Compressor.exe  ..\..\Solfeggio.Launcher\Assemblies\Solfeggio.exe
+..\..\..\Compressor\bin\Compressor.exe  "$(SolutionDir)Solfeggio\Solfeggio.Win.Launcher\Assemblies\Solfeggio.exe"
 
-del "$(ProjectDir)\Assemblies\Solfeggio.exe"
-</PreBuildEvent>
+del "$(ProjectDir)\Assemblies\Solfeggio.exe"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
