@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
-namespace Solfeggio.Languages
+namespace Solfeggio
 {
 	using static LanguageCodes;
 	using o = Dictionary<LanguageCodes, string>;
@@ -95,6 +95,8 @@ namespace Solfeggio.Languages
 		public static o DesignedByMessage = _(Messages.DesignedBy.English, Messages.DesignedBy.Russian);
 		public static o IAmReadyToHelpMessage = _(Messages.IAmReadyToHelpMessage.English, Messages.IAmReadyToHelpMessage.Russian);
 		public static o IAmReadyToHelpLink = _(Messages.IAmReadyToHelpLink.English, Messages.IAmReadyToHelpLink.Russian);
+		public static o ExpirationMessage = _(Messages.ExpirationMessage.English, Messages.ExpirationMessage.Russian);
+		public static o ExpirationLink = _(Messages.ExpirationLink.English, Messages.ExpirationLink.Russian);
 
 		public static Dictionary<string, o> GetBaseDictionary() =>
 			typeof(Localizator).GetFields(BindingFlags.Static | BindingFlags.Public).
@@ -148,6 +150,20 @@ Your help is needed and priceless!";
 		}
 
 		public static class IAmReadyToHelpLink
+		{
+			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
+			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";
+		}
+
+		public static class ExpirationMessage
+		{
+			public const string English = @"Your version has been expired.
+Please, download the newest release.";
+			public const string Russian = @"Ваша версия устарела.
+Пожалуйста, загрузите новейший релиз.";
+		}
+
+		public static class ExpirationLink
 		{
 			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
 			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";

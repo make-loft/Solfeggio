@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using Ace;
 using Solfeggio.Processors;
+using Solfeggio.ViewModels;
 using Yandex.Metrica;
 using static System.Environment;
 
@@ -38,6 +39,18 @@ namespace Solfeggio
 			}
 		}
 
+		public void CheckExpiration()
+		{
+			var versionAge = DateTime.Now - new DateTime(2019, 5, 12);
+			if (versionAge > TimeSpan.FromDays(32))
+			{
+				YandexMetrica.ReportEvent("Expiration", versionAge);
+				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
+				MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
+				Process.Start(Localizator.ExpirationLink[activeLanguage]);
+			}
+		}
+
 		private void App_OnStartup(object sender, StartupEventArgs args)
 		{
 			var settingsFolder = CheckWriteAccess(EntryFolder)
@@ -52,6 +65,7 @@ namespace Solfeggio
 
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate("4722c611-c016-4e44-943b-05f9c56968d6");
+				CheckExpiration();
 			}
 			catch (Exception exception)
 			{
