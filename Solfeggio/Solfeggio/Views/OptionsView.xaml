@@ -14,31 +14,42 @@
 			<ScrollViewer>
 				<StackLayout>
 
-					<Expander>
-						<Expander.HeaderTemplate>
-							<DataTemplate>
-								<StackLayout
-									DataContext="{m:Store Key=viewModels:SpectralViewModel}"
-									Orientation="Horizontal">
-									<Label
-										Text="{m:Localizing Key=Signal}" />
-									<Picker
-										ItemsSource="{Binding Profiles}"
-										SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" />
-									<!--<Label
-										Text="{m:Localizing Key=Mute}" />
-									<Switch />
-									<Label
-										Text="{m:Localizing Key=Loudness}" />
-									<Slider />-->
-								</StackLayout>
-							</DataTemplate>
-						</Expander.HeaderTemplate>
+					<Expander
+						Header="{m:Localizing Key=Signal}">
 
-						<ItemsView
-							DataContext="{m:StoreBinding StoreKey=viewModels:SpectralViewModel, Path=ActiveProfile}"
+						<!--<ItemsView
+							DataContext="{m:StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
 							ItemsSource="{StaticResource SignalSourceOptionsSet}"
-							ItemTemplate="{StaticResource OptionTemplate}" />
+							ItemTemplate="{StaticResource OptionTemplate}" />-->
+
+						<StackLayout
+							DataContext="{m:Store Key=viewModels:ProcessingManager}">
+							<StackLayout
+								HorizontalAlignment="Center"
+								Orientation="Horizontal">
+
+								<Label
+									Text="{m:Localizing Key=Profile}" />
+								<!--<Button
+									Content="{m:Localizing Key=Delete}"
+									CommandParameter="{m:StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
+									Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}" />-->
+								<Picker
+									DisplayMemberPath="Title"
+									ItemsSource="{Binding Path=Profiles}"
+									SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}" />
+								<Button
+									Content="➕"
+									Command="{m:Context Key=Set.Create, StoreKey=viewModels:HarmonicManager}" />
+
+							</StackLayout>
+
+							<controls:Pivot
+								ItemsSource="{Binding Profiles}"
+								SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+								ContentTemplate="{StaticResource ProcessingProfileTemplate}" />
+						</StackLayout>
 
 					</Expander>
 
@@ -71,7 +82,7 @@
 								ItemsSource="{Binding Profiles}"
 								SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
 								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-								ContentTemplate="{StaticResource ProfileTemplate}" />
+								ContentTemplate="{StaticResource HarmonicProfileTemplate}" />
 
 						</StackLayout>
 					</Expander>

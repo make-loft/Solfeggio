@@ -9,20 +9,8 @@ using static Rainbow.Windowing;
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
-	public class SpectralViewModel : ContextObject, IExposable
+	public class ProcessingManager : AManager<ProcessingProfile>
 	{
-		public ProcessingProfile ActiveProfile
-		{
-			get => Get(() => ActiveProfile, Profiles.FirstOrDefault());
-			set => Set(() => ActiveProfile, value);
-		}
-
-		public ProcessingProfile[] Profiles { get; } =
-		{
-			new ProcessingProfile(),
-			new ProcessingProfile()
-		};
-
 		public bool IsPaused
 		{
 			get => Get(() => IsPaused);
@@ -35,8 +23,12 @@ namespace Solfeggio.ViewModels
 
 		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
 
-		public void Expose()
+		public override ProcessingProfile Create() => new ProcessingProfile();
+
+		public override void Expose()
 		{
+			base.Expose();
+
 			this[() => ActiveProfile].PropertyChanging += (sender, args) =>
 			{
 				if (ActiveProfile.IsNot()) return;

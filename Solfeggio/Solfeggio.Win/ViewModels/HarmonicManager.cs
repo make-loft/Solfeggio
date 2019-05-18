@@ -5,7 +5,7 @@ using System;
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
-	public class HarmonicManager : Manager<Harmonic.Profile>
+	public class HarmonicManager : AManager<Harmonic.Profile>
 	{
 		public override Harmonic.Profile Create() => new Harmonic.Profile { Title = DateTime.Now.ToShortDateString() };
 

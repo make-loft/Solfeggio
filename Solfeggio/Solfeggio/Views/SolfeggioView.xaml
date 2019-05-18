@@ -6,7 +6,7 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	BindingContext="{m:Store Key=viewModels:SpectralViewModel}">
+	BindingContext="{m:Store Key=viewModels:ProcessingManager}">
 
 	<Grid
 		m:Rack.Rows="2* *"

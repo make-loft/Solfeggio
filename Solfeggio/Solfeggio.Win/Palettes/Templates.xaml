@@ -86,7 +86,15 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="ProfileTemplate">
+		x:Key="ProcessingProfileTemplate">
+		<ItemsView
+			DataContext="{m:StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
+			ItemsSource="{StaticResource ProcessingProfileOptionsSet}"
+			ItemTemplate="{StaticResource OptionTemplate}" />
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="HarmonicProfileTemplate">
 		<StackLayout>
 			<StackLayout
 				Orientation="Horizontal">
@@ -449,7 +457,7 @@
 				<Label
 					Text="{m:Localizing Key=Framing}" />
 				<ContentPresenter
-					Content="{m:Store Key=viewModels:SpectralViewModel}"
+					Content="{m:Store Key=viewModels:ProcessingManager}"
 					ContentTemplate="{StaticResource FramingTemplate}" />
 			</StackLayout>
 

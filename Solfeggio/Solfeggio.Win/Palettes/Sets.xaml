@@ -36,7 +36,7 @@
 
 	<m:Set
 		x:Shared="False"
-		x:Key="SignalSourceOptionsSet">
+		x:Key="ProcessingProfileOptionsSet">
 
 		<Picker
 			Tag="{m:Localizing Key=Input}"
@@ -54,6 +54,11 @@
 			Tag="{m:Localizing Key=SampleRate}"
 			ItemsSource="{Binding SampleRates}"
 			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+		
+		<Picker
+			Tag="{m:Localizing Key=BuffersCount}"
+			ItemsSource="{StaticResource AllowedBuffersCount}"
+			SelectedItem="{Binding BuffersCount, Mode=TwoWay}" />
 
 		<Picker
 			Tag="{m:Localizing Key=Window}"
@@ -66,17 +71,17 @@
 			HorizontalAlignment="Right"
 			Tag="{m:Localizing Key=FrameSize}">
 			<Label
-				Text="2 ^"/>
+				Text="2 ^" />
 			<Picker
 				ItemsSource="{StaticResource AllowedPowsOf2}"
 				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
 			<Label
-				Text="{Binding FrameSize, StringFormat=' = {0}'}"/>
+				Text="{Binding FrameSize, StringFormat=' = {0}'}" />
+			<Label
+				Text="{m:Localizing Key=Duration, StringFormat='{}{0}:'}" />
+			<Label
+				Text="{Binding FrameDuration}" />
 		</StackLayout>
-
-		<Label
-			Tag="{m:Localizing Key=Duration}"
-			Text="{Binding FrameDuration}" />
 
 		<Switch
 			Tag="{m:Localizing Key=SpectralInterpolation}"

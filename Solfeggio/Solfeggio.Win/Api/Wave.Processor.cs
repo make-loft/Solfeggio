@@ -33,7 +33,7 @@ namespace Solfeggio.Api
 			{
 				NumberOfBuffers = buffersCount;
 				_source = source;
-				this._session = session;
+				_session = session;
 				BufferSize = bufferSize;
 				_callback = ProcessingCallback;
 				session.As<Out.Session>()?.SetVolume(1f);

@@ -12,6 +12,13 @@ namespace Solfeggio.Models
 	[DataContract]
 	public class ProcessingProfile : ContextObject, IAudioInputDevice, IExposable, IDisposable
 	{
+		[DataMember]
+		public string Title
+		{
+			get => Get(() => Title, DateTime.Now.Millisecond.ToString());
+			set => Set(() => Title, value);
+		}
+
 		public double[] SampleRates { get; } = AudioInputDevice.StandardSampleRates;
 
 		[DataMember]
@@ -77,6 +84,9 @@ namespace Solfeggio.Models
 			set => Set(() => FramePow, value);
 		}
 
+		[DataMember] public int ActiveInputDeviceIndex { get; set; }
+		[DataMember] public int ActiveOutputDeviceIndex { get; set; }
+
 		[DataMember] public bool UseSpectralInterpolation { get; set; } = true;
 		[DataMember] public double ShiftsPerFrame { get; set; } = 0;
 		public int ShiftSize => ShiftsPerFrame.Is(0d) ? 0 : (int)(FrameSize / ShiftsPerFrame);
@@ -91,8 +101,11 @@ namespace Solfeggio.Models
 			OutputDevices = Wave.Out.EnumerateDevices().ToSet();
 			InputDevices.Add(new SoftwareGenerator());
 
-			ActiveInputDevice = ActiveInputDevice ?? InputDevices.FirstOrDefault();
-			ActiveOutputDevice = ActiveOutputDevice ?? OutputDevices.FirstOrDefault();
+			this[() => ActiveInputDevice].PropertyChanged += (o, e) =>
+				ActiveInputDeviceIndex = InputDevices.IndexOf(ActiveInputDevice);
+
+			this[() => ActiveOutputDevice].PropertyChanged += (o, e) =>
+				ActiveOutputDeviceIndex = OutputDevices.IndexOf(ActiveOutputDevice);
 
 			this[() => FramePow].PropertyChanged += (sender, args) =>
 			{
@@ -102,8 +115,18 @@ namespace Solfeggio.Models
 			};
 		}
 
+		private bool CheckIndex(int index, int count) => 0 <= index && index < count;
+
 		public void Expose()
 		{
+			ActiveInputDevice = CheckIndex(ActiveInputDeviceIndex, InputDevices.Count)
+				? InputDevices[ActiveInputDeviceIndex]
+				: default;
+
+			ActiveOutputDevice = CheckIndex(ActiveOutputDeviceIndex, OutputDevices.Count)
+				? OutputDevices[ActiveOutputDeviceIndex]
+				: default;
+
 			if (inputProcessor.Is() || SampleSize.Is(default) || SampleRate.Is(default))
 				return;
 
@@ -172,8 +195,5 @@ namespace Solfeggio.Models
 		}
 
 		public event EventHandler<AudioInputEventArgs> SampleReady;
-
-		public void Start() => Expose();
-		public void Stop() => Dispose();
 	}
 }

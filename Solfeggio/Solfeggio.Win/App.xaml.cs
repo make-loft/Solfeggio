@@ -80,8 +80,7 @@ namespace Solfeggio
 				e.Handled = true;
 			};
 
-			Store.Get<ViewModels.AppViewModel>();
-			Store.Set<IAudioInputDevice>(new ProcessingProfile());
+			Store.Get<AppViewModel>();
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e) => Store.Snapshot();

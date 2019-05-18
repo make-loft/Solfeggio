@@ -114,7 +114,7 @@ namespace Solfeggio.Views
             }
         }
 
-	    private SpectralViewModel _spectralViewModel = Store.Get<SpectralViewModel>();
+	    private ProcessingManager _spectralViewModel = Store.Get<ProcessingManager>();
 
 		void OnCanvasViewPaintSurfaceP(object sender, SKPaintSurfaceEventArgs args)
 	    {

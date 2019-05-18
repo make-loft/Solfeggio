@@ -1,12 +1,10 @@
 ﻿using Ace;
-using Solfeggio.Models;
-using System;
 using System.Linq;
 
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
-	public abstract class Manager<TProfile> : ContextObject, IExposable
+	public abstract class AManager<TProfile> : ContextObject, IExposable
 	{
 		[DataMember]
 		public SmartSet<TProfile> Profiles { get; set; } = new SmartSet<TProfile>();

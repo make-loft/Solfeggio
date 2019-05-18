@@ -5,7 +5,7 @@
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	DataContext="{m:Store Key=vm:SpectralViewModel}"
+	DataContext="{m:Store Key=vm:ProcessingManager}"
 	HorizontalContentAlignment="Stretch"
 	VerticalContentAlignment="Stretch"
 	HorizontalAlignment="Stretch"

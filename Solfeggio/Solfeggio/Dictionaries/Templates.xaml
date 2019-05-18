@@ -7,8 +7,7 @@
     xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
     xmlns:converters="clr-namespace:Solfeggio.Converters"
-    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace"
-	xmlns:m1="clr-namespace:Ace.Markup;assembly=Ace">
+    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace">
     
     <converters:PowConverter x:Key="PowConverter" Base="2"/>
    
@@ -43,7 +42,7 @@
 
     
     <ControlTemplate x:Key="SizeTemplate">
-        <Grid BindingContext="{m1:Store Key=vm:SpectralViewModel}">
+        <Grid BindingContext="{m:Store Key=vm:ProcessingManager}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -72,7 +71,7 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="ProcessingOptionsTemplate">
-        <a:StackPanel DataContext="{m:Store Key=vm:SpectralViewModel}">           
+        <a:StackPanel DataContext="{m:Store Key=vm:ProcessingManager}">           
             <Label 
                 Grid.Row="0" 
                 Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>

@@ -16,7 +16,7 @@ namespace Solfeggio.Views
 			InitializeComponent();
 
 			var appViewModel = Store.Get<AppViewModel>();
-			var spectralViewModel = Store.Get<SpectralViewModel>();
+			var spectralViewModel = Store.Get<ProcessingManager>();
 			var presenter = Store.Get<MusicalPresenter>();
 			var timer = new DispatcherTimer();
 			timer.Tick += (o, e) =>
