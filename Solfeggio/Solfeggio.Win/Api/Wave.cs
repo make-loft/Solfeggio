@@ -33,18 +33,13 @@ namespace Solfeggio.Api
 		public delegate void Callback(IntPtr hWaveOut, Message message, IntPtr dwInstance, Wave.Header wavhdr, IntPtr dwReserved);
 
 		public abstract class ADeviceInfo<TCapabilities>
-			where TCapabilities : new()
+			where TCapabilities : IDeviceCapabilities, new()
 		{
 			protected int _number;
-			public int Number => _number;
 			public ADeviceInfo(int number) => _number = number;
-			public abstract ref TCapabilities Fill(ref TCapabilities capabilities);
-			public TCapabilities GetCapabilities()
-			{
-				var capabilities = new TCapabilities();
-				Fill(ref capabilities);
-				return capabilities;
-			}
+			public int Number => _number;
+			public virtual string ProductName => GetCapabilities().ProductName;
+			public abstract TCapabilities GetCapabilities();
 		}
 
 		public abstract class ASession

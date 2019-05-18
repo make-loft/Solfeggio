@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Ace;
-using Solfeggio.Processors;
+using Solfeggio.Models;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 using static System.Environment;
@@ -81,7 +81,7 @@ namespace Solfeggio
 			};
 
 			Store.Get<ViewModels.AppViewModel>();
-			Store.Set<IAudioInputDevice>(Store.Get<Microphone>());
+			Store.Set<IAudioInputDevice>(new ProcessingProfile());
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e) => Store.Snapshot();

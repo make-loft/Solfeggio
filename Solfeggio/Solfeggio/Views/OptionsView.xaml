@@ -23,8 +23,8 @@
 									<Label
 										Text="{m:Localizing Key=Signal}" />
 									<Picker
-										ItemsSource="{Binding Devices}"
-										SelectedItem="{Binding ActiveDevice, Mode=TwoWay}" />
+										ItemsSource="{Binding Profiles}"
+										SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" />
 									<!--<Label
 										Text="{m:Localizing Key=Mute}" />
 									<Switch />
@@ -36,7 +36,7 @@
 						</Expander.HeaderTemplate>
 
 						<ItemsView
-							DataContext="{m:Store Key=viewModels:SpectralViewModel}"
+							DataContext="{m:StoreBinding StoreKey=viewModels:SpectralViewModel, Path=ActiveProfile}"
 							ItemsSource="{StaticResource SignalSourceOptionsSet}"
 							ItemTemplate="{StaticResource OptionTemplate}" />
 

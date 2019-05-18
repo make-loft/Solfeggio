@@ -41,11 +41,15 @@
 
 		<Picker
 			Tag="{m:Localizing Key=Input}"
-			m:Rack.Cell="R1 C1" />
+			ItemsSource="{Binding InputDevices}"
+			SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+			DisplayMemberPath="ProductName" />
 
 		<Picker
 			Tag="{m:Localizing Key=Output}"
-			m:Rack.Cell="R1 C1" />
+			ItemsSource="{Binding OutputDevices}"
+			SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+			DisplayMemberPath="ProductName"/>
 
 		<Picker
 			Tag="{m:Localizing Key=SampleRate}"

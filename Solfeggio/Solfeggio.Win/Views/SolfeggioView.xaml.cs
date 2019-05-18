@@ -17,7 +17,6 @@ namespace Solfeggio.Views
 
 			var appViewModel = Store.Get<AppViewModel>();
 			var spectralViewModel = Store.Get<SpectralViewModel>();
-			var generator = spectralViewModel.Devices[1].To<Generator>();
 			var presenter = Store.Get<MusicalPresenter>();
 			var timer = new DispatcherTimer();
 			timer.Tick += (o, e) =>
@@ -46,7 +45,7 @@ namespace Solfeggio.Views
 					Use(MagnitudePolyline.Points.AppendRange);
 				
 
-				var step = spectralViewModel.SampleRate / spectralViewModel.FrameSize;
+				var step = spectralViewModel.ActiveProfile.SampleRate / spectralViewModel.ActiveProfile.FrameSize;
 
 				if (presenter.Spectrum.Frequency.IsVisible)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
@@ -71,7 +70,7 @@ namespace Solfeggio.Views
 					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 
-				if (presenter.Show.Wave && spectralViewModel.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+				if (presenter.Show.Wave && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 

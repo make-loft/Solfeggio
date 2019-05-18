@@ -1,15 +1,15 @@
 ﻿using System;
 using Rainbow;
+using Solfeggio.Models;
 
 namespace Solfeggio
 {
 	public interface IAudioInputDevice
 	{
 		double[] SampleRates { get; }
-		double SampleRate { get; }
-		int SampleSize { get; }
+		double SampleRate { get; set; }
+		int SampleSize { get; set; }
 
-		void StartWith(double sampleRate = default, int desiredFrameSize = default);
 		void Start();
 		void Stop();
 		event EventHandler<AudioInputEventArgs> SampleReady;
@@ -37,7 +37,15 @@ namespace Solfeggio
 
 	public class AudioInputEventArgs : EventArgs
 	{
-		public IAudioInputDevice Source { get; set; }
-		public Complex[] Sample { get; set; }
+		public AudioInputEventArgs(ProcessingProfile source, Complex[] sample, double sampleRate)
+		{
+			Source = source;
+			Sample = sample;
+			SampleRate = sampleRate;
+		}
+
+		public ProcessingProfile Source { get; }
+		public Complex[] Sample { get; }
+		public double SampleRate { get; }
 	}
 }

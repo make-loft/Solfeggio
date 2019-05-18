@@ -12,13 +12,16 @@ namespace Solfeggio.Api
 			{
 				public DeviceInfo(int number) : base(number) { }
 
-				public override ref WaveOutCapabilities Fill(ref WaveOutCapabilities capabilities)
+				public override WaveOutCapabilities GetCapabilities()
 				{
-					waveOutGetDevCaps((IntPtr)_number, out capabilities, Marshal.SizeOf(capabilities)).Verify();
-					return ref capabilities;
+					waveOutGetDevCaps((IntPtr)_number, out var capabilities, Marshal.SizeOf(typeof(WaveOutCapabilities))).Verify();
+					return capabilities;
 				}
 
 				public Session CreateSession(WaveFormat format) => new Session(_number, format);
+
+				public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source) =>
+					new Processor(CreateSession(waveFormat), sampleSize, buffersCount, source);
 			}
 
 			public static int GetDevicesCount() => waveOutGetNumDevs();

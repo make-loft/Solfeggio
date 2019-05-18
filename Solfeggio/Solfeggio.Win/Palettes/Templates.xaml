@@ -185,13 +185,13 @@
 
 			<Label
 				m:Rack.Cell="R1 C2"
-				Text="{Binding ActiveDevice.SampleDuration.TotalMilliseconds}" />
+				Text="{Binding ActiveProfile.SampleDuration.TotalMilliseconds}" />
 			<Label
 				m:Rack.Cell="R2 C2"
 				Text="{Binding FrameDuration.TotalMilliseconds}" />
 			<Label
 				m:Rack.Cell="R1 C1"
-				Text="{Binding ActiveDevice.SampleSize}" />
+				Text="{Binding ActiveProfile.SampleSize}" />
 			<Label
 				m:Rack.Cell="R2 C1"
 				Text="{Binding FrameSize}" />

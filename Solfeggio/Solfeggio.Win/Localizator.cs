@@ -120,7 +120,7 @@ namespace Solfeggio
 		public static class Policy
 		{
 			public const string English =
-	@"Solfeggio application is free for educational and non-commercial purposes.
+				@"Solfeggio application is free for educational and non-commercial purposes.
 
 If you use this program on regular commertial fit or just really like it and want to support developing,
 please, buy a paid version or make voluntary donation of any amount.
@@ -128,7 +128,7 @@ please, buy a paid version or make voluntary donation of any amount.
 Your help is needed and priceless!";
 
 			public const string Russian =
-		@"Приложение Solfeggio бесплатно для образовательных и некоммерческих целей.
+				@"Приложение Solfeggio бесплатно для образовательных и некоммерческих целей.
 
 Если вы используете эту программу на регулярной коммерческой основе
 или просто она вам действительно нравится и есть желание поддержать разработку,

@@ -121,18 +121,19 @@
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MathConverter.cs" />
+    <Compile Include="Processors\IdealSignalProcessor.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Assemblies.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AManager.cs" />
-    <Compile Include="Processors\Microphone.cs" />
     <Compile Include="Localizator.cs" />
     <Compile Include="Presenters\AppPalette.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />
-    <Compile Include="Processors\SignalProcessor.cs" />
+    <Compile Include="Models\ProcessingProfile.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\HarmonicManager.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
     </Compile>
