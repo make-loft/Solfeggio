@@ -27,7 +27,6 @@ namespace Solfeggio.Models
 			get => Get(() => SampleSize, 4096);
 			set => Set(() => SampleSize, value);
 		}
-		//public TimeSpan SampleDuration => TimeSpan.FromMilliseconds(inputProcessor.BufferMilliseconds);
 
 		protected IProcessor inputProcessor;
 		protected IProcessor outputProcessor;
@@ -84,6 +83,7 @@ namespace Solfeggio.Models
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
+		public TimeSpan SampleDuration => TimeSpan.FromSeconds(SampleSize / SampleRate);
 
 		public ProcessingProfile()
 		{
@@ -131,8 +131,10 @@ namespace Solfeggio.Models
 
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (ActivePropertyNames.Contains(e.PropertyName))
-				Restart();
+			if (ActivePropertyNames.Contains(e.PropertyName).Not()) return;
+			Restart();
+			EvokePropertyChanged(nameof(FrameDuration));
+			EvokePropertyChanged(nameof(SampleDuration));
 		}
 
 		public void Dispose()

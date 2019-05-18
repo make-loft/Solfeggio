@@ -1,17 +1,16 @@
 ﻿using System;
+using Ace;
 using Rainbow;
 using Solfeggio.Models;
 
 namespace Solfeggio
 {
-	public interface IAudioInputDevice
+	public interface IAudioInputDevice : IExposable, IDisposable
 	{
 		double[] SampleRates { get; }
 		double SampleRate { get; set; }
 		int SampleSize { get; set; }
 
-		void Start();
-		void Stop();
 		event EventHandler<AudioInputEventArgs> SampleReady;
 	}
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -52,10 +53,19 @@ namespace Xamarin.Forms
 
     public class ItemsView : ItemsControl
 	{
+		public ItemsView()
+		{
+			DataContextChanged += (o, e) =>
+			{
+				foreach (var item in Items.OfType<FrameworkElement>())
+					item.DataContext = DataContext;
+			};
+		}
+
 		public static readonly DependencyProperty BindingContextProperty =
 			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(ItemsView), new PropertyMetadata((o, e)=>
 			{
-				if (o is Control control) control.SetValue(DataContextProperty, e.NewValue);
+				if (o is ItemsView control)	control.SetValue(DataContextProperty, e.NewValue);
 			}));
 
 		public object BindingContext
@@ -68,7 +78,7 @@ namespace Xamarin.Forms
 
 		protected override bool IsItemItsOwnContainerOverride(object item)
 		{
-			if (item is Control c && c.DataContext is null) c.DataContext = DataContext;
+			if (item is FrameworkElement e && e.DataContext is null) e.DataContext = DataContext;
 			return false; // wrap always
 		}
 	}

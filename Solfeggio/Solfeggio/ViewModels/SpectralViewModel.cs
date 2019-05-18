@@ -33,7 +33,6 @@ namespace Solfeggio.ViewModels
 		public IList<Complex> OuterFrame { get; private set; }
 		public IList<Complex> InnerFrame { get; private set; }
 
-
 		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
 
 		public void Expose()
@@ -42,14 +41,14 @@ namespace Solfeggio.ViewModels
 			{
 				if (ActiveProfile.IsNot()) return;
 				ActiveProfile.SampleReady -= OnActiveProfileOnDataReady;
-				ActiveProfile.Stop();
+				ActiveProfile.Dispose();
 			};
 
 			this[() => ActiveProfile].PropertyChanged += (sender, args) =>
 			{
 				if (ActiveProfile.IsNot()) return;
 				ActiveProfile.SampleReady += OnActiveProfileOnDataReady;
-				ActiveProfile.Start();
+				ActiveProfile.Expose();
 			};
 
 			EvokePropertyChanged(nameof(ActiveProfile));

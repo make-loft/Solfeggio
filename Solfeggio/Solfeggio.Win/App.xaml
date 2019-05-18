@@ -33,11 +33,19 @@
 
 			<m:Set
 				x:Key="AllowedPowsOf2">
+				<s:Int32>4</s:Int32>
+				<s:Int32>5</s:Int32>
+				<s:Int32>6</s:Int32>
+				<s:Int32>7</s:Int32>
+				<s:Int32>8</s:Int32>
 				<s:Int32>9</s:Int32>
 				<s:Int32>10</s:Int32>
 				<s:Int32>11</s:Int32>
 				<s:Int32>12</s:Int32>
 				<s:Int32>13</s:Int32>
+				<s:Int32>14</s:Int32>
+				<s:Int32>15</s:Int32>
+				<s:Int32>16</s:Int32>
 			</m:Set>
 
 			<Style
