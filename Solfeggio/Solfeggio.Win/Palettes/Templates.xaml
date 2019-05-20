@@ -486,4 +486,32 @@
 			ItemsSource="{StaticResource ShowStateSet}" />
 	</DataTemplate>
 
+	<DataTemplate
+		x:Key="VisualProfileTemplate">
+		<StackLayout>
+			<ItemsView
+				ItemsSource="{Binding AppBrushes}">
+				<ItemsView.ItemTemplate>
+					<DataTemplate>
+						<Picker
+							Tag="{Binding Key}"
+							ItemsSource="{m:StoreBinding Path=Brushes, StoreKey=models:VisualProfile}"
+							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
+					</DataTemplate>
+				</ItemsView.ItemTemplate>
+			</ItemsView>
+			<ItemsView
+				ItemsSource="{Binding AppFontSizes}">
+				<ItemsView.ItemTemplate>
+					<DataTemplate>
+						<Picker
+							Tag="{Binding Key}"
+							ItemsSource="{m:StoreBinding Path=FontSizes, StoreKey=models:VisualProfile}"
+							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
+					</DataTemplate>
+				</ItemsView.ItemTemplate>
+			</ItemsView>
+		</StackLayout>
+	</DataTemplate>
+
 </ResourceDictionary>

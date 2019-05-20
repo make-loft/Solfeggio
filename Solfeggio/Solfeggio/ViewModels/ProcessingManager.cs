@@ -21,13 +21,35 @@ namespace Solfeggio.ViewModels
 		public IList<Complex> OuterFrame { get; private set; }
 		public IList<Complex> InnerFrame { get; private set; }
 
-		public SmartSet<double> Pitches { get; } = new SmartSet<double>();
-
 		public override ProcessingProfile Create() => new ProcessingProfile();
 
 		public override void Expose()
 		{
 			base.Expose();
+
+			if (Profiles.Count.Is(0))
+			{
+				var p = default(ProcessingProfile);
+
+				Create().To(out p).With
+				(
+					p.Title = "Low Latency Realtime Analize",
+					p.FramePow = 10
+				).Use(Profiles.Add);
+
+				Create().To(out p).With
+				(
+					p.Title = "Research of Ideal Signals",
+					p.FramePow = 10,
+					p.ActiveInputDevice = p.InputDevices.LastOrDefault()
+				).Use(Profiles.Add);
+
+				Create().To(out p).With
+				(
+					p.Title = "Musical Tuning & Vocal Trainings",
+					p.FramePow = 11
+				).Use(Profiles.Add);
+			}
 
 			this[() => ActiveProfile].PropertyChanging += (sender, args) =>
 			{
@@ -51,43 +73,28 @@ namespace Solfeggio.ViewModels
 			var (j, k) = 0d;
 			var frameSize = args.Source.FrameSize;
 
-			var frame0 = args.Sample.Skip(0).Take(frameSize).ToArray();
-			var frame1 = args.Sample.Skip(args.Source.ShiftSize).Take(frameSize).ToArray();
+			var timeFrame = args.Sample.Skip(0).Take(frameSize).ToArray();
 			var activeWindow = args.Source.ActiveWindow;
 			if (activeWindow.Is(Rectangle)) goto SkipApodization;
 			for (var i = 0; i < frameSize; i++)
 			{
-				frame0[i] *= activeWindow(i, frameSize);
-				frame1[i] *= activeWindow(i, frameSize);
+				timeFrame[i] *= activeWindow(i, frameSize);
 			}
 
 		SkipApodization:
 
-			var floats = frame0.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
+			var floats = timeFrame.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
 
 			if (IsPaused || args.Sample.Length < frameSize + args.Source.ShiftSize) return;
-			var spectrum0 = frame0.Decimation(true);
-			var spectrum1 = frame1.Decimation(true);
+			var spectralFrame = timeFrame.Decimation(true);
+			var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
+			Spectrum = args.Source.UseSpectralInterpolation
+				? Filtering.Interpolate(spectrum).ToArray()
+				: spectrum;
 
-			for (var i = 0; i < frameSize; i++)
-			{
-				spectrum0[i] /= frameSize;
-				spectrum1[i] /= frameSize;
-			}
-
-			var innerFrame = spectrum0.Decimation(false);
-			var frameLength = innerFrame.Length;
-			OuterFrame = args.Sample.Take(frameLength).Select(c => new Complex(j++ / frameLength, c.Real)).ToArray();
+			var innerFrame = spectralFrame.Decimation(false);
+			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
 			InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
-
-			var spectrum = Filtering.GetSpectrum(spectrum0, args.SampleRate).ToArray();
-			//ShiftsPerFrame.Is(0d)
-			//? Filtering.GetSpectrum(spectrum0, SampleRate)
-			//: Filtering.GetJoinedSpectrum(spectrum0, spectrum1, ShiftsPerFrame, SampleRate);
-			if (args.Source.UseSpectralInterpolation)
-				spectrum = Filtering.Interpolate(spectrum).ToArray();
-
-			Spectrum = spectrum;
 		}
 	}
 }

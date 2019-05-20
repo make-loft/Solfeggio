@@ -256,63 +256,80 @@ namespace Solfeggio.Presenters
 			v => v.Negation().Increment(height)
 		);
 
-		public IEnumerable<StackPanel> DrawTops(IList<PianoKey> keys, double width, double height,
+		public IEnumerable<Grid> DrawTops(IList<PianoKey> keys, double width, double height,
 			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes) => Draw
 		(
 			keys, default,
 			(in double x, in double y,
 				PianoKey item, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
 			{
-				var panel = new StackPanel();
 				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
+
+				var panel = new StackPanel
+				{
+					Opacity = 0.3 + activeMagnitude,
+				};
+
+				var border = new Border
+				{
+					CornerRadius = new CornerRadius(2 * expressionLevel),
+					Background = visualProfile.AppBrushes["TopBrush"].Value
+				};
 
 				EnumeratePanelContent(item, activeFrequency, activeMagnitude, expressionLevel,
 					showActualFrequncy, showActualMagnitude, showEthalonFrequncy, showNotes).
 					ForEach(panel.Children.Add);
 
-				panel.Margin = new Thickness(x, y, 0d, 0d);
-				return panel;
+				return new Grid { Children = { border, panel }, Margin = new Thickness(x, y / 2d, 0d, 0d) };
 			},
 			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
 			width, height, default, default
 		);
 
+		VisualProfile visualProfile = Store.Get<VisualProfile>();
+
 		private IEnumerable<TextBlock> EnumeratePanelContent(
 			PianoKey key, double activeFrequency, double activeMagnitude, double expressionLevel,
 			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
 		{
-			if (showActualFrequncy) yield return new TextBlock
-			{
-				Opacity = 0.5 * expressionLevel,
-				FontSize = 8.0 * expressionLevel,
-				Foreground = AppPalette.HzBrush,
-				Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
-			};
+			var fontWeight = FontWeight.FromOpenTypeWeight((int)(5d * expressionLevel));
 
 			if (showActualMagnitude) yield return new TextBlock
 			{
-				Opacity = 0.5 * expressionLevel,
-				FontSize = 8.0 * expressionLevel,
-				Foreground = AppPalette.HzBrush,
-				Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat)
+				HorizontalAlignment = HorizontalAlignment.Center,
+				FontSize = visualProfile.AppFontSizes["ActualMagnitude"].Value * expressionLevel,
+				Foreground = visualProfile.AppBrushes["ActualMagnitude"].Value,
+				Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat),
+				FontWeight = fontWeight,
+			};
+
+			if (showActualFrequncy) yield return new TextBlock
+			{
+				HorizontalAlignment = HorizontalAlignment.Center,
+				FontSize = visualProfile.AppFontSizes["ActualFrequancy"].Value * expressionLevel,
+				Foreground = visualProfile.AppBrushes["ActualFrequancy"].Value,
+				Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat),
+				FontWeight = fontWeight,
 			};
 
 			if (showEthalonFrequncy) yield return new TextBlock
 			{
-				Opacity = 0.5 * expressionLevel,
-				FontSize = 8.0 * expressionLevel,
-				Foreground = AppPalette.NoteBrush,
-				Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat)
+				HorizontalAlignment = HorizontalAlignment.Center,
+				FontSize = visualProfile.AppFontSizes["EthalonFrequncy"].Value * expressionLevel,
+				Foreground = visualProfile.AppBrushes["EthalonFrequncy"].Value,
+				Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat),
+				FontWeight = fontWeight,
 			};
 
 			if (showNotes) yield return new TextBlock
 			{
-				Opacity = 0.5 * expressionLevel,
+				HorizontalAlignment = HorizontalAlignment.Center,
 				FontSize = 12.0 * expressionLevel,
-				Foreground = AppPalette.NoteBrush,
-				Text = key.NoteName
+				Foreground = visualProfile.AppBrushes["NoteName"].Value,
+				Text = key.NoteName,
+				FontWeight = fontWeight,
 			};
 		}
 

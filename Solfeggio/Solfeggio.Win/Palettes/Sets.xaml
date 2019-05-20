@@ -2,6 +2,7 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:models="clr-namespace:Solfeggio.Models"
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters">
 
 	<m:Set
@@ -128,6 +129,11 @@
 			Header="{m:Localizing Key=Visualization}"
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{m:Store Key=presenters:MusicalPresenter}" />
+
+		<Expander
+			Header="{m:Localizing Key=Theme}"
+			ContentTemplate="{StaticResource VisualProfileTemplate}"
+			Content="{m:Store Key=models:VisualProfile}" />
 
 	</m:Set>
 

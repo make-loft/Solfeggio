@@ -59,7 +59,7 @@
 
 	<SolidColorBrush
 		x:Key="HzBrush"
-		Color="LightGreen"
+		Color="Blue"
 		Opacity="0.3" />
 
 </ResourceDictionary>

@@ -86,9 +86,8 @@ namespace Solfeggio.Models
 
 		[DataMember] public int ActiveInputDeviceIndex { get; set; }
 		[DataMember] public int ActiveOutputDeviceIndex { get; set; }
-
 		[DataMember] public bool UseSpectralInterpolation { get; set; } = true;
-		[DataMember] public double ShiftsPerFrame { get; set; } = 0;
+		public double ShiftsPerFrame { get; set; } = 0;
 		public int ShiftSize => ShiftsPerFrame.Is(0d) ? 0 : (int)(FrameSize / ShiftsPerFrame);
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 
@@ -142,22 +141,22 @@ namespace Solfeggio.Models
 			PropertyChanged += OnPropertyChanged;
 		}
 
-		private readonly string[] ActivePropertyNames =
+		private readonly string[] LifecyclePropertyNames =
 		{
 			nameof(SampleRate),
 			nameof(SampleSize),
 			nameof(BuffersCount),
-			nameof(ActiveWindow),
 			nameof(ActiveInputDevice),
 			nameof(ActiveOutputDevice),
 		};
 
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (ActivePropertyNames.Contains(e.PropertyName).Not()) return;
-			Restart();
-			EvokePropertyChanged(nameof(FrameDuration));
+			if (LifecyclePropertyNames.Contains(e.PropertyName).Not()) return;
 			EvokePropertyChanged(nameof(SampleDuration));
+			EvokePropertyChanged(nameof(FrameDuration));
+			Dispose();
+			Expose();
 		}
 
 		public void Dispose()
@@ -174,12 +173,6 @@ namespace Solfeggio.Models
 			inputProcessor = default;
 
 			PropertyChanged -= OnPropertyChanged;
-		}
-
-		public void Restart()
-		{
-			Dispose();
-			Expose();
 		}
 
 		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)

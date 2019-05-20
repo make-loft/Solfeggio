@@ -1,0 +1,20 @@
+﻿<Window
+	x:Class="Solfeggio.MonitorView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
+	mc:Ignorable="d"
+	DataContext="{m:Store Key=viewModels:AppViewModel}"
+	Height="{Smart MonitorHeight, DefaultValue=400}"
+	Width="{Smart MonitorWidth, DefaultValue=1000}"
+	Left="{Smart MonitorLeft, DefaultValue=NaN}"
+	Top="{Smart MonitorTop, DefaultValue=NaN}"
+	Title="{m:Localizing Key=Monitor}"
+	ResizeMode="CanResizeWithGrip">
+
+	<views:OptionsView />
+</Window>

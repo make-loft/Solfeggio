@@ -80,6 +80,7 @@ namespace Solfeggio
 		public static o Signal = _("Signal", "Сигнал");
 		public static o Input = _("Input", "Ввод");
 		public static o Output = _("Output", "Вывод");
+		public static o Monitor = _("Monitor", "Монитор");
 
 		public static o FrameSize = _("Frame Size", "Размер кадра");
 		public static o BuffersCount = _("Buffers Count", "Количество буферов");

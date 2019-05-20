@@ -70,7 +70,7 @@ namespace Solfeggio.Presenters
 	public class Bandwidth
 	{
 		public static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
-		{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp, ScaleFuncs._20Log10 };
+		{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp, ScaleFuncs._20Log10, ScaleFuncs.Sqrt };
 
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
@@ -109,6 +109,7 @@ namespace Solfeggio.Presenters
 		{
 			Limit = SmartRange.Create(0.00d, 1d),
 			Threshold = SmartRange.Create(0.00d, 1d),
+			VisualScaleFunc = ScaleFuncs.Sqrt,
 			IsVisible = true
 		};
 
