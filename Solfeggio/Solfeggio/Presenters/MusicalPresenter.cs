@@ -21,10 +21,10 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenter : ContextObject
 	{
-		[DataMember] public VisualStates Show { get; set; } = new VisualStates();
 		[DataMember] public FrameOptions Frame { get; set; } = new FrameOptions();
 		[DataMember] public MusicalOptions Music { get; set; } = new MusicalOptions();
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new SpectralOptions();
+		[DataMember] public VisualProfile VisualProfile { get; set; } = new VisualProfile();
 
 		[DataMember] public int MaxDominantsCount { get; set; } = 10;
 		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
@@ -256,29 +256,23 @@ namespace Solfeggio.Presenters
 			v => v.Negation().Increment(height)
 		);
 
-		public IEnumerable<Grid> DrawTops(IList<PianoKey> keys, double width, double height,
-			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes) => Draw
+		public IEnumerable<Grid> DrawTops(IList<PianoKey> keys, double width, double height) => Draw
 		(
 			keys, default,
 			(in double x, in double y,
-				PianoKey item, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
+				PianoKey pianoKey, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
 			{
 				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
-				var panel = new StackPanel
-				{
-					Opacity = 0.3 + activeMagnitude,
-				};
-
+				var panel = new StackPanel { Opacity = 0.3d + activeMagnitude };
 				var border = new Border
 				{
-					CornerRadius = new CornerRadius(2 * expressionLevel),
-					Background = visualProfile.AppBrushes["TopBrush"].Value
+					CornerRadius = new CornerRadius(2d * expressionLevel),
+					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
 
-				EnumeratePanelContent(item, activeFrequency, activeMagnitude, expressionLevel,
-					showActualFrequncy, showActualMagnitude, showEthalonFrequncy, showNotes).
+				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel).
 					ForEach(panel.Children.Add);
 
 				return new Grid { Children = { border, panel }, Margin = new Thickness(x, y / 2d, 0d, 0d) };
@@ -288,49 +282,29 @@ namespace Solfeggio.Presenters
 			width, height, default, default
 		);
 
-		VisualProfile visualProfile = Store.Get<VisualProfile>();
-
 		private IEnumerable<TextBlock> EnumeratePanelContent(
-			PianoKey key, double activeFrequency, double activeMagnitude, double expressionLevel,
-			bool showActualFrequncy, bool showActualMagnitude, bool showEthalonFrequncy, bool showNotes)
+			PianoKey pianoKey, double activeFrequency, double activeMagnitude, double expressionLevel)
 		{
-			var fontWeight = FontWeight.FromOpenTypeWeight((int)(5d * expressionLevel));
+			var weightValue = (int)(300d * expressionLevel);
+			var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);
 
-			if (showActualMagnitude) yield return new TextBlock
-			{
-				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = visualProfile.AppFontSizes["ActualMagnitude"].Value * expressionLevel,
-				Foreground = visualProfile.AppBrushes["ActualMagnitude"].Value,
-				Text = activeMagnitude.ToString(Spectrum.Magnitude.NumericFormat),
-				FontWeight = fontWeight,
-			};
+			object GetValueByKey(string key) =>
+				key.Is("ActualMagnitude") ? activeMagnitude :
+				key.Is("ActualFrequancy") ? activeFrequency :
+				key.Is("DeltaFrequancy") ? pianoKey.DeltaFrequency :
+				key.Is("EthalonFrequncy") ? pianoKey.EthalonFrequency :
+				key.Is("NoteName") ? pianoKey.NoteName :
+				default(object);
 
-			if (showActualFrequncy) yield return new TextBlock
+			return VisualProfile.TopProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
 			{
+				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = visualProfile.AppFontSizes["ActualFrequancy"].Value * expressionLevel,
-				Foreground = visualProfile.AppBrushes["ActualFrequancy"].Value,
-				Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat),
+				FontSize = p.Value.FontSize * expressionLevel,
+				FontFamily = p.Value.FontFamily,
 				FontWeight = fontWeight,
-			};
-
-			if (showEthalonFrequncy) yield return new TextBlock
-			{
-				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = visualProfile.AppFontSizes["EthalonFrequncy"].Value * expressionLevel,
-				Foreground = visualProfile.AppBrushes["EthalonFrequncy"].Value,
-				Text = key.EthalonFrequency.ToString(Spectrum.Frequency.NumericFormat),
-				FontWeight = fontWeight,
-			};
-
-			if (showNotes) yield return new TextBlock
-			{
-				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = 12.0 * expressionLevel,
-				Foreground = visualProfile.AppBrushes["NoteName"].Value,
-				Text = key.NoteName,
-				FontWeight = fontWeight,
-			};
+				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
+			});
 		}
 
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height)

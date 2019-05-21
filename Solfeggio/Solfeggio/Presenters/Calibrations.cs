@@ -81,18 +81,6 @@ namespace Solfeggio.Presenters
 	}
 
 	[DataContract]
-	public class VisualStates
-	{
-		[DataMember] public bool Wave { get; set; } = false;
-		[DataMember] public bool Dominants { get; set; } = true;
-		[DataMember] public bool ActualFrequncy { get; set; } = true;
-		[DataMember] public bool ActualMagnitude { get; set; } = true;
-		[DataMember] public bool EthalonFrequncy { get; set; } = true;
-		[DataMember] public bool Notes { get; set; } = true;
-		[DataMember] public bool NotesGrid { get; set; } = false;
-	}
-
-	[DataContract]
 	public class SpectralOptions
 	{
 		[DataMember]
@@ -101,7 +89,7 @@ namespace Solfeggio.Presenters
 			Limit = SmartRange.Create(10d, 22000d),
 			Threshold = SmartRange.Create(20d, 3000d),
 			VisualScaleFunc = ScaleFuncs.Log2,
-			NumericFormat = "F0",
+			NumericFormat = "F1",
 		};
 
 		[DataMember]

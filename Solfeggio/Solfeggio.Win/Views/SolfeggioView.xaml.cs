@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
-using Solfeggio.Processors;
 using Solfeggio.ViewModels;
 
 namespace Solfeggio.Views
@@ -57,7 +56,7 @@ namespace Solfeggio.Views
 				//		AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 				//		generator.Frequency.ToEnumerable(), 0.92d);
 
-				if (presenter.Show.NotesGrid)
+				if (presenter.VisualProfile.NotesGrid)
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateNotes());
@@ -70,17 +69,13 @@ namespace Solfeggio.Views
 					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 
-				if (presenter.Show.Wave && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+				if (presenter.VisualProfile.Wave && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
-				if (presenter.Show.ActualFrequncy || presenter.Show.ActualMagnitude || presenter.Show.EthalonFrequncy || presenter.Show.Notes)
-					presenter.DrawTops(dominanats, width, height,
-						presenter.Show.ActualFrequncy,
-						presenter.Show.ActualMagnitude,
-						presenter.Show.EthalonFrequncy,
-						presenter.Show.Notes).
+				if (presenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
+					presenter.DrawTops(dominanats, width, height).
 						ForEach(p =>
 						{
 							SpectrumCanvas.Children.Add(p);
