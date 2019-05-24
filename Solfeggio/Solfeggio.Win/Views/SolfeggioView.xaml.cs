@@ -69,7 +69,7 @@ namespace Solfeggio.Views
 					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 
-				if (presenter.VisualProfile.Wave && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+				if (presenter.Frame.Level.IsVisible && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 
@@ -83,7 +83,7 @@ namespace Solfeggio.Views
 							p.Margin = new Thickness(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 2d, 0d, 0d);
 						});
 
-				appViewModel.Dominants = dominanats.OrderBy(k => Math.Abs(k.DeltaFrequency)).ToArray();
+				appViewModel.Harmonics = dominanats.OrderBy(k => Math.Abs(k.DeltaFrequency)).ToArray();
 			};
 
 			timer.Start();

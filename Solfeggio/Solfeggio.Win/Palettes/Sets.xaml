@@ -10,10 +10,10 @@
         x:Key="ShowStateSet">
         
         <Switch
-            Tag="{m:Localizing Key=Dominants}"
-            IsToggled="{Binding Show.Dominants, Mode=TwoWay}" />
+            Tag="{m:Localizing Key=Harmonics}"
+			IsToggled="{Binding VisualProfile.Harmonics, Mode=TwoWay}" />
 
-        <Switch
+        <!--<Switch
             Tag="{m:Localizing Key=ActualFrequncy}"
             IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
 
@@ -23,15 +23,15 @@
 
         <Switch
             Tag="{m:Localizing Key=Notes}"
-            IsToggled="{Binding Show.Notes, Mode=TwoWay}" />
+            IsToggled="{Binding Show.Notes, Mode=TwoWay}" />-->
 
         <Switch
             Tag="{m:Localizing Key=NotesGrid}"
-            IsToggled="{Binding Show.NotesGrid, Mode=TwoWay}" />
+			IsToggled="{Binding VisualProfile.NotesGrid, Mode=TwoWay}" />
 
         <Switch
             Tag="{m:Localizing Key=DiscreteGrid}"
-            IsToggled="{Binding Show.DiscreteGrid, Mode=TwoWay}" />
+			IsToggled="{Binding Spectrum.Frequency.IsVisible, Mode=TwoWay}" />
         
     </m:Set>
 
@@ -39,23 +39,63 @@
 		x:Shared="False"
 		x:Key="ProcessingProfileOptionsSet">
 
-		<Picker
-			Tag="{m:Localizing Key=Input}"
-			ItemsSource="{Binding InputDevices}"
-			SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-			DisplayMemberPath="ProductName" />
+		<Entry
+			m:Rack.Cell="C3"
+			Tag="{m:Localizing Key=Title}"
+			Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-		<Picker
-			Tag="{m:Localizing Key=Output}"
-			ItemsSource="{Binding OutputDevices}"
-			SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-			DisplayMemberPath="ProductName"/>
+		<Grid
+			m:Rack.Columns="2* ^ * ^"
+			Tag="{m:Localizing Key=Input}">
+			<Picker
+				m:Rack.Cell="C0"
+				MinWidth="210"
+				Tag="{m:Localizing Key=Input}"
+				ItemsSource="{Binding InputDevices}"
+				SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+				DisplayMemberPath="ProductName" />
+			<Label
+				m:Rack.Cell="C1"
+				Text="{m:Localizing Key=Level}" />
+			<Slider
+				m:Rack.Cell="C2"
+				Minimum="0"
+				Maximum="1"
+				VerticalAlignment="Center"
+				Value="{Binding InputLevel, Mode=TwoWay}" />
+			<Entry
+				m:Rack.Cell="C3"
+				Text="{Binding InputLevel, Mode=TwoWay, StringFormat=F2}" />
+		</Grid>
+
+		<Grid
+			m:Rack.Columns="2* ^ * ^"
+			Tag="{m:Localizing Key=Output}">
+			<Picker
+				m:Rack.Cell="C0"
+				MinWidth="210"
+				ItemsSource="{Binding OutputDevices}"
+				SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+				DisplayMemberPath="ProductName" />
+			<Label
+				m:Rack.Cell="C1"
+				Text="{m:Localizing Key=Level}" />
+			<Slider
+				m:Rack.Cell="C2"
+				Minimum="0"
+				Maximum="1"
+				VerticalAlignment="Center"
+				Value="{Binding OutputLevel, Mode=TwoWay}"/>
+			<Entry
+				m:Rack.Cell="C3"
+				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat=F2}"/>
+		</Grid>
 
 		<Picker
 			Tag="{m:Localizing Key=SampleRate}"
 			ItemsSource="{Binding SampleRates}"
 			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
-		
+
 		<Picker
 			Tag="{m:Localizing Key=BuffersCount}"
 			ItemsSource="{StaticResource AllowedBuffersCount}"
@@ -130,10 +170,10 @@
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-		<Expander
+		<!--<Expander
 			Header="{m:Localizing Key=Theme}"
 			ContentTemplate="{StaticResource VisualProfileTemplate}"
-			Content="{m:Store Key=models:VisualProfile}" />
+			Content="{m:Store Key=models:VisualProfile}" />-->
 
 	</m:Set>
 

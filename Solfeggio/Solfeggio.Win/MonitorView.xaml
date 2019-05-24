@@ -14,7 +14,8 @@
 	Left="{Smart MonitorLeft, DefaultValue=NaN}"
 	Top="{Smart MonitorTop, DefaultValue=NaN}"
 	Title="{m:Localizing Key=Monitor}"
-	ResizeMode="CanResizeWithGrip">
+	ResizeMode="CanResizeWithGrip"
+	ShowInTaskbar="False">
 
 	<views:OptionsView />
 </Window>

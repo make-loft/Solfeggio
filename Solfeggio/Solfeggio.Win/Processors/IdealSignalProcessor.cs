@@ -27,6 +27,9 @@ namespace Solfeggio.Processors
 			set => _timer.Interval = TimeSpan.FromMilliseconds(value);
 		}
 
+		public float Level { get; set; } = 1f;
+		public double Boost { get; set; } = 1d;
+
 		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
 		private readonly DispatcherTimer _timer = new DispatcherTimer();
@@ -45,15 +48,15 @@ namespace Solfeggio.Processors
 
 		public void Tick()
 		{
-			DataAvailable?.Invoke(this, new ProcessingEventArgs(_bins, _bins.Length));
+			DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _bins, _bins.Length));
 			_bins = Next();
 		}
 
 		public short[] Next()
 		{
 			var signal = _manager.ActiveProfile.GenerateSignalSample(_sampleSize, _sampleRate, false);
-			var bins = signal.Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
-			return bins;
+			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
+			return bins.Scale(Boost);
 		}
 
 		short[] _bins;

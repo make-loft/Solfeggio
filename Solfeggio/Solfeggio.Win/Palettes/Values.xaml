@@ -25,7 +25,7 @@
 		x:Key="WaveOutStrokeThickness">1</system:Double>
 
 	<system:Double
-		x:Key="MinDominantOpacityLevel">0.3</system:Double>
+		x:Key="MinHarmonicOpacityLevel">0.3</system:Double>
 
 	<system:Double
 		x:Key="MinWidth">32</system:Double>

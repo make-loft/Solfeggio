@@ -18,7 +18,7 @@ namespace Solfeggio.Models
 		[DataMember] public bool IsVisible { get; set; }
 	}
 
-	[DataContract]
+	//[DataContract]
 	public class VisualProfile : ContextObject
 	{
 		public SmartSet<Brush> Brushes { get; } = EnumerateColors().Select(c => (Brush)new SolidColorBrush(c)).ToSet();
@@ -34,9 +34,17 @@ namespace Solfeggio.Models
 
 		public Brush TopBrush = new SolidColorBrush(BurlyWood) { Opacity = 0.1d };
 
-		[DataMember] public bool Wave { get; set; } = false;
-		[DataMember] public bool Dominants { get; set; } = true;
-		[DataMember] public bool NotesGrid { get; set; } = false;
+		[DataMember] public bool Harmonics
+		{
+			get => Get(() => Harmonics);
+			set => Set(() => Harmonics, value);
+		}
+
+		[DataMember] public bool NotesGrid
+		{
+			get => Get(() => NotesGrid);
+			set => Set(() => NotesGrid, value);
+		}
 
 		private static TopProfile CreateProfile(
 			Color color,
@@ -60,22 +68,21 @@ namespace Solfeggio.Models
 		public static Color[] Rainbow =	new[]
 		{
 			Red,
-			Color.Multiply(SkyBlue, 0.5f),
+			SkyBlue, //Color.Multiply(SkyBlue, 0.5f),
 			Orange,
-			Color.Multiply(Blue, 0.5f),
+			Blue, //Color.Multiply(Blue, 0.5f),
 			Yellow,
 
 			Green,
-			Color.Multiply(Red, 0.5f),
+			Red, //Color.Multiply(Red, 0.5f),
 			SkyBlue,
-			Color.Multiply(Orange, 0.5f),
+			Orange, //Color.Multiply(Orange, 0.5f),
 			Blue,
-			Color.Multiply(Yellow, 0.5f),
+			Yellow, //Color.Multiply(Yellow, 0.5f),
 			Violet
 		};
 
-		public Brush[] NoteBrushes = Rainbow.Reverse()
-			.Select(c => new SolidColorBrush(Color.Subtract(White, c)) { Opacity = 0.1d }).ToArray();
+		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 0.1d }).ToArray();
 		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 1d }).ToArray();
 
 		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
@@ -83,11 +90,11 @@ namespace Solfeggio.Models
 		[DataMember]
 		public Dictionary<string, TopProfile> TopProfiles { get; set; } = new Dictionary<string, TopProfile>
 		{
-			{ nameof(ActualMagnitude), CreateProfile(White, 10d) },
-			{ nameof(ActualFrequancy), CreateProfile(White, 12d) },
-			{ nameof(DeltaFrequancy), CreateProfile(LightBlue, 12d, "{0:+0.0;-0.0; 0.0}") },
-			{ nameof(EthalonFrequncy), CreateProfile(Transparent, 12d) },
-			{ nameof(NoteName), CreateProfile(Transparent, 14d, default) },
+			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
+			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
+			{ nameof(DeltaFrequancy), CreateProfile(LightBlue, 14d, "{0:+0.0;-0.0; 0.0}") },
+			{ nameof(EthalonFrequncy), CreateProfile(Transparent, 14d) },
+			{ nameof(NoteName), CreateProfile(Transparent, 16d, default) },
 		};
 	}
 }

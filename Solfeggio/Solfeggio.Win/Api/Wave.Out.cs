@@ -59,17 +59,14 @@ namespace Solfeggio.Api
 				public override MmResult MarkForProcessing(Header header) =>
 					waveOutWrite(handle, header, Marshal.SizeOf(header)).Verify();
 
-				public float GetVolume()
+				public override float GetVolume()
 				{
 					waveOutGetVolume(handle, out var stereoVolume).Verify();
 					return (stereoVolume & 0xFFFF) / (float)0xFFFF;
 				}
 
-				public void SetVolume(float value)
+				public override void SetVolume(float value)
 				{
-					if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Volume must be between 0.0 and 1.0");
-					if (value > 1) throw new ArgumentOutOfRangeException(nameof(value), "Volume must be between 0.0 and 1.0");
-
 					float left = value;
 					float right = value;
 

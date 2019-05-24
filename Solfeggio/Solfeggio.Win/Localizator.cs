@@ -46,7 +46,7 @@ namespace Solfeggio
 		public static o Language = _("Language", "Язык");
 		public static o Device = _("Device", "Устройство");
 		public static o Window = _("Window", "Окно");
-		public static o Dominants = _("Dominants", "Доминанты");
+		public static o Harmonics = _("Harmonics", "Доминанты");
 		public static o Notes = _("Notes", "Ноты");
 		public static o Sample = _("Sample", "Сэмпл");
 		public static o Scaling = _("Scaling", "Масштабирование");
@@ -91,7 +91,7 @@ namespace Solfeggio
 		public static o PhaseShift = _("Phase shift", "Фазовый сдвиг");
 		public static o NotesGrid = _("Notes Grid", "Нотная сетка");
 		public static o DiscreteGrid = _("Discrete Grid", "Дискретная сетка");
-		public static o MusicalStandards = _("MusicalStandards", "Музыкальные стандарты");
+		public static o MusicalStandards = _("Musical Standards", "Музыкальные стандарты");
 		public static o SpectralInterpolation = _("Spectral Interpolation", "Спектральная интерполяция");
 		
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");

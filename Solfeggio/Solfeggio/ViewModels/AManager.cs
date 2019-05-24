@@ -12,7 +12,7 @@ namespace Solfeggio.ViewModels
 		[DataMember]
 		public TProfile ActiveProfile
 		{
-			get => Get(() => ActiveProfile, Profiles.LastOrDefault());
+			get => Get(() => ActiveProfile, Profiles.FirstOrDefault());
 			set => Set(() => ActiveProfile, value);
 		}
 

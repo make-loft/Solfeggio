@@ -40,7 +40,7 @@
 									SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}" />
 								<Button
 									Content="➕"
-									Command="{m:Context Key=Set.Create, StoreKey=viewModels:HarmonicManager}" />
+									Command="{m:Context Key=Set.Create, StoreKey=viewModels:ProcessingManager}" />
 
 							</StackLayout>
 
@@ -88,11 +88,11 @@
 					</Expander>
 
 					<Expander
-						Header="{m:Localizing Key=Dominants}">
+						Header="{m:Localizing Key=Harmonics}">
 						<ItemsView
 							Name="DominatsItemsControl"
-							ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=viewModels:AppViewModel}"
-							ItemTemplate="{StaticResource DominantTemplate}" />
+							ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=viewModels:AppViewModel}"
+							ItemTemplate="{StaticResource HarmonicTemplate}" />
 					</Expander>
 			
 				</StackLayout>

@@ -106,12 +106,21 @@ namespace Solfeggio.Models
 			this[() => ActiveOutputDevice].PropertyChanged += (o, e) =>
 				ActiveOutputDeviceIndex = OutputDevices.IndexOf(ActiveOutputDevice);
 
-			this[() => FramePow].PropertyChanged += (sender, args) =>
+			this[() => FramePow].PropertyChanged += (o, e) =>
 			{
 				SampleSize = FrameSize + ShiftSize;
 				EvokePropertyChanged(nameof(FrameDuration));
 				EvokePropertyChanged(nameof(FrameSize));
 			};
+
+			this[() => InputBoost].PropertyChanged += (o, e) =>
+				inputProcessor.To(out var p)?.With(p.Boost = InputBoost);
+			this[() => InputLevel].PropertyChanged += (o, e) =>
+				inputProcessor.To(out var p)?.With(p.Level = InputLevel);
+			this[() => OutputBoost].PropertyChanged += (o, e) =>
+				outputProcessor.To(out var p)?.With(p.Boost = InputBoost);
+			this[() => OutputLevel].PropertyChanged += (o, e) =>
+				outputProcessor.To(out var p)?.With(p.Level = InputLevel);
 		}
 
 		private bool CheckIndex(int index, int count) => 0 <= index && index < count;
@@ -132,6 +141,10 @@ namespace Solfeggio.Models
 			var waveFormat = new WaveFormat((int)SampleRate, 16, 1); ;
 			inputProcessor = ActiveInputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount);
 			outputProcessor = ActiveOutputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount, inputProcessor);
+			inputProcessor.Boost = InputBoost;
+			outputProcessor.Boost = OutputBoost;
+			inputProcessor.Level = InputLevel;
+			outputProcessor.Level = OutputLevel;
 
 			inputProcessor.DataAvailable += OnInputDataAvailable;
 
@@ -173,6 +186,34 @@ namespace Solfeggio.Models
 			inputProcessor = default;
 
 			PropertyChanged -= OnPropertyChanged;
+		}
+
+		[DataMember]
+		public double InputBoost
+		{
+			get => Get(() => InputBoost, 1.0d);
+			set => Set(() => InputBoost, value);
+		}
+
+		[DataMember]
+		public double OutputBoost
+		{
+			get => Get(() => OutputBoost, 1.0d);
+			set => Set(() => OutputBoost, value);
+		}
+
+		[DataMember]
+		public float InputLevel
+		{
+			get => Get(() => InputLevel, 1.0f);
+			set => Set(() => InputLevel, value);
+		}
+
+		[DataMember]
+		public float OutputLevel
+		{
+			get => Get(() => OutputLevel, 0.1f);
+			set => Set(() => OutputLevel, value);
 		}
 
 		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)

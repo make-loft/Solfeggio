@@ -18,10 +18,10 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveLanguage, value);
 		}
 
-		public IList<PianoKey> Dominants
+		public IList<PianoKey> Harmonics
 		{
-			get => Get<IList<PianoKey>>(nameof(Dominants));
-			set => Set(nameof(Dominants), value);
+			get => Get<IList<PianoKey>>(nameof(Harmonics));
+			set => Set(nameof(Harmonics), value);
 		}
 
 		public void Expose()

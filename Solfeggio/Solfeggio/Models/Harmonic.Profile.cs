@@ -26,6 +26,7 @@ namespace Solfeggio.Models
 			{
 				new Harmonic {Frequency = presenter.Music.ActivePitchStandard},
 				new Harmonic {Frequency = presenter.Music.ActivePitchStandard + 2},
+				new Harmonic {Frequency = presenter.Music.ActivePitchStandard + 5},
 			};
 
 			public Profile() => Expose();
@@ -39,7 +40,7 @@ namespace Solfeggio.Models
 			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics) => new Harmonic
 			{
 				Frequency = harmonics.LastOrDefault().Is(out var harmonic)
-					? harmonic.Frequency + 2
+					? harmonic.Frequency + (harmonics.Count + 1)
 					: presenter.Music.ActivePitchStandard
 			};
 

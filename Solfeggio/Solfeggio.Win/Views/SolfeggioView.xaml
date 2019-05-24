@@ -4,7 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:v="clr-namespace:Solfeggio.Views"
+	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	DataContext="{m:Store Key=vm:ProcessingManager}"
 	HorizontalContentAlignment="Stretch"
 	VerticalContentAlignment="Stretch"
@@ -65,7 +66,7 @@
 				<Border
 					Background="DimGray"
 					Opacity=".5" />
-				<views:OptionsView />
+				<v:OptionsView />
 			</Grid>
 		</Grid>
 
@@ -73,9 +74,10 @@
 			Rack.Cell="R0 C0"
 			Margin="0 32 0 0"
 			Foreground="Violet"
-			Name="DominatsItemsControl"
-			ItemsSource="{m:StoreBinding Path=Dominants, StoreKey=vm:AppViewModel}"
-			ItemTemplate="{StaticResource DominantTemplate}" />
+			Name="HarmoncsItemsControl"
+			Visibility="{m:StoreBinding StoreKey=p:MusicalPresenter, Path=VisualProfile.Harmonics, Converter={StaticResource TrueToVisibleConverter}}"
+			ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
+			ItemTemplate="{StaticResource HarmonicOutTemplate}" />
 
 	</Grid>
 

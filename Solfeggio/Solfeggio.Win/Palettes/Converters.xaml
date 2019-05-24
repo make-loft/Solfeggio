@@ -9,9 +9,9 @@
 		x:Key="DelegateToNameConverter" />
 	
 	<converters:MathConverter
-		x:Key="DominantOpacityConverter"
+		x:Key="HarmonicOpacityConverter"
 		Operation="Increment"
-		Parameter="{StaticResource MinDominantOpacityLevel}"/>
+		Parameter="{StaticResource MinHarmonicOpacityLevel}"/>
 
 	<c:SwitchConverter
 		x:Key="ModeToTitleConverter">

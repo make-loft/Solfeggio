@@ -10,10 +10,10 @@
 	<DataTemplate
 		x:Key="HarmonicTemplate">
 		<Grid
-			Opacity="{Binding Magnitude, Converter={StaticResource DominantOpacityConverter}}"
+			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
 			m:Rack.Columns="2* 2* 2* * * * *"
 			m:Rack.Rows="* *">
-			
+
 			<Slider
 				m:Rack.Cell="C0 R1"
 				Minimum="+0.0"
@@ -38,13 +38,13 @@
 
 			<Entry
 				m:Rack.Cell="C0 R0"
-				Text="{Binding Magnitude, StringFormat=F2}" />
+				Text="{Binding Magnitude, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				m:Rack.Cell="C1 R0"
-				Text="{Binding Frequency, StringFormat=F2}" />
+				Text="{Binding Frequency, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				m:Rack.Cell="C2 R0"
-				Text="{Binding PhaseShift, StringFormat=F2}" />
+				Text="{Binding PhaseShift, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Picker
 				m:Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
@@ -59,7 +59,7 @@
 				m:Rack.Cell="C5 R0"
 				HorizontalAlignment="Right"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
-			
+
 			<StackLayout
 				m:Rack.Cell="C6 R0"
 				Orientation="Horizontal"
@@ -101,7 +101,7 @@
 				<Label
 					Text="{m:Localizing Key=Title}" />
 				<Entry
-					Text="{Binding Title}" />
+					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<Button
 					Content="✗"
 					Command="{m:Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager}"
@@ -137,7 +137,7 @@
 			<ItemsView
 				ItemsSource="{Binding Harmonics}"
 				ItemTemplate="{StaticResource HarmonicTemplate}" />
-			
+
 			<Button
 				HorizontalAlignment="Center"
 				Content="{m:Localizing Key=Create}"
@@ -146,9 +146,9 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="DominantTemplate">
+		x:Key="HarmonicOutTemplate">
 		<Grid
-			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource DominantOpacityConverter}}"
+			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
 			m:Rack.Columns="* * * * *">
 			<Label
 				m:Rack.Cell="C0"
@@ -165,79 +165,6 @@
 			<Label
 				m:Rack.Cell="C4"
 				Text="{Binding NoteName}" />
-		</Grid>
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="DurationTemplate">
-		<Grid
-			m:Rack.Rows="^ ^ ^ ^"
-			m:Rack.Columns="^ ^ ^ ^ ^">
-
-			<Label
-				m:Rack.Cell="R0 C0"
-				Text="{m:Localizing Key=Duration}" />
-
-			<Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=Frame}" />
-			<Label
-				m:Rack.Cell="R2 C0"
-				Text="{m:Localizing Key=Sample}" />
-			<Label
-				m:Rack.Cell="R0 C2"
-				Text="bins" />
-			<Label
-				m:Rack.Cell="R0 C1"
-				Text="ms" />
-
-			<Label
-				m:Rack.Cell="R1 C2"
-				Text="{Binding ActiveProfile.SampleDuration.TotalMilliseconds}" />
-			<Label
-				m:Rack.Cell="R2 C2"
-				Text="{Binding FrameDuration.TotalMilliseconds}" />
-			<Label
-				m:Rack.Cell="R1 C1"
-				Text="{Binding ActiveProfile.SampleSize}" />
-			<Label
-				m:Rack.Cell="R2 C1"
-				Text="{Binding FrameSize}" />
-		</Grid>
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="FramingTemplate">
-		<Grid
-			m:Rack.Rows="^ ^"
-			m:Rack.Columns="^ * ^">
-
-			<StackLayout
-				m:Rack.Cell="R0 C0">
-				<Label
-					Text="{m:Localizing Key=Short}" />
-				<Label
-					Text="{m:Localizing Key=Speed}" />
-			</StackLayout>
-
-			<Slider
-				m:Rack.Cell="R0 C1"
-				Maximum="13"
-				Minimum="9"
-				Value="{Binding Path=FramePow, Mode=TwoWay}" />
-
-			<StackLayout
-				m:Rack.Cell="R0 C2">
-				<Label
-					Text="{m:Localizing Key=Long}" />
-				<Label
-					Text="{m:Localizing Key=Accurate}" />
-			</StackLayout>
-
-			<ContentPresenter
-				m:Rack.Cell="R1 C1"
-				ContentTemplate="{StaticResource DurationTemplate}"
-				Content="{Binding}" />
 		</Grid>
 	</DataTemplate>
 
@@ -451,15 +378,6 @@
 			<GridSplitter
 				m:Rack.Cell="C3"
 				Style="{StaticResource VerticalGridSplitter}" />
-
-			<StackLayout
-				m:Rack.Cell="C4">
-				<Label
-					Text="{m:Localizing Key=Framing}" />
-				<ContentPresenter
-					Content="{m:Store Key=viewModels:ProcessingManager}"
-					ContentTemplate="{StaticResource FramingTemplate}" />
-			</StackLayout>
 
 		</Grid>
 

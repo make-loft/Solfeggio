@@ -26,7 +26,7 @@ namespace Solfeggio.Presenters
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new SpectralOptions();
 		[DataMember] public VisualProfile VisualProfile { get; set; } = new VisualProfile();
 
-		[DataMember] public int MaxDominantsCount { get; set; } = 10;
+		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
 		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
 
@@ -365,7 +365,7 @@ namespace Solfeggio.Presenters
 
 			averageMagnitude /= m;
 			var minMagnitude = upperMagnitude * 0.03;
-			var dominants = keys.OrderByDescending(k => k.Magnitude).Take(MaxDominantsCount)
+			var dominants = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
 				.Where(k => k.Magnitude > minMagnitude).ToList();
 
 			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);

@@ -11,12 +11,14 @@ namespace Solfeggio.Api
 
 	public class ProcessingEventArgs : EventArgs
 	{
-		public ProcessingEventArgs(short[] buffer, int binsCount)
+		public ProcessingEventArgs(IProcessor source, short[] buffer, int binsCount)
 		{
+			Source = source;
 			Bins = buffer;
 			BinsCount = binsCount;
 		}
 
+		public IProcessor Source { get; }
 		public short[] Bins { get; }
 		public int BinsCount { get; }
 	}

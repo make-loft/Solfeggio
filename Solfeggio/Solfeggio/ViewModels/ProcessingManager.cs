@@ -25,31 +25,32 @@ namespace Solfeggio.ViewModels
 
 		public override void Expose()
 		{
-			base.Expose();
-
 			if (Profiles.Count.Is(0))
 			{
 				var p = default(ProcessingProfile);
 
 				Create().To(out p).With
 				(
-					p.Title = "Low Latency Realtime Analize",
-					p.FramePow = 10
+					p.Title = "Musical Tuning & Vocal Trainings",
+					p.FramePow = 11
 				).Use(Profiles.Add);
 
 				Create().To(out p).With
 				(
 					p.Title = "Research of Ideal Signals",
 					p.FramePow = 10,
-					p.ActiveInputDevice = p.InputDevices.LastOrDefault()
+					p.ActiveInputDevice = p.InputDevices.LastOrDefault(),
+					p.OutputLevel = 1.0f
 				).Use(Profiles.Add);
 
 				Create().To(out p).With
 				(
-					p.Title = "Musical Tuning & Vocal Trainings",
-					p.FramePow = 11
+					p.Title = "Low Latency Realtime Analize",
+					p.FramePow = 10
 				).Use(Profiles.Add);
 			}
+
+			base.Expose();
 
 			this[() => ActiveProfile].PropertyChanging += (sender, args) =>
 			{
@@ -70,7 +71,6 @@ namespace Solfeggio.ViewModels
 
 		private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
 		{
-			var (j, k) = 0d;
 			var frameSize = args.Source.FrameSize;
 
 			var timeFrame = args.Sample.Skip(0).Take(frameSize).ToArray();
@@ -92,9 +92,10 @@ namespace Solfeggio.ViewModels
 				? Filtering.Interpolate(spectrum).ToArray()
 				: spectrum;
 
-			var innerFrame = spectralFrame.Decimation(false);
+			var (j, k) = 0d;
+			//var innerFrame = spectralFrame.Decimation(false);
+			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
 			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
-			InnerFrame = innerFrame.Select(c => new Complex(k++, c.Real)).ToArray();
 		}
 	}
 }

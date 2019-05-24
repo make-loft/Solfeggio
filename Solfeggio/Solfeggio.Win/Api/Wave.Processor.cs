@@ -9,6 +9,8 @@ namespace Solfeggio.Api
 {
 	public interface IProcessor : IDataSource
 	{
+		float Level { get; set; }
+		double Boost { get; set; }
 		void Wake();
 		void Lull();
 		void Free();
@@ -24,7 +26,30 @@ namespace Solfeggio.Api
 
 	public partial class Wave
 	{
-		public abstract class Processor<TDeviceInfo> : IProcessor, IExposable, IDisposable
+		public static short[] Scale(this short[] data, double boost)
+		{
+			if (boost.Is(1d)) return data;
+
+			for (var i = 0; i < data.Length; i++)
+			{
+				var normalizedValue = (double)data[i] / short.MaxValue;
+				data[i] = (short)(short.MaxValue * Math.Pow(normalizedValue, 1d/boost));
+			}
+
+			return data;
+		}
+
+		public static double[] Stretch(this double[] data, double volume)
+		{
+			if (volume.Is(1d)) return data;
+
+			for (var i = 0; i < data.Length; i++)
+				data[i] *= volume;
+
+			return data;
+		}
+
+		public abstract class Processor<TDeviceInfo> :IProcessor, IExposable, IDisposable
 		{
 			private readonly IProcessor _source;
 			private readonly Callback _callback;
@@ -45,7 +70,7 @@ namespace Solfeggio.Api
 						var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
 						if (buffer.Is())
 						{
-							Array.Copy(e.Bins, buffer.Data, e.BinsCount);
+							Array.Copy(e.Bins.Scale(Boost), buffer.Data, e.BinsCount);
 							if (State.Is(Processing)) buffer.MarkForProcessing();
 						}
 					};
@@ -119,7 +144,7 @@ namespace Solfeggio.Api
 					{
 						if (message.Is(Message.WaveInData))
 						{
-							DataAvailable?.Invoke(this, new ProcessingEventArgs(buffer.Data, buffer.BinsCount));
+							DataAvailable?.Invoke(this, new ProcessingEventArgs(this, buffer.Data.Scale(Boost), buffer.BinsCount));
 							if (State.Is(Processing)) buffer.MarkForProcessing();
 						}
 
@@ -130,6 +155,14 @@ namespace Solfeggio.Api
 					}
 				}
 			}
+
+			public float Level
+			{
+				get => _session.GetVolume();
+				set => _session.SetVolume(value);
+			}
+
+			public double Boost { get; set; } = 1d;
 
 			public void Wake()
 			{

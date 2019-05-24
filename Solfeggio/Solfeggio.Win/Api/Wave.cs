@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Solfeggio.Api
 {
-	public partial class Wave
+	public static partial class Wave
 	{
 		public enum Message
 		{
@@ -73,6 +73,9 @@ namespace Solfeggio.Api
 			public abstract MmResult PrepareHeader(Header header);
 			public abstract MmResult UnprepareHeader(Header header);
 			public abstract MmResult MarkForProcessing(Header header);
+
+			public abstract float GetVolume();
+			public abstract void SetVolume(float value);
 		}
 	}
 }
