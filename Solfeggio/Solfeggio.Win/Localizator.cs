@@ -101,7 +101,7 @@ namespace Solfeggio
 		public static o IAmReadyToHelpMessage = _(Messages.IAmReadyToHelpMessage.English, Messages.IAmReadyToHelpMessage.Russian);
 		public static o IAmReadyToHelpLink = _(Messages.IAmReadyToHelpLink.English, Messages.IAmReadyToHelpLink.Russian);
 		public static o ExpirationMessage = _(Messages.ExpirationMessage.English, Messages.ExpirationMessage.Russian);
-		public static o ExpirationLink = _(Messages.ExpirationLink.English, Messages.ExpirationLink.Russian);
+		public static o HomeLink = _(Messages.HomeLink.English, Messages.HomeLink.Russian);
 
 		public static Dictionary<string, o> GetBaseDictionary() =>
 			typeof(Localizator).GetFields(BindingFlags.Static | BindingFlags.Public).
@@ -168,7 +168,7 @@ Please, download the newest release.";
 Пожалуйста, загрузите новейший релиз.";
 		}
 
-		public static class ExpirationLink
+		public static class HomeLink
 		{
 			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
 			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";

@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	ShutdownMode="OnLastWindowClose"
 	StartupUri="AppView.xaml"
 	Startup="App_OnStartup"
 	Exit="App_OnExit">

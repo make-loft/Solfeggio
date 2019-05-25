@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Ace;
-using Solfeggio.Models;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 using static System.Environment;
@@ -47,7 +46,7 @@ namespace Solfeggio
 				YandexMetrica.ReportEvent("Expiration", versionAge);
 				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
 				MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
-				Process.Start(Localizator.ExpirationLink[activeLanguage]);
+				Process.Start(Localizator.HomeLink[activeLanguage]);
 			}
 		}
 
@@ -81,9 +80,23 @@ namespace Solfeggio
 			};
 
 			Store.Get<AppViewModel>();
+			_startupTimestamp = DateTime.Now;
 		}
 
-		private void App_OnExit(object sender, ExitEventArgs e) => Store.Snapshot();
+		private DateTime _startupTimestamp;
+		private static readonly TimeSpan LongSessionDuation = TimeSpan.FromMinutes(4);
+
+		private void App_OnExit(object sender, ExitEventArgs e)
+		{
+			Store.Snapshot();
+			var sessionDuration = DateTime.Now - _startupTimestamp;
+			if (sessionDuration > LongSessionDuation)
+			{
+				YandexMetrica.ReportEvent("LongSession", sessionDuration);
+				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
+				Process.Start(Localizator.HomeLink[activeLanguage]);
+			}
+		}
 
 		#region Launching
 		/* should not directly use nested assemblies into this region */

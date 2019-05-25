@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using Ace;
-using Solfeggio.Views;
 
 namespace Solfeggio
 {
@@ -15,8 +13,7 @@ namespace Solfeggio
 			Closed += (o, e) =>
 			{
 				optionsView.Close();
-				Store.Snapshot();
-				Environment.Exit(0);
+				Application.Current.Shutdown();
 			};
 		}
 	}
