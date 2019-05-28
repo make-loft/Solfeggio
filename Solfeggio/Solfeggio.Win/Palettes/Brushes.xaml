@@ -7,7 +7,7 @@
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
-			Color="Violet"
+			Color="Gray"
 			Offset="0" />
 		<GradientStop
 			Color="#FF0D0712"
@@ -36,7 +36,7 @@
 
 	<SolidColorBrush
 		x:Key="FullToneKeyBrush"
-		Color="White" />
+		Color="WhiteSmoke" />
 
 	<SolidColorBrush
 		x:Key="HalfToneKeyBrush"

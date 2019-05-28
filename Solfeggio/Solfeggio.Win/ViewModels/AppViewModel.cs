@@ -9,7 +9,7 @@ namespace Solfeggio.ViewModels
 	[DataContract]
 	class AppViewModel : ContextObject, IExposable
 	{
-		public LanguageCodes[] Languages { get; } = Enum.GetValues(TypeOf<LanguageCodes>.Raw).Cast<LanguageCodes>().ToArray();
+		public LanguageCodes[] Languages { get; } = Enum.GetValues(TypeOf<LanguageCodes>.Raw).Cast<LanguageCodes>().Take(2).ToArray();
 
 		[DataMember]
 		public LanguageCodes ActiveLanguage

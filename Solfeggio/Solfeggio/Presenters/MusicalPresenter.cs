@@ -365,19 +365,14 @@ namespace Solfeggio.Presenters
 
 			averageMagnitude /= m;
 			var minMagnitude = upperMagnitude * 0.03;
-			var dominants = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
+			var harmonics = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
 				.Where(k => k.Magnitude > minMagnitude).ToList();
-
-			//keys.ForEach(k => k.Magnitude = k.Magnitude/k.Hits);
-			keys.ForEach(k => k.Magnitude *= k.Magnitude);
-			var maxMagnitude = upperMagnitude * upperMagnitude * 0.32; // keys.Max(k => k.Magnitude);
-																	   //if (MaxMagnitude1 > maxMagnitude) maxMagnitude = MaxMagnitude1*0.7;
 
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
 				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
 				var basicColor = MusicalOptions.OktaveBrushes[key.NoteNumber].As<SolidColorBrush>()?.Color ?? Colors.Transparent;
-				var tmp = 255 * key.Magnitude / maxMagnitude;
+				var tmp = 255 * Math.Sqrt(key.Magnitude);
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var noteNumber = key.NoteNumber;
 				var isTone = MusicalOptions.Tones[key.NoteNumber];
@@ -402,7 +397,7 @@ namespace Solfeggio.Presenters
 				CreateVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
-			return dominants;
+			return harmonics;
 		}
 
 		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line
