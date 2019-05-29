@@ -7,10 +7,10 @@
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
-			Color="Gray"
+			Color="#FF616187"
 			Offset="0" />
 		<GradientStop
-			Color="#FF0D0712"
+			Color="IndianRed"
 			Offset="1" />
 	</LinearGradientBrush>
 

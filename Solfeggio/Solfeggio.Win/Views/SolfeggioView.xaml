@@ -55,7 +55,8 @@
 			<xamarin:Label
 				m:Rack.Cell="R1 C0"
 				FontSize="18"
-				Foreground="WhiteSmoke"
+				Opacity="0.7"
+				Foreground="IndianRed"
 				Text="🎼" />
 			<xamarin:Switch
 				m:Rack.Cell="R1 C1"
@@ -64,7 +65,8 @@
 			<xamarin:Label
 				m:Rack.Cell="R2 C0"
 				FontSize="18"
-				Foreground="WhiteSmoke"
+				Opacity="0.7"
+				Foreground="IndianRed"
 				Text="📷" />
 			<xamarin:Switch
 				m:Rack.Cell="R2 C1"

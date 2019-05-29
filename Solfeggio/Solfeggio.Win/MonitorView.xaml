@@ -15,7 +15,7 @@
 	Top="{Smart MonitorTop, DefaultValue=NaN}"
 	Title="{m:Localizing Key=Monitor}"
 	ResizeMode="CanResizeWithGrip"
-	ShowInTaskbar="False">
+	Background="{StaticResource SpectumBackgroundBrush}">
 
 	<views:OptionsView />
 </Window>

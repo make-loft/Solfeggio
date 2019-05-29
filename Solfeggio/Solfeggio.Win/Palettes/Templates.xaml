@@ -407,6 +407,12 @@
 	<DataTemplate
 		x:Key="VisualProfileTemplate">
 		<StackLayout>
+			<Entry
+				Tag="{Binding FirstColor}"
+				Text="{Binding FirstColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			<Entry
+				Tag="{Binding SecondColor}"
+				Text="{Binding SecondColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			<ItemsView
 				ItemsSource="{Binding AppBrushes}">
 				<ItemsView.ItemTemplate>

@@ -268,6 +268,8 @@ namespace Solfeggio.Presenters
 				var panel = new StackPanel { Opacity = 0.3d + activeMagnitude };
 				var border = new Border
 				{
+					BorderThickness = new Thickness(1d),
+					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 					CornerRadius = new CornerRadius(2d * expressionLevel),
 					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
@@ -376,10 +378,11 @@ namespace Solfeggio.Presenters
 				var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var noteNumber = key.NoteNumber;
 				var isTone = MusicalOptions.Tones[key.NoteNumber];
-				red = isTone ? (byte)(basicColor.Red() - red) : red;
-				var pressColor = isTone
-					? Color.FromArgb(255, basicColor.Red(), red, red)
-					: Color.FromArgb(255, red, basicColor.Green(), basicColor.Blue());
+
+				var r = ToColorByte(basicColor.R() + red);
+				var g = ToColorByte(basicColor.G() - red);
+				var b = ToColorByte(basicColor.B() - red);
+				var pressColor = Color.FromArgb(255, r, g, b);
 
 				gradientBrush.GradientStops.Merge
 				(
@@ -399,6 +402,11 @@ namespace Solfeggio.Presenters
 
 			return harmonics;
 		}
+
+		private byte ToColorByte(int value, byte min = 0, byte max = 255) =>
+			value < min ? min :
+			value > max ? max :
+			(byte)value;
 
 		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line
 		{

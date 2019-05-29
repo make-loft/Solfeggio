@@ -34,6 +34,17 @@ namespace Solfeggio.Models
 
 		public Brush TopBrush = new SolidColorBrush(BurlyWood) { Opacity = 0.1d };
 
+		public Color FirstColor
+		{
+			get => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color;
+			set => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color = value;
+		}
+		public Color SecondColor
+		{
+			get => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color;
+			set => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color = value;
+		}
+
 		[DataMember] public bool Harmonics
 		{
 			get => Get(() => Harmonics);
@@ -67,19 +78,19 @@ namespace Solfeggio.Models
 
 		public static Color[] Rainbow =	new[]
 		{
-			Red,
+			PaleVioletRed,
 			SkyBlue, //Color.Multiply(SkyBlue, 0.5f),
 			Orange,
 			Blue, //Color.Multiply(Blue, 0.5f),
 			Yellow,
 
-			Green,
-			Red, //Color.Multiply(Red, 0.5f),
+			YellowGreen,
+			PaleVioletRed, //Color.Multiply(Red, 0.5f),
 			SkyBlue,
 			Orange, //Color.Multiply(Orange, 0.5f),
 			Blue,
 			Yellow, //Color.Multiply(Yellow, 0.5f),
-			Violet
+			BlueViolet
 		};
 
 		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 0.1d }).ToArray();
@@ -92,9 +103,9 @@ namespace Solfeggio.Models
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
-			{ nameof(DeltaFrequancy), CreateProfile(LightBlue, 14d, "{0:+0.0;-0.0; 0.0}") },
-			{ nameof(EthalonFrequncy), CreateProfile(Transparent, 14d) },
-			{ nameof(NoteName), CreateProfile(Transparent, 16d, default) },
+			{ nameof(DeltaFrequancy), CreateProfile(Black, 16d, "{0:+0.0;-0.0; 0.0}") },
+			{ nameof(EthalonFrequncy), CreateProfile(White, 14d) },
+			{ nameof(NoteName), CreateProfile(White, 16d, default) },
 		};
 	}
 }
