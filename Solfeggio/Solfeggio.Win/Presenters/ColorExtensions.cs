@@ -15,5 +15,14 @@ namespace Solfeggio.Presenters
 		public static byte Green(this Color c) => c.G;
 		public static byte Blue(this Color c) => c.B;
 	}
+
+	public static class BrushExtensions
+	{
+		public static TBrush DoFreeze<TBrush>(this TBrush brush) where TBrush : Brush
+		{
+			brush.Freeze();
+			return brush;
+		}
+	}
 #endif
 }

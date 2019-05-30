@@ -170,10 +170,10 @@
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{m:Store Key=presenters:MusicalPresenter}" />
 
-		<Expander
+		<!--<Expander
 			Header="{m:Localizing Key=Theme}"
 			ContentTemplate="{StaticResource VisualProfileTemplate}"
-			Content="{m:Store Key=models:VisualProfile}" />
+			Content="{m:Store Key=models:VisualProfile}" />-->
 
 	</m:Set>
 

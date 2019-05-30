@@ -40,7 +40,7 @@
 
 	<SolidColorBrush
 		x:Key="HalfToneKeyBrush"
-		Color="Black" />
+		Color="#202124" />
 
 	<SolidColorBrush
 		x:Key="MarkerBrush"

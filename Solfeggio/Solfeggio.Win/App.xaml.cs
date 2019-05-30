@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
 using Ace;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
@@ -65,6 +66,8 @@ namespace Solfeggio
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate("4722c611-c016-4e44-943b-05f9c56968d6");
 				CheckExpiration();
+
+				Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
 			}
 			catch (Exception exception)
 			{

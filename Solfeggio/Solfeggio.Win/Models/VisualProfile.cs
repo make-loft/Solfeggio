@@ -1,4 +1,5 @@
 ﻿using Ace;
+using Solfeggio.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace Solfeggio.Models
 			string stringFormat = "{0:0.0;-0.0;0.0}",
 			bool isVisible = true) => new TopProfile
 			{
-				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color),
+				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
 				FontFamily = new FontFamily("Consolas"),
 				StringFormat = stringFormat,
 				IsVisible = isVisible,
@@ -93,8 +94,8 @@ namespace Solfeggio.Models
 			BlueViolet
 		};
 
-		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 0.1d }).ToArray();
-		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 1d }).ToArray();
+		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 0.1d }.DoFreeze()).ToArray();
+		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 1d }.DoFreeze()).ToArray();
 
 		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
 
@@ -103,7 +104,7 @@ namespace Solfeggio.Models
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
-			{ nameof(DeltaFrequancy), CreateProfile(Black, 16d, "{0:+0.0;-0.0; 0.0}") },
+			{ nameof(DeltaFrequancy), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "{0:+0.0;-0.0; 0.0}") },
 			{ nameof(EthalonFrequncy), CreateProfile(White, 14d) },
 			{ nameof(NoteName), CreateProfile(White, 16d, default) },
 		};

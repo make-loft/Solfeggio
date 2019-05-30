@@ -118,9 +118,9 @@ namespace Solfeggio.Models
 			this[() => InputLevel].PropertyChanged += (o, e) =>
 				inputProcessor.To(out var p)?.With(p.Level = InputLevel);
 			this[() => OutputBoost].PropertyChanged += (o, e) =>
-				outputProcessor.To(out var p)?.With(p.Boost = InputBoost);
+				outputProcessor.To(out var p)?.With(p.Boost = OutputBoost);
 			this[() => OutputLevel].PropertyChanged += (o, e) =>
-				outputProcessor.To(out var p)?.With(p.Level = InputLevel);
+				outputProcessor.To(out var p)?.With(p.Level = OutputLevel);
 		}
 
 		private bool CheckIndex(int index, int count) => 0 <= index && index < count;
@@ -212,7 +212,7 @@ namespace Solfeggio.Models
 		[DataMember]
 		public float OutputLevel
 		{
-			get => Get(() => OutputLevel, 0.1f);
+			get => Get(() => OutputLevel, 0.05f);
 			set => Set(() => OutputLevel, value);
 		}
 
