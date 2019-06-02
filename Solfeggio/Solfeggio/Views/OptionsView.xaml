@@ -3,6 +3,7 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:local="clr-namespace:Solfeggio"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
 
@@ -137,7 +138,12 @@
 						CommandParameter="{m:Localizing Key=IAmReadyToHelpLink}"
 						Command="{m:Context Key=Navigate, StoreKey=viewModels:AppViewModel}"
 						Content="{m:Localizing Key=IAmReadyToHelpMessage}"/>
-					
+
+					<!--<Label
+						FontSize="10"
+						HorizontalAlignment="Left"
+						Text="{Binding Source={x:Static local:App.Edition}}" />-->
+
 					<Label
 						FontSize="10"
 						Text="{m:Localizing Key=DesignedByMessage}" />

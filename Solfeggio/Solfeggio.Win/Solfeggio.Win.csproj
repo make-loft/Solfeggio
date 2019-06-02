@@ -112,10 +112,12 @@
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MathConverter.cs" />
+    <Compile Include="Editions.cs" />
     <Compile Include="Models\VisualProfile.cs" />
     <Compile Include="MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PolicyManager.cs" />
     <Compile Include="Processors\IdealSignalProcessor.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>

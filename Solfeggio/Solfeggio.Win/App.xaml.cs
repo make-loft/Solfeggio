@@ -10,11 +10,21 @@ using Ace;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 using static System.Environment;
+using static Solfeggio.Editions;
 
 namespace Solfeggio
 {
 	public partial class App
 	{
+		public static Editions Edition { get; } = Developer;
+
+		public static Dictionary<Editions, string> YandexMetricaKeys = new Dictionary<Editions, string>
+		{
+			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
+			{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
+			{ Scientific, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
+		};
+
 		public static readonly string Location = Assembly.GetEntryAssembly().Location;
 		public static readonly string EntryFolder = Path.GetDirectoryName(Location);
 
@@ -39,17 +49,7 @@ namespace Solfeggio
 			}
 		}
 
-		public void CheckExpiration()
-		{
-			var versionAge = DateTime.Now - new DateTime(2019, 5, 12);
-			if (versionAge > TimeSpan.FromDays(32))
-			{
-				YandexMetrica.ReportEvent("Expiration", versionAge);
-				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
-				MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
-				Process.Start(Localizator.HomeLink[activeLanguage]);
-			}
-		}
+		private DateTime _startupTimestamp;
 
 		private void App_OnStartup(object sender, StartupEventArgs args)
 		{
@@ -64,8 +64,8 @@ namespace Solfeggio
 				var metricaFolder = Path.Combine(settingsFolder, "Metric");
 
 				YandexMetricaFolder.SetCurrent(metricaFolder);
-				YandexMetrica.Activate("4722c611-c016-4e44-943b-05f9c56968d6");
-				CheckExpiration();
+				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
+				PolicyManager.CheckExpirationStatus(Edition);
 
 				Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
 			}
@@ -86,19 +86,10 @@ namespace Solfeggio
 			_startupTimestamp = DateTime.Now;
 		}
 
-		private DateTime _startupTimestamp;
-		private static readonly TimeSpan LongSessionDuation = TimeSpan.FromMinutes(4);
-
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
 			Store.Snapshot();
-			var sessionDuration = DateTime.Now - _startupTimestamp;
-			if (sessionDuration > LongSessionDuation)
-			{
-				YandexMetrica.ReportEvent("LongSession", sessionDuration);
-				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
-				Process.Start(Localizator.HomeLink[activeLanguage]);
-			}
+			PolicyManager.CheckSessionDuration(Edition, _startupTimestamp);
 		}
 
 		#region Launching
