@@ -138,18 +138,26 @@ namespace Solfeggio.Models
 			if (inputProcessor.Is() || SampleSize.Is(default) || SampleRate.Is(default))
 				return;
 
-			var waveFormat = new WaveFormat((int)SampleRate, 16, 1); ;
-			inputProcessor = ActiveInputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount);
-			outputProcessor = ActiveOutputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount, inputProcessor);
-			inputProcessor.Boost = InputBoost;
-			outputProcessor.Boost = OutputBoost;
-			inputProcessor.Level = InputLevel;
-			outputProcessor.Level = OutputLevel;
+			var waveFormat = new WaveFormat((int)SampleRate, 16, 1);
 
-			inputProcessor.DataAvailable += OnInputDataAvailable;
+			var activeInputDevice = ActiveInputDevice;
+			if (activeInputDevice.Is())
+			{
+				inputProcessor = activeInputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount);
+				inputProcessor.DataAvailable += OnInputDataAvailable;
+				inputProcessor.Boost = InputBoost;
+				inputProcessor.Level = InputLevel;
+				inputProcessor.Wake();
+			}
 
-			inputProcessor.Wake();
-			outputProcessor.Wake();
+			var activeOutputDevice = ActiveOutputDevice;
+			if (activeOutputDevice.Is())
+			{
+				outputProcessor = activeOutputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount, inputProcessor);
+				outputProcessor.Boost = OutputBoost;
+				outputProcessor.Level = OutputLevel;
+				outputProcessor.Wake();
+			}
 
 			PropertyChanged += OnPropertyChanged;
 		}
@@ -174,16 +182,18 @@ namespace Solfeggio.Models
 
 		public void Dispose()
 		{
-			if (inputProcessor.IsNot())
-				return;
+			if (inputProcessor.Is())
+			{
+				inputProcessor?.Free();
+				inputProcessor.DataAvailable -= OnInputDataAvailable;
+				inputProcessor = default;
+			}
 
-			inputProcessor.Free();
-			outputProcessor.Free();
-
-			inputProcessor.DataAvailable -= OnInputDataAvailable;
-
-			outputProcessor = default;
-			inputProcessor = default;
+			if (outputProcessor.Is())
+			{
+				outputProcessor.Free();
+				outputProcessor = default;
+			}
 
 			PropertyChanged -= OnPropertyChanged;
 		}

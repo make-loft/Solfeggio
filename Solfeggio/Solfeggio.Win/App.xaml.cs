@@ -16,11 +16,12 @@ namespace Solfeggio
 {
 	public partial class App
 	{
-		public static Editions Edition { get; } = Developer;
+		public static Editions Edition { get; } = Portable;
 
 		public static Dictionary<Editions, string> YandexMetricaKeys = new Dictionary<Editions, string>
 		{
 			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
+			{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
 			{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
 			{ Scientific, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
 		};

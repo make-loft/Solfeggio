@@ -2,6 +2,6 @@
 {
 	public enum Editions
 	{
-		Developer, Education, Scientific
+		Developer, Portable, Education, Scientific
 	}
 }
