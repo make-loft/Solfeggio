@@ -15,7 +15,7 @@ namespace Solfeggio
 		public static void CheckExpirationStatus(Editions edition)
 		{
 			if (edition.Is(Scientific)) return;
-			var versionAge = DateTime.Now - new DateTime(2019, 5, 12);
+			var versionAge = DateTime.Now - new DateTime(2019, 6, 16);
 			if (versionAge > TimeSpan.FromDays(32))
 			{
 				YandexMetrica.ReportEvent("Expiration", versionAge);
