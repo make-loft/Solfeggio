@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using static Rainbow.ScaleFuncs;
 
 namespace Solfeggio.Presenters
 {
@@ -70,11 +71,11 @@ namespace Solfeggio.Presenters
 	public class Bandwidth
 	{
 		public static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
-		{ ScaleFuncs.Lineal, ScaleFuncs.Log2, ScaleFuncs.Log, ScaleFuncs.Exp, ScaleFuncs._20Log10, ScaleFuncs.Sqrt };
+		{ Lineal, Log2, Log, Exp, _20Log10, Sqrt };
 
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
-		[DataMember] public ScaleFunc VisualScaleFunc { get; set; } = ScaleFuncs.Lineal;
+		[DataMember] public ScaleFunc VisualScaleFunc { get; set; } = Lineal;
 		[DataMember] public ScaleFunc[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
 		[DataMember] public bool IsVisible { get; set; }
 		[DataMember] public string NumericFormat { get; set; } = "F2";
@@ -88,7 +89,7 @@ namespace Solfeggio.Presenters
 		{
 			Limit = SmartRange.Create(10d, 22000d),
 			Threshold = SmartRange.Create(20d, 3000d),
-			VisualScaleFunc = ScaleFuncs.Log2,
+			VisualScaleFunc = Log2,
 			NumericFormat = "F1",
 		};
 
@@ -97,7 +98,7 @@ namespace Solfeggio.Presenters
 		{
 			Limit = SmartRange.Create(0.00d, 1d),
 			Threshold = SmartRange.Create(0.00d, 1d),
-			VisualScaleFunc = ScaleFuncs.Sqrt,
+			VisualScaleFunc = Sqrt,
 			IsVisible = true
 		};
 
@@ -117,7 +118,7 @@ namespace Solfeggio.Presenters
 		{
 			Limit = SmartRange.Create(-1d, +1d),
 			Threshold = SmartRange.Create(-1d, +1d),
-			VisualScaleFunc = ScaleFuncs.Lineal,
+			VisualScaleFunc = Lineal,
 		};
 
 		[DataMember]
@@ -125,7 +126,7 @@ namespace Solfeggio.Presenters
 		{
 			Limit = SmartRange.Create(+0d, +1d),
 			Threshold = SmartRange.Create(+0d, +1d),
-			VisualScaleFunc = ScaleFuncs.Lineal,
+			VisualScaleFunc = Lineal,
 		};
 	}
 
