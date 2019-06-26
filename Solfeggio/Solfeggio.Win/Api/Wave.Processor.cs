@@ -63,20 +63,19 @@ namespace Solfeggio.Api
 				_callback = ProcessingCallback;
 				session.As<Out.Session>()?.SetVolume(1f);
 
-				if (source.Is())
-				{
-					source.DataAvailable += (o, e) =>
-					{
-						var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
-						if (buffer.Is())
-						{
-							Array.Copy(e.Bins.Scale(Boost), buffer.Data, e.BinsCount);
-							if (State.Is(Processing)) buffer.MarkForProcessing();
-						}
-					};
-				}
-
 				Expose();
+
+				if (source.IsNot()) return;
+
+				source.DataAvailable += (o, e) =>
+				{
+					var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
+					if (buffer.Is())
+					{
+						Array.Copy(e.Bins.Scale(Boost), buffer.Data, e.BinsCount);
+						if (State.Is(Processing)) buffer.MarkForProcessing();
+					}
+				};
 			}
 
 			~Processor() => Dispose();
@@ -98,10 +97,7 @@ namespace Solfeggio.Api
 				Debug.WriteLine($"{_session.Handle}.Dispose()");
 				GC.SuppressFinalize(this);
 
-				for (var n = 0; n < buffers.Length; n++)
-				{
-					buffers[n].Dispose();
-				}
+				buffers?.ForEach(b => b.Dispose());
 
 				_session.Close();
 			}
