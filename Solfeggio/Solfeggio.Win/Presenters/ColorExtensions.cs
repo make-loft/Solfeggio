@@ -2,7 +2,6 @@
 
 namespace Solfeggio.Presenters
 {
-#if !NETSTANDARD
 	public static class ColorExtensions
 	{
 		public static byte A(this Color c) => c.A;
@@ -14,6 +13,8 @@ namespace Solfeggio.Presenters
 		public static byte Red(this Color c) => c.R;
 		public static byte Green(this Color c) => c.G;
 		public static byte Blue(this Color c) => c.B;
+
+		public static Color FromArgb(byte a, byte r, byte g, byte b) => Color.FromArgb(255, r, g, b);
 	}
 
 	public static class BrushExtensions
@@ -24,5 +25,4 @@ namespace Solfeggio.Presenters
 			return brush;
 		}
 	}
-#endif
 }

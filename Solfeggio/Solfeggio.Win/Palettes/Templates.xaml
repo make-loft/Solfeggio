@@ -45,6 +45,9 @@
 			<Entry
 				m:Rack.Cell="C2 R0"
 				Text="{Binding PhaseShift, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+      <Entry
+				m:Rack.Cell="C3 R2"
+				Text="{Binding Gap, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Picker
 				m:Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"

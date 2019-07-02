@@ -18,7 +18,10 @@ namespace Solfeggio.Droid
 	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
 		public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
 
-        private ByteBuffer _bytes;
+		double IAudioInputDevice.SampleRate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		int IAudioInputDevice.SampleSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		private ByteBuffer _bytes;
         private AudioRecord _recorder;
 
         public static double[] GetValidSampleRates() =>
@@ -75,7 +78,7 @@ namespace Solfeggio.Droid
                     frame[i] = shorts.Get();
                 }
 
-                DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
+                //DataReady?.Invoke(this, new AudioInputEventArgs(this, frame, SampleRate));
             }
         }
 
@@ -89,7 +92,18 @@ namespace Solfeggio.Droid
         public void Stop() => _recorder.Stop();
 
         public event EventHandler<AudioInputEventArgs> DataReady;
+		public event EventHandler<AudioInputEventArgs> SampleReady;
 
 		public override string ToString() => "Microphone";
+
+		public void Expose()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

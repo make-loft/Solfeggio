@@ -22,8 +22,12 @@ namespace Solfeggio.Models
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
 		[DataMember] public double PhaseShift { get; set; } = 0d;
+		[DataMember] public double Gap { get; set; } = 0d;
 		[DataMember] public PhaseMode PhaseMode { get; set; } = PhaseMode.Flow;
 		[DataMember] public bool IsEnabled { get; set; } = true;
+
+
+		public static double SinX(double value) => Sin((int)Abs(0.5 * value / PI) % 16 != 0 ? value : 0);
 
 		private double offset;
 
@@ -34,7 +38,14 @@ namespace Solfeggio.Models
 			while (true)
 			{
 				offset += step;
-				yield return 2d * Magnitude * BasisFunc(offset + PhaseShift);
+				var value = offset + PhaseShift;
+				if (Gap.Is(0d))
+					yield return 2d * Magnitude * BasisFunc(value);
+				else
+				{
+					var hit = (int)(Abs(value / Pi.Double) % Gap) == 0d;
+					yield return hit ^ Gap > 0d ? 0d : 2d * Magnitude * BasisFunc(value);
+				}
 			}
 		}
 	}

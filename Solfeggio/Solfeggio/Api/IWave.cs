@@ -9,6 +9,23 @@ namespace Solfeggio.Api
 		Suspending
 	}
 
+	public interface IDataSource
+	{
+		short[] Next();
+
+		event EventHandler<ProcessingEventArgs> DataAvailable;
+	}
+
+	public interface IProcessor : IDataSource
+	{
+		float Level { get; set; }
+		double Boost { get; set; }
+		void Wake();
+		void Lull();
+		void Free();
+		void Tick();
+	}
+
 	public class ProcessingEventArgs : EventArgs
 	{
 		public ProcessingEventArgs(IProcessor source, short[] buffer, int binsCount)
@@ -21,12 +38,5 @@ namespace Solfeggio.Api
 		public IProcessor Source { get; }
 		public short[] Bins { get; }
 		public int BinsCount { get; }
-	}
-
-	public class StoppedEventArgs : EventArgs
-	{
-		public StoppedEventArgs(Exception exception = null) => Exception = exception;
-
-		public Exception Exception { get; }
 	}
 }

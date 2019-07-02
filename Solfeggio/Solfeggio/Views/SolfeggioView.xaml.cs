@@ -11,6 +11,7 @@ using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static Xamarin.Forms.Color;
 
 namespace Solfeggio.Views
 {
@@ -123,16 +124,16 @@ namespace Solfeggio.Views
 		    var canvas = args.Surface.Canvas;
 		    var pianoCanvas = new Panel(args);
 
-		    var spectrum = _spectralViewModel.MagnitudeSpectrum;
+		    var spectrum = _spectralViewModel.Spectrum;
 		    if (spectrum.IsNot()) return;
 
 		    pianoCanvas.Children.Clear();
 
 		    var presenter = Store.Get<MusicalPresenter>();
-		    var max = spectrum.Values.Max() * 0.7;
-		    if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
+		    //var max = spectrum.Values.Max() * 0.7;
+		    //if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
-		    presenter.DrawPiano(pianoCanvas, spectrum);
+		    presenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.ActualWidth, pianoCanvas.ActualHeight);
 		    //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
 		    //presenter.DrawWave(WaveCanvas, waveOutData, WaveOutLine, waveCorrectionMargin);
 		    //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
@@ -148,7 +149,7 @@ namespace Solfeggio.Views
 	        var canvas = args.Surface.Canvas;
 	        var spectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
 
-			var spectrum = _spectralViewModel.MagnitudeSpectrum;
+			var spectrum = _spectralViewModel.Spectrum;
 			if (spectrum.IsNot()) return;
 
 	        var waveInData = _spectralViewModel.OuterFrame;
@@ -157,17 +158,25 @@ namespace Solfeggio.Views
 			spectrumCanvas.Children.Clear();
 
 	        var presenter = Store.Get<MusicalPresenter>();
-	        //var max = spectrum.Values.Max() * 0.7;
-	        //if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
+			var spectralViewModel = Store.Get<ProcessingManager>();
+			//var max = spectrum.Values.Max() * 0.7;
+			//if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
-			presenter.DrawSpectrum(spectrumCanvas, spectrum, SpectrumPolyline);
-	        //var waveCorrectionMargin = presenter.UseHorizontalLogScale ? WaveCanvas.Margin : new Thickness();
-			if (presenter["ShowWaveIn"].Is(true))
-				presenter.DrawWave(spectrumCanvas, waveInData, WaveInLine, new Thickness());
-			if (presenter["ShowWaveOut"].Is(true))
-				presenter.DrawWave(spectrumCanvas, waveOutData, WaveOutLine, new Thickness());
-			//var tops = presenter.DrawPiano(PianoCanvas, spectrum);
-			//presenter.DrawTops(SpectrumCanvas, tops);
+			if (presenter.Spectrum.Magnitude.IsVisible)
+				presenter.DrawMagnitude(spectrum, width, height).
+				Use(SpectrumPolyline.Points.AppendRange);
+
+			//if (presenter.Spectrum.Phase.IsVisible)
+			//	presenter.DrawPhase(spectrum, width, height).
+			//	Use(PhasePolyline.Points.AppendRange);
+
+			if (presenter.Frame.Level.IsVisible)
+				presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
+				Use(WaveInLine.Points.AppendRange);
+
+			if (presenter.Frame.Level.IsVisible && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+				presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
+				Use(WaveOutLine.Points.AppendRange);
 
 			spectrumCanvas.Draw();
 		}
@@ -179,12 +188,12 @@ namespace Solfeggio.Views
 		    {
 			    new GradientStop
 			    {
-				    Color = SKColors.LightSteelBlue,
+				    Color = Xamarin.Forms.Color.LightSteelBlue,
 				    Offset = 0
 			    },
 			    new GradientStop
 			    {
-				    Color = SKColors.IndianRed,
+				    Color = Xamarin.Forms.Color.IndianRed,
 				    Offset = 1
 			    }
 		    }
@@ -192,20 +201,20 @@ namespace Solfeggio.Views
 
 	    private readonly Polyline SpectrumPolyline = new Polyline
 	    {
-		    Fill = new SolidColorBrush(SKColors.Yellow),
-		    Stroke = new SolidColorBrush(SKColors.Gold),
+		    Fill = new SolidColorBrush(Yellow),
+		    Stroke = new SolidColorBrush(Gold),
 			StrokeThickness = 1
 	    };
 
 	    private readonly Polyline WaveInLine = new Polyline
 	    {
-		    Stroke = new SolidColorBrush(SKColors.DarkRed),
+		    Stroke = new SolidColorBrush(DarkRed),
 		    StrokeThickness = 1
 	    };
 
 		private readonly Polyline WaveOutLine = new Polyline
 		{
-			Stroke = new SolidColorBrush(SKColors.GreenYellow),
+			Stroke = new SolidColorBrush(GreenYellow),
 			StrokeThickness = 1
 		};
 	}

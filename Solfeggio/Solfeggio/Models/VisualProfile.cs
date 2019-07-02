@@ -1,11 +1,18 @@
 ﻿using Ace;
-using Solfeggio.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Solfeggio.Presenters;
+#if NETSTANDARD
+using Color = Xamarin.Forms.Color;
+using Colors = Xamarin.Forms.Color;
+using FontFamily = System.String;
+using static Xamarin.Forms.Color;
+#else
 using System.Windows.Media;
 using static System.Windows.Media.Colors;
+#endif
 
 namespace Solfeggio.Models
 {
@@ -65,7 +72,11 @@ namespace Solfeggio.Models
 			bool isVisible = true) => new TopProfile
 			{
 				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
+#if NETSTANDARD
+				FontFamily = "Consolas",
+#else
 				FontFamily = new FontFamily("Consolas"),
+#endif
 				StringFormat = stringFormat,
 				IsVisible = isVisible,
 				FontSize = fontSize,

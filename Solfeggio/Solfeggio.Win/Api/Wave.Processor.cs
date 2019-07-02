@@ -7,23 +7,6 @@ using static Solfeggio.Api.ProcessingState;
 
 namespace Solfeggio.Api
 {
-	public interface IProcessor : IDataSource
-	{
-		float Level { get; set; }
-		double Boost { get; set; }
-		void Wake();
-		void Lull();
-		void Free();
-		void Tick();
-	}
-
-	public interface IDataSource
-	{
-		short[] Next();
-
-		event EventHandler<ProcessingEventArgs> DataAvailable;
-	}
-
 	public partial class Wave
 	{
 		public static short[] Scale(this short[] data, double boost)

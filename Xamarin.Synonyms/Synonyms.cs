@@ -157,4 +157,9 @@ namespace Xamarin.Forms
 			set => SetValue(IsToggledProperty, value);
 		}
 	}
+
+	//public static class Colors
+	//{
+	//	public static Color Transparent { get; } = Color.FromArgb(0, 0, 0, 0);
+	//}
 }

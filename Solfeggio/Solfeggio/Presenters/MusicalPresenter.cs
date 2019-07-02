@@ -9,7 +9,7 @@ using Ace;
 using Rainbow;
 using Solfeggio.Models;
 #if NETSTANDARD
-using Colors = SkiaSharp.SKColors;
+using Colors = Xamarin.Forms.Color;
 using Thickness = Xamarin.Forms.Thickness;
 #else
 using Color = System.Windows.Media.Color;
@@ -382,7 +382,7 @@ namespace Solfeggio.Presenters
 				var r = ToColorByte(basicColor.R() + red);
 				var g = ToColorByte(basicColor.G() - red);
 				var b = ToColorByte(basicColor.B() - red);
-				var pressColor = Color.FromArgb(255, r, g, b);
+				var pressColor = ColorExtensions.FromArgb(255, r, g, b);
 
 				gradientBrush.GradientStops.Merge
 				(

@@ -62,6 +62,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Solfeggio\Api\IWave.cs">
+      <Link>Api\IWave.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
     </Compile>
@@ -74,6 +77,15 @@
     <Compile Include="..\Solfeggio\Models\Harmonic.Profile.cs">
       <Link>Models\Harmonic.Profile.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Models\ProcessingProfile.cs">
+      <Link>Models\ProcessingProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Models\VisualProfile.cs">
+      <Link>Models\VisualProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\AppPalette.cs">
+      <Link>Presenters\AppPalette.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Presenters\Calibrations.cs">
       <Link>Presenters\Calibrations.cs</Link>
     </Compile>
@@ -81,7 +93,10 @@
       <Link>Presenters\MusicalPresenter.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
-      <Link>Models\PianoKey.cs</Link>
+      <Link>Presenters\PianoKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\IdealSignalProcessor.cs">
+      <Link>Processors\IdealSignalProcessor.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\AManager.cs">
       <Link>ViewModels\AManager.cs</Link>
@@ -96,7 +111,6 @@
       <Link>Views\OptionsView.xaml.cs</Link>
       <DependentUpon>OptionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Api\IWave.cs" />
     <Compile Include="Api\MmResult.cs" />
     <Compile Include="Api\MmTime.cs" />
     <Compile Include="Api\Wave.In.Imports.cs" />
@@ -113,21 +127,17 @@
     </Compile>
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Editions.cs" />
-    <Compile Include="Models\VisualProfile.cs" />
     <Compile Include="MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PolicyManager.cs" />
-    <Compile Include="Processors\IdealSignalProcessor.cs" />
+    <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Assemblies.resx</DependentUpon>
     </Compile>
     <Compile Include="Localizator.cs" />
-    <Compile Include="Presenters\AppPalette.cs" />
-    <Compile Include="Presenters\ColorExtensions.cs" />
-    <Compile Include="Models\ProcessingProfile.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
