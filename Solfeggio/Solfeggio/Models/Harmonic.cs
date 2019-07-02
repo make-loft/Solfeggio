@@ -26,9 +26,6 @@ namespace Solfeggio.Models
 		[DataMember] public PhaseMode PhaseMode { get; set; } = PhaseMode.Flow;
 		[DataMember] public bool IsEnabled { get; set; } = true;
 
-
-		public static double SinX(double value) => Sin((int)Abs(0.5 * value / PI) % 16 != 0 ? value : 0);
-
 		private double offset;
 
 		public IEnumerable<double> EnumerateBins(double sampleRate, bool globalLoop = false)

@@ -20,13 +20,13 @@ namespace Solfeggio.Models
 	public class TopProfile
 	{
 		public Brush Brush { get; set; }
-		[DataMember] public FontFamily FontFamily { get; set; }
+		[DataMember] public string FontFamilyName { get; set; }
 		[DataMember] public double FontSize { get; set; }
 		[DataMember] public string StringFormat { get; set; }
 		[DataMember] public bool IsVisible { get; set; }
 	}
 
-	//[DataContract]
+	[DataContract]
 	public class VisualProfile : ContextObject
 	{
 		public SmartSet<Brush> Brushes { get; } = EnumerateColors().Select(c => (Brush)new SolidColorBrush(c)).ToSet();
@@ -72,11 +72,7 @@ namespace Solfeggio.Models
 			bool isVisible = true) => new TopProfile
 			{
 				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
-#if NETSTANDARD
-				FontFamily = "Consolas",
-#else
-				FontFamily = new FontFamily("Consolas"),
-#endif
+				FontFamilyName = "Consolas",
 				StringFormat = stringFormat,
 				IsVisible = isVisible,
 				FontSize = fontSize,
@@ -110,7 +106,7 @@ namespace Solfeggio.Models
 
 		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
 
-		[DataMember]
+		//[DataMember]
 		public Dictionary<string, TopProfile> TopProfiles { get; set; } = new Dictionary<string, TopProfile>
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },

@@ -62,6 +62,8 @@ namespace Solfeggio
 			{
 				if (Directory.Exists(settingsFolder).Not()) Directory.CreateDirectory(settingsFolder);
 				Store.ActiveBox = new Memory(new Ace.Specific.KeyFileStorage(), Path.Combine(settingsFolder, "{0}.json"));
+				SetHandlers(Store.ActiveBox);
+
 				var metricaFolder = Path.Combine(settingsFolder, "Metric");
 
 				YandexMetricaFolder.SetCurrent(metricaFolder);
@@ -91,6 +93,23 @@ namespace Solfeggio
 		{
 			Store.Snapshot();
 			PolicyManager.CheckSessionDuration(Edition, _startupTimestamp);
+		}
+
+		private void SetHandlers(Memory memoryBox)
+		{
+			memoryBox.EncodeFailed += (key, item, exception) =>
+			{
+				if (Debugger.IsAttached)
+					MessageBox.Show($"{key} : {item}\n{exception}");
+				YandexMetrica.ReportError($"{key} : {item}", exception);
+			};
+
+			memoryBox.DecodeFailed += (key, type, exception) =>
+			{
+				if (Debugger.IsAttached)
+					MessageBox.Show($"{key} - {type}\n{exception}");
+				YandexMetrica.ReportError($"{key} - {type}", exception);
+			};
 		}
 
 		#region Launching

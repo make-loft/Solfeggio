@@ -303,7 +303,7 @@ namespace Solfeggio.Presenters
 				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
 				FontSize = p.Value.FontSize * expressionLevel,
-				FontFamily = p.Value.FontFamily,
+				FontFamily = new FontFamily(p.Value.FontFamilyName),
 				FontWeight = fontWeight,
 				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 			});
