@@ -47,7 +47,7 @@
 			<Grid
 				BackgroundColor="DimGray"
 				Opacity=".5" />
-			<views:OptionsView />
+			<!--<views:OptionsView />-->
 		</Grid>
 
 	</Grid>

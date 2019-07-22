@@ -112,33 +112,6 @@ namespace Solfeggio.Presenters
 
 		public delegate void Deconstruct<TIn, TOut>(in TIn p, out TOut h, out TOut v);
 
-		private static bool TryMoveToStartPoint<TIn>(
-			IEnumerator<TIn> enumerator,
-			Deconstruct<TIn, double> deconstruct,
-			double hLowerValue,
-			double hUpperValue,
-			out TIn startPoint)
-		{
-			startPoint = default;
-
-			while (enumerator.MoveNext())
-			{
-				var currentPoint = enumerator.Current;
-				deconstruct(in currentPoint, out var hActiveValue, out _);
-				if (hActiveValue > hUpperValue) return false;
-				if (hActiveValue < hLowerValue)
-				{
-					startPoint = currentPoint;
-					continue;
-				}
-
-				if (startPoint.Is(default)) startPoint = currentPoint;
-				return true;
-			}
-
-			return false;
-		}
-
 		private static IEnumerable<TIn> EnuerateActivePoints<TIn>(
 			IEnumerable<TIn> items,
 			Deconstruct<TIn, double> deconstruct,
@@ -303,7 +276,11 @@ namespace Solfeggio.Presenters
 				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
 				FontSize = p.Value.FontSize * expressionLevel,
+#if NETSTANDARD
+				FontFamily = p.Value.FontFamilyName,
+#else
 				FontFamily = new FontFamily(p.Value.FontFamilyName),
+#endif
 				FontWeight = fontWeight,
 				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 			});

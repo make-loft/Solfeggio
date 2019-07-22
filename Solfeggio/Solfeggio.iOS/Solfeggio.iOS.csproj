@@ -163,6 +163,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\Ace\Ace.Xamarin.csproj">
+      <Project>{2abc671e-9b43-4546-b6af-ee20b22f55b5}</Project>
+      <Name>Ace.Xamarin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
       <Name>Rainbow.Standard1.0</Name>
