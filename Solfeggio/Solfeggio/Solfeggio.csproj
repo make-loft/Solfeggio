@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\..\Ace\Ace.Xamarin.csproj" />
 	<ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj" />
   </ItemGroup>
 

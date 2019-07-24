@@ -41,7 +41,7 @@ namespace Solfeggio.Presenters
 	{
 		public override double Length => Upper - Lower;
 
-		public void Deconstruct(double visualLength, ScaleFunc visualScaleFunc,
+		public void Deconstruct(double visualLength, Projection visualScaleFunc,
 			out double logicalLowerValue, out double logicalUpperValue,
 			out double visualLowerDecrementOffset, out double visualUpperDecrementOffset,
 			out double visualLengthStretchFactor)
@@ -70,13 +70,13 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class Bandwidth
 	{
-		public static readonly ScaleFunc[] AllScaleFuncs = new ScaleFunc[]
+		public static readonly Projection[] AllScaleFuncs = new Projection[]
 		{ Lineal, Log2, Log, Exp, _20Log10, Sqrt };
 
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
-		[DataMember] public ScaleFunc VisualScaleFunc { get; set; } = Lineal;
-		[DataMember] public ScaleFunc[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
+		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
+		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
 		[DataMember] public bool IsVisible { get; set; }
 		[DataMember] public string NumericFormat { get; set; } = "F2";
 	}

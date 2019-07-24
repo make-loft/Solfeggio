@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace Solfeggio.Launcher
@@ -30,7 +31,7 @@ namespace Solfeggio.Launcher
 			var domain = AppDomain.CurrentDomain;
 			var appAssembly = domain.Load(GetAppRawAssembly());
 			domain.AssemblyResolve += (o, e) =>
-				domain.GetAssemblies().FirstOrDefault(a => a.FullName == e.Name);
+				domain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == new AssemblyName(e.Name).Name);
 
 			GetAppNestedRawAssemblies().ToList().ForEach(b => domain.Load(b));
 		}

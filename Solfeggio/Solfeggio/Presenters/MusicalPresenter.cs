@@ -53,7 +53,7 @@ namespace Solfeggio.Presenters
 				if (activeFrequency > upperFrequency) break;
 
 				activeFrequency.
-					Scale(hVisualScaleFunc).
+					Project(hVisualScaleFunc).
 					Stretch(hVisualStretchFactor).
 					Decrement(hLowerVisualOffset).
 					To(out var hVisualOffset);
@@ -154,8 +154,8 @@ namespace Solfeggio.Presenters
 			Deconstruct<TIn, double> deconstruct,
 			Bandwidth hBand, Bandwidth vBand,
 			double hLength, double vLength,
-			ScaleFunc hCorrection,
-			ScaleFunc vCorrection)
+			Projection hCorrection,
+			Projection vCorrection)
 		{
 			hBand.Threshold.Deconstruct(hLength,
 				hBand.VisualScaleFunc.To(out var hVisualScaleFunc),
@@ -177,16 +177,16 @@ namespace Solfeggio.Presenters
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
 				var hVisualOffset = hActiveValue
-					.Scale(hVisualScaleFunc)
+					.Project(hVisualScaleFunc)
 					.Stretch(hVisualLengthStretchFactor)
 					.Decrement(hLowerVisualOffset)
-					.Scale(hCorrection);
+					.Project(hCorrection);
 
 				var vVisualOffset = vActiveValue
-					.Scale(vVisualScaleFunc)
+					.Project(vVisualScaleFunc)
 					.Stretch(vVisualLengthStretchFactor)
 					.Decrement(vLowerVisualOffset)
-					.Scale(vCorrection);
+					.Project(vCorrection);
 
 				yield return createWithContent is null
 					? create(in hVisualOffset, in vVisualOffset)
