@@ -72,9 +72,35 @@ namespace Solfeggio.ViewModels
 		private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
 		{
 			var frameSize = args.Source.FrameSize;
+			if (IsPaused || args.Sample.Length < frameSize + args.Source.ShiftSize) return;
 
 			var timeFrame = args.Sample.Skip(0).Take(frameSize).ToArray();
-			var activeWindow = args.Source.ActiveWindow;
+			var spectralFrame = GetSpectrum(timeFrame, args.Source.ActiveWindow);
+			var shiftsPerFrame = (int)args.Source.ShiftsPerFrame;
+			if (shiftsPerFrame > 0)
+			{
+				var timeFrame_ = args.Sample.Skip(args.Source.ShiftSize).Take(frameSize).ToArray();
+				var spectralFrame_ = GetSpectrum(timeFrame_, args.Source.ActiveWindow);
+				var spectrum = Filtering.GetJoinedSpectrum(spectralFrame, spectralFrame_, shiftsPerFrame, args.SampleRate).ToArray();
+				Spectrum = spectrum;
+			}
+			else
+			{
+				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
+				Spectrum = args.Source.UseSpectralInterpolation
+					? Filtering.Interpolate(spectrum).ToArray()
+					: spectrum;
+			}
+
+			var (j, k) = 0d;
+			//var innerFrame = spectralFrame.Decimation(false);
+			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
+			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
+		}
+
+		private Complex[] GetSpectrum(Complex[] timeFrame, ApodizationFunc activeWindow)
+		{
+			var frameSize = timeFrame.Length;
 			if (activeWindow.Is(Rectangle)) goto SkipApodization;
 			for (var i = 0; i < frameSize; i++)
 			{
@@ -84,18 +110,8 @@ namespace Solfeggio.ViewModels
 		SkipApodization:
 
 			var floats = timeFrame.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
-
-			if (IsPaused || args.Sample.Length < frameSize + args.Source.ShiftSize) return;
 			var spectralFrame = timeFrame.Decimation(true);
-			var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-			Spectrum = args.Source.UseSpectralInterpolation
-				? Filtering.Interpolate(spectrum).ToArray()
-				: spectrum;
-
-			var (j, k) = 0d;
-			//var innerFrame = spectralFrame.Decimation(false);
-			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
-			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
+			return spectralFrame;
 		}
 	}
 }
