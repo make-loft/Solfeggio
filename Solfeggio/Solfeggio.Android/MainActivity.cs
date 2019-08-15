@@ -5,11 +5,11 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Ace;
-using Ace.Specific;
 using Android.Support.V4.App;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Solfeggio.Api;
 
 namespace Solfeggio.Droid
 {
@@ -31,7 +31,7 @@ namespace Solfeggio.Droid
 			    Log.Error("Unhandled", args.ExceptionObject.ToString());
 
 		    //Store.ActiveBox = new Memory(new KeyFileStorage());
-		    Store.Set<IAudioInputDevice>(Microphone.Default);
+		    Store.Set<IProcessor>(Microphone.Default);
 
 			RequestedOrientation = ScreenOrientation.Landscape;
 		    Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);

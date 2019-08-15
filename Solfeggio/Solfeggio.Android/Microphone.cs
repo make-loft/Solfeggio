@@ -4,11 +4,12 @@ using Ace;
 using Android.Media;
 using Java.Nio;
 using Rainbow;
+using Solfeggio.Api;
 using Encoding = Android.Media.Encoding;
 
 namespace Solfeggio.Droid
 {
-    public class Microphone : IAudioInputDevice
+    public class Microphone : IProcessor
     {
         public static readonly Microphone Default = new Microphone();
 
@@ -18,8 +19,8 @@ namespace Solfeggio.Droid
 	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
 		public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
 
-		double IAudioInputDevice.SampleRate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		int IAudioInputDevice.SampleSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public float Level { get; set; }
+		public double Boost { get; set; } = 8;
 
 		private ByteBuffer _bytes;
         private AudioRecord _recorder;
@@ -33,7 +34,8 @@ namespace Solfeggio.Droid
             {
                 var sRate = (int) Math.Round(frequency);
                 var minBufferSize = AudioRecord.GetMinBufferSize((int) frequency, ChannelIn.Mono, Encoding.Pcm16bit);
-                new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, minBufferSize).Release();
+				using (var r = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, minBufferSize))
+					r.Release();
                 return true;
             }
             catch
@@ -42,11 +44,11 @@ namespace Solfeggio.Droid
             }
         }
 
-        public void StartWith(double sampleRate = default, int desiredFrameSize = default)
+        public void StartWith(double sampleRate = default, int desiredFrameSize = 2048)
         {
             if (_recorder.Is()) _recorder.Release();
 
-            var sRate = sampleRate.Is(default) ? 48000 : (int) Math.Round(sampleRate);
+            var sRate = sampleRate.Is(default) ? 22050 : (int) Math.Round(sampleRate);
             var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Encoding.Pcm16bit);
             MinFrameSize = minBufferSizeInBytes / sizeof(short);
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
@@ -71,37 +73,41 @@ namespace Solfeggio.Droid
                 if (currentRecorder.IsNot(_recorder)) return;
 
                 var frameSize = readLengthInBytes / sizeof(short);
-                var frame = new Complex[frameSize];
+                var frame = new short[frameSize];
                 var shorts = _bytes.AsShortBuffer();
                 for (var i = 0; i < frameSize; i++)
                 {
                     frame[i] = shorts.Get();
                 }
 
-                //DataReady?.Invoke(this, new AudioInputEventArgs(this, frame, SampleRate));
-            }
-        }
+				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, frame.Scale(2), frameSize));
+			}
+		}
 
-        public void Start()
+        public void Wake()
         {
             if (_recorder.IsNot()) StartWith();
             if (IsRecodingState) return;
             _recorder.StartRecording();
         }
 
-        public void Stop() => _recorder.Stop();
+        public void Lull() => _recorder.Stop();
 
-        public event EventHandler<AudioInputEventArgs> DataReady;
-		public event EventHandler<AudioInputEventArgs> SampleReady;
+		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
 		public override string ToString() => "Microphone";
 
-		public void Expose()
+		public void Free()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Dispose()
+		public void Tick()
+		{
+			throw new NotImplementedException();
+		}
+
+		public short[] Next()
 		{
 			throw new NotImplementedException();
 		}

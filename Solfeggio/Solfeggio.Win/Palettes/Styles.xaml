@@ -91,7 +91,7 @@
 	</Style>
 
 	<Style
-		TargetType="xamarin:ScrollViewer">
+		TargetType="xamarin:ScrollView">
 		<Setter
 			Property="VerticalScrollBarVisibility"
 			Value="Auto" />

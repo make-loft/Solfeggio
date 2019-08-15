@@ -40,8 +40,8 @@
     <c:KeyToValueConverter x:Key="EqualsToFalseConverter" KeySource="ConverterParameter" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
     <c:KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
 
-    
-    <ControlTemplate x:Key="SizeTemplate">
+
+	<ControlTemplate x:Key="SizeTemplate">
         <Grid BindingContext="{m:Store Key=vm:ProcessingManager}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

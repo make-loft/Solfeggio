@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:dictionaries="clr-namespace:Solfeggio.Dictionaries"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
+	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	x:Class="Solfeggio.App">
     <Application.Resources>
 		<ResourceDictionary>
@@ -10,6 +11,14 @@
 				<dictionaries:Templates />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
+
+		<p:SolidColorBrush
+			x:Key="FullToneKeyBrush"
+			Color="WhiteSmoke" />
+
+		<p:SolidColorBrush
+			x:Key="HalfToneKeyBrush"
+			Color="Black" />
 
 		<Style
 			TargetType="Grid">

@@ -24,9 +24,10 @@ namespace Xamarin.Forms
 
 	public class StackLayout : StackPanel
 	{
+		public HorizontalAlignment HorizontalOptions { get; set; }
 	}
 
-	public class ScrollViewer : System.Windows.Controls.ScrollViewer
+	public class ScrollView : System.Windows.Controls.ScrollViewer
 	{
 	}
 

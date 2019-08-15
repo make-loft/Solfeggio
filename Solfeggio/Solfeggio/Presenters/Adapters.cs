@@ -204,12 +204,12 @@ namespace System.Windows.Controls
 			foreach (var child in Children)
 			{
 				var path = child.ToSkPath();
-				if (child.Fill.Is()) _canvas.DrawPath(path, child.Fill.ToSkPaint());
+
+				if (child.Fill.Is())
+					_canvas.DrawPath(path, child.Fill.ToSkPaint());
+
 				if (child.Stroke.Is())
-				{
-					var paint = child.GetStrokeSkPaint();
-					_canvas.DrawPath(path, paint);
-				}
+					_canvas.DrawPath(path, child.GetStrokeSkPaint());
 			}
 		}
 	}

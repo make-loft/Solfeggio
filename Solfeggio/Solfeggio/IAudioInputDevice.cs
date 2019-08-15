@@ -16,6 +16,8 @@ namespace Solfeggio
 
 	public static class AudioInputDevice
 	{
+		public static IAudioInputDevice DefaultDevice => Store.Get<IAudioInputDevice>();
+
 		public static TimeSpan GetBufferDuration(this IAudioInputDevice device) =>
 			TimeSpan.FromSeconds(device.SampleSize / device.SampleRate);
 

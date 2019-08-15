@@ -35,10 +35,20 @@ namespace Solfeggio.Api
 		{
 			public static IEnumerable<DeviceInfo> EnumerateDevices()
 			{
-				yield break;
+				yield return new MicrophoneDeviceInfo();
 			}
 
-			public class DeviceInfo
+
+			public class MicrophoneDeviceInfo : DeviceInfo
+			{
+				public MicrophoneDeviceInfo() : base(0) { }
+				public override string ProductName => "Microphone";
+
+				public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
+					Store.Get<IProcessor>();
+			}
+
+			public abstract class DeviceInfo
 			{
 				public DeviceInfo(int number) { }
 				public virtual string ProductName { get; }

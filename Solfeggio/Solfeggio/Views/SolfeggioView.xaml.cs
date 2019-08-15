@@ -155,12 +155,14 @@ namespace Solfeggio.Views
 	        var waveInData = _spectralViewModel.OuterFrame;
 			var waveOutData = _spectralViewModel.InnerFrame;
 
-			spectrumCanvas.Children.Clear();
+			spectrumCanvas.Children.Add(SpectrumPolyline);
 
 	        var presenter = Store.Get<MusicalPresenter>();
 			var spectralViewModel = Store.Get<ProcessingManager>();
 			//var max = spectrum.Values.Max() * 0.7;
 			//if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
+
+			SpectrumPolyline.Points.Clear();
 
 			if (presenter.Spectrum.Magnitude.IsVisible)
 				presenter.DrawMagnitude(spectrum, width, height).
@@ -188,12 +190,12 @@ namespace Solfeggio.Views
 		    {
 			    new GradientStop
 			    {
-				    Color = Xamarin.Forms.Color.LightSteelBlue,
+				    Color = FromHex("#FF616187"),
 				    Offset = 0
 			    },
 			    new GradientStop
 			    {
-				    Color = Xamarin.Forms.Color.IndianRed,
+				    Color = IndianRed,
 				    Offset = 1
 			    }
 		    }

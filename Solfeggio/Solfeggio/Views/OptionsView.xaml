@@ -12,7 +12,7 @@
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Telemetry}">
-			<ScrollViewer>
+			<ScrollView>
 				<StackLayout>
 
 					<Expander
@@ -26,7 +26,7 @@
 						<StackLayout
 							DataContext="{m:Store Key=viewModels:ProcessingManager}">
 							<StackLayout
-								HorizontalAlignment="Center"
+								HorizontalOptions="Center"
 								Orientation="Horizontal">
 
 								<Label
@@ -60,7 +60,7 @@
 							DataContext="{m:Store Key=viewModels:HarmonicManager}">
 
 							<StackLayout
-								HorizontalAlignment="Center"
+								HorizontalOptions="Center"
 								Orientation="Horizontal">
 
 								<Label
@@ -95,22 +95,22 @@
 							ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=viewModels:AppViewModel}"
 							ItemTemplate="{StaticResource HarmonicTemplate}" />
 					</Expander>
-			
+
 				</StackLayout>
-			</ScrollViewer>
+			</ScrollView>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Сalibration}">
-			<ScrollViewer>
+			<ScrollView>
 				<ItemsView
 					ItemsSource="{StaticResource CalibrationOptionsSet}" />
-			</ScrollViewer>
+			</ScrollView>
 		</controls:PivotItem>
 
 		<controls:PivotItem
 			Header="{m:Localizing Key=Policy}">
-			<ScrollViewer>
+			<ScrollView>
 				<StackLayout>
 					<StackLayout
 						Orientation="Horizontal"
@@ -124,7 +124,7 @@
 							ItemsSource="{m:StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
 							SelectedItem="{m:StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
 					</StackLayout>
-					
+
 					<Label
 						FontSize="14"
 						FontWeight="Medium"
@@ -137,7 +137,7 @@
 						HorizontalAlignment="Center"
 						CommandParameter="{m:Localizing Key=IAmReadyToHelpLink}"
 						Command="{m:Context Key=Navigate, StoreKey=viewModels:AppViewModel}"
-						Content="{m:Localizing Key=IAmReadyToHelpMessage}"/>
+						Content="{m:Localizing Key=IAmReadyToHelpMessage}" />
 
 					<!--<Label
 						FontSize="10"
@@ -148,7 +148,7 @@
 						FontSize="10"
 						Text="{m:Localizing Key=DesignedByMessage}" />
 				</StackLayout>
-			</ScrollViewer>
+			</ScrollView>
 		</controls:PivotItem>
 
 	</controls:Pivot>

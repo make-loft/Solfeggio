@@ -62,6 +62,9 @@ namespace Solfeggio.Processors
 		short[] _bins;
 
 		public bool IsTimerEnabled { get; set; }
+#if NETSTANDARD
+		= true;
+#endif
 
 		private void OnTimerTick(object sender, EventArgs e)
 		{
