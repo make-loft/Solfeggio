@@ -183,9 +183,9 @@ namespace Solfeggio.Views
 			spectrumCanvas.Draw();
 		}
 
-	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new LinearGradientBrush
+	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new()
 	    {
-		    EndPoint = new Presenters.Point(0, h),
+		    EndPoint = new Point(0, h),
 		    GradientStops =
 		    {
 			    new GradientStop

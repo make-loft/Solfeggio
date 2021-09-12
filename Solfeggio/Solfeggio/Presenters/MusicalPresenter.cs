@@ -9,6 +9,7 @@ using Ace;
 using Rainbow;
 using Solfeggio.Models;
 #if NETSTANDARD
+using Xamarin.Forms;
 using Colors = Xamarin.Forms.Color;
 using Thickness = Xamarin.Forms.Thickness;
 #else
@@ -43,7 +44,7 @@ namespace Solfeggio.Presenters
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
-			opacityLineBrush.Opacity *= 0.3;
+			//opacityLineBrush.Opacity *= 0.3;
 			opacityLineBrush.Freeze();
 
 			foreach (var activeFrequency in markers)
@@ -243,7 +244,7 @@ namespace Solfeggio.Presenters
 				{
 					BorderThickness = new Thickness(1d),
 					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
-					CornerRadius = new CornerRadius(2d * expressionLevel),
+					CornerRadius = new(2d * expressionLevel),
 					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
 
@@ -363,8 +364,8 @@ namespace Solfeggio.Presenters
 
 				gradientBrush.GradientStops.Merge
 				(
-					new GradientStop { Color = basicColor, Offset = 0.0d },
-					new GradientStop { Color = pressColor, Offset = 0.5d }
+					new GradientStop { Color = basicColor, Offset = 0.0f },
+					new GradientStop { Color = pressColor, Offset = 0.5f }
 				);
 
 				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);

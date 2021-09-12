@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Solfeggio.Presenters;
 #if NETSTANDARD
+using Xamarin.Forms;
 using Color = Xamarin.Forms.Color;
 using Colors = Xamarin.Forms.Color;
 using FontFamily = System.String;
@@ -40,7 +41,7 @@ namespace Solfeggio.Models
 			.Where(p => p.PropertyType.Is(ColorType))
 			.Select(p => (Color)p.GetValue(null));
 
-		public Brush TopBrush = new SolidColorBrush(BurlyWood) { Opacity = 0.1d };
+		public Brush TopBrush = new SolidColorBrush(BurlyWood);
 
 		public Color FirstColor
 		{
@@ -101,8 +102,8 @@ namespace Solfeggio.Models
 			BlueViolet
 		};
 
-		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 0.1d }.DoFreeze()).ToArray();
-		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c) { Opacity = 1d }.DoFreeze()).ToArray();
+		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
+		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
 
 		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
 

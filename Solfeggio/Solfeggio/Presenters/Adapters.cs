@@ -6,74 +6,40 @@ using Ace;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Solfeggio.Presenters;
+
+using Xamarin.Forms;
+
 using static Xamarin.Forms.LayoutOptions;
 
 namespace Solfeggio.Presenters
 {
-	public struct Point
+	public static class Ext
 	{
-		public readonly double X, Y;
-
-		public Point(double x, double y)
+		public static SKPoint ToSkPoint(this Point point) => new()
 		{
-			X = x;
-			Y = y;
-		}
-
-		public SKPoint ToSkPoint() => new SKPoint((float) X, (float) Y);
-	}
-
-	public abstract class Brush
-	{
-		public double Opacity { get; set; }
-
-		public abstract SKPaint ToSkPaint();
-
-		public abstract Brush Clone();
-
-		public void Freeze() { }
-	}
-
-	public class SolidColorBrush : Brush
-	{
-		public SolidColorBrush() { }
-		//public SolidColorBrush(Color color) => Color = color;
-		public SolidColorBrush(Xamarin.Forms.Color color) => Color = color;
-		public Xamarin.Forms.Color Color { get; set; }
-
-		public override Brush Clone() => new SolidColorBrush(Color);
-
-		public override SKPaint ToSkPaint() => new SKPaint {Color = Color.ToSKColor()};
-
-		public SolidColorBrush DoFreeze() => this;
-	}
-
-	public static class ColorConverters
-	{
-		//public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
-		public static Xamarin.Forms.Color SkToXamarin(this SKColor c) => Xamarin.Forms.Color.FromRgb(c.Red, c.Green, c.Blue);
-		public static SKColor XamarinToSk(this Xamarin.Forms.Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
-	}
-
-	public class LinearGradientBrush : Brush
-	{
-		public Point StartPoint { get; set; }
-		public Point EndPoint { get; set; }
-		public List<GradientStop> GradientStops { get; private set; } = new List<GradientStop>();
-
-		public override Brush Clone() => new LinearGradientBrush
-		{
-			GradientStops = GradientStops.ToList(),
-			StartPoint = StartPoint,
-			EndPoint = EndPoint
+			X = (float)point.X,
+			Y = (float)point.Y,
 		};
 
-		public override SKPaint ToSkPaint()
+		public static Brush Freeze(this Brush brush) => brush;
+		public static Brush Clone(this Brush brush) => brush.As<LinearGradientBrush>()?.Clone() ?? brush;
+		public static Brush Clone(this LinearGradientBrush brush) => new LinearGradientBrush(brush.GradientStops);
+
+		public static SKPaint ToSkPaint(this Brush brush) =>
+			brush.As<LinearGradientBrush>()?.ToSkPaint() ?? brush.As<SolidColorBrush>()?.ToSkPaint();
+
+		public static SKPaint ToSkPaint(this SolidColorBrush brush) => new()
 		{
-			var startPoint = StartPoint.ToSkPoint();
-			var endPoint = EndPoint.ToSkPoint();
-			var colors = GradientStops.Select(s => s.Color.ToSKColor()).ToArray();
-			var offsets = GradientStops.Select(s => (float) s.Offset).ToArray();
+			Style = SKPaintStyle.Fill,
+			Color = brush.Color.ToSKColor(),
+		};
+
+		public static SKPaint ToSkPaint(this LinearGradientBrush brush)
+		{
+			var startPoint = brush.StartPoint.ToSkPoint();
+			var endPoint = brush.EndPoint.ToSkPoint();
+			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor()).ToArray();
+			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
 			return new SKPaint
 			{
@@ -83,10 +49,11 @@ namespace Solfeggio.Presenters
 		}
 	}
 
-	public class GradientStop
+	public static class ColorConverters
 	{
-		public Xamarin.Forms.Color Color { get; set; }
-		public double Offset { get; set; }
+		//public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
+		public static Color SkToXamarin(this SKColor c) => Xamarin.Forms.Color.FromRgb(c.Red, c.Green, c.Blue);
+		public static SKColor XamarinToSk(this Xamarin.Forms.Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
 	}
 }
 
@@ -97,7 +64,7 @@ namespace System.Windows.Controls
 		public static FontWeight FromOpenTypeWeight(int value) => default;
 	}
 
-	public class TextBlock : Xamarin.Forms.Label
+	public class TextBlock : Label
 	{
 		public Brush Foreground
 		{
@@ -134,11 +101,11 @@ namespace System.Windows.Controls
 	{
 		public new CornerRadius CornerRadius
 		{
-			get => new CornerRadius(base.CornerRadius);
+			get => new(base.CornerRadius);
 			set => base.CornerRadius = value.Value;
 		}
 
-		public Xamarin.Forms.Thickness BorderThickness { get; set; }
+		public Thickness BorderThickness { get; set; }
 
 		public Brush BorderBrush
 		{
@@ -153,11 +120,7 @@ namespace System.Windows.Controls
 		}
 	}
 
-	public class Grid : Xamarin.Forms.Grid
-	{
-	}
-
-	public class StackPanel : Xamarin.Forms.StackLayout
+	public class StackPanel : StackLayout
 	{
 		public void UpdateLayout() => InvalidateLayout();
 
@@ -315,64 +278,3 @@ namespace System.Windows.Shapes
 		}
 	}
 }
-
-//namespace Xamarin.Media
-//{
-//	public abstract class Brush
-//	{
-//		public double Opacity { get; set; }
-
-//		public abstract SKPaint ToSkPaint();
-
-//		public abstract Brush Clone();
-
-//		public void Freeze() { }
-//	}
-
-//	public class SolidColorBrush : Brush
-//	{
-//		public SolidColorBrush() { }
-//		public SolidColorBrush(Forms.Color color) => Color = color;
-//		public Forms.Color Color { get; set; }
-
-//		public override Brush Clone() => new SolidColorBrush(Color);
-
-//		public override SKPaint ToSkPaint() => new SKPaint { Color = Color };
-
-//		public SolidColorBrush DoFreeze() => this;
-//	}
-
-//	public class GradientStop
-//	{
-//		public Forms.Color Color { get; set; }
-//		public double Offset { get; set; }
-//	}
-
-//	public class LinearGradientBrush : Brush
-//	{
-//		public Point StartPoint { get; set; }
-//		public Point EndPoint { get; set; }
-//		public List<GradientStop> GradientStops { get; private set; } = new List<GradientStop>();
-
-//		public override Brush Clone() => new LinearGradientBrush
-//		{
-//			GradientStops = GradientStops.ToList(),
-//			StartPoint = StartPoint,
-//			EndPoint = EndPoint
-//		};
-
-//		public override SKPaint ToSkPaint()
-//		{
-//			var startPoint = StartPoint.ToSkPoint();
-//			var endPoint = EndPoint.ToSkPoint();
-//			var colors = GradientStops.Select(s => s.Color).ToArray();
-//			var offsets = GradientStops.Select(s => (float)s.Offset).ToArray();
-//			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
-//			return new SKPaint
-//			{
-//				Style = SKPaintStyle.Fill,
-//				Shader = shader
-//			};
-//		}
-//	}
-//}

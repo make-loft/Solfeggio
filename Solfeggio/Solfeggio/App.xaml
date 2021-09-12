@@ -12,11 +12,11 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 
-		<p:SolidColorBrush
+		<SolidColorBrush
 			x:Key="FullToneKeyBrush"
 			Color="WhiteSmoke" />
 
-		<p:SolidColorBrush
+		<SolidColorBrush
 			x:Key="HalfToneKeyBrush"
 			Color="Black" />
 

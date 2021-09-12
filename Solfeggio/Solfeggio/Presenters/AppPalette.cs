@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 #if NETSTANDARD
+using Xamarin.Forms;
 using static Xamarin.Forms.Application;
 #else
 using System.Windows.Media;

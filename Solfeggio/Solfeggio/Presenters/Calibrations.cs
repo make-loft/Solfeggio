@@ -3,6 +3,7 @@ using Rainbow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xamarin.Forms;
 using System.Windows.Media;
 using static Rainbow.ScaleFuncs;
 
