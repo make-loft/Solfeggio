@@ -61,11 +61,27 @@ namespace Solfeggio.Presenters
 				: visualUpperDecrementOffset / uLogicalOffset;
 		}
 
-		public static SmartRange Create(double lower, double upper) => new SmartRange
+		public static SmartRange Create(double lower, double upper) => new()
 		{
 			Lower = lower,
 			Upper = upper
 		};
+
+		public void Shift(double lowerOffset, double upperOffset, Projection scaleFunc, double lowerLimit, double upperLimit)
+		{
+			var lowerA = scaleFunc(Lower);
+			var lowerB = lowerA + lowerOffset;
+			if (lowerB < scaleFunc(lowerLimit)) return;
+			var lowerScale = lowerB / lowerA;
+
+			var upperA = scaleFunc(Upper);
+			var upperB = upperA + upperOffset;
+			if (upperB > scaleFunc(upperLimit)) return;
+			var upperScale = upperB / upperA;
+
+			Lower *= lowerScale;
+			Upper *= upperScale;
+		}
 	}
 
 	[DataContract]

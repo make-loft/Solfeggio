@@ -16,12 +16,12 @@ namespace Solfeggio.Models
 	public partial class Harmonic
 	{
 		public delegate double Basis(double v);
-		[DataMember] public Basis[] BasisFuncs { get; } = { Sin, Triangle, Sawtooth, Rectangle };
+		[DataMember] public Basis[] BasisFuncs { get; } = { Cos, Sin, Triangle, Sawtooth, Rectangle };
 
 		[DataMember] public Basis BasisFunc { get; set; } = Sin;
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
-		[DataMember] public double PhaseShift { get; set; } = 0d;
+		[DataMember] public double Phase { get; set; } = 0d;
 		[DataMember] public double Gap { get; set; } = 0d;
 		[DataMember] public PhaseMode PhaseMode { get; set; } = PhaseMode.Flow;
 		[DataMember] public bool IsEnabled { get; set; } = true;
@@ -35,7 +35,7 @@ namespace Solfeggio.Models
 			while (true)
 			{
 				offset += step;
-				var value = offset + PhaseShift;
+				var value = offset + Phase;
 				if (Gap.Is(0d))
 					yield return 2d * Magnitude * BasisFunc(value);
 				else

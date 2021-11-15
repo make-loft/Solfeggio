@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:models="clr-namespace:Solfeggio.Models"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
@@ -11,66 +10,66 @@
 		x:Key="HarmonicTemplate">
 		<Grid
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			m:Rack.Columns="2* 2* 2* * * * *"
-			m:Rack.Rows="* *">
+			Rack.Columns="2* 2* 2* * * * *"
+			Rack.Rows="* *">
 
 			<Slider
-				m:Rack.Cell="C0 R1"
+				Rack.Cell="C0 R1"
 				Minimum="+0.0"
 				Maximum="+1.0"
 				TickFrequency="0.01"
 				TickPlacement="TopLeft"
 				Value="{Binding Magnitude, StringFormat=F2}" />
 			<Slider
-				m:Rack.Cell="C1 R1"
+				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
-				Minimum="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
-				Maximum="{m:StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
+				Minimum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
+				Maximum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
 				Value="{Binding Frequency, StringFormat=F2}" />
 			<Slider
-				m:Rack.Cell="C2 R1"
+				Rack.Cell="C2 R1"
 				TickFrequency="0.207"
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding PhaseShift, StringFormat=F2}" />
+				Value="{Binding Phase, StringFormat=F2}" />
 
 			<Entry
-				m:Rack.Cell="C0 R0"
+				Rack.Cell="C0 R0"
 				Text="{Binding Magnitude, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
-				m:Rack.Cell="C1 R0"
+				Rack.Cell="C1 R0"
 				Text="{Binding Frequency, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
-				m:Rack.Cell="C2 R0"
-				Text="{Binding PhaseShift, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
-      <Entry
-				m:Rack.Cell="C3 R2"
+				Rack.Cell="C2 R0"
+				Text="{Binding Phase, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+			<Entry
+				Rack.Cell="C3 R2"
 				Text="{Binding Gap, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
 			<Picker
-				m:Rack.Cell="C3 R0"
+				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
 				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
 				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 			<Picker
-				m:Rack.Cell="C4 R0"
-				ItemsSource="{m:Enum Type=models:PhaseMode}"
+				Rack.Cell="C4 R0"
+				ItemsSource="{Enum Type=models:PhaseMode}"
 				SelectedItem="{Binding PhaseMode, Mode=TwoWay}" />
 
 			<Switch
-				m:Rack.Cell="C5 R0"
+				Rack.Cell="C5 R0"
 				HorizontalAlignment="Right"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
 
 			<StackLayout
-				m:Rack.Cell="C6 R0"
+				Rack.Cell="C6 R0"
 				Orientation="Horizontal"
 				HorizontalAlignment="Right">
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{m:Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, SourcePath=ActiveProfile}" />
+					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, SourcePath=ActiveProfile}" />
 			</StackLayout>
 		</Grid>
 	</DataTemplate>
@@ -83,7 +82,7 @@
 				Text="{Binding Title}" />
 			<!--<Button
 				Content="✗"
-				Command="{m:Context Key=Set.Delete, StoreKey=local:Generator}"
+				Command="{Context Key=Set.Delete, StoreKey=local:Generator}"
 				CommandParameter="{Binding}" />-->
 		</StackLayout>
 	</DataTemplate>
@@ -91,7 +90,7 @@
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate">
 		<ItemsView
-			DataContext="{m:StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
+			DataContext="{StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
 			ItemsSource="{StaticResource ProcessingProfileOptionsSet}"
 			ItemTemplate="{StaticResource OptionTemplate}" />
 	</DataTemplate>
@@ -102,39 +101,39 @@
 			<StackLayout
 				Orientation="Horizontal">
 				<Label
-					Text="{m:Localizing Key=Title}" />
+					Text="{Localizing Key=Title}" />
 				<Entry
 					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<Button
 					Content="✗"
-					Command="{m:Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager}"
+					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager}"
 					CommandParameter="{Binding}" />
 			</StackLayout>
 
 			<Grid
-				m:Rack.Columns="2* 2* 2* * * * *"
-				m:Rack.Rows="* *">
+				Rack.Columns="2* 2* 2* * * * *"
+				Rack.Rows="* *">
 				<Label
-					m:Rack.Cell="C0"
-					Text="{m:Localizing Key=Magnitude}" />
+					Rack.Cell="C0"
+					Text="{Localizing Key=Magnitude}" />
 				<Label
-					m:Rack.Cell="C1"
-					Text="{m:Localizing Key=Frequency}" />
+					Rack.Cell="C1"
+					Text="{Localizing Key=Frequency}" />
 				<Label
-					m:Rack.Cell="C2"
-					Text="{m:Localizing Key=PhaseShift}" />
+					Rack.Cell="C2"
+					Text="{Localizing Key=Phase}" />
 				<Label
-					m:Rack.Cell="C3"
-					Text="{m:Localizing Key=Basis}" />
+					Rack.Cell="C3"
+					Text="{Localizing Key=Basis}" />
 				<Label
-					m:Rack.Cell="C4"
-					Text="{m:Localizing Key=Mode}" />
+					Rack.Cell="C4"
+					Text="{Localizing Key=Mode}" />
 				<Label
-					m:Rack.Cell="C5"
-					Text="{m:Localizing Key=Sound}" />
+					Rack.Cell="C5"
+					Text="{Localizing Key=Sound}" />
 				<Label
-					m:Rack.Cell="C6"
-					Text="{m:Localizing Key=Action}" />
+					Rack.Cell="C6"
+					Text="{Localizing Key=Action}" />
 			</Grid>
 
 			<ItemsView
@@ -143,8 +142,8 @@
 
 			<Button
 				HorizontalAlignment="Center"
-				Content="{m:Localizing Key=Create}"
-				Command="{m:Context Key=Set.Create, TrackContextChanges=True, Mode=OneWay}" />
+				Content="{Localizing Key=Create}"
+				Command="{Context Key=Set.Create, TrackedPath='', Mode=OneWay}" />
 		</StackLayout>
 	</DataTemplate>
 
@@ -152,21 +151,21 @@
 		x:Key="HarmonicOutTemplate">
 		<Grid
 			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			m:Rack.Columns="* * * * *">
+			Rack.Columns="* * * * *">
 			<Label
-				m:Rack.Cell="C0"
+				Rack.Cell="C0"
 				Text="{Binding Harmonic.Magnitude, StringFormat=F2}" />
 			<Label
-				m:Rack.Cell="C1"
+				Rack.Cell="C1"
 				Text="{Binding Harmonic.Frequency, StringFormat=F2}" />
 			<Label
-				m:Rack.Cell="C2"
+				Rack.Cell="C2"
 				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
-				m:Rack.Cell="C3"
+				Rack.Cell="C3"
 				Text="{Binding EthalonFrequency, StringFormat=F2}" />
 			<Label
-				m:Rack.Cell="C4"
+				Rack.Cell="C4"
 				Text="{Binding NoteName}" />
 		</Grid>
 	</DataTemplate>
@@ -174,12 +173,12 @@
 	<DataTemplate
 		x:Key="OptionTemplate">
 		<Grid
-			m:Rack.Columns="7* 5* *">
+			Rack.Columns="7* 5* *">
 			<ContentPresenter
-				m:Rack.Cell="C0"
+				Rack.Cell="C0"
 				Content="{Binding Tag}" />
 			<ContentPresenter
-				m:Rack.Cell="C1"
+				Rack.Cell="C1"
 				Content="{Binding}" />
 		</Grid>
 	</DataTemplate>
@@ -188,53 +187,53 @@
 		x:Key="RangeGridTemplate">
 
 		<Grid
-			m:Rack.Rows="^ ^ ^ ^"
-			m:Rack.Columns="^ ^ ^"
+			Rack.Rows="^ ^ ^ ^"
+			Rack.Columns="^ ^ ^"
 			HorizontalAlignment="Center">
 
 			<Label
-				m:Rack.Cell="R0 C0"
+				Rack.Cell="R0 C0"
 				Text="" />
 
 			<Label
-				m:Rack.Cell="R1 C0"
-				Text="{m:Localizing Key=Upper}" />
+				Rack.Cell="R1 C0"
+				Text="{Localizing Key=Upper}" />
 			<Label
-				m:Rack.Cell="R2 C0"
-				Text="{m:Localizing Key=Lower}" />
+				Rack.Cell="R2 C0"
+				Text="{Localizing Key=Lower}" />
 			<Label
-				m:Rack.Cell="R3 C0"
+				Rack.Cell="R3 C0"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{m:Localizing Key=Length}" />
+				Text="{Localizing Key=Length}" />
 
 			<Label
-				m:Rack.Cell="R0 C1"
-				Text="{m:Localizing Key=Threshold}" />
+				Rack.Cell="R0 C1"
+				Text="{Localizing Key=Threshold}" />
 			<Label
-				m:Rack.Cell="R0 C2"
-				Text="{m:Localizing Key=Limit}" />
+				Rack.Cell="R0 C2"
+				Text="{Localizing Key=Limit}" />
 
 			<Entry
-				m:Rack.Cell="R1 C1"
+				Rack.Cell="R1 C1"
 				Text="{Binding Threshold.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				m:Rack.Cell="R2 C1"
+				Rack.Cell="R2 C1"
 				Text="{Binding Threshold.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				m:Rack.Cell="R1 C2"
+				Rack.Cell="R1 C2"
 				Text="{Binding Limit.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				m:Rack.Cell="R2 C2"
+				Rack.Cell="R2 C2"
 				Text="{Binding Limit.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 
 			<Entry
-				m:Rack.Cell="R3 C1"
+				Rack.Cell="R3 C1"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Binding Threshold.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				m:Rack.Cell="R3 C2"
+				Rack.Cell="R3 C2"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Binding Limit.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
@@ -249,7 +248,7 @@
 			HorizontalAlignment="Stretch">
 
 			<Switch
-				m:Rack.Cell="R0"
+				Rack.Cell="R0"
 				HorizontalAlignment="Right"
 				IsToggled="{Binding IsVisible, Mode=TwoWay}" />
 
@@ -268,7 +267,7 @@
 				HorizontalAlignment="Center">
 
 				<Label
-					Text="{m:Localizing Key=Scale}" />
+					Text="{Localizing Key=Scale}" />
 
 				<Picker
 					ItemsSource="{Binding VisualScaleFuncs}"
@@ -284,54 +283,54 @@
 		x:Key="SpectrumTemplate">
 
 		<Grid
-			m:Rack.Columns="{m:Smart Key=Columns, DefaultValue='^ ^ ^ ^ ^'}">
+			Rack.Columns="{Smart Key=Columns, DefaultValue='^ ^ ^ ^ ^'}">
 
 			<Grid
-				m:Rack.Cell="C0"
-				m:Rack.Rows="^ ^"
+				Rack.Cell="C0"
+				Rack.Rows="^ ^"
 				DataContext="{Binding Magnitude}">
 				<Label
-					m:Rack.Cell="R0"
+					Rack.Cell="R0"
 					HorizontalAlignment="Center"
-					Text="{m:Localizing Key=Magnitude}" />
+					Text="{Localizing Key=Magnitude}" />
 				<ContentPresenter
-					m:Rack.Cell="R1"
+					Rack.Cell="R1"
 					Content="{Binding}"
 					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
 
 			<GridSplitter
-				m:Rack.Cell="C1"
+				Rack.Cell="C1"
 				Style="{StaticResource VerticalGridSplitter}" />
 
 			<Grid
-				m:Rack.Cell="C2"
-				m:Rack.Rows="^ ^"
+				Rack.Cell="C2"
+				Rack.Rows="^ ^"
 				DataContext="{Binding Frequency}">
 				<Label
-					m:Rack.Cell="R0"
+					Rack.Cell="R0"
 					HorizontalAlignment="Center"
-					Text="{m:Localizing Key=Frequency}" />
+					Text="{Localizing Key=Frequency}" />
 				<ContentPresenter
-					m:Rack.Cell="R1"
+					Rack.Cell="R1"
 					Content="{Binding}"
 					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
 
 			<GridSplitter
-				m:Rack.Cell="C3"
+				Rack.Cell="C3"
 				Style="{StaticResource VerticalGridSplitter}" />
 
 			<Grid
-				m:Rack.Cell="C4"
-				m:Rack.Rows="^ ^"
+				Rack.Cell="C4"
+				Rack.Rows="^ ^"
 				DataContext="{Binding Phase}">
 				<Label
-					m:Rack.Cell="R0"
+					Rack.Cell="R0"
 					HorizontalAlignment="Center"
-					Text="{m:Localizing Key=Phase}" />
+					Text="{Localizing Key=Phase}" />
 				<ContentPresenter
-					m:Rack.Cell="R1"
+					Rack.Cell="R1"
 					Content="{Binding}"
 					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
@@ -344,42 +343,42 @@
 		x:Key="FrameTemplate">
 
 		<Grid
-			m:Rack.Columns="^ ^ ^ ^ ^">
+			Rack.Columns="^ ^ ^ ^ ^">
 
 			<Grid
-				m:Rack.Cell="C0"
-				m:Rack.Rows="^ ^"
+				Rack.Cell="C0"
+				Rack.Rows="^ ^"
 				DataContext="{Binding Level}">
 				<Label
-					m:Rack.Cell="R0"
+					Rack.Cell="R0"
 					HorizontalAlignment="Center"
-					Text="{m:Localizing Key=Level}" />
+					Text="{Localizing Key=Level}" />
 				<ContentPresenter
-					m:Rack.Cell="R1"
+					Rack.Cell="R1"
 					Content="{Binding}"
 					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
 
 			<GridSplitter
-				m:Rack.Cell="C1"
+				Rack.Cell="C1"
 				Style="{StaticResource VerticalGridSplitter}" />
 
 			<Grid
-				m:Rack.Cell="C2"
-				m:Rack.Rows="^ ^"
+				Rack.Cell="C2"
+				Rack.Rows="^ ^"
 				DataContext="{Binding Offset}">
 				<Label
-					m:Rack.Cell="R0"
+					Rack.Cell="R0"
 					HorizontalAlignment="Center"
-					Text="{m:Localizing Key=Offset}" />
+					Text="{Localizing Key=Offset}" />
 				<ContentPresenter
-					m:Rack.Cell="R1"
+					Rack.Cell="R1"
 					Content="{Binding}"
 					ContentTemplate="{StaticResource RangeTemplate}" />
 			</Grid>
 
 			<GridSplitter
-				m:Rack.Cell="C3"
+				Rack.Cell="C3"
 				Style="{StaticResource VerticalGridSplitter}" />
 
 		</Grid>
@@ -422,7 +421,7 @@
 					<DataTemplate>
 						<Picker
 							Tag="{Binding Key}"
-							ItemsSource="{m:StoreBinding Path=Brushes, StoreKey=models:VisualProfile}"
+							ItemsSource="{StoreBinding Path=Brushes, StoreKey=models:VisualProfile}"
 							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
 					</DataTemplate>
 				</ItemsView.ItemTemplate>
@@ -433,7 +432,7 @@
 					<DataTemplate>
 						<Picker
 							Tag="{Binding Key}"
-							ItemsSource="{m:StoreBinding Path=FontSizes, StoreKey=models:VisualProfile}"
+							ItemsSource="{StoreBinding Path=FontSizes, StoreKey=models:VisualProfile}"
 							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
 					</DataTemplate>
 				</ItemsView.ItemTemplate>

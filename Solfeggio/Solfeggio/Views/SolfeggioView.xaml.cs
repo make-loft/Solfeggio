@@ -119,11 +119,7 @@ namespace Solfeggio.Views
 
 		void OnCanvasViewPaintSurfaceP(object sender, SKPaintSurfaceEventArgs args)
 	    {
-		    var width = (float)args.Info.Width;
-		    var height = (float)args.Info.Height;
-		    var canvas = args.Surface.Canvas;
-		    var pianoCanvas = new Panel(args);
-
+		    var pianoCanvas = PianoCanvas;
 		    var spectrum = _spectralViewModel.Spectrum;
 		    if (spectrum.IsNot()) return;
 
@@ -139,7 +135,7 @@ namespace Solfeggio.Views
 		    //var tops = presenter.DrawPiano(PianoCanvas, spectrum);
 		    //presenter.DrawTops(SpectrumCanvas, tops);
 
-		    pianoCanvas.Draw();
+		    pianoCanvas.Draw(args);
 		}
 
         void OnCanvasViewPaintSurface1(object sender, SKPaintSurfaceEventArgs args)
@@ -147,7 +143,8 @@ namespace Solfeggio.Views
 	        var width = (float)args.Info.Width;
 	        var height = (float)args.Info.Height;
 	        var canvas = args.Surface.Canvas;
-	        var spectrumCanvas = new Panel(args) { Background = CreateBackgroundBrush(height)};
+            var spectrumCanvas = SpectrumCanvas;
+            //spectrumCanvas.Background = CreateBackgroundBrush(height);
 
 			var spectrum = _spectralViewModel.Spectrum;
 			if (spectrum.IsNot()) return;
@@ -155,32 +152,30 @@ namespace Solfeggio.Views
 	        var waveInData = _spectralViewModel.OuterFrame;
 			var waveOutData = _spectralViewModel.InnerFrame;
 
-			spectrumCanvas.Children.Add(SpectrumPolyline);
-
 	        var presenter = Store.Get<MusicalPresenter>();
 			var spectralViewModel = Store.Get<ProcessingManager>();
 			//var max = spectrum.Values.Max() * 0.7;
 			//if (max > presenter.MaxMagnitude) presenter.MaxMagnitude = max;
 
-			SpectrumPolyline.Points.Clear();
+			MagnitudePolyline.Points.Clear();
 
 			if (presenter.Spectrum.Magnitude.IsVisible)
 				presenter.DrawMagnitude(spectrum, width, height).
-				Use(SpectrumPolyline.Points.AppendRange);
+				Use(MagnitudePolyline.Points.AppendRange);
 
-			//if (presenter.Spectrum.Phase.IsVisible)
-			//	presenter.DrawPhase(spectrum, width, height).
-			//	Use(PhasePolyline.Points.AppendRange);
+			if (presenter.Spectrum.Phase.IsVisible)
+				presenter.DrawPhase(spectrum, width, height).
+				Use(PhasePolyline.Points.AppendRange);
 
 			if (presenter.Frame.Level.IsVisible)
 				presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
-				Use(WaveInLine.Points.AppendRange);
+				Use(WaveInPolyline.Points.AppendRange);
 
 			if (presenter.Frame.Level.IsVisible && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 				presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
-				Use(WaveOutLine.Points.AppendRange);
+				Use(WaveOutPolyline.Points.AppendRange);
 
-			spectrumCanvas.Draw();
+			spectrumCanvas.Draw(args);
 		}
 
 	    private static LinearGradientBrush CreateBackgroundBrush(double h) => new()
@@ -200,24 +195,5 @@ namespace Solfeggio.Views
 			    }
 		    }
 	    };
-
-	    private readonly Polyline SpectrumPolyline = new Polyline
-	    {
-		    Fill = new SolidColorBrush(Yellow),
-		    Stroke = new SolidColorBrush(Gold),
-			StrokeThickness = 1
-	    };
-
-	    private readonly Polyline WaveInLine = new Polyline
-	    {
-		    Stroke = new SolidColorBrush(DarkRed),
-		    StrokeThickness = 1
-	    };
-
-		private readonly Polyline WaveOutLine = new Polyline
-		{
-			Stroke = new SolidColorBrush(GreenYellow),
-			StrokeThickness = 1
-		};
 	}
 }

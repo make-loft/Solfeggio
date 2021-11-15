@@ -1,0 +1,62 @@
+<ResourceDictionary
+    x:Class="Solfeggio.Palettes.Values"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+	<LinearGradientBrush
+		x:Key="SpectumBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="#FF616187"
+			Offset="0" />
+		<GradientStop
+			Color="IndianRed"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<SolidColorBrush
+		x:Key="MagnitudeSpectrumFillBrush"
+		Color="Yellow" />
+
+	<SolidColorBrush
+		x:Key="MagnitudeSpectrumStrokeBrush"
+		Color="Gold"/>
+
+	<SolidColorBrush
+		x:Key="WaveInStrokeBrush"
+		Color="Crimson" />
+
+	<SolidColorBrush
+		x:Key="WaveOutStrokeBrush"
+		Color="YellowGreen" />
+
+	<SolidColorBrush
+		x:Key="PianoCanvasBackgroundBrush"
+		Color="#FF616187" />
+
+	<SolidColorBrush
+		x:Key="FullToneKeyBrush"
+		Color="WhiteSmoke" />
+
+	<SolidColorBrush
+		x:Key="HalfToneKeyBrush"
+		Color="#202124" />
+
+	<SolidColorBrush
+		x:Key="MarkerBrush"
+		Color="Green" />
+
+	<SolidColorBrush
+		x:Key="ButterflyGridBrush"
+		Color="Violet" />
+
+	<SolidColorBrush
+		x:Key="NoteGridBrush"
+		Color="Purple" />
+
+	<SolidColorBrush
+		x:Key="HzBrush"
+		Color="Blue" />
+
+</ResourceDictionary>

@@ -25,8 +25,8 @@ namespace Solfeggio.Presenters
 		public static Brush Clone(this Brush brush) => brush.As<LinearGradientBrush>()?.Clone() ?? brush;
 		public static Brush Clone(this LinearGradientBrush brush) => new LinearGradientBrush(brush.GradientStops);
 
-		public static SKPaint ToSkPaint(this Brush brush) =>
-			brush.As<LinearGradientBrush>()?.ToSkPaint() ?? brush.As<SolidColorBrush>()?.ToSkPaint();
+		public static SKPaint ToSkPaint(this Brush brush, double w, double h) =>
+			brush.As<LinearGradientBrush>()?.ToSkPaint(w, h) ?? brush.As<SolidColorBrush>()?.ToSkPaint();
 
 		public static SKPaint ToSkPaint(this SolidColorBrush brush) => new()
 		{
@@ -34,10 +34,10 @@ namespace Solfeggio.Presenters
 			Color = brush.Color.ToSKColor(),
 		};
 
-		public static SKPaint ToSkPaint(this LinearGradientBrush brush)
+		public static SKPaint ToSkPaint(this LinearGradientBrush brush, double w, double h)
 		{
 			var startPoint = brush.StartPoint.ToSkPoint();
-			var endPoint = brush.EndPoint.ToSkPoint();
+			var endPoint = new SKPoint { X = (float)(brush.EndPoint.X * w), Y = (float)(brush.EndPoint.Y * h) };
 			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor()).ToArray();
 			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
@@ -112,12 +112,6 @@ namespace System.Windows.Controls
 			get => new SolidColorBrush(BorderColor);
 			set => BorderColor = value.To<SolidColorBrush>().Color;
 		}
-
-		public Brush Background
-		{
-			get => new SolidColorBrush(BackgroundColor);
-			set => BackgroundColor = value.To<SolidColorBrush>().Color;
-		}
 	}
 
 	public class StackPanel : StackLayout
@@ -140,39 +134,30 @@ namespace System.Windows.Controls
 		public double ActualHeight => Height;
 	}
 
-	public class Panel
+	[ContentProperty("Children")]
+	public class Canvas : SKCanvasView
 	{
-		private readonly SKCanvas _canvas;
-		private readonly SKPaintSurfaceEventArgs _args;
+		public float ActualWidth { get; set; }
+		public float ActualHeight { get; set; }
 
-		public Panel(SKPaintSurfaceEventArgs args)
+		public List<Primitive> Children { get; } = new();
+
+		public void Draw(SKPaintSurfaceEventArgs _args)
 		{
-			_args = args;
-			_canvas = args.Surface.Canvas;
+			var canvas = _args.Surface.Canvas;
+			canvas.Clear();
 			ActualWidth = _args.Info.Width;
 			ActualHeight = _args.Info.Height;
-		}
-
-		public float ActualWidth;
-		public float ActualHeight;
-
-
-		public List<Primitive> Children { get; } = new List<Primitive>();
-		public Brush Background;
-
-		public void Draw()
-		{
-			_canvas.Clear();
-			if (Background.Is()) _canvas.DrawRect(0f, 0f, _args.Info.Width, _args.Info.Height, Background.ToSkPaint());
+			if (Background.Is()) canvas.DrawRect(0f, 0f, ActualWidth, ActualHeight, Background.ToSkPaint(ActualWidth, ActualHeight));
 			foreach (var child in Children)
 			{
 				var path = child.ToSkPath();
 
 				if (child.Fill.Is())
-					_canvas.DrawPath(path, child.Fill.ToSkPaint());
+					canvas.DrawPath(path, child.Fill.ToSkPaint(ActualWidth, ActualHeight));
 
 				if (child.Stroke.Is())
-					_canvas.DrawPath(path, child.GetStrokeSkPaint());
+					canvas.DrawPath(path, child.GetStrokeSkPaint(ActualWidth, ActualHeight));
 			}
 		}
 	}
@@ -231,14 +216,14 @@ namespace System.Windows.Shapes
 {
 	public abstract class Primitive
 	{
-		public abstract SKPath ToSkPath();
-		public Brush Fill;
-		public Brush Stroke;
-		public double StrokeThickness;
+		public Brush Fill { get; set; }
+		public Brush Stroke { get; set; }
+		public double StrokeThickness { get; set; }
 
-		public SKPaint GetStrokeSkPaint()
+		public abstract SKPath ToSkPath();
+		public SKPaint GetStrokeSkPaint(double w, double h)
 		{
-			var skBrush = Stroke.ToSkPaint();
+			var skBrush = Stroke.ToSkPaint(w, h);
 			skBrush.StrokeWidth = (float)StrokeThickness;
 			skBrush.Style = SKPaintStyle.Stroke;
 			return skBrush;
@@ -247,12 +232,15 @@ namespace System.Windows.Shapes
 
 	public class Polyline : Primitive
 	{
-		public List<Point> Points { get; } = new List<Point>();
+		public List<Point> Points { get; } = new();
 
 		public override SKPath ToSkPath()
 		{
 			var points = Points.Select(p => p.ToSkPoint()).ToList();
 			var path = new SKPath();
+			if (points.Count is 0)
+				return path;
+
 			path.MoveTo(points[0]);
 			for (var i = 1; i < points.Count; i++)
 			{

@@ -10,9 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Palettes\ResourceDictionary.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="SkiaSharp" Version="*" />
 	<PackageReference Include="SkiaSharp.Views.Forms" Version="*" />
 	<PackageReference Include="Xamarin.Forms" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Palettes\ResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -21,8 +31,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\Pivot.xaml.cs">
-      <DependentUpon>Pivot.xaml</DependentUpon>
+    <Compile Update="Palettes\Sets.xaml.cs">
+      <DependentUpon>Sets.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Palettes\Values.xaml.cs">
+      <DependentUpon>Values.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Palettes\Brushes.xaml.cs">
+      <DependentUpon>Brushes.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
@@ -30,7 +46,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Dictionaries\Templates.xaml">
+    <EmbeddedResource Update="Palettes\Sets.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Values.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Templates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\OptionsView.xaml">
@@ -40,9 +65,6 @@
 
   <ItemGroup>
     <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Controls\Pivot.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Dictionaries\Templates.xaml">

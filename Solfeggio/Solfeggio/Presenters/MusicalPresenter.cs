@@ -66,7 +66,7 @@ namespace Solfeggio.Presenters
 				var panel = new StackPanel();
 
 				var fontSize = hVisualScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
-				fontSize = fontSize > 20d ? 20d : fontSize;
+				fontSize = fontSize > 20d || fontSize < 5d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
 				{
 					FontSize = fontSize,
@@ -245,7 +245,7 @@ namespace Solfeggio.Presenters
 					BorderThickness = new Thickness(1d),
 					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 					CornerRadius = new(2d * expressionLevel),
-					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
+					//Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
 
 				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel).
@@ -287,7 +287,7 @@ namespace Solfeggio.Presenters
 			});
 		}
 
-		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height)
+		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, out Bin[] peaks)
 		{
 			Spectrum.Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
 
@@ -312,7 +312,7 @@ namespace Solfeggio.Presenters
 					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]).Use(keys.Add);
 			}
 
-			var peaks = data.EnumeratePeaks().OrderByDescending(p => p.Magnitude).Take(10).ToArray();
+			peaks = data.EnumeratePeaks().OrderByDescending(p => p.Magnitude).Take(10).ToArray();
 
 			var m = 0;
 			var averageMagnitude = 0d;

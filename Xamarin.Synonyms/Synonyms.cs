@@ -22,6 +22,26 @@ namespace Xamarin.Forms
 	{
 	}
 
+	public class Pivot : TabControl
+	{
+		public HorizontalAlignment HorizontalOptions { get; set; }
+	}
+
+	public class ListView : System.Windows.Controls.ListView
+	{
+		public HorizontalAlignment HorizontalOptions { get; set; }
+	}
+
+	public class PivotItem : TabItem
+	{
+		public HorizontalAlignment HorizontalOptions { get; set; }
+	}
+
+	public class StackView : StackPanel
+	{
+		public HorizontalAlignment HorizontalOptions { get; set; }
+	}
+
 	public class StackLayout : StackPanel
 	{
 		public HorizontalAlignment HorizontalOptions { get; set; }
@@ -132,7 +152,7 @@ namespace Xamarin.Forms
 	{
 		public Binding ItemDisplayBinding
 		{
-			set => DisplayMemberPath = "Method.Name";
+			set => DisplayMemberPath = value.Path?.Path ?? "Method.Name";
 		}
 	}
 

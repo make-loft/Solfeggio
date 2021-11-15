@@ -1,5 +1,5 @@
 <ResourceDictionary
-    x:Class="Solfeggio.Dictionaries.Templates"
+    x:Class="Solfeggio.Palettes.Templates"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"

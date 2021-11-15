@@ -1,38 +1,37 @@
-﻿<ResourceDictionary
-	xmlns="http://xamarin.com/schemas/2014/forms"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:models="clr-namespace:Solfeggio.Models"
-	xmlns:presenters="clr-namespace:Solfeggio.Presenters">
-
+<ResourceDictionary
+    x:Class="Solfeggio.Palettes.Sets"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Solfeggio.Controls">
+	
 	<Set
         x:Shared="False"
         x:Key="ShowStateSet">
-        
-        <Switch
-            Tag="{Localizing Key=Harmonics}"
+
+		<Switch
+            Attach.Tag="{Localizing Key=Harmonics}"
 			IsToggled="{Binding VisualProfile.Harmonics, Mode=TwoWay}" />
 
-        <!--<Switch
-            Tag="{Localizing Key=ActualFrequncy}"
+		<!--<Switch
+            Attach.Tag="{Localizing Key=ActualFrequncy}"
             IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
 
         <Switch
-            Tag="{Localizing Key=ActualMagnitude}"
+            Attach.Tag="{Localizing Key=ActualMagnitude}"
             IsToggled="{Binding Show.ActualMagnitude, Mode=TwoWay}" />
 
         <Switch
-            Tag="{Localizing Key=Notes}"
+            Attach.Tag="{Localizing Key=Notes}"
             IsToggled="{Binding Show.Notes, Mode=TwoWay}" />-->
 
-        <Switch
-            Tag="{Localizing Key=NotesGrid}"
+		<Switch
+            Attach.Tag="{Localizing Key=NotesGrid}"
 			IsToggled="{Binding VisualProfile.NotesGrid, Mode=TwoWay}" />
 
-        <Switch
-            Tag="{Localizing Key=DiscreteGrid}"
+		<Switch
+            Attach.Tag="{Localizing Key=DiscreteGrid}"
 			IsToggled="{Binding Spectrum.Frequency.IsVisible, Mode=TwoWay}" />
-        
-    </Set>
+
+	</Set>
 
 	<Set
 		x:Shared="False"
@@ -40,16 +39,16 @@
 
 		<Entry
 			Rack.Cell="C3"
-			Tag="{Localizing Key=Title}"
+			Attach.Tag="{Localizing Key=Title}"
 			Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 		<Grid
 			Rack.Columns="2* ^ * ^"
-			Tag="{Localizing Key=Input}">
+			Attach.Tag="{Localizing Key=Input}">
 			<Picker
 				Rack.Cell="C0"
 				MinWidth="210"
-				Tag="{Localizing Key=Input}"
+				Attach.Tag="{Localizing Key=Input}"
 				ItemsSource="{Binding InputDevices}"
 				SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
 				DisplayMemberPath="ProductName" />
@@ -69,7 +68,7 @@
 
 		<Grid
 			Rack.Columns="2* ^ * ^"
-			Tag="{Localizing Key=Output}">
+			Attach.Tag="{Localizing Key=Output}">
 			<Picker
 				Rack.Cell="C0"
 				MinWidth="210"
@@ -91,17 +90,17 @@
 		</Grid>
 
 		<Picker
-			Tag="{Localizing Key=SampleRate}"
+			Attach.Tag="{Localizing Key=SampleRate}"
 			ItemsSource="{Binding SampleRates}"
 			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
 
 		<Picker
-			Tag="{Localizing Key=BuffersCount}"
+			Attach.Tag="{Localizing Key=BuffersCount}"
 			ItemsSource="{StaticResource AllowedBuffersCount}"
 			SelectedItem="{Binding BuffersCount, Mode=TwoWay}" />
 
 		<Picker
-			Tag="{Localizing Key=Window}"
+			Attach.Tag="{Localizing Key=Window}"
 			ItemsSource="{Binding Windows}"
 			SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
 			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
@@ -109,7 +108,7 @@
 		<StackLayout
 			Orientation="Horizontal"
 			HorizontalAlignment="Right"
-			Tag="{Localizing Key=FrameSize}">
+			Attach.Tag="{Localizing Key=FrameSize}">
 			<Label
 				Text="2 ^" />
 			<Picker
@@ -124,7 +123,7 @@
 		</StackLayout>
 
 		<Switch
-			Tag="{Localizing Key=SpectralInterpolation}"
+			Attach.Tag="{Localizing Key=SpectralInterpolation}"
 			IsToggled="{Binding UseSpectralInterpolation, Mode=TwoWay}" />
 	</Set>
 
@@ -132,44 +131,44 @@
         x:Shared="False"
         x:Key="MusicalStandardsOptionsSet">
 
-        <Picker
-            Tag="{Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
+		<Picker
+            Attach.Tag="{Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
 			ItemsSource="{Binding PitchStandards}"
 			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
-        <Picker
-            Tag="{Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
+		<Picker
+            Attach.Tag="{Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
 			ItemsSource="{Binding Notations}"
 			SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
             DisplayMemberPath="Key" />
 
-    </Set>
+	</Set>
 
-    <Set
+	<Set
         x:Shared="False"
         x:Key="CalibrationOptionsSet">
 
-		<Expander
+		<controls:Expander
 			Header="{Localizing Key=Spectrum}"
 			ContentTemplate="{StaticResource SpectrumTemplate}"
 			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum}" />
 
-		<Expander
+		<controls:Expander
 			Header="{Localizing Key=Frame}"
 			ContentTemplate="{StaticResource FrameTemplate}"
 			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Frame}" />
 
-		<Expander
+		<controls:Expander
 			Header="{Localizing Key=MusicalStandards}"
 			ContentTemplate="{StaticResource MusicalStandardsTemplate}"
 			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Music}" />
 
-		<Expander
+		<controls:Expander
 			Header="{Localizing Key=Visualization}"
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{Store Key=presenters:MusicalPresenter}" />
 
-		<!--<Expander
+		<!--<controls:Expander
 			Header="{Localizing Key=Theme}"
 			ContentTemplate="{StaticResource VisualProfileTemplate}"
 			Content="{Store Key=models:VisualProfile}" />-->

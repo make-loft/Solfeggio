@@ -2,54 +2,82 @@
 	x:Class="Solfeggio.Views.SolfeggioView"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels;assembly=Solfeggio"
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	BindingContext="{m:Store Key=viewModels:ProcessingManager}">
+	xmlns:s="clr-namespace:System.Windows.Shapes"
+	xmlns:controls="clr-namespace:System.Windows.Controls"
+	BindingContext="{Store Key=viewModels:ProcessingManager}">
 
-	<Grid
-		m:Rack.Rows="2* *"
-		m:Rack.Columns="^ *">
+	<RackView
+		Rows="2* *"
+		Columns="^ *">
 
-		<forms:SKCanvasView
-			m:Rack.Cell="R0 C0 CS2"
+		<controls:Canvas
+			Rack.Cell="R0 C0 CS2"
 			x:Name="SpectrumCanvas"
-			BackgroundColor="BlanchedAlmond"
 			EnableTouchEvents="True"
 			Touch="OnTouchEffectAction"
-			PaintSurface="OnCanvasViewPaintSurface" />
+			PaintSurface="OnCanvasViewPaintSurface"
+			Background="{DynamicResource SpectumBackgroundBrush}">
+			<s:Polyline
+				x:Name="MagnitudePolyline"
+				Fill="{StaticResource MagnitudeSpectrumFillBrush}"
+				Stroke="{StaticResource MagnitudeSpectrumStrokeBrush}"
+				StrokeThickness="{StaticResource MagnitideSpectrumStrokeThickness}" />
+			<s:Polyline
+				x:Name="PhasePolyline"
+				Stroke="{DynamicResource WaveOutStrokeBrush}"
+				StrokeThickness="{StaticResource WaveInStrokeThickness}" />
+			<s:Polyline
+				x:Name="WaveInPolyline"
+				Stroke="{DynamicResource WaveInStrokeBrush}"
+				StrokeThickness="{StaticResource WaveInStrokeThickness}" />
+			<s:Polyline
+				x:Name="WaveOutPolyline"
+				Stroke="{DynamicResource WaveOutStrokeBrush}"
+				StrokeThickness="{StaticResource WaveOutStrokeThickness}" />
+		</controls:Canvas>
 
-		<forms:SKCanvasView
-			m:Rack.Cell="R1 C0 CS2"
+		<controls:Canvas
+			Rack.Cell="R1 C0 CS2"
 			x:Name="PianoCanvas"
-			BackgroundColor="Gray"
 			EnableTouchEvents="True"
-			PaintSurface="OnCanvasViewPaintSurfaceP" />
+			PaintSurface="OnCanvasViewPaintSurfaceP"
+			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
 
 		<Switch
-			m:Rack.Cell="R1 C0"
+			Rack.Cell="R1 C0"
 			VerticalOptions="End"
 			HorizontalOptions="Start"
 			IsToggled="{Binding IsPaused}" />
 		
 		<Switch
-			m:Rack.Cell="R1 C0"
+			Rack.Cell="R1 C0"
 			VerticalOptions="Start"
 			HorizontalOptions="Start"
 			IsToggled="{Binding ShowSettings}" />
 
 		<Grid
-			m:Rack.Cell="R0 C0 CS2"
-			m:Rack.Rows="^ ^"
+			Rack.Cell="R0 C0 CS2"
+			Rack.Rows="^ ^"
 			IsVisible="{Binding ShowSettings}">
 
 			<Grid
 				BackgroundColor="DimGray"
 				Opacity=".5" />
-			<!--<views:OptionsView />-->
+
 		</Grid>
 
-	</Grid>
+
+		<Pivot>
+			<PivotItem Header="Abc" >
+				<Button Text="123" />
+			</PivotItem>
+			<PivotItem Header="Xyz" >
+				<Button Text="321" />
+			</PivotItem>
+		</Pivot>
+
+	</RackView>
 
 </ContentPage>

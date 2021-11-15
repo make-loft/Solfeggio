@@ -1,11 +1,10 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:xamarin="clr-namespace:Xamarin.Forms;assembly=Xamarin.Synonyms"
-	xmlns:controls="clr-namespace:Solfeggio.Controls">
+	xmlns:xamarin="clr-namespace:Xamarin.Forms;assembly=Xamarin.Synonyms">
 	
 	<Style
-		TargetType="controls:Pivot">
+		TargetType="xamarin:Pivot">
 		<Setter
 			Property="Background"
 			Value="Transparent" />

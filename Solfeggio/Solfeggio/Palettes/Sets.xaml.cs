@@ -1,11 +1,11 @@
 ﻿using Xamarin.Forms.Xaml;
 
-namespace Solfeggio.Dictionaries
+namespace Solfeggio.Palettes
 {
     [XamlCompilation(XamlCompilationOptions.Skip)]
-    public partial class Templates
+    public partial class Sets
     {
-        public Templates()
+        public Sets()
         {
             InitializeComponent();
         }

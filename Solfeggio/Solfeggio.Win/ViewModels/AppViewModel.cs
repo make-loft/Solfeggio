@@ -1,5 +1,7 @@
 ﻿using Ace;
-using Solfeggio.Models;
+
+using Rainbow;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +20,9 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveLanguage, value);
 		}
 
-		public IList<PianoKey> Harmonics
+		public IList<Bin> Harmonics
 		{
-			get => Get<IList<PianoKey>>(nameof(Harmonics));
+			get => Get<IList<Bin>>(nameof(Harmonics));
 			set => Set(nameof(Harmonics), value);
 		}
 

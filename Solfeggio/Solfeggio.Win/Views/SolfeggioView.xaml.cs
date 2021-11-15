@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -13,10 +14,62 @@ namespace Solfeggio.Views
 		public SolfeggioView()
 		{
 			InitializeComponent();
+			Focus();
 
 			var appViewModel = Store.Get<AppViewModel>();
 			var spectralViewModel = Store.Get<ProcessingManager>();
 			var presenter = Store.Get<MusicalPresenter>();
+
+			Point d = default;
+			PreviewMouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
+			PreviewMouseMove += (o, e) =>
+			{
+				if (e.LeftButton.IsNot(MouseButtonState.Pressed))
+					return;
+
+				var p = e.GetPosition(this);
+				var deltaX = d.X - p.X;
+				var deltsY = d.Y - p.Y;
+
+				d = p;
+
+				var bandwidth = presenter.Spectrum.Frequency;
+				var scaleFunc = bandwidth.VisualScaleFunc;
+				var x = 100 * presenter.Spectrum.Frequency.VisualScaleFunc(deltaX) / bandwidth.Threshold.Length;
+
+				bandwidth.Threshold.Shift(x, x, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
+			};
+
+			PreviewKeyDown += (o, e) =>
+			{
+				var upperDirection = e.Key switch
+				{
+					Key.Left or Key.Up => -1,
+					Key.Right or Key.Down => +1,
+					_ => 0,
+				};
+
+				var lowerDirection = e.Key switch
+				{
+					Key.Left or Key.Down => -1,
+					Key.Right or Key.Up => +1,
+					_ => 0,
+				};
+
+				var bandwidth = presenter.Spectrum.Frequency;
+				var scaleFunc = bandwidth.VisualScaleFunc;
+				var lower = lowerDirection * bandwidth.Threshold.Length / 3000;
+				var upper = upperDirection * bandwidth.Threshold.Length / 3000;
+				bandwidth.Threshold.Shift(lower, upper, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
+			};
+
+			PreviewMouseWheel += (o, e) =>
+			{
+				var d = e.Delta;
+				presenter.Spectrum.Frequency.Threshold.Lower -= d;
+				presenter.Spectrum.Frequency.Threshold.Upper += d;
+			};
+
 			var timer = new DispatcherTimer();
 			timer.Tick += (o, e) =>
 			{
@@ -73,7 +126,7 @@ namespace Solfeggio.Views
 					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 
-				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight);
+				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrum, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
 				if (presenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
 					presenter.DrawTops(dominanats, width, height).
 						ForEach(p =>
@@ -83,7 +136,7 @@ namespace Solfeggio.Views
 							p.Margin = new Thickness(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 2d, 0d, 0d);
 						});
 
-				appViewModel.Harmonics = dominanats.OrderBy(k => Math.Abs(k.DeltaFrequency)).ToArray();
+				appViewModel.Harmonics = peaks;
 			};
 
 			timer.Start();

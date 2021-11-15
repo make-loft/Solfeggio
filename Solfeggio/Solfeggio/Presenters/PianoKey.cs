@@ -33,7 +33,7 @@ namespace Solfeggio.Models
 			var topFrequency = Math.Pow(2d, topOffset);
 			var ethalonFrequency = activeNote; // Math.Pow(2d, ethalonOffset)
 
-			return new PianoKey
+			return new()
 			{
 				NoteNumber = noteNumber,
 				NoteName = note + oktaveNumber,
