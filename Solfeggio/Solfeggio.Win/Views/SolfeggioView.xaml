@@ -29,8 +29,17 @@
 				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush}"
 				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
 			<Polyline
+				Name="InterpolatedMagnitudePolyline"
+				Fill="Transparent"
+				Stroke="Red"
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
+			<Polyline
 				Name="PhasePolyline"
 				Stroke="{DynamicResource WaveOutStrokeBrush}"
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
+			<Polyline
+				Name="InterpolatedPhasePolyline"
+				Stroke="Green"
 				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
 			<Polyline
 				Name="WaveInPolyline"

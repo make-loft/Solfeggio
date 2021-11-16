@@ -18,6 +18,7 @@ namespace Solfeggio.ViewModels
 		}
 
 		public IList<Bin> Spectrum { get; private set; }
+		public IList<Bin> SpectrumBetter { get; private set; }
 		public IList<Complex> OuterFrame { get; private set; }
 		public IList<Complex> InnerFrame { get; private set; }
 
@@ -82,14 +83,14 @@ namespace Solfeggio.ViewModels
 				var timeFrame_ = args.Sample.Skip(args.Source.ShiftSize).Take(frameSize).ToArray();
 				var spectralFrame_ = GetSpectrum(timeFrame_, args.Source.ActiveWindow);
 				var spectrum = Filtering.GetJoinedSpectrum(spectralFrame, spectralFrame_, shiftsPerFrame, args.SampleRate).ToArray();
+				SpectrumBetter = spectrum;
 				Spectrum = spectrum;
 			}
 			else
 			{
 				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-				Spectrum = args.Source.UseSpectralInterpolation
-					? Filtering.Interpolate(spectrum).ToArray()
-					: spectrum;
+				SpectrumBetter = Filtering.Interpolate(spectrum).ToArray();
+				Spectrum = spectrum;
 			}
 
 			var (j, k) = 0d;
