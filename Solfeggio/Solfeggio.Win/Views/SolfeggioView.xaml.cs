@@ -13,7 +13,7 @@ namespace Solfeggio.Views
 		static void Shift(Bandwidth bandwidth, double delta, double lowerDirection, double upperDirection)
 		{
 			var scaleFunc = bandwidth.VisualScaleFunc;
-			var offset = delta * bandwidth.Threshold.Length / 3000;
+			var offset = delta * scaleFunc(bandwidth.Threshold.Length) / 8;
 			var lowerOffset = lowerDirection * offset;
 			var upperOffset = upperDirection * offset;
 			bandwidth.Threshold.Shift(lowerOffset, upperOffset, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
@@ -47,7 +47,15 @@ namespace Solfeggio.Views
 				var lowerDirection = isHorizontalMove ? +1 : -1;
 				var upperDirection = +1;
 
-				Shift(presenter.Spectrum.Frequency, delta / 100, lowerDirection, upperDirection);
+				Shift(presenter.Spectrum.Frequency, delta / 16, lowerDirection, upperDirection);
+			};
+
+			PreviewMouseWheel += (o, e) =>
+			{
+				var lowerDirection = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? +1 : -1;
+				var upperDirection = +1;
+
+				Shift(presenter.Spectrum.Frequency, e.Delta / 16, lowerDirection, upperDirection);
 			};
 
 			PreviewKeyDown += (o, e) =>
@@ -68,15 +76,7 @@ namespace Solfeggio.Views
 
 				e.Handled = lowerDirection.IsNot(0) && upperDirection.IsNot(0);
 
-				Shift(presenter.Spectrum.Frequency , + 1, lowerDirection, upperDirection);
-			};
-
-			PreviewMouseWheel += (o, e) =>
-			{
-				var lowerDirection = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? +1 : -1;
-				var upperDirection = +1;
-
-				Shift(presenter.Spectrum.Frequency, e.Delta / 10, lowerDirection, upperDirection);
+				Shift(presenter.Spectrum.Frequency, + 1, lowerDirection, upperDirection);
 			};
 
 			var timer = new DispatcherTimer();

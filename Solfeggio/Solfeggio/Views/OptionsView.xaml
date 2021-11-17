@@ -2,96 +2,90 @@
 	x:Class="Solfeggio.Views.OptionsView"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:local="clr-namespace:Solfeggio">
 
 	<Pivot>
 
 		<PivotItem
+			Header="{Localizing Signal}">
+			<StackView
+				DataContext="{Store Key=vm:ProcessingManager}">
+				
+				<StackView
+					HorizontalOptions="Center"
+					Orientation="Horizontal">
+
+					<Label
+						Text="{Localizing Key=Profile}" />
+					<Picker
+						ItemDisplayBinding="{Binding Title}"
+						ItemsSource="{Binding Path=Profiles}"
+						SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}" />
+					<Button
+						Content="➕"
+						Command="{Context Key=Set.Create, StoreKey=vm:ProcessingManager}" />
+					<Button
+						Content="➖"
+						CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=vm:ProcessingManager}"
+						Command="{Context Key=Set.Delete, StoreKey=vm:ProcessingManager, SourcePath=ActiveProfile}" />
+
+				</StackView>
+
+				<Pivot
+					ItemsSource="{Binding Profiles}"
+					SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+					ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+					ContentTemplate="{StaticResource ProcessingProfileTemplate}" />
+				
+			</StackView>
+		</PivotItem>
+
+		<PivotItem
+			Header="{Localizing Key=Generator}">
+			<StackView
+				DataContext="{Store Key=vm:HarmonicManager}">
+
+				<StackView
+					HorizontalOptions="Center"
+					Orientation="Horizontal">
+
+					<Label
+						Text="{Localizing Key=Profile}" />
+					<Picker
+						ItemDisplayBinding="{Binding Title}"
+						ItemsSource="{StoreBinding Path=Profiles, StoreKey=vm:HarmonicManager}"
+						SelectedItem="{StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=vm:HarmonicManager}" />
+					<Button
+						Content="➕"
+						Command="{Context Key=Set.Create, StoreKey=vm:HarmonicManager}" />
+					<Button
+						Content="➖"
+						CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=vm:HarmonicManager}"
+						Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, SourcePath=ActiveProfile}" />
+
+				</StackView>
+
+				<Pivot
+					ItemsSource="{Binding Profiles}"
+					SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+					ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+					ContentTemplate="{StaticResource HarmonicProfileTemplate}" />
+
+			</StackView>
+		</PivotItem>
+		
+		<PivotItem
 			Header="{Localizing Key=Telemetry}">
 			<ScrollView>
 				<StackView>
-
-					<Expander
-						Header="{Localizing Key=Signal}">
-
-						<!--<CollectionView
-							BindingContext="{StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
-							ItemsSource="{StaticResource SignalSourceOptionsSet}"
-							ItemTemplate="{StaticResource OptionTemplate}" />-->
-
-						<StackView
-							DataContext="{Store Key=viewModels:ProcessingManager}">
-							<StackView
-								HorizontalOptions="Center"
-								Orientation="Horizontal">
-
-								<Label
-									Text="{Localizing Key=Profile}" />
-								<!--<Button
-									Content="{Localizing Key=Delete}"
-									CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
-									Command="{Context Key=Set.Delete, StoreKey=local:Generator}" />-->
-								<Picker
-									ItemDisplayBinding="{Binding Title}"
-									ItemsSource="{Binding Path=Profiles}"
-									SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}" />
-								<Button
-									Content="➕"
-									Command="{Context Key=Set.Create, StoreKey=viewModels:ProcessingManager}" />
-
-							</StackView>
-
-							<Pivot
-								ItemsSource="{Binding Profiles}"
-								SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
-								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-								ContentTemplate="{StaticResource ProcessingProfileTemplate}" />
-						</StackView>
-
-					</Expander>
-
-					<Expander
-						Header="{Localizing Key=Generator}">
-						<StackView
-							DataContext="{Store Key=viewModels:HarmonicManager}">
-
-							<StackView
-								HorizontalOptions="Center"
-								Orientation="Horizontal">
-
-								<Label
-									Text="{Localizing Key=Profile}" />
-								<!--<Button
-									Content="{Localizing Key=Delete}"
-									CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=local:Generator}"
-									Command="{Context Key=Set.Delete, StoreKey=local:Generator}" />-->
-								<Picker
-									ItemDisplayBinding="{Binding Title}"
-									ItemsSource="{StoreBinding Path=Profiles, StoreKey=viewModels:HarmonicManager}"
-									SelectedItem="{StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=viewModels:HarmonicManager}" />
-								<Button
-									Content="➕"
-									Command="{Context Key=Set.Create, StoreKey=viewModels:HarmonicManager}" />
-
-							</StackView>
-
-							<Pivot
-								ItemsSource="{Binding Profiles}"
-								SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
-								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-								ContentTemplate="{StaticResource HarmonicProfileTemplate}" />
-
-						</StackView>
-					</Expander>
-
 					<Expander
 						Header="{Localizing Key=Harmonics}">
 						<ListView
 							x:Name="DominantsItemsControl"
-							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=viewModels:AppViewModel}"
+							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
 							ItemTemplate="{StaticResource HarmonicTemplate}" />
 					</Expander>
-
 				</StackView>
 			</ScrollView>
 		</PivotItem>
@@ -115,8 +109,8 @@
 						<Label
 							Text="{Localizing Key=Language}" />
 						<Picker
-							ItemsSource="{StoreBinding Path=Languages, StoreKey=viewModels:AppViewModel}"
-							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=viewModels:AppViewModel}" />
+							ItemsSource="{StoreBinding Path=Languages, StoreKey=vm:AppViewModel}"
+							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=vm:AppViewModel}" />
 					</StackView>
 
 					<Label
@@ -126,17 +120,18 @@
 					<Button
 						FontSize="13"
 						CommandParameter="{Localizing Key=IAmReadyToHelpLink}"
-						Command="{Context Key=Navigate, StoreKey=viewModels:AppViewModel}"
+						Command="{Context Key=Navigate, StoreKey=vm:AppViewModel}"
 						Content="{Localizing Key=IAmReadyToHelpMessage}" />
 
-					<!--<Label
+					<Label
 						FontSize="10"
 						HorizontalAlignment="Left"
-						Text="{Binding Source={x:Static local:App.Edition}}" />-->
+						Text="{Binding Source={x:Static local:App.Edition}}" />
 
 					<Label
 						FontSize="10"
 						Text="{Localizing Key=DesignedByMessage}" />
+					
 				</StackView>
 			</ScrollView>
 		</PivotItem>

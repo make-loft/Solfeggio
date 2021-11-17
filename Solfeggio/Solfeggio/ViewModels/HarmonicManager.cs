@@ -7,7 +7,7 @@ namespace Solfeggio.ViewModels
 	[DataContract]
 	public class HarmonicManager : AManager<Harmonic.Profile>
 	{
-		public override Harmonic.Profile Create() => new Harmonic.Profile { Title = DateTime.Now.Millisecond.ToString() };
+		public override Harmonic.Profile Create() => new() { Title = DateTime.Now.Millisecond.ToString() };
 
 		public override void Expose()
 		{

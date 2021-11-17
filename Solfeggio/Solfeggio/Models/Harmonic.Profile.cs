@@ -1,5 +1,4 @@
 ﻿using Ace;
-using Rainbow;
 using Solfeggio.Presenters;
 using System;
 using System.Collections.Generic;
@@ -22,11 +21,11 @@ namespace Solfeggio.Models
 			}
 
 			[DataMember]
-			public SmartSet<Harmonic> Harmonics { get; set; } = new SmartSet<Harmonic>
+			public SmartSet<Harmonic> Harmonics { get; set; } = new()
 			{
-				new Harmonic {Frequency = presenter.Music.ActivePitchStandard},
-				new Harmonic {Frequency = presenter.Music.ActivePitchStandard + 2},
-				new Harmonic {Frequency = presenter.Music.ActivePitchStandard + 5},
+				new() {Frequency = presenter.Music.ActivePitchStandard},
+				new() {Frequency = presenter.Music.ActivePitchStandard + 2},
+				new() {Frequency = presenter.Music.ActivePitchStandard + 5},
 			};
 
 			public Profile() => Expose();
@@ -37,7 +36,7 @@ namespace Solfeggio.Models
 				this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
 			}
 
-			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics) => new Harmonic
+			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics) => new()
 			{
 				Frequency = harmonics.LastOrDefault().Is(out var harmonic)
 					? harmonic.Frequency + (harmonics.Count + 1)

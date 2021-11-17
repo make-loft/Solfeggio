@@ -69,7 +69,7 @@
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, SourcePath=ActiveProfile}" />
+					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, KeyPath=ActiveProfile}" />
 			</StackLayout>
 		</Grid>
 	</DataTemplate>
@@ -106,8 +106,8 @@
 					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<Button
 					Content="✗"
-					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager}"
-					CommandParameter="{Binding}" />
+					CommandParameter="{Binding}"
+					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, TrackedPath=CommandParameter}" />
 			</StackLayout>
 
 			<Grid
@@ -143,7 +143,7 @@
 			<Button
 				HorizontalAlignment="Center"
 				Content="{Localizing Key=Create}"
-				Command="{Context Key=Set.Create, TrackedPath='', Mode=OneWay}" />
+				Command="{Context Key=Set.Create, TrackedPath=DataContext}" />
 		</StackLayout>
 	</DataTemplate>
 

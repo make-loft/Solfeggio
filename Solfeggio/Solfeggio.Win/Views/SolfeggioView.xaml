@@ -2,12 +2,11 @@
 	x:Class="Solfeggio.Views.SolfeggioView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
-	DataContext="{m:Store Key=vm:ProcessingManager}"
+	DataContext="{Store Key=vm:ProcessingManager}"
 	HorizontalContentAlignment="Stretch"
 	VerticalContentAlignment="Stretch"
 	HorizontalAlignment="Stretch"
@@ -15,11 +14,11 @@
 	Background="DimGray">
 
 	<Grid
-		m:Rack.Columns="* 3*"
-		m:Rack.Rows="2* *">
+		Rack.Columns="* 3*"
+		Rack.Rows="2* *">
 
 		<Canvas
-			m:Rack.Cell="R0 C0 CS2"
+			Rack.Cell="R0 C0 CS2"
 			Name="SpectrumCanvas"
 			Background="{DynamicResource SpectumBackgroundBrush}">
 
@@ -52,38 +51,38 @@
 		</Canvas>
 
 		<Canvas
-			m:Rack.Cell="R1 C0 CS2"
+			Rack.Cell="R1 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
 			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
 
 		<Grid
-			m:Rack.Cell="R1 C0"
-			m:Rack.Rows="* ^ ^"
-			m:Rack.Columns="^ ^ *">
+			Rack.Cell="R1 C0"
+			Rack.Rows="* ^ ^"
+			Rack.Columns="^ ^ *">
 			<xamarin:Label
-				m:Rack.Cell="R1 C0"
+				Rack.Cell="R1 C0"
 				FontSize="18"
 				Opacity="0.7"
 				Foreground="IndianRed"
 				Text="🎼" />
 			<xamarin:Switch
-				m:Rack.Cell="R1 C1"
+				Rack.Cell="R1 C1"
 				Name="OptionsToggleButton"
 				IsChecked="False" />
 			<xamarin:Label
-				m:Rack.Cell="R2 C0"
+				Rack.Cell="R2 C0"
 				FontSize="18"
 				Opacity="0.7"
 				Foreground="IndianRed"
 				Text="📷" />
 			<xamarin:Switch
-				m:Rack.Cell="R2 C1"
+				Rack.Cell="R2 C1"
 				IsChecked="{Binding IsPaused, Mode=TwoWay}" />
 		</Grid>
 
 		<Grid
-			m:Rack.Cell="R0 C0 CS2"
+			Rack.Cell="R0 C0 CS2"
 			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
 			<Grid>
 				<Border
@@ -98,8 +97,8 @@
 			Margin="0 32 0 0"
 			Foreground="Violet"
 			Name="HarmoncsItemsControl"
-			Visibility="{m:StoreBinding StoreKey=p:MusicalPresenter, Path=VisualProfile.Harmonics, Converter={StaticResource TrueToVisibleConverter}}"
-			ItemsSource="{m:StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
+			Visibility="{StoreBinding StoreKey=p:MusicalPresenter, Path=VisualProfile.Harmonics, Converter={StaticResource TrueToVisibleConverter}}"
+			ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
 			ItemTemplate="{StaticResource HarmonicOutTemplate}" />
 
 	</Grid>

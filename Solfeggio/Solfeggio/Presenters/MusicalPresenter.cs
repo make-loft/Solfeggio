@@ -53,11 +53,10 @@ namespace Solfeggio.Presenters
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
-				activeFrequency.
+				var hVisualOffset = activeFrequency.
 					Project(hVisualScaleFunc).
 					Stretch(hVisualStretchFactor).
-					Decrement(hLowerVisualOffset).
-					To(out var hVisualOffset);
+					Decrement(hLowerVisualOffset);
 
 				CreateVerticalLine(hVisualOffset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
 
@@ -319,8 +318,7 @@ namespace Solfeggio.Presenters
 			foreach (var bin in peaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
-				if (activeFrequency < lowerFrequency) continue;
-				if (activeFrequency > upperFrequency) break;
+				if (activeFrequency < lowerFrequency || activeFrequency > upperFrequency) continue;
 
 				m++;
 				averageMagnitude += activeMagnitude;

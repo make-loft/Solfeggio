@@ -67,20 +67,28 @@ namespace Solfeggio.Presenters
 			Upper = upper
 		};
 
+		static double Limit(double value, double lowerLimit, double upperLimit) =>
+			value < lowerLimit ? lowerLimit :
+			value > upperLimit ? upperLimit :
+			value;
+
+		static double GetScale(double value, double offset, Projection scaleFunc, double lowerLimit, double upperLimit)
+		{
+			var valueS = scaleFunc(value);
+			var lowerLimitS = scaleFunc(lowerLimit);
+			var upperLimitS = scaleFunc(upperLimit);
+			var valueSL = Limit(valueS + offset, lowerLimitS, upperLimitS);
+			var scale = valueSL / valueS;
+			return scale;
+		}
+
 		public void Shift(double lowerOffset, double upperOffset, Projection scaleFunc, double lowerLimit, double upperLimit)
 		{
-			var lowerA = scaleFunc(Lower);
-			var lowerB = lowerA + lowerOffset;
-			if (lowerB < scaleFunc(lowerLimit)) return;
-			var lowerScale = lowerB / lowerA;
-
-			var upperA = scaleFunc(Upper);
-			var upperB = upperA + upperOffset;
-			if (upperB > scaleFunc(upperLimit)) return;
-			var upperScale = upperB / upperA;
-
-			Lower *= lowerScale;
-			Upper *= upperScale;
+			var lowerS = Lower * GetScale(Lower, lowerOffset, scaleFunc, lowerLimit, upperLimit);
+			var upperS = Upper * GetScale(Upper, upperOffset, scaleFunc, lowerLimit, upperLimit);
+			if (lowerS > upperS) return;
+			Lower = lowerS;
+			Upper = upperS;
 		}
 	}
 

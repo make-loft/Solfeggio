@@ -44,7 +44,7 @@
 			Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 		<Grid
-			Rack.Columns="2* ^ * ^"
+			Rack.Columns="3* ^ * ^"
 			Tag="{Localizing Key=Input}">
 			<Picker
 				Rack.Cell="C0"
@@ -68,7 +68,7 @@
 		</Grid>
 
 		<Grid
-			Rack.Columns="2* ^ * ^"
+			Rack.Columns="3* ^ * ^"
 			Tag="{Localizing Key=Output}">
 			<Picker
 				Rack.Cell="C0"
@@ -123,9 +123,6 @@
 				Text="{Binding FrameDuration}" />
 		</StackLayout>
 
-		<Switch
-			Tag="{Localizing Key=SpectralInterpolation}"
-			IsToggled="{Binding UseSpectralInterpolation, Mode=TwoWay}" />
 	</Set>
 
 	<Set

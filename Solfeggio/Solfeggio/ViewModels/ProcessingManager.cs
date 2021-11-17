@@ -22,7 +22,7 @@ namespace Solfeggio.ViewModels
 		public IList<Complex> OuterFrame { get; private set; }
 		public IList<Complex> InnerFrame { get; private set; }
 
-		public override ProcessingProfile Create() => new ProcessingProfile();
+		public override ProcessingProfile Create() => new();
 
 		public override void Expose()
 		{
