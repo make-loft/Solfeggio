@@ -39,7 +39,11 @@ namespace Xamarin.Forms
 
 	public class StackView : StackPanel
 	{
-		public HorizontalAlignment HorizontalOptions { get; set; }
+		public HorizontalAlignment HorizontalOptions
+		{
+			get => HorizontalAlignment;
+			set => HorizontalAlignment = value;
+		}
 	}
 
 	public class StackLayout : StackPanel

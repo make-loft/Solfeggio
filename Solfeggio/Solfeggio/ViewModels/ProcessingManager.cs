@@ -89,7 +89,7 @@ namespace Solfeggio.ViewModels
 			else
 			{
 				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-				SpectrumBetter = Filtering.Interpolate(spectrum).ToArray();
+				SpectrumBetter = Filtering.Interpolate(spectrum, false).ToArray();
 				Spectrum = spectrum;
 			}
 

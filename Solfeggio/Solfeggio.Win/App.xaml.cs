@@ -18,7 +18,7 @@ namespace Solfeggio
 	{
 		public static Editions Edition { get; } = Developer;
 
-		public static Dictionary<Editions, string> YandexMetricaKeys = new Dictionary<Editions, string>
+		public static Dictionary<Editions, string> YandexMetricaKeys = new()
 		{
 			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
 			{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
@@ -68,7 +68,7 @@ namespace Solfeggio
 
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
-				PolicyManager.CheckExpirationStatus(Edition);
+				AgreementManager.CheckExpirationStatus(Edition);
 
 				Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
 			}
@@ -92,7 +92,7 @@ namespace Solfeggio
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
 			Store.Snapshot();
-			PolicyManager.CheckSessionDuration(Edition, _startupTimestamp);
+			AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
 		}
 
 		private void SetHandlers(Memory memoryBox)

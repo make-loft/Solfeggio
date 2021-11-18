@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -131,7 +131,7 @@
     <Compile Include="MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PolicyManager.cs" />
+    <Compile Include="AgreementManager.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>

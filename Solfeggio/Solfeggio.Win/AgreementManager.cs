@@ -8,7 +8,7 @@ using static Solfeggio.Editions;
 
 namespace Solfeggio
 {
-	internal static class PolicyManager
+	internal static class AgreementManager
 	{
 		private static readonly TimeSpan LongSessionDuation = TimeSpan.FromMinutes(4);
 

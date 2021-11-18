@@ -139,7 +139,7 @@
 	<DataTemplate
 		x:Key="OptionTemplate">
 		<Grid
-			Rack.Columns="7* 5* *">
+			Rack.Columns="^ ^ *">
 			<ContentPresenter
 				Rack.Cell="C0"
 				Content="{Binding Tag}" />

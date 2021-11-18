@@ -18,7 +18,7 @@ namespace Solfeggio
 			[CallerMemberName]
 			string eng = default,
 			string rus = default,
-			string bel = default) => new o
+			string bel = default) => new()
 		{
 			{ English, eng },
 			{ Russian, rus ?? eng },
@@ -46,7 +46,7 @@ namespace Solfeggio
 		public static o Language = _("Language", "Язык");
 		public static o Device = _("Device", "Устройство");
 		public static o Window = _("Window", "Окно");
-		public static o Harmonics = _("Harmonics", "Доминанты");
+		public static o Harmonics = _("Harmonics", "Гармоники");
 		public static o Notes = _("Notes", "Ноты");
 		public static o Sample = _("Sample", "Сэмпл");
 		public static o Scaling = _("Scaling", "Масштабирование");
@@ -66,7 +66,7 @@ namespace Solfeggio
 		public static o Scale = _("Scale", "Масштаб");
 		public static o Profile = _("Profile", "Профиль");
 		public static o Generator = _("Generator", "Генератор");
-		public static o Policy = _("Policy", "Политика");
+		public static o Agreement = _("Agreement", "Соглашение");
 		public static o Create = _("Create", "Создать");
 		public static o Delete = _("Delete", "Удалить");
 		public static o Basis = _("Basis", "Базис");
@@ -96,7 +96,7 @@ namespace Solfeggio
 		
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");
 
-		public static o PolicyMessage = _(Messages.Policy.English, Messages.Policy.Russian);
+		public static o AgreementMessage = _(Messages.Agreement.English, Messages.Agreement.Russian);
 		public static o DesignedByMessage = _(Messages.DesignedBy.English, Messages.DesignedBy.Russian);
 		public static o IAmReadyToHelpMessage = _(Messages.IAmReadyToHelpMessage.English, Messages.IAmReadyToHelpMessage.Russian);
 		public static o IAmReadyToHelpLink = _(Messages.IAmReadyToHelpLink.English, Messages.IAmReadyToHelpLink.Russian);
@@ -122,7 +122,7 @@ namespace Solfeggio
 
 	public static class Messages
 	{
-		public static class Policy
+		public static class Agreement
 		{
 			public const string English =
 				@"Solfeggio application is free for educational and non-commercial purposes.
