@@ -1,0 +1,6 @@
+1. Download and unpack MakeAppx tool
+https://1drv.ms/u/s!AvvcPQX44tbIhr5KlKu8Somr-79-Zg?e=hDSv2a
+2. Edit map.txt and pack.bat
+3. Run pack.bat
+
+Done!

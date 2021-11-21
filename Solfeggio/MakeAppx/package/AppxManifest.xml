@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
+  <Identity Name="40705VladimirMakarevich.SolfeggioScientificEdition" Version="3.0.0.0" Publisher="CN=639023F6-28BC-4C02-9C21-1E1CDFE62E6A" ProcessorArchitecture="x86" />
+  <Properties>
+    <DisplayName>Solfeggio (Scientific Edition)</DisplayName>
+    <PublisherDisplayName>Makeloft Studio</PublisherDisplayName>
+    <Description>Spectral Analyzer, Camerton and Musical Tuner</Description>
+    <Logo>App.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14316.0" MaxVersionTested="10.0.15063.0" />
+  </Dependencies>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+  <Applications>
+    <Application Id="Solfeggio" Executable="Solfeggio.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Solfeggio" Description="Solfeggio" Square150x150Logo="App.png" Square44x44Logo="App.png" BackgroundColor="#B5E61D" />
+    </Application>
+  </Applications>
+  <mp:PhoneIdentity PhoneProductId="4f685680-8929-43a2-becf-2acab28b6917" PhonePublisherId="80e9c31a-9321-4be3-a9b5-9eb8380b6e9b" />
+</Package>
