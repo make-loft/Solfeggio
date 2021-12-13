@@ -21,7 +21,7 @@ namespace Solfeggio.Presenters
 	{
 		public static TBrush DoFreeze<TBrush>(this TBrush brush) where TBrush : Brush
 		{
-			brush.Freeze();
+			//brush.Freeze();
 			return brush;
 		}
 	}

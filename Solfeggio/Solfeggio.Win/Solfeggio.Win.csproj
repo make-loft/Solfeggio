@@ -132,6 +132,7 @@
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="AgreementManager.cs" />
+    <Compile Include="Palettes\Colors.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -140,8 +141,20 @@
     </Compile>
     <Compile Include="Localizator.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Views\BrushPicker.xaml.cs">
+      <DependentUpon>BrushPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PopupView.xaml.cs">
+      <DependentUpon>PopupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SolfeggioView.xaml.cs">
       <DependentUpon>SolfeggioView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ValuePicker.xaml.cs">
+      <DependentUpon>ValuePicker.xaml</DependentUpon>
     </Compile>
     <Page Include="..\Solfeggio\Views\OptionsView.xaml">
       <Link>Views\OptionsView.xaml</Link>
@@ -171,10 +184,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Palettes\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Palettes\Converters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -199,7 +208,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\BrushPicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SolfeggioView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ValuePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

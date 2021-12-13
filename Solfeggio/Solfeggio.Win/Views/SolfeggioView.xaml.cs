@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -8,6 +11,20 @@ using Solfeggio.ViewModels;
 
 namespace Solfeggio.Views
 {
+	public struct Setup<T>
+	{
+		public Setup(T value) => Setters = Items = value;
+		public T Setters { get; set; }
+		public T Items { get; set; }
+
+		public static implicit operator T(Setup<T> d) => d.Setters;
+	}
+
+	public static class Test
+	{
+		public static T Setup<T>(this T o, Func<T, Setup<T>> block) => block(o).Setters;
+	}
+
 	public partial class SolfeggioView
 	{
 		static void Shift(Bandwidth bandwidth, double delta, double lowerDirection, double upperDirection)
@@ -33,10 +50,16 @@ namespace Solfeggio.Views
 			PreviewMouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
 			PreviewMouseMove += (o, e) =>
 			{
-				if (e.LeftButton.IsNot(MouseButtonState.Pressed))
+				if (e.LeftButton.IsNot(MouseButtonState.Pressed) || e.OriginalSource is GridSplitter)
 					return;
 
 				var p = e.GetPosition(this);
+				if (d.Is(default))
+				{
+					d = p;
+					return;
+				}
+
 				var deltaX = d.X - p.X;
 				var deltaY = d.Y - p.Y;
 				var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;
@@ -95,13 +118,21 @@ namespace Solfeggio.Views
 
 				PianoCanvas.Children.Clear();
 				SpectrumCanvas.Children.Clear();
+				SpectrumCanvas.Children.Setup(s => new(s)
+				{
+					Items =
+					{
+						MagnitudePolyline,
+						InterpolatedMagnitudePolyline,
+						PhasePolyline,
+						InterpolatedPhasePolyline,
+						WaveInPolyline,
+						WaveOutPolyline
+					}
+				});
 
-				SpectrumCanvas.Children.Add(MagnitudePolyline);
-				SpectrumCanvas.Children.Add(InterpolatedMagnitudePolyline);
-				SpectrumCanvas.Children.Add(PhasePolyline);
-				SpectrumCanvas.Children.Add(InterpolatedPhasePolyline);
-				SpectrumCanvas.Children.Add(WaveInPolyline);
-				SpectrumCanvas.Children.Add(WaveOutPolyline);
+				//var c = SpectrumCanvas.Children;
+				//MagnitudePolyline.Use(c.Add);
 
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;

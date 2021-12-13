@@ -59,6 +59,10 @@ namespace Xamarin.Forms
 	{
 	}
 
+	public class Popup : System.Windows.Controls.Primitives.Popup
+	{
+	}
+
 	public class Button : System.Windows.Controls.Button
 	{
 	}
@@ -67,6 +71,9 @@ namespace Xamarin.Forms
 	{
 	}
 
+	public class ControlTemplate : System.Windows.Controls.ControlTemplate
+	{
+	}
 
 	public class ContentPresenter : System.Windows.Controls.ContentPresenter
 	{
@@ -108,6 +115,14 @@ namespace Xamarin.Forms
 		}
 	}
 
+	public class Style : System.Windows.Style
+	{
+	}
+
+	public class Setter : System.Windows.Setter
+	{
+	}
+
 	public class Entry : TextBox
 	{
 	}
@@ -116,6 +131,10 @@ namespace Xamarin.Forms
     {
 		public Brush TextColor { get; set; }
     }
+
+	public class Frame : Border
+	{
+	}
 
 	public class StaticResource : StaticResourceExtension
 	{
@@ -148,8 +167,20 @@ namespace Xamarin.Forms
 		public Binding(string path) : base(path) { }
 	}
 
+	public class RelativeSource : System.Windows.Data.RelativeSource
+	{
+	}
+
 	public class Slider : System.Windows.Controls.Slider
 	{
+		public Slider()
+		{
+			MouseWheel += (o, e) =>
+			{
+				var delta = (Maximum - Minimum) / 256;
+				Value += e.Delta < 0 ? +delta : e.Delta > 0 ? -delta : 0;
+			};
+		}
 	}
 
 	public class Picker : ComboBox

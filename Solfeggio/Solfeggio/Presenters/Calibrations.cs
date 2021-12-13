@@ -186,7 +186,7 @@ namespace Solfeggio.Presenters
 			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};
 
 		public static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
-		public static readonly Brush[] OktaveBrushes =
+		public static Brush[] OktaveBrushes() =>
 			Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
 
 		public static double HalfTonesCount => Notes.Length;

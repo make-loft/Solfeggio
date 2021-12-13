@@ -50,6 +50,8 @@ namespace Solfeggio
 			}
 		}
 
+		public static Palettes.Colors ActiveColorPalette => App.Current.Resources.MergedDictionaries.OfType<Palettes.Colors>().First();
+
 		private DateTime _startupTimestamp;
 
 		private void App_OnStartup(object sender, StartupEventArgs args)
@@ -70,7 +72,7 @@ namespace Solfeggio
 				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
 				AgreementManager.CheckExpirationStatus(Edition);
 
-				Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
+				//Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
 			}
 			catch (Exception exception)
 			{

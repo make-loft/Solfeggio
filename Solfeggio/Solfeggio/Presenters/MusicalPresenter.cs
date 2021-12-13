@@ -22,10 +22,10 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenter : ContextObject
 	{
-		[DataMember] public FrameOptions Frame { get; set; } = new FrameOptions();
-		[DataMember] public MusicalOptions Music { get; set; } = new MusicalOptions();
-		[DataMember] public SpectralOptions Spectrum { get; set; } = new SpectralOptions();
-		[DataMember] public VisualProfile VisualProfile { get; set; } = new VisualProfile();
+		[DataMember] public FrameOptions Frame { get; set; } = new();
+		[DataMember] public MusicalOptions Music { get; set; } = new();
+		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
+		[DataMember] public VisualProfile VisualProfile { get; set; } = new();
 
 		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
 		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
@@ -45,7 +45,7 @@ namespace Solfeggio.Presenters
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
 			//opacityLineBrush.Opacity *= 0.3;
-			opacityLineBrush.Freeze();
+			//opacityLineBrush.Freeze();
 
 			foreach (var activeFrequency in markers)
 			{
@@ -348,24 +348,29 @@ namespace Solfeggio.Presenters
 
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
-				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
-				var basicColor = MusicalOptions.OktaveBrushes[key.NoteNumber].As<SolidColorBrush>()?.Color ?? Colors.Transparent;
-				var tmp = 255 * Math.Sqrt(key.Magnitude);
-				var red = tmp > 255 ? (byte)255 : (byte)tmp;
+				var basicBrush = MusicalOptions.OktaveBrushes()[key.NoteNumber];
+				
+				//var tmp = 255 * Math.Sqrt(key.Magnitude);
+				//var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var noteNumber = key.NoteNumber;
 				var isTone = MusicalOptions.Tones[key.NoteNumber];
 
+				var gradientBrush = AppPalette.PressToneKeyBrush.Clone();
+				gradientBrush.Opacity = Math.Sqrt(key.Magnitude);
+				/*
+				var a = ToColorByte(basicColor.A() - red);
 				var r = ToColorByte(basicColor.R() + red);
 				var g = ToColorByte(basicColor.G() - red);
 				var b = ToColorByte(basicColor.B() - red);
-				var pressColor = ColorExtensions.FromArgb(255, r, g, b);
+				var pressColor = ColorExtensions.FromArgb(a, 255, g, b);
 
+				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
 				gradientBrush.GradientStops.Merge
 				(
 					new GradientStop { Color = basicColor, Offset = 0.0f },
 					new GradientStop { Color = pressColor, Offset = 0.5f }
 				);
-
+				*/
 				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var upperOffset = frequencyVisualScaleFunc(key.UpperFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var ethalonOffset = frequencyVisualScaleFunc(key.EthalonFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
@@ -373,6 +378,7 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.7d;
 				var strokeThickness = upperOffset - lowerOffset;
 
+				CreateVerticalLine(ethalonOffset, actualHeight, basicBrush, strokeThickness).Use(items.Add);
 				CreateVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
@@ -384,7 +390,7 @@ namespace Solfeggio.Presenters
 			value > max ? max :
 			(byte)value;
 
-		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new Line
+		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new()
 		{
 			Y1 = 0d,
 			Y2 = length,

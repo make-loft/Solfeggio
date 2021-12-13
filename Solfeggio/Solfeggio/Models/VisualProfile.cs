@@ -45,13 +45,13 @@ namespace Solfeggio.Models
 
 		public Color FirstColor
 		{
-			get => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color;
-			set => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color = value;
+			get => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color;
+			set => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color = value;
 		}
 		public Color SecondColor
 		{
-			get => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color;
-			set => App.Current.Resources["SpectumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color = value;
+			get => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color;
+			set => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color = value;
 		}
 
 		[DataMember] public bool Harmonics

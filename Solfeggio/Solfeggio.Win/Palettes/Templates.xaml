@@ -4,7 +4,9 @@
 	xmlns:models="clr-namespace:Solfeggio.Models"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels">
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
+	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:local="clr-namespace:Solfeggio">
 
 	<DataTemplate
 		x:Key="HarmonicTemplate">
@@ -439,5 +441,32 @@
 			</ItemsView>
 		</StackLayout>
 	</DataTemplate>
+
+	<DataTemplate
+		x:Key="NamedColorTemplate">
+		<StackLayout
+			Orientation="Horizontal">
+			<Frame
+				Style="{StaticResource FrameStyle}"
+				Background="{Binding Value}" />
+			<Label
+				Text="{Binding Value}" />
+			<Label
+				Text="{Binding Key}" />
+		</StackLayout>
+	</DataTemplate>
+
+	<ControlTemplate
+		x:Key="BrushPickerTemplate">
+		<Expander
+			x:Name="Root"
+			Header="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<views:PopupView
+				IsOpen="{Binding IsExpanded, ElementName=Root}">
+				<views:BrushPicker
+					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+			</views:PopupView>
+		</Expander>
+	</ControlTemplate>
 
 </ResourceDictionary>

@@ -1,0 +1,45 @@
+﻿<Popup 
+	x:Class="Solfeggio.Views.PopupView"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+	SnapsToDevicePixels="True"
+	AllowsTransparency="True"
+	x:Name="This">
+	<Grid>
+		<Thumb
+			Opacity="0"
+			x:Name="DragMoveThumb" />
+		<ContentControl
+			x:Name="ContentControl">
+			<ContentControl.Style>
+				<Style
+					TargetType="{x:Type ContentControl}">
+					<Setter
+						Property="Template">
+						<Setter.Value>
+							<ControlTemplate
+								TargetType="{x:Type ContentControl}">
+								<Border
+									BorderBrush="LightGray"
+									Background="DarkGray"
+									BorderThickness="2"
+									CornerRadius="12 16 8 8">
+									<ContentPresenter
+										Margin="10 12"
+										Content="{TemplateBinding Content}" />
+								</Border>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ContentControl.Style>
+		</ContentControl>
+		<Expander
+			Margin="3"
+			VerticalAlignment="Top"
+			HorizontalAlignment="Left"
+			IsExpanded="{Binding IsOpen, ElementName=This, Mode=TwoWay}" />
+	</Grid>
+</Popup>
+	
+

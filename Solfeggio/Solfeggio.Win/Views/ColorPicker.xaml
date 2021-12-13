@@ -1,0 +1,169 @@
+﻿<GroupBox
+	x:Class="Solfeggio.Views.ColorPicker"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Background="LightGray"
+	BorderThickness="0"
+	Padding="4"
+	x:Name="This">
+	<Grid
+		Rack.Rows="^ ^ ^ ^ ^ ^ *"
+		Rack.Columns="^ 128 ^ ^ ^"
+		DataContext="{Binding ElementName=This}">
+
+		<Frame
+			Rack.Cell="R1 C0"
+			Background="{StaticResource ChessBrush}"
+			Style="{StaticResource FrameStyle}" />
+		<Frame
+			Rack.Cell="R1 C0"
+			x:Name="ActiveColorA"
+			Style="{StaticResource FrameStyle}" />
+		<Frame
+			Rack.Cell="R2 C0"
+			Background="#FF0000"
+			Style="{StaticResource FrameStyle}" />
+		<Frame
+			Rack.Cell="R3 C0"
+			Background="#00FF00"
+			Style="{StaticResource FrameStyle}" />
+		<Frame
+			Rack.Cell="R4 C0"
+			Background="#0000FF"
+			Style="{StaticResource FrameStyle}" />
+
+		<Label
+			Rack.Cell="R1 C0"
+			Foreground="#000000"
+			Text="A"
+			Style="{StaticResource LabelStyle}" />
+		<Label
+			Rack.Cell="R2 C0"
+			Foreground="#00FFFF"
+			Text="R"
+			Style="{StaticResource LabelStyle}" />
+		<Label
+			Rack.Cell="R3 C0"
+			Foreground="#FF00FF"
+			Text="G"
+			Style="{StaticResource LabelStyle}" />
+		<Label
+			Rack.Cell="R4 C0"
+			Foreground="#FFFF00"
+			Text="B"
+			Style="{StaticResource LabelStyle}" />
+
+		<Grid
+			Rack.Cell="R0 C4"
+			Background="{StaticResource ChessBrush}">
+			<Frame
+				x:Name="ActiveColor" />
+		</Grid>
+		
+		<Grid
+			Rack.Cell="R1 C4"
+			Background="{StaticResource ChessBrush}">
+			<Frame
+				x:Name="Opacity" />
+		</Grid>
+
+		<Frame
+			Rack.Cell="R2 C4 RS4"
+			Background="{StaticResource ChessBrush}" />
+		<Grid
+			Rack.Cell="R2 C4 RS4"
+			Width="192"
+			x:Name="Spectrum">
+			<Frame
+				Background="{StaticResource RainbowBrush.V}" />
+			<Frame
+				Background="{StaticResource BrightnessBrush.H}" />
+		</Grid>
+
+		<Slider
+			Rack.Cell="R1 C1"
+			Value="{Binding A}"
+			Style="{StaticResource ByteSliderStyle}" />
+		<Slider
+			Rack.Cell="R2 C1"
+			Value="{Binding R}"
+			Style="{StaticResource ByteSliderStyle}" />
+		<Slider
+			Rack.Cell="R3 C1"
+			Value="{Binding G}"
+			Style="{StaticResource ByteSliderStyle}" />
+		<Slider
+			Rack.Cell="R4 C1"
+			Value="{Binding B}"
+			Style="{StaticResource ByteSliderStyle}" />
+
+		<Entry
+			Rack.Cell="R0 C1"
+			Margin="4 4 20 4"
+			Text="{Binding Value, Mode=TwoWay}" />
+		<Picker
+			Rack.Cell="R0 C1"
+			Width="17"
+			Height="18"
+			HorizontalAlignment="Right"
+			ItemsSource="{Binding NamedColors}"
+
+			SelectedItem="{Binding ActiveNamedColor, Mode=TwoWay}">
+			<Picker.ItemTemplate>
+				<DataTemplate>
+					<StackLayout
+						Orientation="Horizontal">
+						<Frame
+							Background="{Binding ChessBrush}">
+							<Frame
+								Style="{StaticResource FrameStyle}"
+								Background="{Binding Brush}" />
+						</Frame>
+						<Entry
+							Width="80"
+							Text="{Binding Color}" />
+						<Entry
+							Text="{Binding Name}" />
+					</StackLayout>
+				</DataTemplate>
+			</Picker.ItemTemplate>
+		</Picker>
+		<Label
+			Rack.Cell="R0 C2"
+			HorizontalAlignment="Center"
+			Text="DEC" />
+		<Label
+			Rack.Cell="R0 C3"
+			HorizontalAlignment="Center"
+			Text="HEX" />
+
+		<Entry
+			Width="30"
+			Rack.Cell="R1 C2"
+			Text="{Binding A, Mode=TwoWay}" />
+		<Entry
+			Rack.Cell="R2 C2"
+			Text="{Binding R, Mode=TwoWay}" />
+		<Entry
+			Rack.Cell="R3 C2"
+			Text="{Binding G, Mode=TwoWay}" />
+		<Entry
+			Rack.Cell="R4 C2"
+			Text="{Binding B, Mode=TwoWay}" />
+
+		<Entry
+			Width="30"
+			Rack.Cell="R1 C3"
+			Text="{Binding A, Mode=TwoWay, StringFormat=X2}" />
+		<Entry
+			Rack.Cell="R2 C3"
+			Text="{Binding R, Mode=TwoWay, StringFormat=X2}" />
+		<Entry
+			Rack.Cell="R3 C3"
+			Text="{Binding G, Mode=TwoWay, StringFormat=X2}" />
+		<Entry
+			Rack.Cell="R4 C3"
+			Text="{Binding B, Mode=TwoWay, StringFormat=X2}" />
+
+	</Grid>
+</GroupBox>

@@ -12,6 +12,7 @@ namespace Solfeggio.Presenters
 	{
 		public static Brush GetBrush([CallerMemberName]string key = default) =>	(Brush)Current.Resources[key];
 
+		public static Brush PressToneKeyBrush => GetBrush();
 		public static Brush FullToneKeyBrush => GetBrush();
 		public static Brush HalfToneKeyBrush => GetBrush();
 

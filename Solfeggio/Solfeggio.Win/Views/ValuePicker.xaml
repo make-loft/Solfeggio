@@ -1,0 +1,22 @@
+﻿<GroupBox
+	x:Class="Solfeggio.Views.ValuePicker"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Background="LightGray"
+	BorderThickness="0"
+	Padding="4"
+	x:Name="This">
+	<StackLayout
+		DataContext="{Binding ElementName=This}"
+		Orientation="Horizontal">
+		<Entry
+			Text="{Binding Value, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+		<Slider
+			Minimum="0"
+			Maximum="1"
+			Width="128"
+			TickFrequency="0.25"
+			TickPlacement="BottomRight"
+			Value="{Binding Value, Mode=TwoWay}" />
+	</StackLayout>
+</GroupBox>

@@ -18,7 +18,7 @@
 			EnableTouchEvents="True"
 			Touch="OnTouchEffectAction"
 			PaintSurface="OnCanvasViewPaintSurface"
-			Background="{DynamicResource SpectumBackgroundBrush}">
+			Background="{DynamicResource SpectrumBackgroundBrush}">
 			<s:Polyline
 				x:Name="MagnitudePolyline"
 				Fill="{StaticResource MagnitudeSpectrumFillBrush}"

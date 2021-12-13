@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:models="clr-namespace:Solfeggio.Models"
-	xmlns:presenters="clr-namespace:Solfeggio.Presenters">
+	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
+	xmlns:local="clr-namespace:Solfeggio">
 
 	<Set
         x:Shared="False"
@@ -142,7 +142,7 @@
 
     </Set>
 
-    <Set
+	<Set
         x:Shared="False"
         x:Key="CalibrationOptionsSet">
 
@@ -171,6 +171,75 @@
 			ContentTemplate="{StaticResource VisualProfileTemplate}"
 			Content="{Store Key=models:VisualProfile}" />-->
 
+	</Set>
+
+	<Set
+		x:Shared="False"
+		x:Key="ThemeSet">
+		
+		<GroupBox
+			Header="{Localizing Key=Magnitude, StringFormat='{}{0} (FFT)', ForceStringFormat=True}">
+			<StackLayout
+				Orientation="Horizontal">
+				<ContentView
+					Tag="{Localizing Key=Fill}"
+					DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+				<ContentView
+					Tag="{Localizing Key=Stroke}"
+					DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+			</StackLayout>
+		</GroupBox>
+
+		<GroupBox
+			Header="{Localizing Key=Magnitude, StringFormat='{}{0} (MPI)', ForceStringFormat=True}">
+			<StackLayout
+				Orientation="Horizontal">
+				<ContentView
+					Tag="{Localizing Key=Fill}"
+					DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.MPI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+				<ContentView
+					Tag="{Localizing Key=Stroke}"
+					DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.MPI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+			</StackLayout>
+		</GroupBox>
+
+		<GroupBox
+			Header="{Localizing Key=Background}">
+			<StackLayout
+				Orientation="Horizontal">
+				<ContentView
+					Tag="{Localizing Key=Spectrum}"
+					DataContext="{Binding Resources[SpectrumBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+				<ContentView
+					Tag="{Localizing Key=Piano}"
+					DataContext="{Binding Resources[PianoCanvasBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+			</StackLayout>
+		</GroupBox>
+
+		<GroupBox
+			Header="{Localizing Key=Piano}">
+			<StackLayout
+				Orientation="Horizontal">
+				<ContentView
+					Tag="{Localizing Key=Piano}"
+					DataContext="{Binding Resources[PianoCanvasBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+				<ContentView
+					Tag="{Localizing Key=HalfTone}"
+					DataContext="{Binding Resources[HalfToneKeyBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+				<ContentView
+					Tag="{Localizing Key=FullTone}"
+					DataContext="{Binding Resources[FullToneKeyBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"/>
+			</StackLayout>
+		</GroupBox>
 	</Set>
 
 </ResourceDictionary>

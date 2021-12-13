@@ -15,22 +15,22 @@
 
 	<Grid
 		Rack.Columns="* 3*"
-		Rack.Rows="2* *">
+		Rack.Rows="2* ^ *">
 
 		<Canvas
 			Rack.Cell="R0 C0 CS2"
 			Name="SpectrumCanvas"
-			Background="{DynamicResource SpectumBackgroundBrush}">
+			Background="{DynamicResource SpectrumBackgroundBrush}">
 
 			<Polyline
 				Name="MagnitudePolyline"
-				Fill="{DynamicResource MagnitudeSpectrumFillBrush}"
-				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush}"
+				Fill="{DynamicResource MagnitudeSpectrumFillBrush.FFT}"
+				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.FFT}"
 				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
 			<Polyline
 				Name="InterpolatedMagnitudePolyline"
-				Fill="Transparent"
-				Stroke="Red"
+				Fill="{DynamicResource MagnitudeSpectrumFillBrush.MPI}"
+				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.MPI}"
 				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
 			<Polyline
 				Name="PhasePolyline"
@@ -50,14 +50,20 @@
 				StrokeThickness="{DynamicResource WaveOutStrokeThickness}" />
 		</Canvas>
 
-		<Canvas
+		<GridSplitter
 			Rack.Cell="R1 C0 CS2"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Stretch"
+			Height="8" />
+
+		<Canvas
+			Rack.Cell="R2 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
 			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
 
 		<Grid
-			Rack.Cell="R1 C0"
+			Rack.Cell="R2 C0"
 			Rack.Rows="* ^ ^"
 			Rack.Columns="^ ^ *">
 			<xamarin:Label
@@ -92,14 +98,14 @@
 			</Grid>
 		</Grid>
 
-		<ItemsControl
+		<!--<ItemsControl
 			Rack.Cell="R0 C0"
 			Margin="0 32 0 0"
 			Foreground="Violet"
 			Name="HarmoncsItemsControl"
 			Visibility="{StoreBinding StoreKey=p:MusicalPresenter, Path=VisualProfile.Harmonics, Converter={StaticResource TrueToVisibleConverter}}"
 			ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
-			ItemTemplate="{StaticResource HarmonicOutTemplate}" />
+			ItemTemplate="{StaticResource HarmonicOutTemplate}" />-->
 
 	</Grid>
 

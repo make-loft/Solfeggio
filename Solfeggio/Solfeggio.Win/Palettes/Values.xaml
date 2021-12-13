@@ -28,7 +28,7 @@
 		x:Key="MinHarmonicOpacityLevel">0.3</system:Double>
 
 	<system:Double
-		x:Key="MinWidth">32</system:Double>
+		x:Key="MinWidth">0</system:Double>
 
 	<system:Double
 		x:Key="InfoTextOpacityLevel">0.4</system:Double>

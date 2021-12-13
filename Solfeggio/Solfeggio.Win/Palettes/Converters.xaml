@@ -22,5 +22,6 @@
 			Key="Loop"
 			Value="{m:Localizing Key=Loop}" />
 	</c:SwitchConverter>
+
 	
 </ResourceDictionary>

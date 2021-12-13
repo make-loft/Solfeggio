@@ -1,0 +1,208 @@
+﻿<Pivot
+	x:Class="Solfeggio.Views.BrushPicker"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:views="clr-namespace:Solfeggio.Views"
+	DataContext="{Binding Value, ElementName=This, Mode=TwoWay}"
+	x:Name="This">
+
+	<Pivot.Resources>
+
+		<ControlTemplate
+			x:Key="ValueTemplate">
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Entry
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+				</Expander.Header>
+				<views:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<views:ValuePicker
+						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+				</views:PopupView>
+			</Expander>
+		</ControlTemplate>
+
+		<ControlTemplate
+			x:Key="ColorValueTemplate">
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Entry
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				</Expander.Header>
+				<views:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<views:ColorPicker
+						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+				</views:PopupView>
+			</Expander>
+		</ControlTemplate>
+
+		<DataTemplate
+			x:Key="GradientOffsetTemplate">
+			<StackLayout
+				Orientation="Horizontal">
+				<ContentView
+					Rack.Cell="R1 C1"
+					DataContext="{Binding Offset, Mode=TwoWay}"
+					Template="{StaticResource ValueTemplate}" />
+				<ContentView
+					Rack.Cell="R2 C2"
+					DataContext="{Binding Color, Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}" />
+			</StackLayout>
+		</DataTemplate>
+		
+	</Pivot.Resources>
+
+	<PivotItem
+		Header="{Localizing Solid}"
+		DataContext="{Binding UnfrozenValue, ElementName=This}">
+		<GroupBox
+			Header="{Localizing Key=Color}">
+			<ContentView
+				Rack.Cell="R2 C2"
+				DataContext="{Binding Color, Mode=TwoWay}"
+				Template="{StaticResource ColorValueTemplate}" />
+		</GroupBox>
+	</PivotItem>
+
+	<PivotItem
+		Header="{Localizing Linear}"
+		DataContext="{Binding UnfrozenValue, ElementName=This}">
+		<StackLayout>
+			<GroupBox
+				Header="{Localizing Key=Gradient}">
+				<Grid
+					Rack.Rows="^ ^ ^"
+					Rack.Columns="* ^ ^">
+					<Label
+						Rack.Cell="R1 C0"
+						Style="{StaticResource CenteredLabel}"
+						Text="{Localizing Key=From}" />
+					<Label
+						Rack.Cell="R2 C0"
+						Style="{StaticResource CenteredLabel}"
+						Text="{Localizing Key=Till}" />
+
+					<Label
+						Rack.Cell="R0 C1"
+						Style="{StaticResource CenteredLabel}"
+						Text="X" />
+					<Label
+						Rack.Cell="R0 C2"
+						Style="{StaticResource CenteredLabel}"
+						Text="Y" />
+
+					<ContentView
+						Rack.Cell="R1 C1"
+						DataContext="{Binding StartPoint.X, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+					<ContentView
+						Rack.Cell="R1 C2"
+						DataContext="{Binding StartPoint.Y, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+
+					<ContentView
+						Rack.Cell="R2 C1"
+						DataContext="{Binding EndPoint.X, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+					<ContentView
+						Rack.Cell="R2 C2"
+						DataContext="{Binding EndPoint.Y, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+				</Grid>
+			</GroupBox>
+			<GroupBox
+				Header="{Localizing Key=Stops}">
+				<StackLayout>
+					<Grid
+						Rack.Columns="* 2*">
+						<Label
+							Rack.Cell="C0"
+							Style="{StaticResource CenteredLabel}"
+							Text="{Localizing Key=Offset}" />
+						<Label
+							Rack.Cell="C1"
+							Style="{StaticResource CenteredLabel}"
+							Text="{Localizing Key=Color}" />
+					</Grid>
+					<ItemsView
+						ItemsSource="{Binding GradientStops}"
+						ItemTemplate="{StaticResource GradientOffsetTemplate}" />
+				</StackLayout>
+			</GroupBox>
+		</StackLayout>
+	</PivotItem>
+
+	<PivotItem
+		Header="{Localizing Radial}"
+		DataContext="{Binding UnfrozenValue, ElementName=This}">
+		<StackLayout>
+			<GroupBox
+				Header="{Localizing Key=Gradient}">
+				<Grid
+					Rack.Rows="^ ^ ^"
+					Rack.Columns="* ^ ^">
+					<Label
+						Rack.Cell="R1 C0"
+						Style="{StaticResource CenteredLabel}"
+						Text="{Localizing Key=Center}" />
+					<Label
+						Rack.Cell="R2 C0"
+						Style="{StaticResource CenteredLabel}"
+						Text="{Localizing Key=Radius}" />
+
+					<Label
+						Rack.Cell="R0 C1"
+						Style="{StaticResource CenteredLabel}"
+						Text="X" />
+					<Label
+						Rack.Cell="R0 C2"
+						Style="{StaticResource CenteredLabel}"
+						Text="Y" />
+
+					<ContentView
+						Rack.Cell="R1 C1"
+						DataContext="{Binding Center.X, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+					<ContentView
+						Rack.Cell="R1 C2"
+						DataContext="{Binding Center.Y, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+
+					<ContentView
+						Rack.Cell="R2 C1"
+						DataContext="{Binding RadiusX, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+					<ContentView
+						Rack.Cell="R2 C2"
+						DataContext="{Binding RadiusY, Mode=TwoWay}"
+						Template="{StaticResource ValueTemplate}" />
+				</Grid>
+			</GroupBox>
+			<GroupBox
+				Header="{Localizing Key=Stops}">
+				<StackLayout>
+					<Grid
+						Rack.Columns="* 2*">
+						<Label
+							Rack.Cell="C0"
+							Style="{StaticResource CenteredLabel}"
+							Text="{Localizing Key=Offset}" />
+						<Label
+							Rack.Cell="C1"
+							Style="{StaticResource CenteredLabel}"
+							Text="{Localizing Key=Color}" />
+					</Grid>
+					<ItemsView
+						ItemsSource="{Binding GradientStops}"
+						ItemTemplate="{StaticResource GradientOffsetTemplate}" />
+				</StackLayout>
+			</GroupBox>
+		</StackLayout>
+	</PivotItem>
+
+</Pivot>

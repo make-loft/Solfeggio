@@ -103,6 +103,14 @@
 		</PivotItem>
 
 		<PivotItem
+			Header="{Localizing Key=Theme}">
+			<ScrollView>
+				<ListView
+					ItemsSource="{StaticResource ThemeSet}" />
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
 			Header="{Localizing Key=Agreement}">
 			<ScrollView>
 				<StackView>
