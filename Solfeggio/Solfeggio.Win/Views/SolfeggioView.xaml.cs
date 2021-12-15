@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -30,10 +29,14 @@ namespace Solfeggio.Views
 		static void Shift(Bandwidth bandwidth, double delta, double lowerDirection, double upperDirection)
 		{
 			var scaleFunc = bandwidth.VisualScaleFunc;
-			var offset = delta * scaleFunc(bandwidth.Threshold.Length) / 8;
-			var lowerOffset = lowerDirection * offset;
-			var upperOffset = upperDirection * offset;
-			bandwidth.Threshold.Shift(lowerOffset, upperOffset, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
+			var center = (bandwidth.Threshold.Upper - bandwidth.Threshold.Lower) / 2;
+			var centerS = (scaleFunc(bandwidth.Threshold.Upper) - scaleFunc(bandwidth.Threshold.Lower)) / 2;
+			var offsetS = delta * bandwidth.Threshold.Length * centerS / (8 * center);
+
+			var lowerOffsetS = lowerDirection * offsetS;
+			var upperOffsetS = upperDirection * offsetS;
+
+			bandwidth.Threshold.Shift(lowerOffsetS, upperOffsetS, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
 		}
 
 		public SolfeggioView()

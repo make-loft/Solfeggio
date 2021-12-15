@@ -89,7 +89,7 @@
 		<DrawingBrush.Drawing>
 			<GeometryDrawing
 				Brush="White"
-				Geometry="M6,6 L0,6 0,12 6,12 6,6 12,6 12,0 6,0 Z"/>
+				Geometry="M6,6 L0,6 0,12 6,12 6,6 12,6 12,0 6,0 Z" />
 		</DrawingBrush.Drawing>
 	</DrawingBrush>
 
@@ -119,13 +119,25 @@
 
 	<LinearGradientBrush
 		x:Key="SpectrumBackgroundBrush"
-		EndPoint="0,1"
-		StartPoint="0,0">
+		StartPoint="0,0"
+		EndPoint="0,1">
 		<GradientStop
-			Color="{DynamicResource MagnitudeFillColor}"
+			Color="#FF880022"
 			Offset="0" />
 		<GradientStop
-			Color="IndianRed"
+			Color="#FFFFBE22"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="SplitterBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="#FFFFBE22"
+			Offset="0" />
+		<GradientStop
+			Color="#FF880022"
 			Offset="1" />
 	</LinearGradientBrush>
 
@@ -137,13 +149,29 @@
 		x:Key="MagnitudeSpectrumStrokeBrush.FFT"
 		Color="Violet"/>
 
-	<SolidColorBrush
+	<LinearGradientBrush
 		x:Key="MagnitudeSpectrumFillBrush.MPI"
-		Color="{DynamicResource MagnitudeFillColor}" />
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="#FFFFBE22"
+			Offset="0.33" />
+		<GradientStop
+			Color="#00880022"
+			Offset="1.00" />
+	</LinearGradientBrush>
 
-	<SolidColorBrush
+	<LinearGradientBrush
 		x:Key="MagnitudeSpectrumStrokeBrush.MPI"
-		Color="Crimson"/>
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="#FF880022"
+			Offset="0.33" />
+		<GradientStop
+			Color="#00FFBE22"
+			Offset="1.00" />
+	</LinearGradientBrush>
 
 	<SolidColorBrush
 		x:Key="WaveInStrokeBrush"
@@ -153,17 +181,35 @@
 		x:Key="WaveOutStrokeBrush"
 		Color="YellowGreen" />
 
-	<SolidColorBrush
+	<LinearGradientBrush
 		x:Key="PianoCanvasBackgroundBrush"
-		Color="#FF7A5487" />
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.618"
+			Color="#FF884488" />
+		<GradientStop
+			Offset="1.0"
+			Color="#FFFFFFFF" />
+	</LinearGradientBrush>
 
 	<LinearGradientBrush
 		x:Key="PressToneKeyBrush">
 		<GradientStop
 			Offset="0.0"
-			Color="Transparent" />
+			Color="#00FFFFFF" />
 		<GradientStop
-			Offset="0.5"
+			Offset="1.0"
+			Color="Red" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="PressHalfToneKeyBrush">
+		<GradientStop
+			Offset="0.0"
+			Color="#00000000" />
+		<GradientStop
+			Offset="1.0"
 			Color="Red" />
 	</LinearGradientBrush>
 
@@ -172,13 +218,21 @@
 		Color="WhiteSmoke" />
 
 	<LinearGradientBrush
-		x:Key="HalfToneKeyBrush">
+		x:Key="HalfToneKeyBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="#00FFFFFF" />
+			Color="#00FFBE22" />
 		<GradientStop
-			Offset="0.3"
-			Color="#FF252525" />
+			Offset="0.1"
+			Color="#FF3F3E3E" />
+		<GradientStop
+			Offset="0.95"
+			Color="#FF3F3E3E" />
+		<GradientStop
+			Offset="1.0"
+			Color="#FF0C0C0C" />
 	</LinearGradientBrush>
 
 	<SolidColorBrush

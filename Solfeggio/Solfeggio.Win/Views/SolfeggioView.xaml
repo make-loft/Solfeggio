@@ -54,6 +54,7 @@
 			Rack.Cell="R1 C0 CS2"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Stretch"
+			Background="{DynamicResource SplitterBrush}"
 			Height="8" />
 
 		<Canvas

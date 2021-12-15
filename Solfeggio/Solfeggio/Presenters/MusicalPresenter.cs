@@ -334,6 +334,8 @@ namespace Solfeggio.Presenters
 				}
 
 				key.Hits++;
+				key.Peaks.Add(bin);
+
 				if (activeMagnitude > key.Magnitude)
 				{
 					key.Magnitude = activeMagnitude;
@@ -349,46 +351,28 @@ namespace Solfeggio.Presenters
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
 				var basicBrush = MusicalOptions.OktaveBrushes()[key.NoteNumber];
-				
-				//var tmp = 255 * Math.Sqrt(key.Magnitude);
-				//var red = tmp > 255 ? (byte)255 : (byte)tmp;
 				var noteNumber = key.NoteNumber;
 				var isTone = MusicalOptions.Tones[key.NoteNumber];
-
-				var gradientBrush = AppPalette.PressToneKeyBrush.Clone();
-				gradientBrush.Opacity = Math.Sqrt(key.Magnitude);
-				/*
-				var a = ToColorByte(basicColor.A() - red);
-				var r = ToColorByte(basicColor.R() + red);
-				var g = ToColorByte(basicColor.G() - red);
-				var b = ToColorByte(basicColor.B() - red);
-				var pressColor = ColorExtensions.FromArgb(a, 255, g, b);
-
-				var gradientBrush = new LinearGradientBrush { EndPoint = new Point(0d, 1d) };
-				gradientBrush.GradientStops.Merge
-				(
-					new GradientStop { Color = basicColor, Offset = 0.0f },
-					new GradientStop { Color = pressColor, Offset = 0.5f }
-				);
-				*/
 				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var upperOffset = frequencyVisualScaleFunc(key.UpperFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var ethalonOffset = frequencyVisualScaleFunc(key.EthalonFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 
-				var actualHeight = isTone ? height : height * 0.7d;
+				var actualHeight = isTone ? height : height * 0.618d;
 				var strokeThickness = upperOffset - lowerOffset;
 
 				CreateVerticalLine(ethalonOffset, actualHeight, basicBrush, strokeThickness).Use(items.Add);
+
+				if (key.Peaks.Count.Is(0)) continue;
+				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
+				var gradientBrush = (LinearGradientBrush)brush.Clone();
+				var value = Math.Sqrt(key.Magnitude);
+				gradientBrush.GradientStops[0].Offset = 1.0 - value;
+				
 				CreateVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
 			return harmonics;
 		}
-
-		private byte ToColorByte(int value, byte min = 0, byte max = 255) =>
-			value < min ? min :
-			value > max ? max :
-			(byte)value;
 
 		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new()
 		{

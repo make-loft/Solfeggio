@@ -1,8 +1,11 @@
 ﻿using Ace;
 
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+
+using Xamarin.Forms;
 
 namespace Solfeggio.Views
 {
@@ -102,6 +105,29 @@ namespace Solfeggio.Views
 		{
 			get => (Brush)GetValue(ValueProperty);
 			set => SetValue(ValueProperty, value);
+		}
+
+		SmartSet<GradientStop> _activeGradientStopCollection;
+		GradientStopCollection _stops;
+
+		private void RemoveGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
+			_activeGradientStopCollection.Remove(sender.To<Button>().DataContext.To<GradientStop>());
+		private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
+			_activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
+
+		private object Converter_Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (_stops.Is(value))
+				return _activeGradientStopCollection;
+
+			_activeGradientStopCollection = value.To(out _stops).ToSet();
+			_activeGradientStopCollection.CollectionChangeCompleted += (o, e) =>
+			{
+				_stops.Clear();
+				_activeGradientStopCollection.ForEach(_stops.Add);
+			};
+
+			return _activeGradientStopCollection;
 		}
 	}
 }

@@ -2,11 +2,15 @@
 	x:Class="Solfeggio.Views.BrushPicker"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:views="clr-namespace:Solfeggio.Views"
+	xmlns:views="clr-namespace:Solfeggio.Views" xmlns:converters="clr-namespace:Ace.Converters;assembly=Ace"
 	DataContext="{Binding Value, ElementName=This, Mode=TwoWay}"
 	x:Name="This">
 
 	<Pivot.Resources>
+
+		<converters:Converter
+			x:Key="SmartSetConverter"
+			Convert="Converter_Convert" />
 
 		<ControlTemplate
 			x:Key="ValueTemplate">
@@ -52,6 +56,9 @@
 					Rack.Cell="R2 C2"
 					DataContext="{Binding Color, Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}" />
+				<Button
+					Click="RemoveGradientStop_Button_Click"
+					Content="-" />
 			</StackLayout>
 		</DataTemplate>
 		
@@ -115,8 +122,17 @@
 						Template="{StaticResource ValueTemplate}" />
 				</Grid>
 			</GroupBox>
-			<GroupBox
-				Header="{Localizing Key=Stops}">
+			<GroupBox>
+				<GroupBox.Header>
+					<StackLayout
+						Orientation="Horizontal">
+						<Label
+							Text="{Localizing Key=Stops}" />
+						<Button
+							Click="AddGradientStop_Button_Click"
+							Content="+" />
+					</StackLayout>
+				</GroupBox.Header>
 				<StackLayout>
 					<Grid
 						Rack.Columns="* 2*">
@@ -130,7 +146,7 @@
 							Text="{Localizing Key=Color}" />
 					</Grid>
 					<ItemsView
-						ItemsSource="{Binding GradientStops}"
+						ItemsSource="{Binding GradientStops, Converter={StaticResource SmartSetConverter}}"
 						ItemTemplate="{StaticResource GradientOffsetTemplate}" />
 				</StackLayout>
 			</GroupBox>
@@ -183,8 +199,17 @@
 						Template="{StaticResource ValueTemplate}" />
 				</Grid>
 			</GroupBox>
-			<GroupBox
-				Header="{Localizing Key=Stops}">
+			<GroupBox>
+				<GroupBox.Header>
+					<StackLayout
+						Orientation="Horizontal">
+						<Label
+							Text="{Localizing Key=Stops}" />
+						<Button
+							Click="AddGradientStop_Button_Click"
+							Content="+" />
+					</StackLayout>
+				</GroupBox.Header>
 				<StackLayout>
 					<Grid
 						Rack.Columns="* 2*">
@@ -198,7 +223,7 @@
 							Text="{Localizing Key=Color}" />
 					</Grid>
 					<ItemsView
-						ItemsSource="{Binding GradientStops}"
+						ItemsSource="{Binding GradientStops, Converter={StaticResource SmartSetConverter}}"
 						ItemTemplate="{StaticResource GradientOffsetTemplate}" />
 				</StackLayout>
 			</GroupBox>

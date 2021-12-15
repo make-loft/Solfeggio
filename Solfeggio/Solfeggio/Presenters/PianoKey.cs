@@ -1,6 +1,7 @@
 ﻿using Ace;
 using System;
 using Rainbow;
+using System.Collections.Generic;
 
 namespace Solfeggio.Models
 {
@@ -15,6 +16,8 @@ namespace Solfeggio.Models
 		public double DeltaFrequency => Harmonic.Frequency - EthalonFrequency;
 		public Bin Harmonic { get; set; }
 		public int Hits { get; set; }
+
+		public List<Bin> Peaks { get; set; } = new();
 
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
 		{
