@@ -4,7 +4,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
-	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
 	DataContext="{Store Key=vm:ProcessingManager}"
 	HorizontalContentAlignment="Stretch"
@@ -26,28 +25,43 @@
 				Name="MagnitudePolyline"
 				Fill="{DynamicResource MagnitudeSpectrumFillBrush.FFT}"
 				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.FFT}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}"
+				Visibility="{DynamicResource MagnitudeSpectrumVisibility.FFT}"
+				/>
 			<Polyline
 				Name="InterpolatedMagnitudePolyline"
-				Fill="{DynamicResource MagnitudeSpectrumFillBrush.MPI}"
-				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.MPI}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}" />
+				Fill="{DynamicResource MagnitudeSpectrumFillBrush.PMI}"
+				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.PMI}"
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}"
+				Visibility="{DynamicResource MagnitudeSpectrumVisibility.PMI}"
+				/>
 			<Polyline
 				Name="PhasePolyline"
 				Stroke="{DynamicResource WaveOutStrokeBrush}"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				Visibility="{DynamicResource PhaseSpectrumVisibility.FFT}"
+				/>
 			<Polyline
 				Name="InterpolatedPhasePolyline"
-				Stroke="Green"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
+				Fill="{DynamicResource MagnitudeSpectrumFillBrush.PMI}"
+				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.PMI}"
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				Visibility="{DynamicResource PhaseSpectrumVisibility.PMI}"
+				/>
 			<Polyline
 				Name="WaveInPolyline"
-				Stroke="{DynamicResource WaveInStrokeBrush}"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}" />
+				Fill="{DynamicResource FrameFillBrush.Rectangle}"
+				Stroke="{DynamicResource FrameStrokeBrush.Rectangle}"
+				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				Visibility="{DynamicResource FrameVisibility.Rectangle}"
+				/>
 			<Polyline
 				Name="WaveOutPolyline"
-				Stroke="{DynamicResource WaveOutStrokeBrush}"
-				StrokeThickness="{DynamicResource WaveOutStrokeThickness}" />
+				Fill="{DynamicResource FrameFillBrush.Window}"
+				Stroke="{DynamicResource FrameStrokeBrush.Window}"
+				StrokeThickness="{DynamicResource WaveOutStrokeThickness}"
+				Visibility="{DynamicResource FrameVisibility.Window}"
+				/>
 		</Canvas>
 
 		<GridSplitter

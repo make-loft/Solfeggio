@@ -106,6 +106,7 @@
 			Header="{Localizing Key=Theme}">
 			<ScrollView>
 				<ListView
+					Background="Transparent"
 					ItemsSource="{StaticResource ThemeSet}" />
 			</ScrollView>
 		</PivotItem>

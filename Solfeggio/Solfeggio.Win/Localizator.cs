@@ -81,6 +81,21 @@ namespace Solfeggio
 		public static o Input = _("Input", "Ввод");
 		public static o Output = _("Output", "Вывод");
 		public static o Monitor = _("Monitor", "Монитор");
+		public static o Brush = _("Brush", "Кисть");
+		public static o Color = _("Color", "Цвет");
+		public static o Gradient = _("Gradient", "Градиент");
+		public static o Center = _("Center", "Центр");
+		public static o Radius = _("Radius", "Радиус");
+		public static o Linear = _("Linear", "Линейный");
+		public static o Radial = _("Radial", "Радиальный");
+		public static o Solid = _("Solid", "Сплошной");
+		public static o Stops = _("Stops", "Остановки");
+		public static o Theme = _("Theme", "Тема");
+		public static o From = _("From", "От");
+		public static o Till = _("Till", "До");
+		public static o Fill = _("Fill", "Заливка");
+		public static o Stroke = _("Stroke", "Обводка");
+		public static o Background = _("Background", "Фон");
 
 		public static o FrameSize = _("Frame Size", "Размер кадра");
 		public static o BuffersCount = _("Buffers Count", "Количество буферов");

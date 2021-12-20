@@ -39,4 +39,19 @@
 	<Thickness
 		x:Key="RegularMargin">4</Thickness>
 
+	<Visibility
+		x:Key="MagnitudeSpectrumVisibility.FFT">Collapsed</Visibility>
+	<Visibility
+		x:Key="MagnitudeSpectrumVisibility.PMI">Visible</Visibility>
+
+	<Visibility
+		x:Key="PhaseSpectrumVisibility.FFT">Collapsed</Visibility>
+	<Visibility
+		x:Key="PhaseSpectrumVisibility.PMI">Collapsed</Visibility>
+
+	<Visibility
+		x:Key="FrameVisibility.Rectangle">Collapsed</Visibility>
+	<Visibility
+		x:Key="FrameVisibility.Window">Collapsed</Visibility>
+
 </ResourceDictionary>

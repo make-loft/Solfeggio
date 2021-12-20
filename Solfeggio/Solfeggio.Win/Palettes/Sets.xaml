@@ -176,37 +176,152 @@
 	<Set
 		x:Shared="False"
 		x:Key="ThemeSet">
+
+		<Grid
+			ShowGridLines="True"
+			Rack.Rows="^ ^ ^ ^ ^ ^ ^"
+			Rack.Columns="^ ^ ^ ^">
+
+			<Label
+				Rack.Cell="R0 C1"
+				Text="{Localizing Key=Stroke}" />
+			<Label
+				Rack.Cell="R0 C2"
+				Text="{Localizing Key=Fill}" />
+			<Label
+				Rack.Cell="R0 C3"
+				Text="{Localizing Key=State}" />
+
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Key=Magnitude, StringFormat='{}{0} (FFT)'}"
+				/>
+			<Label
+				Rack.Cell="R2 C0"
+				Text="{Localizing Key=Magnitude, StringFormat='{}{0} (PMI)'}"
+				/>
+			<Label
+				Rack.Cell="R3 C0"
+				Text="{Localizing Key=Phase, StringFormat='{}{0} (FFT)'}"
+				/>
+			<Label
+				Rack.Cell="R4 C0"
+				Text="{Localizing Key=Phase, StringFormat='{}{0} (PMI)'}"
+				/>
+
+			<Label
+				Rack.Cell="R5 C0"
+				Text="{Localizing Key=Frame, StringFormat='{}{0} (Rectangle)'}"
+				/>
+			<Label
+				Rack.Cell="R6 C0"
+				Text="{Localizing Key=Frame, StringFormat='{}{0} (Window)'}"
+				/>
+
+			<ContentView
+				Rack.Cell="R1 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R1 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R1 C3"
+				IsToggled="{Binding Resources[MagnitudeSpectrumVisibility.FFT], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+			
+			<ContentView
+				Rack.Cell="R2 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R2 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R2 C3"
+				IsToggled="{Binding Resources[MagnitudeSpectrumVisibility.PMI], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+
+			<ContentView
+				Rack.Cell="R3 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[PhaseSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R3 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[PhaseSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R3 C3"
+				IsToggled="{Binding Resources[PhaseSpectrumVisibility.FFT], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+
+			<ContentView
+				Rack.Cell="R4 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[PhaseSpectrumStrokeBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R4 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[PhaseSpectrumFillBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R4 C3"
+				IsToggled="{Binding Resources[PhaseSpectrumVisibility.PMI], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+
+			<ContentView
+				Rack.Cell="R5 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[FrameStrokeBrush.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R5 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[FrameFillBrush.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R5 C3"
+				IsToggled="{Binding Resources[FrameVisibility.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+
+			<ContentView
+				Rack.Cell="R6 C1"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding Resources[FrameStrokeBrush.Window], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R6 C2"
+				Tag="{Localizing Key=Fill}"
+				DataContext="{Binding Resources[FrameFillBrush.Window], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<Switch
+				Rack.Cell="R6 C3"
+				IsToggled="{Binding Resources[FrameVisibility.Window], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+
+		</Grid>
 		
-		<GroupBox
-			Header="{Localizing Key=Magnitude, StringFormat='{}{0} (FFT)', ForceStringFormat=True}">
-			<StackLayout
-				Orientation="Horizontal">
-				<ContentView
-					Tag="{Localizing Key=Fill}"
-					DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-				<ContentView
-					Tag="{Localizing Key=Stroke}"
-					DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-			</StackLayout>
-		</GroupBox>
-
-		<GroupBox
-			Header="{Localizing Key=Magnitude, StringFormat='{}{0} (MPI)', ForceStringFormat=True}">
-			<StackLayout
-				Orientation="Horizontal">
-				<ContentView
-					Tag="{Localizing Key=Fill}"
-					DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.MPI], Source={x:Static local:App.Current}, Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-				<ContentView
-					Tag="{Localizing Key=Stroke}"
-					DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.MPI], Source={x:Static local:App.Current}, Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-			</StackLayout>
-		</GroupBox>
-
 		<GroupBox
 			Header="{Localizing Key=Background}">
 			<StackLayout

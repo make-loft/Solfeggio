@@ -140,21 +140,23 @@ namespace Solfeggio.Views
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
 
-				if (presenter.Spectrum.Magnitude.IsVisible)
+				static bool IsVisible(UIElement element) => element.Visibility.IsNot(Visibility.Collapsed);
+
+				if (IsVisible(MagnitudePolyline))
 					presenter.DrawMagnitude(spectrum, width, height).
 					Use(MagnitudePolyline.Points.AppendRange);
 
-				if (presenter.Spectrum.Magnitude.IsVisible)
+				if (IsVisible(InterpolatedMagnitudePolyline))
 					presenter.DrawMagnitude(spectrumInterpolated, width, height).
 					Use(InterpolatedMagnitudePolyline.Points.AppendRange);
 
 
 				var step = spectralViewModel.ActiveProfile.SampleRate / spectralViewModel.ActiveProfile.FrameSize;
 
-				if (presenter.Spectrum.Frequency.IsVisible)
-					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
-						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-						presenter.EnumerateGrid(step));
+				//if (IsVisible(SpectrumCanvas))
+				//	presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+				//		AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
+				//		presenter.EnumerateGrid(step));
 
 				//if (presenter.Spectrum.Frequency.IsVisible)
 				//	presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
@@ -166,19 +168,19 @@ namespace Solfeggio.Views
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateNotes());
 
-				if (presenter.Spectrum.Phase.IsVisible)
+				if (IsVisible(PhasePolyline))
 					presenter.DrawPhase(spectrum, width, height).
 					Use(PhasePolyline.Points.AppendRange);
 
-				if (presenter.Spectrum.Phase.IsVisible)
+				if (IsVisible(InterpolatedPhasePolyline))
 					presenter.DrawPhase(spectrumInterpolated, width, height).
 					Use(InterpolatedPhasePolyline.Points.AppendRange);
 
-				if (presenter.Frame.Level.IsVisible)
+				if (IsVisible(WaveInPolyline))
 					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
 					Use(WaveInPolyline.Points.AppendRange);
 
-				if (presenter.Frame.Level.IsVisible && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
+				if (IsVisible(WaveOutPolyline) && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
 					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
 					Use(WaveOutPolyline.Points.AppendRange);
 

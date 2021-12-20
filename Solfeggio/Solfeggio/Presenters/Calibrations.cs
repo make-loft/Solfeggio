@@ -3,7 +3,6 @@ using Rainbow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xamarin.Forms;
 using System.Windows.Media;
 using static Rainbow.ScaleFuncs;
 
@@ -102,7 +101,6 @@ namespace Solfeggio.Presenters
 		[DataMember] public SmartRange Threshold { get; set; }
 		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
-		[DataMember] public bool IsVisible { get; set; }
 		[DataMember] public string NumericFormat { get; set; } = "F2";
 	}
 
@@ -110,7 +108,7 @@ namespace Solfeggio.Presenters
 	public class SpectralOptions
 	{
 		[DataMember]
-		public Bandwidth Frequency { get; set; } = new Bandwidth
+		public Bandwidth Frequency { get; set; } = new()
 		{
 			Limit = SmartRange.Create(10d, 22000d),
 			Threshold = SmartRange.Create(20d, 3000d),
@@ -119,16 +117,15 @@ namespace Solfeggio.Presenters
 		};
 
 		[DataMember]
-		public Bandwidth Magnitude { get; set; } = new Bandwidth
+		public Bandwidth Magnitude { get; set; } = new()
 		{
 			Limit = SmartRange.Create(0.00d, 1d),
 			Threshold = SmartRange.Create(0.00d, 1d),
 			VisualScaleFunc = Sqrt,
-			IsVisible = true
 		};
 
 		[DataMember]
-		public Bandwidth Phase { get; set; } = new Bandwidth
+		public Bandwidth Phase { get; set; } = new()
 		{
 			Limit = SmartRange.Create(-Pi.Single, +Pi.Single),
 			Threshold = SmartRange.Create(-Pi.Single, +Pi.Single),
@@ -139,7 +136,7 @@ namespace Solfeggio.Presenters
 	public class FrameOptions
 	{
 		[DataMember]
-		public Bandwidth Level { get; set; } = new Bandwidth
+		public Bandwidth Level { get; set; } = new()
 		{
 			Limit = SmartRange.Create(-1d, +1d),
 			Threshold = SmartRange.Create(-1d, +1d),
@@ -147,7 +144,7 @@ namespace Solfeggio.Presenters
 		};
 
 		[DataMember]
-		public Bandwidth Offset { get; set; } = new Bandwidth
+		public Bandwidth Offset { get; set; } = new()
 		{
 			Limit = SmartRange.Create(+0d, +1d),
 			Threshold = SmartRange.Create(+0d, +1d),
@@ -173,7 +170,7 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public Dictionary<string, string[]> Notations { get; set; } = new Dictionary<string, string[]>
+		public Dictionary<string, string[]> Notations { get; set; } = new()
 		{
 			{ "Dies", Notes.Select(n => n.Split('|')[0]).ToArray() },
 			{ "Bemole", Notes.Select(n => n.Split('|')[1]).ToArray() },

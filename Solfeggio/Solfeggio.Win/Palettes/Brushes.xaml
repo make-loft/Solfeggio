@@ -149,8 +149,16 @@
 		x:Key="MagnitudeSpectrumStrokeBrush.FFT"
 		Color="Violet"/>
 
+	<SolidColorBrush
+		x:Key="PhaseSpectrumFillBrush.FFT"
+		Color="Transparent" />
+
+	<SolidColorBrush
+		x:Key="PhaseSpectrumStrokeBrush.FFT"
+		Color="Violet"/>
+
 	<LinearGradientBrush
-		x:Key="MagnitudeSpectrumFillBrush.MPI"
+		x:Key="MagnitudeSpectrumFillBrush.PMI"
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
@@ -162,7 +170,7 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="MagnitudeSpectrumStrokeBrush.MPI"
+		x:Key="MagnitudeSpectrumStrokeBrush.PMI"
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
@@ -174,12 +182,50 @@
 	</LinearGradientBrush>
 
 	<SolidColorBrush
-		x:Key="WaveInStrokeBrush"
-		Color="Crimson" />
+		x:Key="PhaseSpectrumFillBrush.PMI"
+		Color="Transparent" />
 
 	<SolidColorBrush
-		x:Key="WaveOutStrokeBrush"
-		Color="YellowGreen" />
+		x:Key="PhaseSpectrumStrokeBrush.PMI"
+		Color="Violet"/>
+
+	<LinearGradientBrush
+		x:Key="FrameFillBrush.Rectangle"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="#FF884488" />
+		<GradientStop
+			Offset="0.5"
+			Color="#00884488" />
+		<GradientStop
+			Offset="1.0"
+			Color="#FF884488" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="FrameStrokeBrush.Rectangle"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="Violet" />
+		<GradientStop
+			Offset="0.5"
+			Color="#00884488" />
+		<GradientStop
+			Offset="1.0"
+			Color="Violet" />
+	</LinearGradientBrush>
+
+	<SolidColorBrush
+		x:Key="FrameFillBrush.Window"
+		Color="AntiqueWhite" />
+
+	<SolidColorBrush
+		x:Key="FrameStrokeBrush.Window"
+		Color="Bisque" />
 
 	<LinearGradientBrush
 		x:Key="PianoCanvasBackgroundBrush"

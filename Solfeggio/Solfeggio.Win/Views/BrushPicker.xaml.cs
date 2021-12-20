@@ -129,5 +129,8 @@ namespace Solfeggio.Views
 
 			return _activeGradientStopCollection;
 		}
+
+		private object ColorToSolidBrush_Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) =>
+			value.Is(out Color color) ? new SolidColorBrush(color) : Brushes.Transparent;
 	}
 }
