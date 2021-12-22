@@ -125,6 +125,14 @@ namespace Xamarin.Forms
 
 	public class Entry : TextBox
 	{
+		public Entry() => KeyDown += (o, e) =>
+		{
+			if (e.Key != System.Windows.Input.Key.Enter)
+				return;
+
+			IsReadOnly = true;
+			IsReadOnly = false;
+		};
 	}
 
 	public class Label : TextBlock

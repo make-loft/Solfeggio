@@ -4,7 +4,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	xmlns:p="clr-namespace:Solfeggio.Palettes"
 	StartupUri="AppView.xaml"
 	Startup="App_OnStartup"
 	Exit="App_OnExit">
@@ -16,7 +15,6 @@
 					Source="pack://application:,,,/Ace;component/Ace.Zest/Dictionaries/AppConverters.xaml" />
 				<ResourceDictionary
 					Source="Palettes/Values.xaml" />
-				<p:Colors />
 				<ResourceDictionary
 					Source="Palettes/Brushes.xaml" />
 				<ResourceDictionary

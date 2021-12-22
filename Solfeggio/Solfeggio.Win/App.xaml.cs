@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Media;
 using Ace;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
@@ -49,8 +48,6 @@ namespace Solfeggio
 				return false;
 			}
 		}
-
-		public static Palettes.Colors ActiveColorPalette => App.Current.Resources.MergedDictionaries.OfType<Palettes.Colors>().First();
 
 		private DateTime _startupTimestamp;
 

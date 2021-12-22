@@ -132,7 +132,6 @@
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="AgreementManager.cs" />
-    <Compile Include="Palettes\Colors.cs" />
     <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>

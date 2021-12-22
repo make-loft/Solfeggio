@@ -5,12 +5,7 @@
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
-	DataContext="{Store Key=vm:ProcessingManager}"
-	HorizontalContentAlignment="Stretch"
-	VerticalContentAlignment="Stretch"
-	HorizontalAlignment="Stretch"
-	VerticalAlignment="Stretch"
-	Background="DimGray">
+	DataContext="{Store Key=vm:ProcessingManager}">
 
 	<Grid
 		Rack.Columns="* 3*"
@@ -25,41 +20,44 @@
 				Name="MagnitudePolyline"
 				Fill="{DynamicResource MagnitudeSpectrumFillBrush.FFT}"
 				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.FFT}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}"
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness.FFT}"
 				Visibility="{DynamicResource MagnitudeSpectrumVisibility.FFT}"
 				/>
 			<Polyline
 				Name="InterpolatedMagnitudePolyline"
 				Fill="{DynamicResource MagnitudeSpectrumFillBrush.PMI}"
 				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.PMI}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness}"
+				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness.PMI}"
 				Visibility="{DynamicResource MagnitudeSpectrumVisibility.PMI}"
 				/>
+			
 			<Polyline
 				Name="PhasePolyline"
-				Stroke="{DynamicResource WaveOutStrokeBrush}"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				Fill="{DynamicResource PhaseSpectrumFillBrush.FFT}"
+				Stroke="{DynamicResource PhaseSpectrumStrokeBrush.FFT}"
+				StrokeThickness="{DynamicResource PhaseSpectrumStrokeThickness.FFT}"
 				Visibility="{DynamicResource PhaseSpectrumVisibility.FFT}"
 				/>
 			<Polyline
 				Name="InterpolatedPhasePolyline"
-				Fill="{DynamicResource MagnitudeSpectrumFillBrush.PMI}"
-				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.PMI}"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				Fill="{DynamicResource PhaseSpectrumFillBrush.PMI}"
+				Stroke="{DynamicResource PhaseSpectrumFillBrush.PMI}"
+				StrokeThickness="{DynamicResource PhaseSpectrumStrokeThickness.PMI}"
 				Visibility="{DynamicResource PhaseSpectrumVisibility.PMI}"
 				/>
+			
 			<Polyline
 				Name="WaveInPolyline"
 				Fill="{DynamicResource FrameFillBrush.Rectangle}"
 				Stroke="{DynamicResource FrameStrokeBrush.Rectangle}"
-				StrokeThickness="{DynamicResource WaveInStrokeThickness}"
+				StrokeThickness="{DynamicResource FrameStrokeThickness.Rectangle}"
 				Visibility="{DynamicResource FrameVisibility.Rectangle}"
 				/>
 			<Polyline
 				Name="WaveOutPolyline"
 				Fill="{DynamicResource FrameFillBrush.Window}"
 				Stroke="{DynamicResource FrameStrokeBrush.Window}"
-				StrokeThickness="{DynamicResource WaveOutStrokeThickness}"
+				StrokeThickness="{DynamicResource FrameStrokeThickness.Window}"
 				Visibility="{DynamicResource FrameVisibility.Window}"
 				/>
 		</Canvas>

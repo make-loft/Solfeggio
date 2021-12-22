@@ -246,13 +246,7 @@
 	<DataTemplate
 		x:Key="RangeTemplate">
 		<StackLayout
-			Margin="0 -24 0 0"
 			HorizontalAlignment="Stretch">
-
-			<Switch
-				Rack.Cell="R0"
-				HorizontalAlignment="Right"
-				IsToggled="{Binding IsVisible, Mode=TwoWay}" />
 
 			<ContentPresenter
 				Content="{Binding}"
@@ -456,17 +450,100 @@
 		</StackLayout>
 	</DataTemplate>
 
+	<DataTemplate
+		x:Key="BrushPreviewTemplate">
+		<Grid
+			Width="26"
+			Height="26">
+			<Frame
+				Rack.Cell="C1"
+				CornerRadius="10"
+				Background="{StaticResource ChessBrush}" />
+			<Frame
+				Rack.Cell="C1"
+				CornerRadius="10"
+				Background="{Binding}" />
+		</Grid>
+	</DataTemplate>
+
 	<ControlTemplate
-		x:Key="BrushPickerTemplate">
+		x:Key="ValuePickerTemplate">
 		<Expander
-			x:Name="Root"
-			Header="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			x:Name="TemplateRoot">
+			<Expander.Header>
+				<Entry
+					Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, StringFormat=F2}"
+					/>
+			</Expander.Header>
 			<views:PopupView
-				IsOpen="{Binding IsExpanded, ElementName=Root}">
-				<views:BrushPicker
-					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+				IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+				<views:ValuePicker
+					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+					/>
 			</views:PopupView>
 		</Expander>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="RangePickerTemplate">
+		<Expander
+			x:Name="TemplateRoot">
+			<Expander.Header>
+				<Entry
+					Text="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+					/>
+			</Expander.Header>
+			<views:PopupView
+				IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+				<ContentPresenter
+					Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+					ContentTemplate="{StaticResource RangeTemplate}"
+					/>
+			</views:PopupView>
+		</Expander>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="BrushPickerTemplate">
+		<Grid
+			Rack.Columns="^ *">
+			<Frame
+				Rack.Cell="C0 CS2"
+				Margin="2"
+				CornerRadius="10"
+				Background="#88AAAAAA"
+				/>
+			<Expander
+				Rack.Cell="C0"
+				x:Name="Root"
+				Header="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+				HeaderTemplate="{StaticResource BrushPreviewTemplate}">
+				<views:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=Root}">
+					<views:BrushPicker
+						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+						/>
+				</views:PopupView>
+			</Expander>
+			<Picker
+				Rack.Cell="C1"
+				Width="17"
+				Height="17"
+				SelectedValuePath="Value"
+				ItemsSource="{Binding Resources.MergedDictionaries[2], Source={x:Static local:App.Current}}"
+				SelectedValue="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
+				<Picker.ItemTemplate>
+					<DataTemplate>
+						<StackLayout
+							Orientation="Horizontal">
+							<Label
+								Text="{Binding Key}"
+								/>
+						</StackLayout>
+					</DataTemplate>
+				</Picker.ItemTemplate>
+			</Picker>
+		</Grid>
 	</ControlTemplate>
 
 </ResourceDictionary>

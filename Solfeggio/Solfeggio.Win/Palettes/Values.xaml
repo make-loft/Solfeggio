@@ -39,6 +39,19 @@
 	<Thickness
 		x:Key="RegularMargin">4</Thickness>
 
+	<system:Double
+		x:Key="MagnitudeSpectrumStrokeThickness.FFT">1</system:Double>
+	<system:Double
+		x:Key="MagnitudeSpectrumStrokeThickness.PMI">1</system:Double>
+	<system:Double
+		x:Key="PhaseSpectrumStrokeThickness.FFT">1</system:Double>
+	<system:Double
+		x:Key="PhaseSpectrumStrokeThickness.PMI">1</system:Double>
+	<system:Double
+		x:Key="FrameStrokeThickness.Rectangle">1</system:Double>
+	<system:Double
+		x:Key="FrameStrokeThickness.Window">1</system:Double>
+
 	<Visibility
 		x:Key="MagnitudeSpectrumVisibility.FFT">Collapsed</Visibility>
 	<Visibility

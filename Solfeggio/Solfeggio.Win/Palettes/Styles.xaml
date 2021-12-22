@@ -17,13 +17,19 @@
 			Value="Center" />
 		<Setter
 			Property="HorizontalAlignment"
-			Value="Right" />
+			Value="Center" />
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="MinWidth"
 			Value="{StaticResource MinWidth}" />
+		<Setter
+			Property="Padding"
+			Value="4,0" />
+		<Setter
+			Property="Background"
+			Value="#88CCCCCC" />
 	</Style>
 
 	<Style

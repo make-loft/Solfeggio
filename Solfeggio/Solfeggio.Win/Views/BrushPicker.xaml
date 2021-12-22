@@ -2,17 +2,17 @@
 	x:Class="Solfeggio.Views.BrushPicker"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:views="clr-namespace:Solfeggio.Views" xmlns:converters="clr-namespace:Ace.Converters;assembly=Ace"
+	xmlns:views="clr-namespace:Solfeggio.Views"
 	DataContext="{Binding Value, ElementName=This, Mode=TwoWay}"
 	x:Name="This">
 
 	<Pivot.Resources>
 
-		<converters:Converter
+		<Converter
 			x:Key="ColorToSolidBrushConverter"
 			Convert="ColorToSolidBrush_Convert" />
 
-		<converters:Converter
+		<Converter
 			x:Key="SmartSetConverter"
 			Convert="Converter_Convert" />
 
@@ -142,6 +142,10 @@
 					<Frame
 						Rack.Cell="R1 C0 RS2"
 						CornerRadius="5"
+						Background="{StaticResource ChessBrush}" />
+					<Frame
+						Rack.Cell="R1 C0 RS2"
+						CornerRadius="5"
 						Background="{Binding}" />
 
 					<Label
@@ -198,6 +202,10 @@
 					Rack.Rows="^ ^ ^"
 					Rack.Columns="* ^ ^">
 
+					<Frame
+						Rack.Cell="R1 C0 RS2"
+						CornerRadius="5"
+						Background="{StaticResource ChessBrush}" />
 					<Frame
 						Rack.Cell="R1 C0 RS2"
 						CornerRadius="5"

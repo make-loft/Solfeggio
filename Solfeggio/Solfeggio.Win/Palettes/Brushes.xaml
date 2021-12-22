@@ -240,7 +240,9 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="PressToneKeyBrush">
+		x:Key="PressToneKeyBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
 			Color="#00FFFFFF" />
@@ -250,7 +252,9 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="PressHalfToneKeyBrush">
+		x:Key="PressHalfToneKeyBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
 			Color="#00000000" />
