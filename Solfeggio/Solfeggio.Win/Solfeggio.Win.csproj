@@ -126,6 +126,7 @@
     <Compile Include="Controls\RangeBar.xaml.cs">
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Editions.cs" />
     <Compile Include="MonitorView.xaml.cs">

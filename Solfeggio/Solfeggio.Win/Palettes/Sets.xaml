@@ -1,20 +1,20 @@
 ﻿<ResourceDictionary
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
-	xmlns:local="clr-namespace:Solfeggio" xmlns:views="clr-namespace:Solfeggio.Views">
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:p="clr-namespace:Solfeggio.Presenters">
 
 	<Set
         x:Shared="False"
         x:Key="ShowStateSet">
-        
-        <Switch
+
+		<Switch
             Tag="{Localizing Key=Harmonics}"
 			IsToggled="{Binding VisualProfile.Harmonics, Mode=TwoWay}" />
 
-        <!--<Switch
+		<!--<Switch
             Tag="{Localizing Key=ActualFrequncy}"
-            IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
+            IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" /> 
 
         <Switch
             Tag="{Localizing Key=ActualMagnitude}"
@@ -24,15 +24,15 @@
             Tag="{Localizing Key=Notes}"
             IsToggled="{Binding Show.Notes, Mode=TwoWay}" />-->
 
-        <Switch
+		<Switch
             Tag="{Localizing Key=NotesGrid}"
 			IsToggled="{Binding VisualProfile.NotesGrid, Mode=TwoWay}" />
 
-        <Switch
+		<Switch
             Tag="{Localizing Key=DiscreteGrid}"
 			IsToggled="{Binding Spectrum.Frequency.IsVisible, Mode=TwoWay}" />
-        
-    </Set>
+
+	</Set>
 
 	<Set
 		x:Shared="False"
@@ -64,7 +64,7 @@
 				Value="{Binding InputLevel, Mode=TwoWay}" />
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding InputLevel, Mode=TwoWay, StringFormat=F2}" />
+				Text="{Binding InputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 		</Grid>
 
 		<Grid
@@ -87,7 +87,7 @@
 				Value="{Binding OutputLevel, Mode=TwoWay}"/>
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat=F2}"/>
+				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}"/>
 		</Grid>
 
 		<Picker
@@ -127,63 +127,32 @@
 
 	<Set
         x:Shared="False"
-        x:Key="MusicalStandardsOptionsSet">
+        x:Key="MusicOptionsSet">
 
-        <Picker
-            Tag="{Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
+		<Picker
+            Tag="{Localizing Key=Standard, StringFormat='{}{0} [A1] (Hz)'}"
 			ItemsSource="{Binding PitchStandards}"
 			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
 
-        <Picker
+		<Picker
             Tag="{Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
 			ItemsSource="{Binding Notations}"
 			SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
             DisplayMemberPath="Key" />
 
-    </Set>
-
-	<Set
-        x:Shared="False"
-        x:Key="CalibrationOptionsSet">
-
-		<Expander
-			Header="{Localizing Key=Spectrum}"
-			ContentTemplate="{StaticResource SpectrumTemplate}"
-			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum}" />
-
-		<Expander
-			Header="{Localizing Key=Frame}"
-			ContentTemplate="{StaticResource FrameTemplate}"
-			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Frame}" />
-
-		<Expander
-			Header="{Localizing Key=MusicalStandards}"
-			ContentTemplate="{StaticResource MusicalStandardsTemplate}"
-			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Music}" />
-
-		<Expander
-			Header="{Localizing Key=Visualization}"
-			ContentTemplate="{StaticResource ShowStateTemplate}"
-			Content="{Store Key=presenters:MusicalPresenter}" />
-
-		<!--<Expander
-			Header="{Localizing Key=Theme}"
-			ContentTemplate="{StaticResource VisualProfileTemplate}"
-			Content="{Store Key=models:VisualProfile}" />-->
-
 	</Set>
 
 	<Set
 		x:Shared="False"
-		x:Key="ThemeSet">
+		x:Key="VisualizationSet">
 
 		<Grid
-			Rack.Rows="^ ^ ^ ^ ^ ^ ^"
-			Rack.Columns="^ ^ ^ ^ ^">
+			Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^"
+			Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^">
 
 			<Label
 				Rack.Cell="R0 C1"
-				Text="{Localizing Key=State}" />
+				Text="{Localizing Key=Visibility}" />
 			<Label
 				Rack.Cell="R0 C2"
 				Text="{Localizing Key=Fill}" />
@@ -193,24 +162,39 @@
 			<Label
 				Rack.Cell="R0 C4"
 				Text="{Localizing Key=Thickness}" />
+			<Label
+				Rack.Cell="R0 C5"
+				Text="{Localizing Key=Index, StringFormat='Z-{0}'}" />
+			<Label
+				Rack.Cell="R0 C6"
+				Text="{Localizing Key=Offset, StringFormat='Y-{0}'}" />
+			<Label
+				Rack.Cell="R0 C7"
+				Text="{Localizing Key=Offset, StringFormat='X-{0}'}" />
 
 			<Grid
 				Rack.Cell="R1 C0 RS2"
 				Rack.Rows="* *"
 				Rack.Columns="* ^">
-				<ContentView
+				<Label
 					Rack.Cell="R0 C0 RS2"
-					Tag="{Localizing Key=Magnitude}"
-					DataContext="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Magnitude}"
-					Template="{StaticResource RangePickerTemplate}"
+					Text="{Localizing Key=Frame}"
 					/>
+				<Picker
+					Rack.Cell="R1 C0"
+					Opacity="0.75"
+					VerticalAlignment="Center"
+					DataContext="{StoreBinding StoreKey=vm:ProcessingManager, Path=ActiveProfile}"
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 				<Label
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=PMI}"
+					Text="{Localizing Key=Raw}"
 					/>
 				<Label
 					Rack.Cell="R1 C1"
-					Text="{Localizing Key=FFT}"
+					Text="{Localizing Key=Window, StringFormat='+{0}'}"
 					/>
 			</Grid>
 
@@ -218,11 +202,27 @@
 				Rack.Cell="R3 C0 RS2"
 				Rack.Rows="* *"
 				Rack.Columns="* ^">
-				<ContentView
+				<Label
 					Rack.Cell="R0 C0 RS2"
-					Tag="{Localizing Key=Phase}"
-					DataContext="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Phase}"
-					Template="{StaticResource RangePickerTemplate}"
+					Text="{Localizing Key=Frequency}"
+					/>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Notes}"
+					/>
+				<Label
+					Rack.Cell="R1 C1"
+					Text="{Localizing Key=Grid}"
+					/>
+			</Grid>
+
+			<Grid
+				Rack.Cell="R5 C0 RS2"
+				Rack.Rows="* *"
+				Rack.Columns="* ^">
+				<Label
+					Rack.Cell="R0 C0 RS2"
+					Text="{Localizing Key=Phase}"
 					/>
 				<Label
 					Rack.Cell="R0 C1"
@@ -235,176 +235,222 @@
 			</Grid>
 
 			<Grid
-				Rack.Cell="R5 C0 RS2"
+				Rack.Cell="R7 C0 RS2"
 				Rack.Rows="* *"
 				Rack.Columns="* ^">
-				<ContentView
+				<Label
 					Rack.Cell="R0 C0 RS2"
-					Tag="{Localizing Key=Level}"
-					DataContext="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Frame.Level}"
-					Template="{StaticResource RangePickerTemplate}"
+					Text="{Localizing Key=Magnitude}"
 					/>
 				<Label
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Rectangle}"
+					Text="{Localizing Key=PMI}"
 					/>
 				<Label
 					Rack.Cell="R1 C1"
-					Text="{Localizing Key=Window}"
+					Text="{Localizing Key=FFT}"
 					/>
 			</Grid>
 
-			<Switch
+			<ContentView
+				Rack.Cell="R7 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Magnitude}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R5 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Phase}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R1 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Level}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R1 C7 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Offset}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R3 C7 RS6"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+			
+			
+			<ContentView
 				Rack.Cell="R1 C1"
-				IsToggled="{Binding Resources[MagnitudeSpectrumVisibility.FFT], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				DataContext="{Binding [Visibility.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R1 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Fill.MagnitudeRawFrame], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R1 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.MagnitudeRawFrame], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R1 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[MagnitudeSpectrumStrokeThickness.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.MagnitudeRawFrame], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
-			<Switch
+			<ContentView
 				Rack.Cell="R2 C1"
-				IsToggled="{Binding Resources[MagnitudeSpectrumVisibility.PMI], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				DataContext="{Binding [Visibility.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R2 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[MagnitudeSpectrumFillBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Fill.MagnitudeWindowFrame], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R2 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[MagnitudeSpectrumStrokeBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.MagnitudeWindowFrame], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R2 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[MagnitudeSpectrumStrokeThickness.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.MagnitudeWindowFrame], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
-			<Switch
-				Rack.Cell="R3 C1"
-				IsToggled="{Binding Resources[PhaseSpectrumVisibility.FFT], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
-				/>
 			<ContentView
-				Rack.Cell="R3 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[PhaseSpectrumFillBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
+				Rack.Cell="R3 C1"
+				DataContext="{Binding [Visibility.FrequencyNotesGrid], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R3 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[PhaseSpectrumStrokeBrush.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.FrequencyNotesGrid], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R3 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[PhaseSpectrumStrokeThickness.FFT], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.FrequencyNotesGrid], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
-			<Switch
-				Rack.Cell="R4 C1"
-				IsToggled="{Binding Resources[PhaseSpectrumVisibility.PMI], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
-				/>
 			<ContentView
-				Rack.Cell="R4 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[PhaseSpectrumFillBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
+				Rack.Cell="R4 C1"
+				DataContext="{Binding [Visibility.FrequencyDiscreteGrid], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R4 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[PhaseSpectrumStrokeBrush.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.FrequencyDiscreteGrid], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R4 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[PhaseSpectrumStrokeThickness.PMI], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.FrequencyDiscreteGrid], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
-			<Switch
+			<ContentView
 				Rack.Cell="R5 C1"
-				IsToggled="{Binding Resources[FrameVisibility.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				DataContext="{Binding [Visibility.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R5 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[FrameFillBrush.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Fill.PhaseFFT], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R5 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[FrameStrokeBrush.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.PhaseFFT], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R5 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[FrameStrokeThickness.Rectangle], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.PhaseFFT], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
-			<Switch
+			<ContentView
 				Rack.Cell="R6 C1"
-				IsToggled="{Binding Resources[FrameVisibility.Window], Source={x:Static local:App.Current}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				DataContext="{Binding [Visibility.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R6 C2"
-				Tag="{Localizing Key=Fill}"
-				DataContext="{Binding Resources[FrameFillBrush.Window], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Fill.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R6 C3"
 				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[FrameStrokeBrush.Window], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [Stroke.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
 				Rack.Cell="R6 C4"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding Resources[FrameStrokeThickness.Window], Source={x:Static local:App.Current}, Mode=TwoWay}"
+				DataContext="{Binding [StrokeThickness.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+
+			<ContentView
+				Rack.Cell="R7 C1"
+				DataContext="{Binding [Visibility.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R7 C2"
+				DataContext="{Binding [Fill.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R7 C3"
+				DataContext="{Binding [Stroke.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R7 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+
+			<ContentView
+				Rack.Cell="R8 C1"
+				DataContext="{Binding [Visibility.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R8 C2"
+				DataContext="{Binding [Fill.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R8 C3"
+				DataContext="{Binding [Stroke.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R8 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudeFFT], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
 
 		</Grid>
-		
+
 		<GroupBox
 			Header="{Localizing Key=Background}">
 			<StackLayout
 				Orientation="Horizontal">
 				<ContentView
 					Tag="{Localizing Key=Spectrum}"
-					DataContext="{Binding Resources[SpectrumBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					DataContext="{Binding [SpectrumBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"/>
 				<ContentView
 					Tag="{Localizing Key=Piano}"
-					DataContext="{Binding Resources[PianoCanvasBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					DataContext="{Binding [PianoCanvasBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"/>
 			</StackLayout>
 		</GroupBox>
@@ -415,18 +461,23 @@
 				Orientation="Horizontal">
 				<ContentView
 					Tag="{Localizing Key=Piano}"
-					DataContext="{Binding Resources[PianoCanvasBackgroundBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					DataContext="{Binding [PianoCanvasBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"/>
 				<ContentView
 					Tag="{Localizing Key=HalfTone}"
-					DataContext="{Binding Resources[HalfToneKeyBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					DataContext="{Binding [HalfToneKeyBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"/>
 				<ContentView
 					Tag="{Localizing Key=FullTone}"
-					DataContext="{Binding Resources[FullToneKeyBrush], Source={x:Static local:App.Current}, Mode=TwoWay}"
+					DataContext="{Binding [FullToneKeyBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"/>
 			</StackLayout>
 		</GroupBox>
+
+		<Expander
+			Header="{Localizing Key=Music}"
+			ContentTemplate="{StaticResource MusicOptionsTemplate}"
+			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}" />
 	</Set>
 
 </ResourceDictionary>

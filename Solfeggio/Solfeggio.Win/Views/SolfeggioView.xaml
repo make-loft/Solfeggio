@@ -17,48 +17,48 @@
 			Background="{DynamicResource SpectrumBackgroundBrush}">
 
 			<Polyline
-				Name="MagnitudePolyline"
-				Fill="{DynamicResource MagnitudeSpectrumFillBrush.FFT}"
-				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.FFT}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness.FFT}"
-				Visibility="{DynamicResource MagnitudeSpectrumVisibility.FFT}"
+				Name="Polyline_Spectrum_Magnitude_FFT"
+				Fill="{DynamicResource Fill.MagnitudeFFT}"
+				Stroke="{DynamicResource Stroke.MagnitudeFFT}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
+				Visibility="{DynamicResource Visibility.MagnitudeFFT}"
 				/>
 			<Polyline
-				Name="InterpolatedMagnitudePolyline"
-				Fill="{DynamicResource MagnitudeSpectrumFillBrush.PMI}"
-				Stroke="{DynamicResource MagnitudeSpectrumStrokeBrush.PMI}"
-				StrokeThickness="{DynamicResource MagnitideSpectrumStrokeThickness.PMI}"
-				Visibility="{DynamicResource MagnitudeSpectrumVisibility.PMI}"
-				/>
-			
-			<Polyline
-				Name="PhasePolyline"
-				Fill="{DynamicResource PhaseSpectrumFillBrush.FFT}"
-				Stroke="{DynamicResource PhaseSpectrumStrokeBrush.FFT}"
-				StrokeThickness="{DynamicResource PhaseSpectrumStrokeThickness.FFT}"
-				Visibility="{DynamicResource PhaseSpectrumVisibility.FFT}"
-				/>
-			<Polyline
-				Name="InterpolatedPhasePolyline"
-				Fill="{DynamicResource PhaseSpectrumFillBrush.PMI}"
-				Stroke="{DynamicResource PhaseSpectrumFillBrush.PMI}"
-				StrokeThickness="{DynamicResource PhaseSpectrumStrokeThickness.PMI}"
-				Visibility="{DynamicResource PhaseSpectrumVisibility.PMI}"
+				Name="Polyline_Spectrum_Magnitude_PMI"
+				Fill="{DynamicResource Fill.MagnitudePMI}"
+				Stroke="{DynamicResource Stroke.MagnitudePMI}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
+				Visibility="{DynamicResource Visibility.MagnitudePMI}"
 				/>
 			
 			<Polyline
-				Name="WaveInPolyline"
-				Fill="{DynamicResource FrameFillBrush.Rectangle}"
-				Stroke="{DynamicResource FrameStrokeBrush.Rectangle}"
-				StrokeThickness="{DynamicResource FrameStrokeThickness.Rectangle}"
-				Visibility="{DynamicResource FrameVisibility.Rectangle}"
+				Name="Polyline_Spectrum_Phase_FFT"
+				Fill="{DynamicResource Fill.PhaseFFT}"
+				Stroke="{DynamicResource Stroke.PhaseFFT}"
+				StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
+				Visibility="{DynamicResource Visibility.PhaseFFT}"
 				/>
 			<Polyline
-				Name="WaveOutPolyline"
-				Fill="{DynamicResource FrameFillBrush.Window}"
-				Stroke="{DynamicResource FrameStrokeBrush.Window}"
-				StrokeThickness="{DynamicResource FrameStrokeThickness.Window}"
-				Visibility="{DynamicResource FrameVisibility.Window}"
+				Name="Polyline_Spectrum_Phase_PMI"
+				Fill="{DynamicResource Fill.PhasePMI}"
+				Stroke="{DynamicResource Stroke.PhasePMI}"
+				StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
+				Visibility="{DynamicResource Visibility.PhasePMI}"
+				/>
+			
+			<Polyline
+				Name="Polyline_Frame_Direct"
+				Fill="{DynamicResource Fill.MagnitudeRawFrame}"
+				Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
+				Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
+				/>
+			<Polyline
+				Name="Polyline_Frame_Window"
+				Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
+				Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
+				Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
 				/>
 		</Canvas>
 
@@ -67,13 +67,15 @@
 			VerticalAlignment="Center"
 			HorizontalAlignment="Stretch"
 			Background="{DynamicResource SplitterBrush}"
-			Height="8" />
+			Height="8"
+			/>
 
 		<Canvas
 			Rack.Cell="R2 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
-			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
+			Background="{DynamicResource PianoCanvasBackgroundBrush}"
+			/>
 
 		<Grid
 			Rack.Cell="R2 C0"

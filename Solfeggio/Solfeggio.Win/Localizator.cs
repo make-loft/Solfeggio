@@ -96,18 +96,24 @@ namespace Solfeggio
 		public static o Fill = _("Fill", "Заливка");
 		public static o Stroke = _("Stroke", "Обводка");
 		public static o Background = _("Background", "Фон");
+		public static o Thickness = _("Thickness", "Толщина");
+		public static o Rectangle = _("Rectangle", "Прямоугольник");
+		public static o State = _("State", "Состояние");
+		public static o Index = _("Index", "Индекс");
+		public static o Grid = _("Grid", "Сетка");
+		public static o Raw = _("Raw", "Сырой");
+		public static o Music = _("Music", "Музыка");
+		public static o Standard = _("Standard", "Стандарт");
+		public static o Visibility = _("Visibility", "Видимость");
+
+		public static o FFT = _("FFT", "БПФ");
+		public static o PMI = _("PMI", "ФАИ");
 
 		public static o FrameSize = _("Frame Size", "Размер кадра");
 		public static o BuffersCount = _("Buffers Count", "Количество буферов");
-		public static o PitchStandard = _("Pitch Standard", "Частотный стандарт");
 		public static o LowFrequency = _("Low Frequency", "Нижняя частота");
 		public static o TopFrequency = _("Top Frequency", "Верхняя частота");
 		public static o SampleRate = _("Sample Rate", "Частота дискретизации");
-		public static o PhaseShift = _("Phase shift", "Фазовый сдвиг");
-		public static o NotesGrid = _("Notes Grid", "Нотная сетка");
-		public static o DiscreteGrid = _("Discrete Grid", "Дискретная сетка");
-		public static o MusicalStandards = _("Musical Standards", "Музыкальные стандарты");
-		public static o SpectralInterpolation = _("Spectral Interpolation", "Спектральная интерполяция");
 		
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");
 

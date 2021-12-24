@@ -23,7 +23,7 @@ namespace Solfeggio.Models
 			[DataMember]
 			public SmartSet<Harmonic> Harmonics { get; set; } = new()
 			{
-				new() {Frequency = presenter.Music.ActivePitchStandard},
+				new() {Frequency = presenter.Music.ActivePitchStandard + 0},
 				new() {Frequency = presenter.Music.ActivePitchStandard + 2},
 				new() {Frequency = presenter.Music.ActivePitchStandard + 5},
 			};

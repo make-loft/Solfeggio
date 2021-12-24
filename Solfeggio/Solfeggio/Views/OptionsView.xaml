@@ -80,34 +80,31 @@
 		</PivotItem>
 
 		<PivotItem
+			Header="{Localizing Key=Visualization}">
+			<ScrollView>
+				<ItemsView
+					Background="Transparent"
+					DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
+					ItemsSource="{StaticResource VisualizationSet}"
+					/>
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
 			Header="{Localizing Key=Telemetry}">
 			<ScrollView>
 				<StackView>
 					<Expander
+						IsExpanded="True"
+						Background="Transparent"
 						Header="{Localizing Key=Harmonics}">
 						<ListView
 							x:Name="DominantsItemsControl"
 							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
-							ItemTemplate="{StaticResource HarmonicTemplate}" />
+							ItemTemplate="{StaticResource HarmonicTemplate}"
+							/>
 					</Expander>
 				</StackView>
-			</ScrollView>
-		</PivotItem>
-
-		<PivotItem
-			Header="{Localizing Key=Сalibration}">
-			<ScrollView>
-				<ListView
-					ItemsSource="{StaticResource CalibrationOptionsSet}" />
-			</ScrollView>
-		</PivotItem>
-
-		<PivotItem
-			Header="{Localizing Key=Theme}">
-			<ScrollView>
-				<ListView
-					Background="Transparent"
-					ItemsSource="{StaticResource ThemeSet}" />
 			</ScrollView>
 		</PivotItem>
 
@@ -120,32 +117,34 @@
 						Orientation="Horizontal"
 						HorizontalOptions="Center">
 						<Label
-							Text="{Localizing Key=Language}" />
+							Text="{Localizing Key=Language}"
+							/>
 						<Picker
 							ItemsSource="{StoreBinding Path=Languages, StoreKey=vm:AppViewModel}"
-							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=vm:AppViewModel}" />
+							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=vm:AppViewModel}"
+							/>
 					</StackView>
 
 					<Label
 						FontSize="14"
-						Text="{Localizing Key=AgreementMessage}" />
-
+						Text="{Localizing Key=AgreementMessage}"
+						/>
 					<Button
 						FontSize="13"
 						HorizontalAlignment="Center"
 						CommandParameter="{Localizing Key=IAmReadyToHelpLink}"
 						Command="{Context Key=Navigate, StoreKey=vm:AppViewModel}"
-						Content="{Localizing Key=IAmReadyToHelpMessage}" />
-
+						Content="{Localizing Key=IAmReadyToHelpMessage}"
+						/>
 					<Label
 						FontSize="10"
 						HorizontalAlignment="Left"
-						Text="{Binding Source={x:Static local:App.Edition}}" />
-
+						Text="{Binding Source={x:Static local:App.Edition}}"
+						/>
 					<Label
 						FontSize="10"
-						Text="{Localizing Key=DesignedByMessage}" />
-
+						Text="{Localizing Key=DesignedByMessage}"
+						/>
 				</StackView>
 			</ScrollView>
 		</PivotItem>

@@ -142,23 +142,23 @@
 	</LinearGradientBrush>
 
 	<SolidColorBrush
-		x:Key="MagnitudeSpectrumFillBrush.FFT"
+		x:Key="Fill.MagnitudeFFT"
 		Color="Transparent" />
 
 	<SolidColorBrush
-		x:Key="MagnitudeSpectrumStrokeBrush.FFT"
+		x:Key="Stroke.MagnitudeFFT"
 		Color="Violet"/>
 
 	<SolidColorBrush
-		x:Key="PhaseSpectrumFillBrush.FFT"
+		x:Key="Fill.PhaseFFT"
 		Color="Transparent" />
 
 	<SolidColorBrush
-		x:Key="PhaseSpectrumStrokeBrush.FFT"
+		x:Key="Stroke.PhaseFFT"
 		Color="Violet"/>
 
 	<LinearGradientBrush
-		x:Key="MagnitudeSpectrumFillBrush.PMI"
+		x:Key="Fill.MagnitudePMI"
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
@@ -170,7 +170,7 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="MagnitudeSpectrumStrokeBrush.PMI"
+		x:Key="Stroke.MagnitudePMI"
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
@@ -182,15 +182,15 @@
 	</LinearGradientBrush>
 
 	<SolidColorBrush
-		x:Key="PhaseSpectrumFillBrush.PMI"
+		x:Key="Fill.PhasePMI"
 		Color="Transparent" />
 
 	<SolidColorBrush
-		x:Key="PhaseSpectrumStrokeBrush.PMI"
+		x:Key="Stroke.PhasePMI"
 		Color="Violet"/>
 
 	<LinearGradientBrush
-		x:Key="FrameFillBrush.Rectangle"
+		x:Key="Fill.MagnitudeRawFrame"
 		StartPoint="0,0"
 		EndPoint="0,1">
 		<GradientStop
@@ -205,7 +205,7 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="FrameStrokeBrush.Rectangle"
+		x:Key="Stroke.MagnitudeRawFrame"
 		StartPoint="0,0"
 		EndPoint="0,1">
 		<GradientStop
@@ -220,11 +220,11 @@
 	</LinearGradientBrush>
 
 	<SolidColorBrush
-		x:Key="FrameFillBrush.Window"
+		x:Key="Fill.MagnitudeWindowFrame"
 		Color="AntiqueWhite" />
 
 	<SolidColorBrush
-		x:Key="FrameStrokeBrush.Window"
+		x:Key="Stroke.MagnitudeWindowFrame"
 		Color="Bisque" />
 
 	<LinearGradientBrush
@@ -291,12 +291,12 @@
 		Opacity="0.3" />
 
 	<SolidColorBrush
-		x:Key="ButterflyGridBrush"
+		x:Key="Stroke.FrequencyDiscreteGrid"
 		Color="Violet"
 		Opacity="0.3" />
 
 	<SolidColorBrush
-		x:Key="NoteGridBrush"
+		x:Key="Stroke.FrequencyNotesGrid"
 		Color="Purple"
 		Opacity="0.3" />
 

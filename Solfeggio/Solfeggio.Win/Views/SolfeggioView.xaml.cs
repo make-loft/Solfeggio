@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
 using Solfeggio.Presenters;
@@ -16,7 +17,7 @@ namespace Solfeggio.Views
 		public T Setters { get; set; }
 		public T Items { get; set; }
 
-		public static implicit operator T(Setup<T> d) => d.Setters;
+		//public static implicit operator T(Setup<T> d) => d.Setters;
 	}
 
 	public static class Test
@@ -112,77 +113,65 @@ namespace Solfeggio.Views
 				var spectrumInterpolated = spectralViewModel.SpectrumBetter;
 				if (spectrum.IsNot()) return;
 
-				MagnitudePolyline.Points.Clear();
-				InterpolatedMagnitudePolyline.Points.Clear();
-				PhasePolyline.Points.Clear();
-				InterpolatedPhasePolyline.Points.Clear();
-				WaveOutPolyline.Points.Clear();
-				WaveInPolyline.Points.Clear();
-
 				PianoCanvas.Children.Clear();
 				SpectrumCanvas.Children.Clear();
-				SpectrumCanvas.Children.Setup(s => new(s)
+				SpectrumCanvas.Children.Setup(c => new(c)
 				{
 					Items =
 					{
-						MagnitudePolyline,
-						InterpolatedMagnitudePolyline,
-						PhasePolyline,
-						InterpolatedPhasePolyline,
-						WaveInPolyline,
-						WaveOutPolyline
+						Polyline_Spectrum_Magnitude_FFT,
+						Polyline_Spectrum_Magnitude_PMI,
+						Polyline_Spectrum_Phase_FFT,
+						Polyline_Spectrum_Phase_PMI,
+						Polyline_Frame_Direct,
+						Polyline_Frame_Window,
 					}
-				});
-
-				//var c = SpectrumCanvas.Children;
-				//MagnitudePolyline.Use(c.Add);
+				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
 
 				var width = SpectrumCanvas.ActualWidth;
 				var height = SpectrumCanvas.ActualHeight;
 
 				static bool IsVisible(UIElement element) => element.Visibility.IsNot(Visibility.Collapsed);
 
-				if (IsVisible(MagnitudePolyline))
+				if (IsVisible(Polyline_Spectrum_Magnitude_FFT))
 					presenter.DrawMagnitude(spectrum, width, height).
-					Use(MagnitudePolyline.Points.AppendRange);
+					Use(Polyline_Spectrum_Magnitude_FFT.Points.AppendRange);
 
-				if (IsVisible(InterpolatedMagnitudePolyline))
+				if (IsVisible(Polyline_Spectrum_Magnitude_PMI))
 					presenter.DrawMagnitude(spectrumInterpolated, width, height).
-					Use(InterpolatedMagnitudePolyline.Points.AppendRange);
+					Use(Polyline_Spectrum_Magnitude_PMI.Points.AppendRange);
 
+				if (IsVisible(Polyline_Spectrum_Phase_FFT))
+					presenter.DrawPhase(spectrum, width, height).
+					Use(Polyline_Spectrum_Phase_FFT.Points.AppendRange);
 
-				var step = spectralViewModel.ActiveProfile.SampleRate / spectralViewModel.ActiveProfile.FrameSize;
+				if (IsVisible(Polyline_Spectrum_Phase_PMI))
+					presenter.DrawPhase(spectrumInterpolated, width, height).
+					Use(Polyline_Spectrum_Phase_PMI.Points.AppendRange);
 
-				//if (IsVisible(SpectrumCanvas))
-				//	presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
-				//		AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-				//		presenter.EnumerateGrid(step));
+				if (IsVisible(Polyline_Frame_Direct))
+					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
+					Use(Polyline_Frame_Direct.Points.AppendRange);
 
-				//if (presenter.Spectrum.Frequency.IsVisible)
-				//	presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
-				//		AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
-				//		generator.Frequency.ToEnumerable(), 0.92d);
+				if (IsVisible(Polyline_Frame_Window))
+					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
+					Use(Polyline_Frame_Window.Points.AppendRange);
 
-				if (presenter.VisualProfile.NotesGrid)
+				var discreteStep = spectralViewModel.ActiveProfile.SampleRate / spectralViewModel.ActiveProfile.FrameSize;
+
+				var resources = App.Current.Resources;
+
+				var vA = resources["Visibility.FrequencyDiscreteGrid"];
+				if (vA.Is(Visibility.Visible))
+					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
+						presenter.EnumerateGrid(discreteStep));
+
+				var vB = resources["Visibility.FrequencyNotesGrid"];
+				if (vB.Is(Visibility.Visible))
 					presenter.DrawMarkers(SpectrumCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						presenter.EnumerateNotes());
-
-				if (IsVisible(PhasePolyline))
-					presenter.DrawPhase(spectrum, width, height).
-					Use(PhasePolyline.Points.AppendRange);
-
-				if (IsVisible(InterpolatedPhasePolyline))
-					presenter.DrawPhase(spectrumInterpolated, width, height).
-					Use(InterpolatedPhasePolyline.Points.AppendRange);
-
-				if (IsVisible(WaveInPolyline))
-					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
-					Use(WaveInPolyline.Points.AppendRange);
-
-				if (IsVisible(WaveOutPolyline) && spectralViewModel.ActiveProfile.ActiveWindow.IsNot(Rainbow.Windowing.Rectangle))
-					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
-					Use(WaveOutPolyline.Points.AppendRange);
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
 				if (presenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))

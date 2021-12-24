@@ -43,34 +43,17 @@ namespace Solfeggio.Models
 
 		public Brush TopBrush = new SolidColorBrush(BurlyWood);
 
-		public Color FirstColor
-		{
-			get => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color;
-			set => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[0].Color = value;
-		}
-		public Color SecondColor
-		{
-			get => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color;
-			set => App.Current.Resources["SpectrumBackgroundBrush"].To<LinearGradientBrush>().GradientStops[1].Color = value;
-		}
-
 		[DataMember] public bool Harmonics
 		{
 			get => Get(() => Harmonics);
 			set => Set(() => Harmonics, value);
 		}
 
-		[DataMember] public bool NotesGrid
-		{
-			get => Get(() => NotesGrid);
-			set => Set(() => NotesGrid, value);
-		}
-
 		private static TopProfile CreateProfile(
 			Color color,
 			double fontSize,
 			string stringFormat = "{0:0.0;-0.0;0.0}",
-			bool isVisible = true) => new TopProfile
+			bool isVisible = true) => new()
 			{
 				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
 				FontFamilyName = "Consolas",

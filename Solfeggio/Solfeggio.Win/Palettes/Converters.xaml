@@ -1,13 +1,18 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:converters="clr-namespace:Solfeggio.Converters">
+	xmlns:c="clr-namespace:Solfeggio.Converters">
 
-	<converters:DelegateToNameConverter
+	<c:DelegateToNameConverter
 		x:Key="DelegateToNameConverter"
 		/>
-	
-	<converters:MathConverter
+
+	<c:DoubleToStringTwoWayConverter
+		x:Key="DoubleToStringTwoWayConverter"
+		StringFormat="{DynamicResource DefaultStringFormat}"
+		/>
+
+	<c:MathConverter
 		x:Key="HarmonicOpacityConverter"
 		Operation="Increment"
 		Parameter="{StaticResource MinHarmonicOpacityLevel}"

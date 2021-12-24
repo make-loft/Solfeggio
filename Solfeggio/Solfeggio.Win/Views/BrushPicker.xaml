@@ -22,7 +22,7 @@
 				x:Name="TemplateRoot">
 				<Expander.Header>
 					<Entry
-						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 				</Expander.Header>
 				<views:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">

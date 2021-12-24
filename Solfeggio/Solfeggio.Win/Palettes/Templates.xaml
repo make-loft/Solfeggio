@@ -21,34 +21,34 @@
 				Maximum="+1.0"
 				TickFrequency="0.01"
 				TickPlacement="TopLeft"
-				Value="{Binding Magnitude, StringFormat=F2}" />
+				Value="{Binding Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Slider
 				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
 				Minimum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
 				Maximum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
-				Value="{Binding Frequency, StringFormat=F2}" />
+				Value="{Binding Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Slider
 				Rack.Cell="C2 R1"
 				TickFrequency="0.207"
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding Phase, StringFormat=F2}" />
+				Value="{Binding Phase, StringFormat={StaticResource DefaultStringFormat}}" />
 
 			<Entry
 				Rack.Cell="C0 R0"
-				Text="{Binding Magnitude, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Magnitude, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C1 R0"
-				Text="{Binding Frequency, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Frequency, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C2 R0"
-				Text="{Binding Phase, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Phase, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C3 R2"
-				Text="{Binding Gap, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Gap, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
 			<Picker
 				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
@@ -156,16 +156,16 @@
 			Rack.Columns="* * * * *">
 			<Label
 				Rack.Cell="C0"
-				Text="{Binding Harmonic.Magnitude, StringFormat=F2}" />
+				Text="{Binding Harmonic.Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Label
 				Rack.Cell="C1"
-				Text="{Binding Harmonic.Frequency, StringFormat=F2}" />
+				Text="{Binding Harmonic.Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Label
 				Rack.Cell="C2"
 				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
 				Rack.Cell="C3"
-				Text="{Binding EthalonFrequency, StringFormat=F2}" />
+				Text="{Binding EthalonFrequency, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Label
 				Rack.Cell="C4"
 				Text="{Binding NoteName}" />
@@ -276,116 +276,10 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="SpectrumTemplate">
-
-		<Grid
-			Rack.Columns="{Smart Key=Columns, DefaultValue='^ ^ ^ ^ ^'}">
-
-			<Grid
-				Rack.Cell="C0"
-				Rack.Rows="^ ^"
-				DataContext="{Binding Magnitude}">
-				<Label
-					Rack.Cell="R0"
-					HorizontalAlignment="Center"
-					Text="{Localizing Key=Magnitude}" />
-				<ContentPresenter
-					Rack.Cell="R1"
-					Content="{Binding}"
-					ContentTemplate="{StaticResource RangeTemplate}" />
-			</Grid>
-
-			<GridSplitter
-				Rack.Cell="C1"
-				Style="{StaticResource VerticalGridSplitter}" />
-
-			<Grid
-				Rack.Cell="C2"
-				Rack.Rows="^ ^"
-				DataContext="{Binding Frequency}">
-				<Label
-					Rack.Cell="R0"
-					HorizontalAlignment="Center"
-					Text="{Localizing Key=Frequency}" />
-				<ContentPresenter
-					Rack.Cell="R1"
-					Content="{Binding}"
-					ContentTemplate="{StaticResource RangeTemplate}" />
-			</Grid>
-
-			<GridSplitter
-				Rack.Cell="C3"
-				Style="{StaticResource VerticalGridSplitter}" />
-
-			<Grid
-				Rack.Cell="C4"
-				Rack.Rows="^ ^"
-				DataContext="{Binding Phase}">
-				<Label
-					Rack.Cell="R0"
-					HorizontalAlignment="Center"
-					Text="{Localizing Key=Phase}" />
-				<ContentPresenter
-					Rack.Cell="R1"
-					Content="{Binding}"
-					ContentTemplate="{StaticResource RangeTemplate}" />
-			</Grid>
-
-		</Grid>
-
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="FrameTemplate">
-
-		<Grid
-			Rack.Columns="^ ^ ^ ^ ^">
-
-			<Grid
-				Rack.Cell="C0"
-				Rack.Rows="^ ^"
-				DataContext="{Binding Level}">
-				<Label
-					Rack.Cell="R0"
-					HorizontalAlignment="Center"
-					Text="{Localizing Key=Level}" />
-				<ContentPresenter
-					Rack.Cell="R1"
-					Content="{Binding}"
-					ContentTemplate="{StaticResource RangeTemplate}" />
-			</Grid>
-
-			<GridSplitter
-				Rack.Cell="C1"
-				Style="{StaticResource VerticalGridSplitter}" />
-
-			<Grid
-				Rack.Cell="C2"
-				Rack.Rows="^ ^"
-				DataContext="{Binding Offset}">
-				<Label
-					Rack.Cell="R0"
-					HorizontalAlignment="Center"
-					Text="{Localizing Key=Offset}" />
-				<ContentPresenter
-					Rack.Cell="R1"
-					Content="{Binding}"
-					ContentTemplate="{StaticResource RangeTemplate}" />
-			</Grid>
-
-			<GridSplitter
-				Rack.Cell="C3"
-				Style="{StaticResource VerticalGridSplitter}" />
-
-		</Grid>
-
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="MusicalStandardsTemplate">
+		x:Key="MusicOptionsTemplate">
 		<ItemsView
 			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource MusicalStandardsOptionsSet}" />
+			ItemsSource="{StaticResource MusicOptionsSet}" />
 	</DataTemplate>
 
 	<DataTemplate
@@ -400,40 +294,6 @@
 		<ItemsView
 			ItemTemplate="{StaticResource OptionTemplate}"
 			ItemsSource="{StaticResource ShowStateSet}" />
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="VisualProfileTemplate">
-		<StackLayout>
-			<Entry
-				Tag="{Binding FirstColor}"
-				Text="{Binding FirstColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-			<Entry
-				Tag="{Binding SecondColor}"
-				Text="{Binding SecondColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-			<ItemsView
-				ItemsSource="{Binding AppBrushes}">
-				<ItemsView.ItemTemplate>
-					<DataTemplate>
-						<Picker
-							Tag="{Binding Key}"
-							ItemsSource="{StoreBinding Path=Brushes, StoreKey=models:VisualProfile}"
-							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
-					</DataTemplate>
-				</ItemsView.ItemTemplate>
-			</ItemsView>
-			<ItemsView
-				ItemsSource="{Binding AppFontSizes}">
-				<ItemsView.ItemTemplate>
-					<DataTemplate>
-						<Picker
-							Tag="{Binding Key}"
-							ItemsSource="{StoreBinding Path=FontSizes, StoreKey=models:VisualProfile}"
-							SelectedItem="{Binding Value.Value, Mode=TwoWay}" />
-					</DataTemplate>
-				</ItemsView.ItemTemplate>
-			</ItemsView>
-		</StackLayout>
 	</DataTemplate>
 
 	<DataTemplate
@@ -468,39 +328,94 @@
 
 	<ControlTemplate
 		x:Key="ValuePickerTemplate">
-		<Expander
-			x:Name="TemplateRoot">
-			<Expander.Header>
-				<Entry
-					Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, StringFormat=F2}"
-					/>
-			</Expander.Header>
-			<views:PopupView
-				IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
-				<views:ValuePicker
-					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
-					/>
-			</views:PopupView>
-		</Expander>
+		<Grid
+			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<Frame
+				Margin="2"
+				CornerRadius="10"
+				Background="#88AAAAAA"
+				/>
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Entry
+						Text="{Binding DataContext, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+				</Expander.Header>
+				<views:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<views:ValuePicker
+						Value="{Binding DataContext, Mode=TwoWay}"
+						/>
+				</views:PopupView>
+			</Expander>
+		</Grid>
 	</ControlTemplate>
 
 	<ControlTemplate
 		x:Key="RangePickerTemplate">
-		<Expander
-			x:Name="TemplateRoot">
-			<Expander.Header>
-				<Entry
-					Text="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-					/>
-			</Expander.Header>
-			<views:PopupView
-				IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
-				<ContentPresenter
-					Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-					ContentTemplate="{StaticResource RangeTemplate}"
-					/>
-			</views:PopupView>
-		</Expander>
+		<Grid>
+			<Frame
+				Margin="2"
+				CornerRadius="10"
+				Background="#88AAAAAA"
+				/>
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Grid
+						Rack.Rows="* *"
+						Rack.Columns="^ ^ ^"
+						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+						<Entry
+							Rack.Cell="R0 C0"
+							Text="{Binding Threshold.Upper, StringFormat={StaticResource DefaultStringFormat}}"
+						/>
+						<Label
+							Rack.Cell="R0 C1"
+							Text="-"
+							/>
+						<Entry
+							Rack.Cell="R0 C2"
+							Text="{Binding Threshold.Lower, StringFormat={StaticResource DefaultStringFormat}}"
+						/>
+						<Label
+							Rack.Cell="R1 C1"
+							Text="="
+							/>
+						<Label
+							Rack.Cell="R1 C2"
+							Text="{Binding Threshold.Length, StringFormat={StaticResource DefaultStringFormat}}"
+						/>
+					</Grid>
+				</Expander.Header>
+				<views:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<ContentPresenter
+						Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+						ContentTemplate="{StaticResource RangeTemplate}"
+						/>
+				</views:PopupView>
+			</Expander>
+		</Grid>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="VisibilityTemplate">
+		<Grid>
+			<Frame
+				Rack.Cell="C0 CS2"
+				Margin="2"
+				CornerRadius="10"
+				Background="#88AAAAAA"
+				/>
+			<Switch
+				Rack.Cell="R1 C1"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				IsToggled="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+		</Grid>
 	</ControlTemplate>
 
 	<ControlTemplate

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Ace;
+﻿using Ace;
 using Rainbow;
+using System.Collections.Generic;
+
 using static System.Math;
 using static Rainbow.HarmonicFuncs;
 
@@ -18,7 +18,7 @@ namespace Solfeggio.Models
 		public delegate double Basis(double v);
 		[DataMember] public Basis[] BasisFuncs { get; } = { Cos, Sin, Triangle, Sawtooth, Rectangle };
 
-		[DataMember] public Basis BasisFunc { get; set; } = Sin;
+		[DataMember] public Basis BasisFunc { get; set; } = Cos;
 		[DataMember] public double Magnitude { get; set; } = 0.3d;
 		[DataMember] public double Frequency { get; set; } = 440d;
 		[DataMember] public double Phase { get; set; } = 0d;

@@ -63,7 +63,7 @@
 				Value="{Binding InputLevel, Mode=TwoWay}" />
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding InputLevel, Mode=TwoWay, StringFormat=F2}" />
+				Text="{Binding InputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 		</Grid>
 
 		<Grid
@@ -86,7 +86,7 @@
 				Value="{Binding OutputLevel, Mode=TwoWay}"/>
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat=F2}"/>
+				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}"/>
 		</Grid>
 
 		<Picker
@@ -129,7 +129,7 @@
 
 	<Set
         x:Shared="False"
-        x:Key="MusicalStandardsOptionsSet">
+        x:Key="MusicOptionsSet">
 
 		<Picker
             Attach.Tag="{Localizing Key=PitchStandard, StringFormat='{}{0} [A1] (Hz)'}"
@@ -160,7 +160,7 @@
 
 		<controls:Expander
 			Header="{Localizing Key=MusicalStandards}"
-			ContentTemplate="{StaticResource MusicalStandardsTemplate}"
+			ContentTemplate="{StaticResource MusicOptionsTemplate}"
 			Content="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Music}" />
 
 		<controls:Expander
