@@ -1,43 +1,55 @@
-﻿<ResourceDictionary
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<p:ResourceDictionary
+	xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:s="clr-namespace:System;assembly=mscorlib">
+	xmlns="clr-namespace:System;assembly=mscorlib">
 
-	<s:Double x:Key="PlusSinglePi">+3.1415926535897931</s:Double>
-	<s:Double x:Key="MinusSinglePi">-3.1415926535897931</s:Double>
+	<Double x:Key="PlusSinglePi">+3.1415926535897931</Double>
+	<Double x:Key="MinusSinglePi">-3.1415926535897931</Double>
 	
-	<s:Double x:Key="PlusSingleE">+2.7182818284590451</s:Double>
-	<s:Double x:Key="MinusSingleE">-2.7182818284590451</s:Double>
+	<Double x:Key="PlusSingleE">+2.7182818284590451</Double>
+	<Double x:Key="MinusSingleE">-2.7182818284590451</Double>
 
-	<s:Double x:Key="MinHarmonicOpacityLevel">0.3</s:Double>
-	<s:Double x:Key="InfoTextOpacityLevel">0.4</s:Double>
-	<s:Double x:Key="MinWidth">0</s:Double>
-	<s:String x:Key="DefaultStringFormat">F2</s:String>
-
-	<Thickness x:Key="RegularMargin">4</Thickness>
+	<Double x:Key="MinHarmonicOpacityLevel">0.3</Double>
+	<Double x:Key="InfoTextOpacityLevel">0.4</Double>
+	<Double x:Key="MinWidth">0</Double>
+	<String x:Key="DefaultStringFormat">F2</String>
 	
-	<s:Double x:Key="StrokeThickness.MagnitudeFFT">1</s:Double>
-	<s:Double x:Key="StrokeThickness.MagnitudePMI">1</s:Double>
+	<Double x:Key="StrokeThickness.MagnitudeFFT">1</Double>
+	<Double x:Key="StrokeThickness.MagnitudePMI">1</Double>
 	
-	<s:Double x:Key="StrokeThickness.PhaseFFT">1</s:Double>
-	<s:Double x:Key="StrokeThickness.PhasePMI">1</s:Double>
+	<Double x:Key="StrokeThickness.PhaseFFT">1</Double>
+	<Double x:Key="StrokeThickness.PhasePMI">1</Double>
 	
-	<s:Double x:Key="StrokeThickness.MagnitudeRawFrame">1</s:Double>
-	<s:Double x:Key="StrokeThickness.MagnitudeWindowFrame">1</s:Double>
+	<Double x:Key="StrokeThickness.MagnitudeRawFrame">1</Double>
+	<Double x:Key="StrokeThickness.MagnitudeWindowFrame">1</Double>
 
-	<s:Double x:Key="StrokeThickness.FrequencyNotesGrid">1</s:Double>
-	<s:Double x:Key="StrokeThickness.FrequencyDiscreteGrid">1</s:Double>
+	<Double x:Key="StrokeThickness.FrequencyNotesGrid">1</Double>
+	<Double x:Key="StrokeThickness.FrequencyDiscreteGrid">1</Double>
 
-	<Visibility x:Key="Visibility.MagnitudeFFT">Collapsed</Visibility>
-	<Visibility x:Key="Visibility.MagnitudePMI">Visible</Visibility>
+	<Int32 x:Key="ZIndex.MagnitudeFFT">0</Int32>
+	<Int32 x:Key="ZIndex.MagnitudePMI">1</Int32>
 
-	<Visibility x:Key="Visibility.PhaseFFT">Collapsed</Visibility>
-	<Visibility x:Key="Visibility.PhasePMI">Collapsed</Visibility>
+	<Int32 x:Key="ZIndex.PhaseFFT">2</Int32>
+	<Int32 x:Key="ZIndex.PhasePMI">3</Int32>
 
-	<Visibility x:Key="Visibility.MagnitudeRawFrame">Collapsed</Visibility>
-	<Visibility x:Key="Visibility.MagnitudeWindowFrame">Collapsed</Visibility>
+	<Int32 x:Key="ZIndex.MagnitudeRawFrame">4</Int32>
+	<Int32 x:Key="ZIndex.MagnitudeWindowFrame">5</Int32>
 
-	<Visibility x:Key="Visibility.FrequencyNotesGrid">Collapsed</Visibility>
-	<Visibility x:Key="Visibility.FrequencyDiscreteGrid">Collapsed</Visibility>
+	<Int32 x:Key="ZIndex.FrequencyNotesGrid">6</Int32>
+	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">7</Int32>
 
-</ResourceDictionary>
+	<p:Visibility x:Key="Visibility.MagnitudeFFT">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.MagnitudePMI">Visible</p:Visibility>
+
+	<p:Visibility x:Key="Visibility.PhaseFFT">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.PhasePMI">Collapsed</p:Visibility>
+
+	<p:Visibility x:Key="Visibility.MagnitudeRawFrame">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.MagnitudeWindowFrame">Collapsed</p:Visibility>
+
+	<p:Visibility x:Key="Visibility.FrequencyNotesGrid">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.FrequencyDiscreteGrid">Collapsed</p:Visibility>
+
+	<p:Thickness x:Key="RegularMargin">4</p:Thickness>
+
+</p:ResourceDictionary>

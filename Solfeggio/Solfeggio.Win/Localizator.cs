@@ -105,10 +105,16 @@ namespace Solfeggio
 		public static o Music = _("Music", "Музыка");
 		public static o Standard = _("Standard", "Стандарт");
 		public static o Visibility = _("Visibility", "Видимость");
+		public static o Splitter = _("Splitter", "Разделитель");
+		public static o Soundless = _("Soundless", "Беззвучный");
+		public static o Sounding = _("Sounding", "Звучащий");
 
 		public static o FFT = _("FFT", "БПФ");
 		public static o PMI = _("PMI", "ФАИ");
 
+		public static o FullTone = _("Full Tone", "Целотон");
+		public static o HalfTone = _("Half Size", "Полутон");
+		public static o PianoKey = _("Piano Key", "Клавиша");
 		public static o FrameSize = _("Frame Size", "Размер кадра");
 		public static o BuffersCount = _("Buffers Count", "Количество буферов");
 		public static o LowFrequency = _("Low Frequency", "Нижняя частота");

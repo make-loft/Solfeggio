@@ -5,23 +5,24 @@
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
-	DataContext="{Store Key=vm:ProcessingManager}">
-
+	DataContext="{Store Key=vm:ProcessingManager}"
+	>
 	<Grid
 		Rack.Columns="* 3*"
-		Rack.Rows="2* ^ *">
-
+		Rack.Rows="2* ^ *"
+		>
 		<Canvas
 			Rack.Cell="R0 C0 CS2"
 			Name="SpectrumCanvas"
-			Background="{DynamicResource SpectrumBackgroundBrush}">
-
+			Background="{DynamicResource SpectrumBackgroundBrush}"
+			>
 			<Polyline
 				Name="Polyline_Spectrum_Magnitude_FFT"
 				Fill="{DynamicResource Fill.MagnitudeFFT}"
 				Stroke="{DynamicResource Stroke.MagnitudeFFT}"
 				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
 				Visibility="{DynamicResource Visibility.MagnitudeFFT}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
 				/>
 			<Polyline
 				Name="Polyline_Spectrum_Magnitude_PMI"
@@ -29,6 +30,7 @@
 				Stroke="{DynamicResource Stroke.MagnitudePMI}"
 				StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
 				Visibility="{DynamicResource Visibility.MagnitudePMI}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
 				/>
 			
 			<Polyline
@@ -37,6 +39,7 @@
 				Stroke="{DynamicResource Stroke.PhaseFFT}"
 				StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
 				Visibility="{DynamicResource Visibility.PhaseFFT}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
 				/>
 			<Polyline
 				Name="Polyline_Spectrum_Phase_PMI"
@@ -44,6 +47,7 @@
 				Stroke="{DynamicResource Stroke.PhasePMI}"
 				StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
 				Visibility="{DynamicResource Visibility.PhasePMI}"
+				Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
 				/>
 			
 			<Polyline
@@ -52,6 +56,7 @@
 				Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
 				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
 				Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
 				/>
 			<Polyline
 				Name="Polyline_Frame_Window"
@@ -59,6 +64,7 @@
 				Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
 				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
 				Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
 				/>
 		</Canvas>
 
@@ -66,7 +72,7 @@
 			Rack.Cell="R1 C0 CS2"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Stretch"
-			Background="{DynamicResource SplitterBrush}"
+			Background="{DynamicResource SplitterBackgroundBrush}"
 			Height="8"
 			/>
 
@@ -74,7 +80,7 @@
 			Rack.Cell="R2 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
-			Background="{DynamicResource PianoCanvasBackgroundBrush}"
+			Background="{DynamicResource PianoBackgroundBrush}"
 			/>
 
 		<Grid

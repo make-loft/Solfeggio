@@ -6,12 +6,16 @@
 	<c:DelegateToNameConverter
 		x:Key="DelegateToNameConverter"
 		/>
-
+	<c:Int32ToStringTwoWayConverter
+		x:Key="Int32ToStringTwoWayConverter"
+		/>
 	<c:DoubleToStringTwoWayConverter
 		x:Key="DoubleToStringTwoWayConverter"
 		StringFormat="{DynamicResource DefaultStringFormat}"
 		/>
-
+	<c:ColorToSolidBrushConverter
+		x:Key="ColorToSolidBrushConverter"
+		/>
 	<c:MathConverter
 		x:Key="HarmonicOpacityConverter"
 		Operation="Increment"

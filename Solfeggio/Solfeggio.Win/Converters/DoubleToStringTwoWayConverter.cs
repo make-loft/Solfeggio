@@ -13,7 +13,7 @@ namespace Solfeggio.Converters
 			set => SetValue(StringFormatProperty, value);
 		}
 
-		public override object Convert(object value) => ((double)value).ToString(StringFormat);
+		public override object Convert(object value) => ((double)(value ?? 0d)).ToString(StringFormat);
 
 		public override object ConvertBack(object value) => double.Parse((string)value);
 	}

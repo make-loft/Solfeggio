@@ -9,10 +9,6 @@
 	<Pivot.Resources>
 
 		<Converter
-			x:Key="ColorToSolidBrushConverter"
-			Convert="ColorToSolidBrush_Convert" />
-
-		<Converter
 			x:Key="SmartSetConverter"
 			Convert="Converter_Convert" />
 
@@ -27,34 +23,6 @@
 				<views:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
 					<views:ValuePicker
-						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
-				</views:PopupView>
-			</Expander>
-		</ControlTemplate>
-
-		<ControlTemplate
-			x:Key="ColorValueTemplate">
-			<Expander
-				x:Name="TemplateRoot">
-				<Expander.Header>
-					<Grid>
-						<Frame
-							CornerRadius="10"
-							Background="LightGray" />
-						<Frame
-							CornerRadius="10"
-							Background="{StaticResource ChessBrush}" />
-						<Frame
-							CornerRadius="10"
-							Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
-						<Entry
-							Margin="10 4"
-							Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-					</Grid>
-				</Expander.Header>
-				<views:PopupView
-					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
-					<views:ColorPicker
 						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
 				</views:PopupView>
 			</Expander>

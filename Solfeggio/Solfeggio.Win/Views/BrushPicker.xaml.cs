@@ -11,27 +11,19 @@ namespace Solfeggio.Views
 {
 	public partial class BrushPicker
 	{
-		SolidColorBrush solidColorBrush = new(Colors.Gray);
+		SolidColorBrush solidColorBrush;
 		LinearGradientBrush linearGradientBrush = new()
 		{
 			StartPoint = new(0, 0),
 			EndPoint = new(0, 1),
-			GradientStops =
-			{
-				new(Colors.Transparent, 0),
-				new(Colors.Gray, 1)
-			}
+			GradientStops = default
 		};
 		RadialGradientBrush radialGradientBrush = new()
 		{
-			Center = new(0, 0),
+			Center = new(0.5, 0.0),
 			RadiusX = 1,
 			RadiusY = 1,
-			GradientStops =
-			{
-				new(Colors.Transparent, 0),
-				new(Colors.Gray, 1)
-			}
+			GradientStops = default
 		};
 
 		public BrushPicker()
@@ -55,6 +47,20 @@ namespace Solfeggio.Views
 					RadialGradientBrush b => radialGradientBrush = b,
 					_ => Value
 				};
+
+				GradientStopCollection CreateDefaultGradientStops() => new()
+				{
+					new(Colors.Transparent, 0),
+					new(Colors.Gray, 1)
+				};
+
+				radialGradientBrush.GradientStops ??= linearGradientBrush.GradientStops;
+				radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
+
+				linearGradientBrush.GradientStops ??= radialGradientBrush.GradientStops;
+				radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
+
+				solidColorBrush ??= new SolidColorBrush(linearGradientBrush.GradientStops.LastOrDefault()?.Color ?? Colors.Gray);
 
 				Value = SelectedIndex switch
 				{
@@ -129,8 +135,5 @@ namespace Solfeggio.Views
 
 			return _activeGradientStopCollection;
 		}
-
-		private object ColorToSolidBrush_Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) =>
-			value.Is(out Color color) ? new SolidColorBrush(color) : Brushes.Transparent;
 	}
 }

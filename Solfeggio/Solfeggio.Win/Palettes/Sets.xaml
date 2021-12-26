@@ -299,6 +299,11 @@
 				DataContext="{Binding [StrokeThickness.MagnitudeRawFrame], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
+			<ContentView
+				Rack.Cell="R1 C5"
+				DataContext="{Binding [ZIndex.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
 
 			<ContentView
 				Rack.Cell="R2 C1"
@@ -319,6 +324,11 @@
 				Rack.Cell="R2 C4"
 				DataContext="{Binding [StrokeThickness.MagnitudeWindowFrame], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R2 C5"
+				DataContext="{Binding [ZIndex.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
 				/>
 
 			<ContentView
@@ -355,45 +365,55 @@
 
 			<ContentView
 				Rack.Cell="R5 C1"
-				DataContext="{Binding [Visibility.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C2"
-				DataContext="{Binding [Fill.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C3"
-				DataContext="{Binding [Stroke.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C4"
-				DataContext="{Binding [StrokeThickness.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R6 C1"
 				DataContext="{Binding [Visibility.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource VisibilityTemplate}"
 				/>
 			<ContentView
-				Rack.Cell="R6 C2"
+				Rack.Cell="R5 C2"
 				DataContext="{Binding [Fill.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
-				Rack.Cell="R6 C3"
+				Rack.Cell="R5 C3"
 				Tag="{Localizing Key=Stroke}"
 				DataContext="{Binding [Stroke.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource BrushPickerTemplate}"
 				/>
 			<ContentView
-				Rack.Cell="R6 C4"
+				Rack.Cell="R5 C4"
 				DataContext="{Binding [StrokeThickness.PhasePMI], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R5 C5"
+				DataContext="{Binding [ZIndex.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+			<ContentView
+				Rack.Cell="R6 C1"
+				DataContext="{Binding [Visibility.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R6 C2"
+				DataContext="{Binding [Fill.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R6 C3"
+				DataContext="{Binding [Stroke.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R6 C4"
+				DataContext="{Binding [StrokeThickness.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+			<ContentView
+				Rack.Cell="R6 C5"
+				DataContext="{Binding [ZIndex.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
 				/>
 
 			<ContentView
@@ -416,6 +436,11 @@
 				DataContext="{Binding [StrokeThickness.MagnitudePMI], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
+			<ContentView
+				Rack.Cell="R7 C5"
+				DataContext="{Binding [ZIndex.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
 
 			<ContentView
 				Rack.Cell="R8 C1"
@@ -437,47 +462,159 @@
 				DataContext="{Binding [StrokeThickness.MagnitudeFFT], Mode=TwoWay}"
 				Template="{StaticResource ValuePickerTemplate}"
 				/>
+			<ContentView
+				Rack.Cell="R8 C5"
+				DataContext="{Binding [ZIndex.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
 
 		</Grid>
 
-		<GroupBox
-			Header="{Localizing Key=Background}">
-			<StackLayout
-				Orientation="Horizontal">
+		<Expander
+			Header="{Localizing Key=Palette}">
+			<Grid
+				Rack.Rows="^ ^ ^ ^ ^ ^"
+				Rack.Columns="^ ^"
+				>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Color}"
+					/>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Key=A}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Key=B}"
+					/>
+				<Label
+					Rack.Cell="R3 C0"
+					Text="{Localizing Key=C}"
+					/>
+				<Label
+					Rack.Cell="R4 C0"
+					Text="{Localizing Key=D}"
+					/>
+				<Label
+					Rack.Cell="R5 C0"
+					Text="{Localizing Key=E}"
+					/>
 				<ContentView
-					Tag="{Localizing Key=Spectrum}"
-					DataContext="{Binding [SpectrumBackgroundBrush], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
+					Rack.Cell="R1 C1"
+					DataContext="{Binding [ColorA], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
 				<ContentView
-					Tag="{Localizing Key=Piano}"
-					DataContext="{Binding [PianoCanvasBackgroundBrush], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-			</StackLayout>
-		</GroupBox>
+					Rack.Cell="R2 C1"
+					DataContext="{Binding [ColorB], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R3 C1"
+					DataContext="{Binding [ColorC], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R4 C1"
+					DataContext="{Binding [ColorD], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R5 C1"
+					DataContext="{Binding [ColorE], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+			</Grid>
+		</Expander>
 
-		<GroupBox
-			Header="{Localizing Key=Piano}">
-			<StackLayout
-				Orientation="Horizontal">
+		<Expander
+			Header="{Localizing Key=Background}"
+			>
+			<Grid
+				Rack.Rows="^ ^ ^"
+				Rack.Columns="^ ^"
+				>
+				<Label
+					Rack.Cell="R0 C0"
+					Text="{Localizing Key=Spectrum}"
+					/>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Key=Splitter}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Key=Spectrum}"
+					/>
 				<ContentView
-					Tag="{Localizing Key=Piano}"
-					DataContext="{Binding [PianoCanvasBackgroundBrush], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
+					Rack.Cell="R0 C1"
+					DataContext="{Binding [SpectrumBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
 				<ContentView
-					Tag="{Localizing Key=HalfTone}"
+					Rack.Cell="R1 C1"
+					DataContext="{Binding [SplitterBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R2 C1"
+					DataContext="{Binding [PianoBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+			</Grid>
+		</Expander>
+
+		<Expander
+			Header="{Localizing Key=PianoKey}">
+			<Grid
+				Rack.Rows="^ ^ ^"
+				Rack.Columns="^ ^ ^"
+				>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Soundless}"
+					/>
+				<Label
+					Rack.Cell="R0 C2"
+					Text="{Localizing Key=Sounding}"
+					/>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Key=HalfTone}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Key=FullTone}"
+					/>
+				<ContentView
+					Rack.Cell="R1 C1"
 					DataContext="{Binding [HalfToneKeyBrush], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
 				<ContentView
-					Tag="{Localizing Key=FullTone}"
+					Rack.Cell="R2 C1"
 					DataContext="{Binding [FullToneKeyBrush], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"/>
-			</StackLayout>
-		</GroupBox>
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R1 C2"
+					DataContext="{Binding [PressedHalfToneKeyColor], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R2 C2"
+					DataContext="{Binding [PressedFullToneKeyColor], Mode=TwoWay}"
+					Template="{StaticResource ColorValueTemplate}"
+					/>
+			</Grid>
+		</Expander>
 
 		<Expander
 			Header="{Localizing Key=Music}"
 			ContentTemplate="{StaticResource MusicOptionsTemplate}"
 			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}" />
+
 	</Set>
 
 </ResourceDictionary>

@@ -353,6 +353,23 @@
 	</ControlTemplate>
 
 	<ControlTemplate
+		x:Key="ZIndexTemplate">
+		<Grid
+			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<Frame
+				Margin="2"
+				CornerRadius="10"
+				Background="#88AAAAAA"
+				/>
+			<Entry
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				Text="{Binding DataContext, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}, Converter={StaticResource Int32ToStringTwoWayConverter}}"
+				/>
+		</Grid>
+	</ControlTemplate>
+
+	<ControlTemplate
 		x:Key="RangePickerTemplate">
 		<Grid>
 			<Frame
@@ -416,6 +433,34 @@
 				IsToggled="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
 				/>
 		</Grid>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="ColorValueTemplate">
+		<Expander
+			x:Name="Root">
+			<Expander.Header>
+				<Grid>
+					<Frame
+						CornerRadius="10"
+						Background="LightGray" />
+					<Frame
+						CornerRadius="10"
+						Background="{StaticResource ChessBrush}" />
+					<Frame
+						CornerRadius="10"
+						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
+					<Entry
+						Margin="10 4"
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+				</Grid>
+			</Expander.Header>
+			<views:PopupView
+				IsOpen="{Binding IsExpanded, ElementName=Root}">
+				<views:ColorPicker
+					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+			</views:PopupView>
+		</Expander>
 	</ControlTemplate>
 
 	<ControlTemplate

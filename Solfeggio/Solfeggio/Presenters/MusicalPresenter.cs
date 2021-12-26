@@ -58,7 +58,9 @@ namespace Solfeggio.Presenters
 					Stretch(hVisualStretchFactor).
 					Decrement(hLowerVisualOffset);
 
-				CreateVerticalLine(hVisualOffset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
+				var offset = hVisualOffset.Is(double.NaN) ? 0d : hVisualOffset;
+
+				CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
 
 				if (skipLabel) continue;
 
@@ -250,7 +252,9 @@ namespace Solfeggio.Presenters
 				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel).
 					ForEach(panel.Children.Add);
 
-				return new Grid { Children = { border, panel }, Margin = new Thickness(x, y / 2d, 0d, 0d) };
+				var l = x.Is(double.NaN) ? 0d : x;
+				var t = y.Is(double.NaN) ? 0d : y;
+				return new Grid { Children = { border, panel }, Margin = new Thickness(l, t / 2d, 0d, 0d) };
 			},
 			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
@@ -356,11 +360,12 @@ namespace Solfeggio.Presenters
 				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var upperOffset = frequencyVisualScaleFunc(key.UpperFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
 				var ethalonOffset = frequencyVisualScaleFunc(key.EthalonFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
+				var offset = ethalonOffset.Is(double.NaN) ? 0d : ethalonOffset;
 
 				var actualHeight = isTone ? height : height * 0.618d;
 				var strokeThickness = upperOffset - lowerOffset;
 
-				CreateVerticalLine(ethalonOffset, actualHeight, basicBrush, strokeThickness).Use(items.Add);
+				CreateVerticalLine(offset, actualHeight, basicBrush, strokeThickness).Use(items.Add);
 
 				if (key.Peaks.Count.Is(0)) continue;
 				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
@@ -368,7 +373,7 @@ namespace Solfeggio.Presenters
 				var value = Math.Sqrt(key.Magnitude);
 				gradientBrush.GradientStops[0].Offset = 1.0 - value;
 				
-				CreateVerticalLine(ethalonOffset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
+				CreateVerticalLine(offset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
 			}
 
 			return harmonics;
