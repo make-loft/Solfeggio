@@ -111,7 +111,7 @@ namespace Solfeggio.ViewModels
 		SkipApodization:
 
 			var floats = timeFrame.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
-			var spectralFrame = timeFrame.Decimation(true);
+			var spectralFrame = timeFrame.Transform(true);
 			return spectralFrame;
 		}
 	}

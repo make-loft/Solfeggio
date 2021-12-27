@@ -3,84 +3,54 @@
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:local="clr-namespace:Solfeggio">
+	xmlns:local="clr-namespace:Solfeggio"
+	>
 	<Pivot
-		SelectedIndex="{Smart ActiveIndex, DefaultValue=0}">
-
+		SelectedIndex="{Smart ActiveIndex, DefaultValue=0}"
+		>
 		<PivotItem
-			Header="{Localizing Signal}">
+			Header="{Localizing Signal}"
+			>
 			<ScrollView>
 				<StackView
-					DataContext="{Store Key=vm:ProcessingManager}">
-
-					<StackView
-						HorizontalOptions="Center"
-						Orientation="Horizontal">
-
-						<Label
-							Text="{Localizing Key=Profile}" />
-						<Picker
-							ItemDisplayBinding="{Binding Title}"
-							ItemsSource="{Binding Path=Profiles}"
-							SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}" />
-						<Button
-							Content="➕"
-							Command="{Context Key=Set.Create, StoreKey=vm:ProcessingManager}" />
-						<Button
-							Content="➖"
-							CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=vm:ProcessingManager}"
-							Command="{Context Key=Set.Delete, StoreKey=vm:ProcessingManager, SourcePath=ActiveProfile}" />
-
-					</StackView>
-
+					DataContext="{Store Key=vm:ProcessingManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
 					<Pivot
 						ItemsSource="{Binding Profiles}"
 						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
 						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-						ContentTemplate="{StaticResource ProcessingProfileTemplate}" />
-
+						ContentTemplate="{StaticResource ProcessingProfileTemplate}"
+						/>
 				</StackView>
 			</ScrollView>
 		</PivotItem>
 
 		<PivotItem
-			Header="{Localizing Key=Generator}">
+			Header="{Localizing Key=Generator}"
+			>
 			<ScrollView>
 				<StackView
-					DataContext="{Store Key=vm:HarmonicManager}">
-
-					<StackView
-						HorizontalOptions="Center"
-						Orientation="Horizontal">
-
-						<Label
-							Text="{Localizing Key=Profile}" />
-						<Picker
-							ItemDisplayBinding="{Binding Title}"
-							ItemsSource="{StoreBinding Path=Profiles, StoreKey=vm:HarmonicManager}"
-							SelectedItem="{StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=vm:HarmonicManager}" />
-						<Button
-							Content="➕"
-							Command="{Context Key=Set.Create, StoreKey=vm:HarmonicManager}" />
-						<Button
-							Content="➖"
-							CommandParameter="{StoreBinding Path=ActiveProfile, StoreKey=vm:HarmonicManager}"
-							Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, SourcePath=ActiveProfile}" />
-
-					</StackView>
-
+					DataContext="{Store Key=vm:HarmonicManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
 					<Pivot
 						ItemsSource="{Binding Profiles}"
 						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
 						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-						ContentTemplate="{StaticResource HarmonicProfileTemplate}" />
-
+						ContentTemplate="{StaticResource HarmonicProfileTemplate}"
+						/>
 				</StackView>
 			</ScrollView>
 		</PivotItem>
 
 		<PivotItem
-			Header="{Localizing Key=Visualization}">
+			Header="{Localizing Key=Visualization}"
+			>
 			<ScrollView>
 				<ItemsView
 					Background="Transparent"
@@ -91,13 +61,15 @@
 		</PivotItem>
 
 		<PivotItem
-			Header="{Localizing Key=Telemetry}">
+			Header="{Localizing Key=Telemetry}"
+			>
 			<ScrollView>
 				<StackView>
 					<Expander
 						IsExpanded="True"
 						Background="Transparent"
-						Header="{Localizing Key=Harmonics}">
+						Header="{Localizing Key=Harmonics}"
+						>
 						<ListView
 							x:Name="DominantsItemsControl"
 							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
@@ -109,13 +81,13 @@
 		</PivotItem>
 
 		<PivotItem
-			Header="{Localizing Key=Agreement}">
+			Header="{Localizing Key=Agreement}"
+			>
 			<ScrollView>
 				<StackView>
-
 					<StackView
-						Orientation="Horizontal"
-						HorizontalOptions="Center">
+						Style="{StaticResource TitlePanelStyle}"
+						>
 						<Label
 							Text="{Localizing Key=Language}"
 							/>

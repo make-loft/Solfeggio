@@ -242,7 +242,7 @@
 			Color="{DynamicResource ColorC}" />
 		<GradientStop
 			Offset="1.0"
-			Color="#FFFFFFFF" />
+			Color="{DynamicResource ColorD}" />
 	</LinearGradientBrush>
 
 	<Color x:Key="PressedFullToneKeyColor">Red</Color>

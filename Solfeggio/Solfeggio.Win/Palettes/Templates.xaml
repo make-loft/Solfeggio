@@ -89,19 +89,38 @@
 		</StackLayout>
 	</DataTemplate>
 
-	<DataTemplate
-		x:Key="ProcessingProfileTemplate">
-		<ItemsView
-			DataContext="{StoreBinding StoreKey=viewModels:ProcessingManager, Path=ActiveProfile}"
-			ItemsSource="{StaticResource ProcessingProfileOptionsSet}"
-			ItemTemplate="{StaticResource OptionTemplate}" />
-	</DataTemplate>
+	<ControlTemplate
+		x:Key="TitleTemplate">
+		<StackView
+			Style="{StaticResource TitlePanelStyle}"
+			>
+			<Label
+				Text="{Localizing Key=Profile}"
+				/>
+			<Picker
+				ItemDisplayBinding="{Binding Title}"
+				ItemsSource="{Binding Path=Profiles}"
+				SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}"
+				/>
+			<Button
+				Content="➕"
+				Command="{Context Key=Set.Create}"
+				/>
+			<Button
+				Content="➖"
+				CommandParameter="{Binding Path=ActiveProfile}"
+				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
+				/>
+		</StackView>
+	</ControlTemplate>
 
 	<DataTemplate
-		x:Key="HarmonicProfileTemplate">
+		x:Key="ProcessingProfileTemplate"
+		>
 		<StackLayout>
 			<StackLayout
-				Orientation="Horizontal">
+				Style="{StaticResource TitlePanelStyle}"
+				>
 				<Label
 					Text="{Localizing Key=Title}" />
 				<Entry
@@ -109,7 +128,134 @@
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, TrackedPath=CommandParameter}" />
+					Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
+			</StackLayout>
+
+			<Grid
+				Rack.Rows="^ ^ ^"
+				Rack.Columns="^ ^ ^ ^ ^"
+				>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Key=Input}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Key=Output}"
+					/>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Device}"
+					/>
+				<Label
+					Rack.Cell="R0 C2"
+					Text="{Localizing Key=Level}"
+					/>
+				<Label
+					Rack.Cell="R0 C3"
+					Text="{Localizing Key=BuffersCount}"
+					/>
+
+				<Picker
+					Rack.Cell="R1 C1"
+					MinWidth="210"
+					Tag="{Localizing Key=Input}"
+					ItemsSource="{Binding InputDevices}"
+					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+					DisplayMemberPath="ProductName"
+					/>
+				<Picker
+					Rack.Cell="R2 C1"
+					MinWidth="210"
+					ItemsSource="{Binding OutputDevices}"
+					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+					DisplayMemberPath="ProductName"
+					/>
+				<ContentView
+					Rack.Cell="R1 C2"
+					DataContext="{Binding InputLevel, Mode=TwoWay}"
+					Template="{StaticResource ValuePickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R2 C2"
+					DataContext="{Binding OutputLevel, Mode=TwoWay}"
+					Template="{StaticResource ValuePickerTemplate}"
+					/>
+				<Picker
+					Rack.Cell="R1 C3"
+					ItemsSource="{StaticResource AllowedBuffersCount}"
+					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
+					/>
+			</Grid>
+
+			<Grid
+				Rack.Rows="^ ^ ^ ^ ^"
+				Rack.Columns="^ ^"
+				>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Sample}"
+					/>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Key=Window}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Key=Rate}"
+					/>
+				<Label
+					Rack.Cell="R3 C0"
+					Text="{Localizing Key=Length}"
+					/>
+				<Label
+					Rack.Cell="R4 C0"
+					Text="{Localizing Key=Duration}"
+					/>
+
+				<Picker
+					Rack.Cell="R1 C1"
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+				<Picker
+					Rack.Cell="R2 C1"
+					ItemsSource="{Binding SampleRates}"
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+				<StackLayout
+					Rack.Cell="R3 C1"
+					Orientation="Horizontal"
+					>
+					<Label
+						Text="2 ^" />
+					<Picker
+						ItemsSource="{StaticResource AllowedPowsOf2}"
+						SelectedItem="{Binding FramePow, Mode=TwoWay}"
+						/>
+					<Label
+						Text="{Binding FrameSize, StringFormat=' = {0}'}" />
+				</StackLayout>
+				<Label
+					Rack.Cell="R4 C1"
+					Text="{Binding FrameDuration}" />
+			</Grid>
+		</StackLayout>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="HarmonicProfileTemplate">
+		<StackLayout>
+			<StackLayout
+				Style="{StaticResource TitlePanelStyle}"
+				>
+				<Label
+					Text="{Localizing Key=Title}" />
+				<Entry
+					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<Button
+					Content="✗"
+					CommandParameter="{Binding}"
+					Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
 			</StackLayout>
 
 			<Grid

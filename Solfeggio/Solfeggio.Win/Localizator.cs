@@ -108,6 +108,7 @@ namespace Solfeggio
 		public static o Splitter = _("Splitter", "Разделитель");
 		public static o Soundless = _("Soundless", "Беззвучный");
 		public static o Sounding = _("Sounding", "Звучащий");
+		public static o Palette = _("Palette", "Палитра");
 
 		public static o FFT = _("FFT", "БПФ");
 		public static o PMI = _("PMI", "ФАИ");

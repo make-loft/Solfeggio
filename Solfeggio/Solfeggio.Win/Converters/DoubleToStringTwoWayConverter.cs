@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Ace;
+
+using System.Windows;
 
 namespace Solfeggio.Converters
 {
@@ -13,7 +15,12 @@ namespace Solfeggio.Converters
 			set => SetValue(StringFormatProperty, value);
 		}
 
-		public override object Convert(object value) => ((double)(value ?? 0d)).ToString(StringFormat);
+		double ToDouble(object value) =>
+			value.Is(out double d) ? d :
+			value.Is(out float f) ? f :
+			0d;
+
+		public override object Convert(object value) => ToDouble(value).ToString(StringFormat);
 
 		public override object ConvertBack(object value) => double.Parse((string)value);
 	}

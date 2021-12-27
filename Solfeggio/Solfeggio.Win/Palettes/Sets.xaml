@@ -35,97 +35,6 @@
 	</Set>
 
 	<Set
-		x:Shared="False"
-		x:Key="ProcessingProfileOptionsSet">
-
-		<Entry
-			Rack.Cell="C3"
-			Tag="{Localizing Key=Title}"
-			Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-		<Grid
-			Rack.Columns="3* ^ * ^"
-			Tag="{Localizing Key=Input}">
-			<Picker
-				Rack.Cell="C0"
-				MinWidth="210"
-				Tag="{Localizing Key=Input}"
-				ItemsSource="{Binding InputDevices}"
-				SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-				DisplayMemberPath="ProductName" />
-			<Label
-				Rack.Cell="C1"
-				Text="{Localizing Key=Level}" />
-			<Slider
-				Rack.Cell="C2"
-				Minimum="0"
-				Maximum="1"
-				VerticalAlignment="Center"
-				Value="{Binding InputLevel, Mode=TwoWay}" />
-			<Entry
-				Rack.Cell="C3"
-				Text="{Binding InputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
-		</Grid>
-
-		<Grid
-			Rack.Columns="3* ^ * ^"
-			Tag="{Localizing Key=Output}">
-			<Picker
-				Rack.Cell="C0"
-				MinWidth="210"
-				ItemsSource="{Binding OutputDevices}"
-				SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-				DisplayMemberPath="ProductName" />
-			<Label
-				Rack.Cell="C1"
-				Text="{Localizing Key=Level}" />
-			<Slider
-				Rack.Cell="C2"
-				Minimum="0"
-				Maximum="1"
-				VerticalAlignment="Center"
-				Value="{Binding OutputLevel, Mode=TwoWay}"/>
-			<Entry
-				Rack.Cell="C3"
-				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}"/>
-		</Grid>
-
-		<Picker
-			Tag="{Localizing Key=SampleRate}"
-			ItemsSource="{Binding SampleRates}"
-			SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
-
-		<Picker
-			Tag="{Localizing Key=BuffersCount}"
-			ItemsSource="{StaticResource AllowedBuffersCount}"
-			SelectedItem="{Binding BuffersCount, Mode=TwoWay}" />
-
-		<Picker
-			Tag="{Localizing Key=Window}"
-			ItemsSource="{Binding Windows}"
-			SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-			ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-
-		<StackLayout
-			Orientation="Horizontal"
-			HorizontalAlignment="Right"
-			Tag="{Localizing Key=FrameSize}">
-			<Label
-				Text="2 ^" />
-			<Picker
-				ItemsSource="{StaticResource AllowedPowsOf2}"
-				SelectedItem="{Binding FramePow, Mode=TwoWay}" />
-			<Label
-				Text="{Binding FrameSize, StringFormat=' = {0}'}" />
-			<Label
-				Text="{Localizing Key=Duration, StringFormat='{}{0}:'}" />
-			<Label
-				Text="{Binding FrameDuration}" />
-		</StackLayout>
-
-	</Set>
-
-	<Set
         x:Shared="False"
         x:Key="MusicOptionsSet">
 
@@ -144,38 +53,46 @@
 
 	<Set
 		x:Shared="False"
-		x:Key="VisualizationSet">
-
+		x:Key="VisualizationSet"
+		>
 		<Grid
 			Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^"
-			Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^">
-
+			Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
+			>
 			<Label
 				Rack.Cell="R0 C1"
-				Text="{Localizing Key=Visibility}" />
+				Text="{Localizing Key=Visibility}"
+				/>
 			<Label
 				Rack.Cell="R0 C2"
-				Text="{Localizing Key=Fill}" />
+				Text="{Localizing Key=Fill}"
+				/>
 			<Label
 				Rack.Cell="R0 C3"
-				Text="{Localizing Key=Stroke}" />
+				Text="{Localizing Key=Stroke}"
+				/>
 			<Label
 				Rack.Cell="R0 C4"
-				Text="{Localizing Key=Thickness}" />
+				Text="{Localizing Key=Thickness}"
+				/>
 			<Label
 				Rack.Cell="R0 C5"
-				Text="{Localizing Key=Index, StringFormat='Z-{0}'}" />
+				Text="{Localizing Key=Index, StringFormat='Z-{0}'}"
+				/>
 			<Label
 				Rack.Cell="R0 C6"
-				Text="{Localizing Key=Offset, StringFormat='Y-{0}'}" />
+				Text="{Localizing Key=Offset, StringFormat='Y-{0}'}"
+				/>
 			<Label
 				Rack.Cell="R0 C7"
-				Text="{Localizing Key=Offset, StringFormat='X-{0}'}" />
+				Text="{Localizing Key=Offset, StringFormat='X-{0}'}"
+				/>
 
 			<Grid
 				Rack.Cell="R1 C0 RS2"
 				Rack.Rows="* *"
-				Rack.Columns="* ^">
+				Rack.Columns="* ^"
+				>
 				<Label
 					Rack.Cell="R0 C0 RS2"
 					Text="{Localizing Key=Frame}"
@@ -201,7 +118,8 @@
 			<Grid
 				Rack.Cell="R3 C0 RS2"
 				Rack.Rows="* *"
-				Rack.Columns="* ^">
+				Rack.Columns="* ^"
+				>
 				<Label
 					Rack.Cell="R0 C0 RS2"
 					Text="{Localizing Key=Frequency}"
@@ -219,7 +137,8 @@
 			<Grid
 				Rack.Cell="R5 C0 RS2"
 				Rack.Rows="* *"
-				Rack.Columns="* ^">
+				Rack.Columns="* ^"
+				>
 				<Label
 					Rack.Cell="R0 C0 RS2"
 					Text="{Localizing Key=Phase}"
@@ -237,7 +156,8 @@
 			<Grid
 				Rack.Cell="R7 C0 RS2"
 				Rack.Rows="* *"
-				Rack.Columns="* ^">
+				Rack.Columns="* ^"
+				>
 				<Label
 					Rack.Cell="R0 C0 RS2"
 					Text="{Localizing Key=Magnitude}"
@@ -467,10 +387,10 @@
 				DataContext="{Binding [ZIndex.MagnitudeFFT], Mode=TwoWay}"
 				Template="{StaticResource ZIndexTemplate}"
 				/>
-
 		</Grid>
 
 		<Expander
+			IsExpanded="True"
 			Header="{Localizing Key=Palette}">
 			<Grid
 				Rack.Rows="^ ^ ^ ^ ^ ^"
@@ -529,6 +449,7 @@
 		</Expander>
 
 		<Expander
+			IsExpanded="True"
 			Header="{Localizing Key=Background}"
 			>
 			<Grid
@@ -566,6 +487,7 @@
 		</Expander>
 
 		<Expander
+			IsExpanded="True"
 			Header="{Localizing Key=PianoKey}">
 			<Grid
 				Rack.Rows="^ ^ ^"
@@ -611,9 +533,11 @@
 		</Expander>
 
 		<Expander
+			IsExpanded="True"
 			Header="{Localizing Key=Music}"
 			ContentTemplate="{StaticResource MusicOptionsTemplate}"
-			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}" />
+			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}"
+			/>
 
 	</Set>
 
