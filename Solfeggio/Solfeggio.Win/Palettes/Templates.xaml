@@ -6,8 +6,8 @@
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	xmlns:local="clr-namespace:Solfeggio">
-
+	xmlns:local="clr-namespace:Solfeggio"
+	>
 	<DataTemplate
 		x:Key="HarmonicTemplate">
 		<Grid
@@ -117,8 +117,12 @@
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
-		<StackLayout>
+		<Grid
+			Rack.Rows="^ *"
+			Rack.Columns="* *"
+			>
 			<StackLayout
+				Rack.Cell="R0 C0 CS2"
 				Style="{StaticResource TitlePanelStyle}"
 				>
 				<Label
@@ -132,8 +136,10 @@
 			</StackLayout>
 
 			<Grid
+				Rack.Cell="R1 C0"
 				Rack.Rows="^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^"
+				Rack.Columns="^ ^ ^ ^ ^ ^"
+				HorizontalAlignment="Center"
 				>
 				<Label
 					Rack.Cell="R1 C0"
@@ -153,7 +159,11 @@
 					/>
 				<Label
 					Rack.Cell="R0 C3"
-					Text="{Localizing Key=BuffersCount}"
+					Text="{Localizing Key=Buffers}"
+					/>
+				<Label
+					Rack.Cell="R1 C4"
+					Text="{Localizing Key=Pcs}"
 					/>
 
 				<Picker
@@ -189,8 +199,10 @@
 			</Grid>
 
 			<Grid
+				Rack.Cell="R1 C1"
 				Rack.Rows="^ ^ ^ ^ ^"
-				Rack.Columns="^ ^"
+				Rack.Columns="^ ^ ^"
+				HorizontalAlignment="Center"
 				>
 				<Label
 					Rack.Cell="R0 C1"
@@ -208,9 +220,18 @@
 					Rack.Cell="R3 C0"
 					Text="{Localizing Key=Length}"
 					/>
+
 				<Label
-					Rack.Cell="R4 C0"
-					Text="{Localizing Key=Duration}"
+					Rack.Cell="R2 C2"
+					Text="{Localizing Key=Hz}"
+					/>
+				<Label
+					Rack.Cell="R3 C2"
+					Text="{Localizing Key=Pcs}"
+					/>
+				<Label
+					Rack.Cell="R34 C2"
+					Text="{Localizing Key=ms}"
 					/>
 
 				<Picker
@@ -227,19 +248,33 @@
 					Orientation="Horizontal"
 					>
 					<Label
-						Text="2 ^" />
+						Text="2 ^"
+						/>
 					<Picker
 						ItemsSource="{StaticResource AllowedPowsOf2}"
 						SelectedItem="{Binding FramePow, Mode=TwoWay}"
 						/>
 					<Label
-						Text="{Binding FrameSize, StringFormat=' = {0}'}" />
+						Text="{Binding FrameSize, StringFormat='= {0}'}"
+						/>
 				</StackLayout>
-				<Label
-					Rack.Cell="R4 C1"
-					Text="{Binding FrameDuration}" />
+				<Grid
+					Rack.Cell="R4 C0 CS2"
+					Rack.Columns="* ^"
+					>
+					<Label
+						Rack.Cell="C0"
+						HorizontalAlignment="Left"
+						Text="{Localizing Key=Duration}"
+						/>
+					<Label
+						Rack.Cell="C1"
+						HorizontalAlignment="Right"
+						Text="{Binding FrameDuration.TotalMilliseconds}"
+						/>
+				</Grid>
 			</Grid>
-		</StackLayout>
+		</Grid>
 	</DataTemplate>
 
 	<DataTemplate

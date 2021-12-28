@@ -71,6 +71,7 @@
 						Header="{Localizing Key=Harmonics}"
 						>
 						<ListView
+							Background="Transparent"
 							x:Name="DominantsItemsControl"
 							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
 							ItemTemplate="{StaticResource HarmonicTemplate}"

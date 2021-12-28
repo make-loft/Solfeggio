@@ -10,14 +10,14 @@
 		<Grid>
 			<Border
 				CornerRadius="8"
-				Background="LightGray"
+				Background="Gray"
 				/>
 			<Border
 				CornerRadius="8"
 				Width="{TemplateBinding Height}"
 				Height="{TemplateBinding Height}"
 				HorizontalAlignment="Right"
-				Background="Green"
+				Background="FloralWhite"
 				Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToVisibleConverter}}"
 				/>
 			<Border
@@ -25,7 +25,7 @@
 				Width="{TemplateBinding Height}"
 				Height="{TemplateBinding Height}"
 				HorizontalAlignment="Left"
-				Background="Gray"
+				Background="LightGray"
 				Visibility="{TemplateBinding IsChecked, Converter={StaticResource TrueToCollapsedConverter}}"
 				/>
 		</Grid>

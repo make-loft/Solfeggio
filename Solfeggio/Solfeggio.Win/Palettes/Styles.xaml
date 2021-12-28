@@ -2,7 +2,21 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xamarin="clr-namespace:Xamarin.Forms;assembly=Xamarin.Synonyms">
-	
+
+	<!--<Style
+		TargetType="Canvas">
+		<Setter
+			Property="CacheMode"
+			Value="BitmapCache" />
+	</Style>
+
+	<Style
+		TargetType="Polyline">
+		<Setter
+			Property="CacheMode"
+			Value="BitmapCache" />
+	</Style>-->
+
 	<Style
 		TargetType="xamarin:Pivot">
 		<Setter
@@ -157,20 +171,6 @@
 				Content="{Binding}" />
 		</Grid>
 	</DataTemplate>
-
-	<!--<Style
-		TargetType="Canvas">
-		<Setter
-			Property="CacheMode"
-			Value="BitmapCache" />
-	</Style>
-
-	<Style
-		TargetType="Polyline">
-		<Setter
-			Property="CacheMode"
-			Value="BitmapCache" />
-	</Style>-->
 
 	<Style
 		x:Key="FrameStyle"

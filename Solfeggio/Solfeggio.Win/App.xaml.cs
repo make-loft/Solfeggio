@@ -86,11 +86,22 @@ namespace Solfeggio
 
 			Store.Get<AppViewModel>();
 			_startupTimestamp = DateTime.Now;
+
+
+			var theme = Store.ActiveBox.Revive<Dictionary<object, object>>("Theme");
+			//var brushes = Resources.MergedDictionaries[2];
+			theme.ForEach(p => Resources[p.Key] = p.Value);
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
+			var brushes = Resources.MergedDictionaries[2];
+			var keysForSave = Resources.Keys.Cast<object>().Where(brushes.Contains).Where(k => Resources[k].EqualsAsStrings(brushes[k]).Not()).ToList();
+			var forSave = keysForSave.ToDictionary(k => k, k => Resources[k]);
+
+			Store.ActiveBox.TryKeep(forSave, "Theme");
 			Store.Snapshot();
+
 			AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
 		}
 

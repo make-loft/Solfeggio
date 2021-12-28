@@ -135,7 +135,7 @@ namespace Solfeggio.Api
 				}
 			}
 
-			public float Level
+			public double Level
 			{
 				get => _session.GetVolume();
 				set => _session.SetVolume(value);

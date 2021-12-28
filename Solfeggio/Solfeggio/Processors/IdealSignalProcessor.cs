@@ -27,12 +27,12 @@ namespace Solfeggio.Processors
 			set => _timer.Interval = TimeSpan.FromMilliseconds(value);
 		}
 
-		public float Level { get; set; } = 1f;
+		public double Level { get; set; } = 1d;
 		public double Boost { get; set; } = 1d;
 
 		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
-		private readonly DispatcherTimer _timer = new DispatcherTimer();
+		private readonly DispatcherTimer _timer = new();
 		private readonly HarmonicManager _manager = Store.Get<HarmonicManager>();
 		private readonly int _sampleRate;
 		private readonly int _sampleSize;

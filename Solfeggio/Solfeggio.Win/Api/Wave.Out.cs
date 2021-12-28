@@ -65,10 +65,10 @@ namespace Solfeggio.Api
 					return (stereoVolume & 0xFFFF) / (float)0xFFFF;
 				}
 
-				public override void SetVolume(float value)
+				public override void SetVolume(double value)
 				{
-					float left = value;
-					float right = value;
+					var left = value;
+					var right = value;
 
 					var stereoVolume = (int)(left * 0xFFFF) + ((int)(right * 0xFFFF) << 16);
 					waveOutSetVolume(handle, stereoVolume).Verify();

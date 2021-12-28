@@ -33,7 +33,7 @@ namespace Solfeggio.Api
 					yield return new DeviceInfo(i);
 			}
 
-			public static readonly DeviceInfo DefaultDevice = new DeviceInfo(-1);
+			public static readonly DeviceInfo DefaultDevice = new(-1);
 
 			public class Session : ASession
 			{
@@ -58,7 +58,7 @@ namespace Solfeggio.Api
 				public override MmResult MarkForProcessing(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 
 				public override float GetVolume() => default;
-				public override void SetVolume(float value) { }
+				public override void SetVolume(double value) { }
 			}
 
 			public class Processor : Processor<DeviceInfo>

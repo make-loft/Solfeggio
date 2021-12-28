@@ -213,16 +213,16 @@ namespace Solfeggio.Models
 		}
 
 		[DataMember]
-		public float InputLevel
+		public double InputLevel
 		{
-			get => Get(() => InputLevel, 1.0f);
+			get => Get(() => InputLevel, 1.0d);
 			set => Set(() => InputLevel, value);
 		}
 
 		[DataMember]
-		public float OutputLevel
+		public double OutputLevel
 		{
-			get => Get(() => OutputLevel, 0.05f);
+			get => Get(() => OutputLevel, 0.05d);
 			set => Set(() => OutputLevel, value);
 		}
 

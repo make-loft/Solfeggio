@@ -75,7 +75,7 @@ namespace Solfeggio.Api
 			public abstract MmResult MarkForProcessing(Header header);
 
 			public abstract float GetVolume();
-			public abstract void SetVolume(float value);
+			public abstract void SetVolume(double value);
 		}
 	}
 }
