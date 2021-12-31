@@ -9,10 +9,41 @@
 	>
 	<Grid
 		Rack.Columns="* 3*"
-		Rack.Rows="2* ^ *"
+		Rack.Rows="* ^ 2* ^ * ^ *"
 		>
 		<Canvas
 			Rack.Cell="R0 C0 CS2"
+			Name="FrameCanvas"
+			Background="{DynamicResource FrameBackgroundBrush}"
+			>
+			<Polyline
+				Name="Polyline_Frame_Direct"
+				Fill="{DynamicResource Fill.MagnitudeRawFrame}"
+				Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
+				Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
+				/>
+			<Polyline
+				Name="Polyline_Frame_Window"
+				Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
+				Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
+				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
+				Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
+				/>
+		</Canvas>
+
+		<GridSplitter
+			Rack.Cell="R1 C0 CS2"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Stretch"
+			Background="{DynamicResource SplitterBackgroundBrush}"
+			Height="8"
+			/>
+
+		<Canvas
+			Rack.Cell="R2 C0 CS2"
 			Name="SpectrumCanvas"
 			Background="{DynamicResource SpectrumBackgroundBrush}"
 			>
@@ -49,27 +80,10 @@
 				Visibility="{DynamicResource Visibility.PhasePMI}"
 				Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
 				/>
-			
-			<Polyline
-				Name="Polyline_Frame_Direct"
-				Fill="{DynamicResource Fill.MagnitudeRawFrame}"
-				Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
-				Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
-				/>
-			<Polyline
-				Name="Polyline_Frame_Window"
-				Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
-				Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
-				Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
-				/>
 		</Canvas>
 
 		<GridSplitter
-			Rack.Cell="R1 C0 CS2"
+			Rack.Cell="R3 C0 CS2"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Stretch"
 			Background="{DynamicResource SplitterBackgroundBrush}"
@@ -77,14 +91,29 @@
 			/>
 
 		<Canvas
-			Rack.Cell="R2 C0 CS2"
+			Rack.Cell="R4 C0 CS2"
 			Name="PianoCanvas"
 			HorizontalAlignment="Stretch"
 			Background="{DynamicResource PianoBackgroundBrush}"
 			/>
 
+		<GridSplitter
+			Rack.Cell="R5 C0 CS2"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Stretch"
+			Background="{DynamicResource SplitterBackgroundBrush}"
+			Height="8"
+			/>
+
+		<StackLayout
+			Rack.Cell="R6 C0 CS2"
+			Name="SpectrogramCanvas"
+			HorizontalAlignment="Stretch"
+			Background="LightGray"
+			/>
+
 		<Grid
-			Rack.Cell="R2 C0"
+			Rack.Cell="R4 C0"
 			Rack.Rows="* ^ ^"
 			Rack.Columns="^ ^ *">
 			<xamarin:Label

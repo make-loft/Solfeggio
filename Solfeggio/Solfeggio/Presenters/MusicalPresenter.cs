@@ -44,8 +44,6 @@ namespace Solfeggio.Presenters
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
-			//opacityLineBrush.Opacity *= 0.3;
-			//opacityLineBrush.Freeze();
 
 			foreach (var activeFrequency in markers)
 			{
@@ -65,7 +63,6 @@ namespace Solfeggio.Presenters
 				if (skipLabel) continue;
 
 				var panel = new StackPanel();
-
 				var fontSize = hVisualScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
 				fontSize = fontSize > 20d || fontSize < 5d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
@@ -172,7 +169,7 @@ namespace Solfeggio.Presenters
 				out var vVisualLengthStretchFactor);
 
 			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
-			if (createWithContent is null) yield return create(0d, in vZeroLevel);
+			if (createWithContent.IsNot()) yield return create(0d, in vZeroLevel);
 
 			foreach(var activePoint in EnuerateActivePoints(points, deconstruct, hLowerValue, hUpperValue))
 			{
@@ -190,12 +187,13 @@ namespace Solfeggio.Presenters
 					.Decrement(vLowerVisualOffset)
 					.Project(vCorrection);
 
-				yield return createWithContent is null
+				yield return createWithContent.IsNot()
 					? create(in hVisualOffset, in vVisualOffset)
 					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
 			}
 
-			if (createWithContent is null) yield return create(in hLength, in vZeroLevel);
+			if (createWithContent.IsNot())
+				yield return create(in hLength, in vZeroLevel);
 		}
 
 		public IEnumerable<Point> DrawFrame(IEnumerable<Complex> frame, double width, double height) => Draw
@@ -240,21 +238,35 @@ namespace Solfeggio.Presenters
 				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
-				var panel = new StackPanel { Opacity = 0.3d + activeMagnitude };
-				var border = new Border
+				var strokeBorder = new Border
 				{
-					BorderThickness = new Thickness(1d),
+					BorderThickness = new Thickness(1 + 4d * activeMagnitude),
 					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
-					CornerRadius = new(2d * expressionLevel),
-					//Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
+					CornerRadius = new(4d * expressionLevel * height / 256),
 				};
 
-				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel).
-					ForEach(panel.Children.Add);
+				var fillBorder = new Border
+				{
+					Opacity = 0.25,
+					CornerRadius = new(4d * expressionLevel * height / 256),
+					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
+				};
+
+				var infoPanel = new StackPanel();
+				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel, width, height).
+					ForEach(infoPanel.Children.Add);
 
 				var l = x.Is(double.NaN) ? 0d : x;
 				var t = y.Is(double.NaN) ? 0d : y;
-				return new Grid { Children = { border, panel }, Margin = new Thickness(l, t / 2d, 0d, 0d) };
+				var grid = new Grid
+				{
+					Children = { fillBorder, strokeBorder, infoPanel },
+					Margin = new Thickness(l, t / 2d, 0d, 0d),
+					Opacity = 0.5d + activeMagnitude
+				};
+
+				Panel.SetZIndex(grid, (int)(expressionLevel * 100));
+				return grid;
 			},
 			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
@@ -262,7 +274,7 @@ namespace Solfeggio.Presenters
 		);
 
 		private IEnumerable<TextBlock> EnumeratePanelContent(
-			PianoKey pianoKey, double activeFrequency, double activeMagnitude, double expressionLevel)
+			PianoKey pianoKey, double activeFrequency, double activeMagnitude, double expressionLevel, double width, double height)
 		{
 			var weightValue = (int)(300d * expressionLevel);
 			var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);
@@ -279,13 +291,13 @@ namespace Solfeggio.Presenters
 			{
 				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = p.Value.FontSize * expressionLevel,
+				FontSize = p.Value.FontSize * expressionLevel * (height > 0 ? height : 0.1d) / 256,
 #if NETSTANDARD
 				FontFamily = p.Value.FontFamilyName,
 #else
 				FontFamily = new FontFamily(p.Value.FontFamilyName),
 #endif
-				FontWeight = fontWeight,
+				FontWeight = p.Key.Is("NoteName") ? FontWeights.SemiBold : fontWeight,
 				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 			});
 		}
@@ -348,7 +360,7 @@ namespace Solfeggio.Presenters
 			}
 
 			averageMagnitude /= m;
-			var minMagnitude = upperMagnitude * 0.03;
+			var minMagnitude = upperMagnitude * 0.01;
 			var harmonics = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
 				.Where(k => k.Magnitude > minMagnitude).ToList();
 

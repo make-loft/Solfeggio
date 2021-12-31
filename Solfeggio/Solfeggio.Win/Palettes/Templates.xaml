@@ -114,6 +114,23 @@
 		</StackView>
 	</ControlTemplate>
 
+	<ControlTemplate
+		x:Key="TitleProfileTemplate">
+		<StackLayout
+			Rack.Cell="R0 C0 CS2"
+			Style="{StaticResource TitlePanelStyle}"
+			>
+			<Label
+				Text="{Localizing Key=Title}" />
+			<Entry
+				Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			<Button
+				Content="✗"
+				CommandParameter="{Binding}"
+				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
+		</StackLayout>
+	</ControlTemplate>
+	
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
@@ -121,24 +138,16 @@
 			Rack.Rows="^ *"
 			Rack.Columns="* *"
 			>
-			<StackLayout
+			<ContentView
 				Rack.Cell="R0 C0 CS2"
-				Style="{StaticResource TitlePanelStyle}"
-				>
-				<Label
-					Text="{Localizing Key=Title}" />
-				<Entry
-					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-				<Button
-					Content="✗"
-					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
-			</StackLayout>
+				Template="{StaticResource TitleProfileTemplate}"
+				/>
 
 			<Grid
 				Rack.Cell="R1 C0"
 				Rack.Rows="^ ^ ^"
 				Rack.Columns="^ ^ ^ ^ ^ ^"
+				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				>
 				<Label
@@ -202,6 +211,7 @@
 				Rack.Cell="R1 C1"
 				Rack.Rows="^ ^ ^ ^ ^"
 				Rack.Columns="^ ^ ^"
+				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				>
 				<Label
@@ -280,18 +290,9 @@
 	<DataTemplate
 		x:Key="HarmonicProfileTemplate">
 		<StackLayout>
-			<StackLayout
-				Style="{StaticResource TitlePanelStyle}"
-				>
-				<Label
-					Text="{Localizing Key=Title}" />
-				<Entry
-					Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-				<Button
-					Content="✗"
-					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
-			</StackLayout>
+			<ContentView
+				Template="{StaticResource TitleProfileTemplate}"
+				/>
 
 			<Grid
 				Rack.Columns="2* 2* 2* * * * *"
@@ -334,22 +335,22 @@
 		x:Key="HarmonicOutTemplate">
 		<Grid
 			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			Rack.Columns="* * * * *">
+			Rack.Columns="32 64 64 64 *">
 			<Label
 				Rack.Cell="C0"
-				Text="{Binding Harmonic.Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding NoteName}" />
 			<Label
 				Rack.Cell="C1"
-				Text="{Binding Harmonic.Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding EthalonFrequency, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Label
 				Rack.Cell="C2"
 				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
 				Rack.Cell="C3"
-				Text="{Binding EthalonFrequency, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding Harmonic.Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Label
 				Rack.Cell="C4"
-				Text="{Binding NoteName}" />
+				Text="{Binding Harmonic.Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
 		</Grid>
 	</DataTemplate>
 

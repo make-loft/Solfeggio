@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
@@ -49,12 +50,19 @@ namespace Solfeggio.Views
 			var spectralViewModel = Store.Get<ProcessingManager>();
 			var presenter = Store.Get<MusicalPresenter>();
 
+			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
+			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
+
 			Point d = default;
-			PreviewMouseLeftButtonUp += (o, e) => d = default;
-			PreviewMouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
-			PreviewMouseMove += (o, e) =>
+			MouseLeftButtonUp += (o, e) => d = default;
+			MouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
+			SpectrumCanvas.MouseMove += MouseMove;
+			PianoCanvas.MouseMove += MouseMove;
+			FrameCanvas.MouseMove += MouseMove;
+
+			void MouseMove(object o, MouseEventArgs e)
 			{
-				if (e.LeftButton.IsNot(MouseButtonState.Pressed) || e.OriginalSource is GridSplitter)
+				if (e.LeftButton.IsNot(MouseButtonState.Pressed))
 					return;
 
 				var p = e.GetPosition(this);
@@ -74,10 +82,15 @@ namespace Solfeggio.Views
 				var lowerDirection = isHorizontalMove ? +1 : -1;
 				var upperDirection = +1;
 
-				Shift(presenter.Spectrum.Frequency, delta / 16, lowerDirection, upperDirection);
+				var bandwidth = o.Is(FrameCanvas)
+					? presenter.Frame.Offset
+					: presenter.Spectrum.Frequency;
+
+				var factor = bandwidth.Threshold.Length / bandwidth.Limit.Length;
+				Shift(bandwidth, delta * factor / (o.Is(FrameCanvas) ? 32 : 2), lowerDirection, upperDirection);
 			};
 
-			PreviewMouseWheel += (o, e) =>
+			MouseWheel += (o, e) =>
 			{
 				var lowerDirection = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? +1 : -1;
 				var upperDirection = +1;
@@ -123,15 +136,25 @@ namespace Solfeggio.Views
 						Polyline_Spectrum_Magnitude_PMI,
 						Polyline_Spectrum_Phase_FFT,
 						Polyline_Spectrum_Phase_PMI,
-						Polyline_Frame_Direct,
-						Polyline_Frame_Window,
 					}
 				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
-
-				var width = SpectrumCanvas.ActualWidth;
-				var height = SpectrumCanvas.ActualHeight;
+				FrameCanvas.Children.OfType<Polyline>().ForEach(p => p.Points.Clear());
 
 				static bool IsVisible(UIElement element) => element.Visibility.IsNot(Visibility.Collapsed);
+
+				var width = FrameCanvas.ActualWidth;
+				var height = FrameCanvas.ActualHeight;
+
+				if (IsVisible(Polyline_Frame_Direct))
+					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
+					Use(Polyline_Frame_Direct.Points.AppendRange);
+
+				if (IsVisible(Polyline_Frame_Window))
+					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
+					Use(Polyline_Frame_Window.Points.AppendRange);
+
+				width = SpectrumCanvas.ActualWidth;
+				height = SpectrumCanvas.ActualHeight;
 
 				if (IsVisible(Polyline_Spectrum_Magnitude_FFT))
 					presenter.DrawMagnitude(spectrum, width, height).
@@ -148,14 +171,6 @@ namespace Solfeggio.Views
 				if (IsVisible(Polyline_Spectrum_Phase_PMI))
 					presenter.DrawPhase(spectrumInterpolated, width, height).
 					Use(Polyline_Spectrum_Phase_PMI.Points.AppendRange);
-
-				if (IsVisible(Polyline_Frame_Direct))
-					presenter.DrawFrame(spectralViewModel.OuterFrame, width, height).
-					Use(Polyline_Frame_Direct.Points.AppendRange);
-
-				if (IsVisible(Polyline_Frame_Window))
-					presenter.DrawFrame(spectralViewModel.InnerFrame, width, height).
-					Use(Polyline_Frame_Window.Points.AppendRange);
 
 				var discreteStep = spectralViewModel.ActiveProfile.SampleRate / spectralViewModel.ActiveProfile.FrameSize;
 
@@ -175,15 +190,29 @@ namespace Solfeggio.Views
 
 				var dominanats = presenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
 				if (presenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
-					presenter.DrawTops(dominanats, width, height).
-						ForEach(p =>
-						{
-							SpectrumCanvas.Children.Add(p);
-							p.UpdateLayout();
-							p.Margin = new Thickness(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 2d, 0d, 0d);
-						});
+					presenter.DrawTops(dominanats, width, height)
+					.ForEach(p =>
+					{
+						SpectrumCanvas.Children.Add(p);
+						p.UpdateLayout();
+						p.Margin = new(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 8d, 0d, 0d);
+					});
 
-				appViewModel.Harmonics = peaks;
+				appViewModel.Harmonics = dominanats;
+
+				var w = SpectrumCanvas.ActualWidth;
+				var h = SpectrumCanvas.ActualHeight;
+				var stops = Polyline_Spectrum_Magnitude_PMI.Points
+					.Select(p => new GradientStop(Color.FromArgb((byte)
+					(512d * (h - p.Y)/ h), 255, 0, 0), p.X / w));
+				var brush = new LinearGradientBrush(new(stops), 0d) { };
+
+				var count = 256;
+				if (SpectrogramCanvas.Children.Count > count)
+					SpectrogramCanvas.Children.RemoveAt(count);
+				SpectrogramCanvas.Children.Insert(0, new Rectangle { Fill = brush, Height = 4 });
+				var hh = SpectrogramCanvas.ActualHeight / count;
+				SpectrogramCanvas.Children.Cast<Rectangle>().ForEach(c => hh);
 			};
 
 			timer.Start();

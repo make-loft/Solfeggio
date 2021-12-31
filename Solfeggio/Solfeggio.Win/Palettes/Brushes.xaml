@@ -124,6 +124,21 @@
 		GradientStops="{StaticResource BrightnessGradient}" />
 
 	<LinearGradientBrush
+		x:Key="FrameBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="{DynamicResource ColorA}"
+			Offset="0" />
+		<GradientStop
+			Color="{DynamicResource ColorB}"
+			Offset="0.5" />
+		<GradientStop
+			Color="{DynamicResource ColorA}"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
 		x:Key="SpectrumBackgroundBrush"
 		StartPoint="0,0"
 		EndPoint="0,1">

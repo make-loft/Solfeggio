@@ -85,9 +85,11 @@ namespace Solfeggio.Presenters
 		{
 			var lowerS = Lower * GetScale(Lower, lowerOffsetS, scaleFunc, lowerLimit, upperLimit);
 			var upperS = Upper * GetScale(Upper, upperOffsetS, scaleFunc, lowerLimit, upperLimit);
+			lowerS = lowerS.Is(double.NaN) ? lowerOffsetS : lowerS;
+			upperS = upperS.Is(double.NaN) ? upperOffsetS : upperS;
 			if (lowerS > upperS) return;
-			Lower = lowerS;
-			Upper = upperS;
+			Lower = lowerS < lowerLimit ? lowerLimit : lowerS;
+			Upper = upperS > upperLimit ? upperLimit : upperS;
 		}
 	}
 

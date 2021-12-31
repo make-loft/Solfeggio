@@ -30,6 +30,8 @@ namespace Solfeggio.Views
 				HorizontalOffset += e.HorizontalChange;
 				VerticalOffset += e.VerticalChange;
 			};
+
+			KeyDown += (o, e) => IsOpen = IsOpen && e.Key.IsNot(Key.Escape);
 		}
 	}
 }
