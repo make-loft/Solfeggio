@@ -63,19 +63,22 @@
 	</Style>
 
 	<Style
-		TargetType="xamarin:GridSplitter">
+		TargetType="GridSplitter">
+		<Setter
+			Property="Background"
+			Value="{DynamicResource SplitterBackgroundBrush}" />
 		<Setter
 			Property="MinHeight"
-			Value="4" />
+			Value="8" />
 		<Setter
 			Property="MinWidth"
-			Value="4" />
+			Value="8" />
 	</Style>
 
 	<Style
 		x:Key="VerticalGridSplitter"
-		BasedOn="{StaticResource {x:Type xamarin:GridSplitter}}"
-		TargetType="xamarin:GridSplitter">
+		BasedOn="{StaticResource {x:Type GridSplitter}}"
+		TargetType="GridSplitter">
 		<Setter
 			Property="HorizontalAlignment"
 			Value="Center" />
@@ -86,8 +89,8 @@
 
 	<Style
 		x:Key="HorizontalGridSplitter"
-		BasedOn="{StaticResource {x:Type xamarin:GridSplitter}}"
-		TargetType="xamarin:GridSplitter">
+		BasedOn="{StaticResource {x:Type GridSplitter}}"
+		TargetType="GridSplitter">
 		<Setter
 			Property="HorizontalAlignment"
 			Value="Stretch" />

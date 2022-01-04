@@ -8,155 +8,154 @@
 	DataContext="{Store Key=vm:ProcessingManager}"
 	>
 	<Grid
-		Rack.Columns="* 3*"
-		Rack.Rows="* ^ 2* ^ * ^ *"
+		Rack.Rows="1.61* ^ *"
 		>
-		<Canvas
-			Rack.Cell="R0 C0 CS2"
-			Name="FrameCanvas"
-			Background="{DynamicResource FrameBackgroundBrush}"
+		<Grid
+			Rack.Cell="R0"
+			Rack.Rows="* ^ 4*"
 			>
-			<Polyline
-				Name="Polyline_Frame_Direct"
-				Fill="{DynamicResource Fill.MagnitudeRawFrame}"
-				Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
-				Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
-				/>
-			<Polyline
-				Name="Polyline_Frame_Window"
-				Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
-				Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
-				Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
-				/>
-		</Canvas>
-
-		<GridSplitter
-			Rack.Cell="R1 C0 CS2"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Stretch"
-			Background="{DynamicResource SplitterBackgroundBrush}"
-			Height="8"
-			/>
-
-		<Canvas
-			Rack.Cell="R2 C0 CS2"
-			Name="SpectrumCanvas"
-			Background="{DynamicResource SpectrumBackgroundBrush}"
-			>
-			<Polyline
-				Name="Polyline_Spectrum_Magnitude_FFT"
-				Fill="{DynamicResource Fill.MagnitudeFFT}"
-				Stroke="{DynamicResource Stroke.MagnitudeFFT}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
-				Visibility="{DynamicResource Visibility.MagnitudeFFT}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
-				/>
-			<Polyline
-				Name="Polyline_Spectrum_Magnitude_PMI"
-				Fill="{DynamicResource Fill.MagnitudePMI}"
-				Stroke="{DynamicResource Stroke.MagnitudePMI}"
-				StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
-				Visibility="{DynamicResource Visibility.MagnitudePMI}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
-				/>
+			<Canvas
+				Rack.Cell="R0"
+				Name="FrameCanvas"
+				Background="{DynamicResource FrameBackgroundBrush}"
+				>
+				<Polyline
+					Name="Polyline_Frame_Direct"
+					Fill="{DynamicResource Fill.MagnitudeRawFrame}"
+					Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
+					Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
+					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
+					/>
+				<Polyline
+					Name="Polyline_Frame_Window"
+					Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
+					Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
+					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
+					Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
+					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
+					/>
+			</Canvas>
 			
-			<Polyline
-				Name="Polyline_Spectrum_Phase_FFT"
-				Fill="{DynamicResource Fill.PhaseFFT}"
-				Stroke="{DynamicResource Stroke.PhaseFFT}"
-				StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
-				Visibility="{DynamicResource Visibility.PhaseFFT}"
-				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+			<GridSplitter
+				Rack.Cell="R1"
+				Style="{StaticResource HorizontalGridSplitter}"
+				Background="{DynamicResource SplitterBackgroundBrush}"
 				/>
-			<Polyline
-				Name="Polyline_Spectrum_Phase_PMI"
-				Fill="{DynamicResource Fill.PhasePMI}"
-				Stroke="{DynamicResource Stroke.PhasePMI}"
-				StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
-				Visibility="{DynamicResource Visibility.PhasePMI}"
-				Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
+			<Canvas
+				Rack.Cell="R2"
+				Name="SpectrumCanvas"
+				Background="{DynamicResource SpectrumBackgroundBrush}"
+				>
+				<Polyline
+					Name="Polyline_Spectrum_Magnitude_FFT"
+					Fill="{DynamicResource Fill.MagnitudeFFT}"
+					Stroke="{DynamicResource Stroke.MagnitudeFFT}"
+					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
+					Visibility="{DynamicResource Visibility.MagnitudeFFT}"
+					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+					/>
+				<Polyline
+					Name="Polyline_Spectrum_Magnitude_PMI"
+					Fill="{DynamicResource Fill.MagnitudePMI}"
+					Stroke="{DynamicResource Stroke.MagnitudePMI}"
+					StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
+					Visibility="{DynamicResource Visibility.MagnitudePMI}"
+					Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
+					/>
+
+				<Polyline
+					Name="Polyline_Spectrum_Phase_FFT"
+					Fill="{DynamicResource Fill.PhaseFFT}"
+					Stroke="{DynamicResource Stroke.PhaseFFT}"
+					StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
+					Visibility="{DynamicResource Visibility.PhaseFFT}"
+					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+					/>
+				<Polyline
+					Name="Polyline_Spectrum_Phase_PMI"
+					Fill="{DynamicResource Fill.PhasePMI}"
+					Stroke="{DynamicResource Stroke.PhasePMI}"
+					StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
+					Visibility="{DynamicResource Visibility.PhasePMI}"
+					Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
+					/>
+			</Canvas>
+		</Grid>
+		
+		<GridSplitter
+			Rack.Cell="R1"
+			Style="{StaticResource HorizontalGridSplitter}"
+			Background="{DynamicResource SplitterBackgroundBrush}"
+			/>
+		<Grid
+			Rack.Cell="R2"
+			Rack.Rows="1.61* ^ *"
+			>
+			<Canvas
+				Rack.Cell="R0"
+				Name="PianoCanvas"
+				HorizontalAlignment="Stretch"
+				Background="{DynamicResource PianoBackgroundBrush}"
 				/>
-		</Canvas>
-
-		<GridSplitter
-			Rack.Cell="R3 C0 CS2"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Stretch"
-			Background="{DynamicResource SplitterBackgroundBrush}"
-			Height="8"
-			/>
-
-		<Canvas
-			Rack.Cell="R4 C0 CS2"
-			Name="PianoCanvas"
-			HorizontalAlignment="Stretch"
-			Background="{DynamicResource PianoBackgroundBrush}"
-			/>
-
-		<GridSplitter
-			Rack.Cell="R5 C0 CS2"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Stretch"
-			Background="{DynamicResource SplitterBackgroundBrush}"
-			Height="8"
-			/>
-
-		<StackLayout
-			Rack.Cell="R6 C0 CS2"
-			Name="SpectrogramCanvas"
-			HorizontalAlignment="Stretch"
-			Background="LightGray"
-			/>
+			<GridSplitter
+				Rack.Cell="R1"
+				Style="{StaticResource HorizontalGridSplitter}"
+				Background="{DynamicResource SplitterBackgroundBrush}"
+				/>
+			<Border
+				Rack.Cell="R2"
+				Name="SpectrogramFrame"
+				/>
+			<StackLayout
+				Rack.Cell="R2"
+				Name="SpectrogramCanvas"
+				HorizontalAlignment="Stretch"
+				Background="LightGray"
+				/>
+		</Grid>
 
 		<Grid
-			Rack.Cell="R4 C0"
+			Rack.Cell="R2"
 			Rack.Rows="* ^ ^"
-			Rack.Columns="^ ^ *">
+			Rack.Columns="^ ^ *"
+			>
 			<xamarin:Label
 				Rack.Cell="R1 C0"
 				FontSize="18"
 				Opacity="0.7"
 				Foreground="IndianRed"
-				Text="🎼" />
+				Text="🎼"
+				/>
 			<xamarin:Switch
 				Rack.Cell="R1 C1"
 				Name="OptionsToggleButton"
-				IsChecked="False" />
+				IsChecked="False"
+				/>
 			<xamarin:Label
 				Rack.Cell="R2 C0"
 				FontSize="18"
 				Opacity="0.7"
 				Foreground="IndianRed"
-				Text="📷" />
+				Text="📷"
+				/>
 			<xamarin:Switch
 				Rack.Cell="R2 C1"
-				IsChecked="{Binding IsPaused, Mode=TwoWay}" />
+				IsChecked="{Binding IsPaused, Mode=TwoWay}"
+				/>
 		</Grid>
 
 		<Grid
-			Rack.Cell="R0 C0 CS2"
-			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}">
+			Rack.Cell="R0"
+			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}"
+			>
 			<Grid>
 				<Border
 					Background="DimGray"
-					Opacity=".5" />
+					Opacity=".5"
+					/>
 				<v:OptionsView />
 			</Grid>
 		</Grid>
-
-		<!--<ItemsControl
-			Rack.Cell="R0 C0"
-			Margin="0 32 0 0"
-			Foreground="Violet"
-			Name="HarmoncsItemsControl"
-			Visibility="{StoreBinding StoreKey=p:MusicalPresenter, Path=VisualProfile.Harmonics, Converter={StaticResource TrueToVisibleConverter}}"
-			ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
-			ItemTemplate="{StaticResource HarmonicOutTemplate}" />-->
-
 	</Grid>
-
 </ContentControl>

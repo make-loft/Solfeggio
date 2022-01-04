@@ -261,7 +261,7 @@ namespace Solfeggio.Presenters
 				var grid = new Grid
 				{
 					Children = { fillBorder, strokeBorder, infoPanel },
-					Margin = new Thickness(l, t / 2d, 0d, 0d),
+					Margin = new(l, t / 2d, 0d, 0d),
 					Opacity = 0.5d + activeMagnitude
 				};
 
@@ -291,7 +291,7 @@ namespace Solfeggio.Presenters
 			{
 				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = p.Value.FontSize * expressionLevel * (height > 0 ? height : 0.1d) / 256,
+				FontSize = p.Value.FontSize * expressionLevel * (height > 0.1 ? height : 0.1) / 256,
 #if NETSTANDARD
 				FontFamily = p.Value.FontFamilyName,
 #else
@@ -377,19 +377,28 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.618d;
 				var strokeThickness = upperOffset - lowerOffset;
 
-				CreateVerticalLine(offset, actualHeight, basicBrush, strokeThickness).Use(items.Add);
+				CreateBorder(lowerOffset, upperOffset, actualHeight, basicBrush).Use(items.Add);
 
 				if (key.Peaks.Count.Is(0)) continue;
 				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
 				var gradientBrush = (LinearGradientBrush)brush.Clone();
 				var value = Math.Sqrt(key.Magnitude);
 				gradientBrush.GradientStops[0].Offset = 1.0 - value;
-				
-				CreateVerticalLine(offset, actualHeight, gradientBrush, strokeThickness).Use(items.Add);
+
+				CreateBorder(lowerOffset, upperOffset, actualHeight, gradientBrush).Use(items.Add);
 			}
 
 			return harmonics;
 		}
+
+		private static Border CreateBorder(double lowerOffset, double upperOffset, double height, Brush strokeBrush) => new()
+		{
+			Width = (upperOffset - lowerOffset).To(out var width),
+			CornerRadius = new(width / 16, width / 16, width / 4, width / 4),
+			Margin = new(lowerOffset, 0d, 0d, 0d),
+			Background = strokeBrush,
+			Height = height,
+		};
 
 		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new()
 		{
