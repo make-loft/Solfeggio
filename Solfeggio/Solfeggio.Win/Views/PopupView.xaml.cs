@@ -1,5 +1,7 @@
 ﻿using Ace;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -15,9 +17,17 @@ namespace Solfeggio.Views
 			set => ContentControl.Content = value;
 		}
 
+		private static readonly List<PopupView> Popups = new();
+
 		public PopupView()
 		{
 			InitializeComponent();
+
+			Opened += (o, e) => Popups.Add(this);
+			Closed += (o, e) => Popups.Remove(this);
+
+			Opened += (o, e) => Child.MoveFocus(new(FocusNavigationDirection.Next));
+			Closed += (o, e) => Popups.LastOrDefault()?.Child.MoveFocus(new(FocusNavigationDirection.Next));
 
 			PreviewMouseLeftButtonDown += (o, e) =>
 			{
@@ -31,7 +41,14 @@ namespace Solfeggio.Views
 				VerticalOffset += e.VerticalChange;
 			};
 
-			KeyDown += (o, e) => IsOpen = IsOpen && e.Key.IsNot(Key.Escape);
+			KeyDown += (o, e) =>
+			{
+				if (e.Key.IsNot(Key.Escape) || e.Handled.IsTrue())
+					return;
+
+				e.Handled = true;
+				IsOpen = false;
+			};
 		}
 	}
 }

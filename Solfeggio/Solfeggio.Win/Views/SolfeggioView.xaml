@@ -42,45 +42,60 @@
 				Style="{StaticResource HorizontalGridSplitter}"
 				Background="{DynamicResource SplitterBackgroundBrush}"
 				/>
-			<Canvas
+			<Grid
 				Rack.Cell="R2"
-				Name="SpectrumCanvas"
-				Background="{DynamicResource SpectrumBackgroundBrush}"
+				Rack.Rows="* ^ 1.61*"
 				>
-				<Polyline
-					Name="Polyline_Spectrum_Magnitude_FFT"
-					Fill="{DynamicResource Fill.MagnitudeFFT}"
-					Stroke="{DynamicResource Stroke.MagnitudeFFT}"
-					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
-					Visibility="{DynamicResource Visibility.MagnitudeFFT}"
-					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
-					/>
-				<Polyline
-					Name="Polyline_Spectrum_Magnitude_PMI"
-					Fill="{DynamicResource Fill.MagnitudePMI}"
-					Stroke="{DynamicResource Stroke.MagnitudePMI}"
-					StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
-					Visibility="{DynamicResource Visibility.MagnitudePMI}"
-					Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
-					/>
-
-				<Polyline
-					Name="Polyline_Spectrum_Phase_FFT"
-					Fill="{DynamicResource Fill.PhaseFFT}"
-					Stroke="{DynamicResource Stroke.PhaseFFT}"
-					StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
-					Visibility="{DynamicResource Visibility.PhaseFFT}"
-					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
-					/>
-				<Polyline
-					Name="Polyline_Spectrum_Phase_PMI"
-					Fill="{DynamicResource Fill.PhasePMI}"
-					Stroke="{DynamicResource Stroke.PhasePMI}"
-					StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
-					Visibility="{DynamicResource Visibility.PhasePMI}"
-					Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
-					/>
-			</Canvas>
+				<Canvas
+					Rack.Cell="R0"
+					Name="PhaseCanvas"
+					Background="{DynamicResource FrameBackgroundBrush}"
+					>
+					<Polyline
+						Name="Polyline_Phase_FFT"
+						Fill="{DynamicResource Fill.PhaseFFT}"
+						Stroke="{DynamicResource Stroke.PhaseFFT}"
+						StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
+						Visibility="{DynamicResource Visibility.PhaseFFT}"
+						Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+						/>
+					<Polyline
+						Name="Polyline_Phase_PMI"
+						Fill="{DynamicResource Fill.PhasePMI}"
+						Stroke="{DynamicResource Stroke.PhasePMI}"
+						StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
+						Visibility="{DynamicResource Visibility.PhasePMI}"
+						Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
+						/>
+				</Canvas>
+				<GridSplitter
+					Rack.Cell="R1"
+					Style="{StaticResource HorizontalGridSplitter}"
+					Background="{DynamicResource SplitterBackgroundBrush}"
+				/>
+				<Canvas
+					Rack.Cell="R2"
+					Name="MagnitudeCanvas"
+					Background="{DynamicResource SpectrumBackgroundBrush}"
+					>
+					<Polyline
+						Name="Polyline_Magnitude_FFT"
+						Fill="{DynamicResource Fill.MagnitudeFFT}"
+						Stroke="{DynamicResource Stroke.MagnitudeFFT}"
+						StrokeThickness="{DynamicResource StrokeThickness.MagnitudeFFT}"
+						Visibility="{DynamicResource Visibility.MagnitudeFFT}"
+						Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+						/>
+					<Polyline
+						Name="Polyline_Magnitude_PMI"
+						Fill="{DynamicResource Fill.MagnitudePMI}"
+						Stroke="{DynamicResource Stroke.MagnitudePMI}"
+						StrokeThickness="{DynamicResource StrokeThickness.MagnitudePMI}"
+						Visibility="{DynamicResource Visibility.MagnitudePMI}"
+						Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
+						/>
+				</Canvas>
+			</Grid>
 		</Grid>
 		
 		<GridSplitter
@@ -111,7 +126,7 @@
 				Rack.Cell="R2"
 				Name="SpectrogramCanvas"
 				HorizontalAlignment="Stretch"
-				Background="LightGray"
+				Background="{DynamicResource PianoBackgroundBrush}"
 				/>
 		</Grid>
 

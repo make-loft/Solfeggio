@@ -42,7 +42,7 @@
 	<p:Visibility x:Key="Visibility.MagnitudePMI">Visible</p:Visibility>
 
 	<p:Visibility x:Key="Visibility.PhaseFFT">Collapsed</p:Visibility>
-	<p:Visibility x:Key="Visibility.PhasePMI">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.PhasePMI">Visible</p:Visibility>
 
 	<p:Visibility x:Key="Visibility.MagnitudeRawFrame">Visible</p:Visibility>
 	<p:Visibility x:Key="Visibility.MagnitudeWindowFrame">Collapsed</p:Visibility>

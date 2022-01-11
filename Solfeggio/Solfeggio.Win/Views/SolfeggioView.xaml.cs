@@ -41,7 +41,8 @@ namespace Solfeggio.Views
 			Point d = default;
 			MouseLeftButtonUp += (o, e) => d = default;
 			MouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
-			SpectrumCanvas.MouseMove += MouseMove;
+			MagnitudeCanvas.MouseMove += MouseMove;
+			PhaseCanvas.MouseMove += MouseMove;
 			PianoCanvas.MouseMove += MouseMove;
 			FrameCanvas.MouseMove += MouseMove;
 
@@ -112,15 +113,24 @@ namespace Solfeggio.Views
 				if (spectrum.IsNot()) return;
 
 				PianoCanvas.Children.Clear();
-				SpectrumCanvas.Children.Clear();
-				SpectrumCanvas.Children.Setup(c => new(c)
+
+				PhaseCanvas.Children.Clear();
+				MagnitudeCanvas.Children.Clear();
+
+				PhaseCanvas.Children.Setup(c => new(c)
 				{
 					Items =
 					{
-						Polyline_Spectrum_Magnitude_FFT,
-						Polyline_Spectrum_Magnitude_PMI,
-						Polyline_Spectrum_Phase_FFT,
-						Polyline_Spectrum_Phase_PMI,
+						Polyline_Phase_FFT,
+						Polyline_Phase_PMI,
+					}
+				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
+				MagnitudeCanvas.Children.Setup(c => new(c)
+				{
+					Items =
+					{
+						Polyline_Magnitude_FFT,
+						Polyline_Magnitude_PMI,
 					}
 				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
 				FrameCanvas.Children.OfType<Polyline>().ForEach(p => p.Points.Clear());
@@ -138,24 +148,24 @@ namespace Solfeggio.Views
 					musicalPresenter.DrawFrame(processingManager.InnerFrame, width, height).
 					Use(Polyline_Frame_Window.Points.AppendRange);
 
-				width = SpectrumCanvas.ActualWidth;
-				height = SpectrumCanvas.ActualHeight;
+				width = MagnitudeCanvas.ActualWidth;
+				height = MagnitudeCanvas.ActualHeight;
 
-				if (IsVisible(Polyline_Spectrum_Magnitude_FFT))
+				if (IsVisible(Polyline_Magnitude_FFT))
 					musicalPresenter.DrawMagnitude(spectrum, width, height).
-					Use(Polyline_Spectrum_Magnitude_FFT.Points.AppendRange);
+					Use(Polyline_Magnitude_FFT.Points.AppendRange);
 
-				if (IsVisible(Polyline_Spectrum_Magnitude_PMI))
+				if (IsVisible(Polyline_Magnitude_PMI))
 					musicalPresenter.DrawMagnitude(spectrumInterpolated, width, height).
-					Use(Polyline_Spectrum_Magnitude_PMI.Points.AppendRange);
+					Use(Polyline_Magnitude_PMI.Points.AppendRange);
 
-				if (IsVisible(Polyline_Spectrum_Phase_FFT))
-					musicalPresenter.DrawPhase(spectrum, width, height).
-					Use(Polyline_Spectrum_Phase_FFT.Points.AppendRange);
+				if (IsVisible(Polyline_Phase_FFT))
+					musicalPresenter.DrawPhase(spectrum, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
+					Use(Polyline_Phase_FFT.Points.AppendRange);
 
-				if (IsVisible(Polyline_Spectrum_Phase_PMI))
-					musicalPresenter.DrawPhase(spectrumInterpolated, width, height).
-					Use(Polyline_Spectrum_Phase_PMI.Points.AppendRange);
+				if (IsVisible(Polyline_Phase_PMI))
+					musicalPresenter.DrawPhase(spectrumInterpolated, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
+					Use(Polyline_Phase_PMI.Points.AppendRange);
 
 				var discreteStep = processingManager.ActiveProfile.SampleRate / processingManager.ActiveProfile.FrameSize;
 
@@ -163,31 +173,43 @@ namespace Solfeggio.Views
 
 				var vA = resources["Visibility.FrequencyDiscreteGrid"];
 				if (vA.Is(Visibility.Visible))
-					musicalPresenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+				{
+					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						musicalPresenter.EnumerateGrid(discreteStep));
 
+					musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
+						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
+						musicalPresenter.EnumerateGrid(discreteStep));
+				}
+
 				var vB = resources["Visibility.FrequencyNotesGrid"];
 				if (vB.Is(Visibility.Visible))
-					musicalPresenter.DrawMarkers(SpectrumCanvas.Children, width, height,
+				{
+					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
 						musicalPresenter.EnumerateNotes());
+
+					musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
+						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+						musicalPresenter.EnumerateNotes());
+				}
 
 				var dominanats = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
 				if (musicalPresenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
 					musicalPresenter.DrawTops(dominanats, width, height)
 					.ForEach(p =>
 					{
-						SpectrumCanvas.Children.Add(p);
+						MagnitudeCanvas.Children.Add(p);
 						p.UpdateLayout();
 						p.Margin = new(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 8d, 0d, 0d);
 					});
 
 				appViewModel.Harmonics = dominanats;
 
-				var w = SpectrumCanvas.ActualWidth;
-				var h = SpectrumCanvas.ActualHeight;
-				var stops = Polyline_Spectrum_Magnitude_PMI.Points
+				var w = MagnitudeCanvas.ActualWidth;
+				var h = MagnitudeCanvas.ActualHeight;
+				var stops = Polyline_Magnitude_PMI.Points
 					.Select(p => new GradientStop(Color.FromArgb((byte)
 					(512d * (h - p.Y)/ h), 255, 0, 0), p.X / w));
 				var brush = new LinearGradientBrush(new(stops), 0d);

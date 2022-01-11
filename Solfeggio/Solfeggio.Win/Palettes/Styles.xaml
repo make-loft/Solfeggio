@@ -43,7 +43,7 @@
 			Value="4,0" />
 		<Setter
 			Property="Background"
-			Value="#88CCCCCC" />
+			Value="{DynamicResource LabelBrush}" />
 	</Style>
 
 	<Style
@@ -69,10 +69,10 @@
 			Value="{DynamicResource SplitterBackgroundBrush}" />
 		<Setter
 			Property="MinHeight"
-			Value="8" />
+			Value="6" />
 		<Setter
 			Property="MinWidth"
-			Value="8" />
+			Value="6" />
 	</Style>
 
 	<Style
@@ -106,7 +106,7 @@
 			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="BorderBrush"
-			Value="#55555555" />
+			Value="{StaticResource LabelBrush}" />
 		<Setter
 			Property="BorderThickness"
 			Value="1" />
@@ -234,7 +234,7 @@
 			Value="Center" />
 		<Setter
 			Property="Background"
-			Value="#AAFFFFFF" />
+			Value="{DynamicResource LabelBrush}" />
 	</Style>
 
 	<Style

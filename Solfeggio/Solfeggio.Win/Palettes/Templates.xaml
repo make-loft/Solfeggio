@@ -515,7 +515,7 @@
 			<Frame
 				Margin="2"
 				CornerRadius="10"
-				Background="#88AAAAAA"
+				Background="{StaticResource LabelBrush}"
 				/>
 			<Expander
 				x:Name="TemplateRoot">
@@ -541,7 +541,7 @@
 			<Frame
 				Margin="2"
 				CornerRadius="10"
-				Background="#88AAAAAA"
+				Background="{StaticResource LabelBrush}"
 				/>
 			<Entry
 				VerticalAlignment="Center"
@@ -557,7 +557,7 @@
 			<Frame
 				Margin="2"
 				CornerRadius="10"
-				Background="#88AAAAAA"
+				Background="{StaticResource LabelBrush}"
 				/>
 			<Expander
 				x:Name="TemplateRoot">
@@ -606,7 +606,7 @@
 				Rack.Cell="C0 CS2"
 				Margin="2"
 				CornerRadius="10"
-				Background="#88AAAAAA"
+				Background="{StaticResource LabelBrush}"
 				/>
 			<Switch
 				Rack.Cell="R1 C1"
@@ -653,7 +653,7 @@
 				Rack.Cell="C0 CS2"
 				Margin="2"
 				CornerRadius="10"
-				Background="#88AAAAAA"
+				Background="{StaticResource LabelBrush}"
 				/>
 			<Expander
 				Rack.Cell="C0"

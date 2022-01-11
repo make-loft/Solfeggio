@@ -2,12 +2,24 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+	<!--
 	<Color x:Key="ColorA">#FF880022</Color>
 	<Color x:Key="ColorB">#FFFFBE22</Color>
 	<Color x:Key="ColorC">#FF884488</Color>
 	<Color x:Key="ColorD">WhiteSmoke</Color>
 	<Color x:Key="ColorE">#FF3F3E3E</Color>
-	
+	-->
+
+	<Color x:Key="ColorA">#FF3F9FFF</Color>
+	<Color x:Key="ColorB">#FFFFFF5F</Color>
+	<Color x:Key="ColorC">#FFBF7FBF</Color>
+	<Color x:Key="ColorD">WhiteSmoke</Color>
+	<Color x:Key="ColorE">#FF3F3E3E</Color>
+
+	<SolidColorBrush
+		x:Key="LabelBrush"
+		Color="#88FFFFFF"/>
+
 	<GradientStopCollection
 		x:Key="RainbowGradient">
 		<GradientStop
@@ -168,26 +180,34 @@
 
 	<SolidColorBrush
 		x:Key="Stroke.MagnitudeFFT"
-		Color="Violet"/>
-
+		Color="{DynamicResource ColorC}"/>
+	
 	<SolidColorBrush
 		x:Key="Fill.PhaseFFT"
-		Color="Transparent" />
+		Color="Transparent"
+		/>
 
 	<SolidColorBrush
 		x:Key="Stroke.PhaseFFT"
-		Color="Violet"/>
+		Color="{DynamicResource ColorC}"/>
+
+	<SolidColorBrush
+		x:Key="Stroke.PhasePMI"
+		Color="{DynamicResource ColorC}"/>
 
 	<LinearGradientBrush
-		x:Key="Fill.MagnitudePMI"
-		EndPoint="0,1"
-		StartPoint="0,0">
+		x:Key="Fill.PhasePMI"
+		StartPoint="0,0"
+		EndPoint="0,1">
 		<GradientStop
-			Color="{DynamicResource ColorB}"
-			Offset="0.33" />
+			Offset="0.0"
+			Color="{DynamicResource ColorC}" />
 		<GradientStop
-			Color="#00880022"
-			Offset="1.00" />
+			Offset="0.5"
+			Color="{DynamicResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{DynamicResource ColorC}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -195,20 +215,24 @@
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
-			Color="{DynamicResource ColorA}"
-			Offset="0.33" />
+			Color="{DynamicResource ColorC}"
+			Offset="0.61" />
 		<GradientStop
-			Color="#00FFBE22"
+			Color="{DynamicResource ColorA}"
 			Offset="1.00" />
 	</LinearGradientBrush>
 
-	<SolidColorBrush
-		x:Key="Fill.PhasePMI"
-		Color="Transparent" />
-
-	<SolidColorBrush
-		x:Key="Stroke.PhasePMI"
-		Color="Violet"/>
+	<LinearGradientBrush
+		x:Key="Fill.MagnitudePMI"
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="{DynamicResource ColorB}"
+			Offset="0.39" />
+		<GradientStop
+			Color="{DynamicResource ColorC}"
+			Offset="1.00" />
+	</LinearGradientBrush>
 
 	<LinearGradientBrush
 		x:Key="Fill.MagnitudeRawFrame"
@@ -219,7 +243,7 @@
 			Color="{DynamicResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="#00884488" />
+			Color="{DynamicResource ColorB}" />
 		<GradientStop
 			Offset="1.0"
 			Color="{DynamicResource ColorC}" />
@@ -231,13 +255,13 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="Violet" />
+			Color="{DynamicResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="#00884488" />
+			Color="{DynamicResource ColorC}" />
 		<GradientStop
 			Offset="1.0"
-			Color="Violet" />
+			Color="{DynamicResource ColorC}" />
 	</LinearGradientBrush>
 
 	<SolidColorBrush

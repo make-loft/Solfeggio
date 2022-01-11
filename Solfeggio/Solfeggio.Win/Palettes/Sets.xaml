@@ -393,31 +393,31 @@
 			IsExpanded="True"
 			Header="{Localizing Key=Palette}">
 			<Grid
-				Rack.Rows="^ ^ ^ ^ ^ ^"
-				Rack.Columns="^ ^"
+				Rack.Columns="^ ^ ^ ^ ^ ^"
+				Rack.Rows="^ ^"
 				>
 				<Label
-					Rack.Cell="R0 C1"
+					Rack.Cell="R0 C0"
 					Text="{Localizing Key=Color}"
 					/>
 				<Label
-					Rack.Cell="R1 C0"
+					Rack.Cell="R0 C1"
 					Text="{Localizing Key=A}"
 					/>
 				<Label
-					Rack.Cell="R2 C0"
+					Rack.Cell="R0 C2"
 					Text="{Localizing Key=B}"
 					/>
 				<Label
-					Rack.Cell="R3 C0"
+					Rack.Cell="R0 C3"
 					Text="{Localizing Key=C}"
 					/>
 				<Label
-					Rack.Cell="R4 C0"
+					Rack.Cell="R0 C4"
 					Text="{Localizing Key=D}"
 					/>
 				<Label
-					Rack.Cell="R5 C0"
+					Rack.Cell="R0 C5"
 					Text="{Localizing Key=E}"
 					/>
 				<ContentView
@@ -426,22 +426,22 @@
 					Template="{StaticResource ColorValueTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R2 C1"
+					Rack.Cell="R1 C2"
 					DataContext="{Binding [ColorB], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R3 C1"
+					Rack.Cell="R1 C3"
 					DataContext="{Binding [ColorC], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R4 C1"
+					Rack.Cell="R1 C4"
 					DataContext="{Binding [ColorD], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R5 C1"
+					Rack.Cell="R1 C5"
 					DataContext="{Binding [ColorE], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
@@ -453,33 +453,52 @@
 			Header="{Localizing Key=Background}"
 			>
 			<Grid
-				Rack.Rows="^ ^ ^"
+				Rack.Rows="^ ^ ^ ^ ^"
 				Rack.Columns="^ ^"
 				>
 				<Label
 					Rack.Cell="R0 C0"
-					Text="{Localizing Key=Spectrum}"
+					Text="{Localizing Key=Frame}"
 					/>
 				<Label
 					Rack.Cell="R1 C0"
-					Text="{Localizing Key=Splitter}"
+					Text="{Localizing Key=Phase}"
 					/>
 				<Label
 					Rack.Cell="R2 C0"
-					Text="{Localizing Key=Spectrum}"
+					Text="{Localizing Key=Magnitude}"
 					/>
+				<Label
+					Rack.Cell="R3 C0"
+					Text="{Localizing Key=Splitter}"
+					/>
+				<Label
+					Rack.Cell="R4 C0"
+					Text="{Localizing Key=Piano}"
+					/>
+
 				<ContentView
 					Rack.Cell="R0 C1"
-					DataContext="{Binding [SpectrumBackgroundBrush], Mode=TwoWay}"
+					DataContext="{Binding [FrameBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R1 C1"
-					DataContext="{Binding [SplitterBackgroundBrush], Mode=TwoWay}"
+					DataContext="{Binding [FrameBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R2 C1"
+					DataContext="{Binding [SpectrumBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R3 C1"
+					DataContext="{Binding [SplitterBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R4 C1"
 					DataContext="{Binding [PianoBackgroundBrush], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
