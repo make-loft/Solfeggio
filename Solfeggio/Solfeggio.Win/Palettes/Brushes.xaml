@@ -280,7 +280,7 @@
 			Offset="0.618"
 			Color="{DynamicResource ColorC}" />
 		<GradientStop
-			Offset="1.0"
+			Offset="1.236"
 			Color="{DynamicResource ColorD}" />
 	</LinearGradientBrush>
 

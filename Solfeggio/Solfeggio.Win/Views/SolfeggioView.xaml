@@ -57,7 +57,7 @@
 						Stroke="{DynamicResource Stroke.PhaseFFT}"
 						StrokeThickness="{DynamicResource StrokeThickness.PhaseFFT}"
 						Visibility="{DynamicResource Visibility.PhaseFFT}"
-						Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT}"
+						Panel.ZIndex="{DynamicResource ZIndex.PhaseFFT}"
 						/>
 					<Polyline
 						Name="Polyline_Phase_PMI"

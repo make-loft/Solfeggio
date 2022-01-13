@@ -41,25 +41,6 @@ namespace Solfeggio.Presenters
 	{
 		public override double Length => Upper - Lower;
 
-		public void Deconstruct(double visualLength, Projection visualScaleFunc,
-			out double logicalLowerValue, out double logicalUpperValue,
-			out double visualLowerDecrementOffset, out double visualUpperDecrementOffset,
-			out double visualLengthStretchFactor)
-		{
-			Deconstruct(out logicalLowerValue, out logicalUpperValue);
-
-			var lLogicalOffset = visualScaleFunc(logicalLowerValue);
-			var uLogicalOffset = visualScaleFunc(logicalUpperValue);
-			var logicalLength = (uLogicalOffset - lLogicalOffset);
-			logicalLength = logicalLength == 0d ? 1d : logicalLength;
-
-			visualLowerDecrementOffset = visualLength * lLogicalOffset / logicalLength;
-			visualUpperDecrementOffset = visualLength * uLogicalOffset / logicalLength;
-			visualLengthStretchFactor = uLogicalOffset == 0d
-				? visualUpperDecrementOffset
-				: visualUpperDecrementOffset / uLogicalOffset;
-		}
-
 		public static SmartRange Create(double lower, double upper) => new()
 		{
 			Lower = lower,
@@ -96,14 +77,49 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class Bandwidth
 	{
-		public static readonly Projection[] AllScaleFuncs = new Projection[]
-		{ Lineal, Log2, Log, Exp, _20Log10, Sqrt };
+		public static readonly Projection[] AllScaleFuncs =
+			{ Lineal, Log2, Log, Exp, Sqrt };
 
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
 		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
 		[DataMember] public string NumericFormat { get; set; } = "F2";
+
+		public void LimitThreshold()
+		{
+			var l = Limit;
+			var t = Threshold;
+
+			if (t.Lower < l.Lower) t.Lower = l.Lower;
+			if (t.Lower > l.Upper) t.Lower = l.Upper;
+
+			if (t.Upper > l.Upper) t.Upper = l.Upper;
+			if (t.Upper < l.Lower) t.Upper = l.Lower;
+		}
+
+		public void ShiftThreshold(double from, double till) =>
+			TransformThreshold(from, till, true);
+		public void ScaleThreshold(double from, double till) =>
+			TransformThreshold(from, till, false);
+
+		public void TransformThreshold(double from, double till, bool shift)
+		{
+			if (VisualScaleFunc.Is(Lineal))
+			{
+				var offset = shift ? from - till : till - from;
+
+				Threshold.Lower += shift ? +offset : -offset;
+				Threshold.Upper += offset;
+			}
+			else
+			{
+				var scale = shift ? from / till : till / from;
+
+				Threshold.Lower *= shift ? scale : (1 / scale);
+				Threshold.Upper *= scale;
+			}
+		}
 	}
 
 	[DataContract]
@@ -112,7 +128,7 @@ namespace Solfeggio.Presenters
 		[DataMember]
 		public Bandwidth Frequency { get; set; } = new()
 		{
-			Limit = SmartRange.Create(10d, 22000d),
+			Limit = SmartRange.Create(10d, AudioInputDevice.DefaultSampleRate / 2),
 			Threshold = SmartRange.Create(20d, 3000d),
 			VisualScaleFunc = Log2,
 			NumericFormat = "F1",

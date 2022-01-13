@@ -97,6 +97,9 @@
     <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
       <Link>Presenters\PianoKey.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Presenters\ScaleTransformer.cs">
+      <Link>Presenters\ScaleTransformer.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Processors\IdealSignalProcessor.cs">
       <Link>Processors\IdealSignalProcessor.cs</Link>
     </Compile>

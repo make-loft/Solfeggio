@@ -38,9 +38,9 @@ namespace Solfeggio.Views
 			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
 			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
 
-			Point d = default;
-			MouseLeftButtonUp += (o, e) => d = default;
-			MouseLeftButtonDown += (o, e) => d = e.GetPosition(this);
+			Point from = default;
+			MouseLeftButtonUp += (o, e) => from = default;
+			MouseLeftButtonDown += (o, e) => from = e.GetPosition(this);
 			MagnitudeCanvas.MouseMove += MouseMove;
 			PhaseCanvas.MouseMove += MouseMove;
 			PianoCanvas.MouseMove += MouseMove;
@@ -51,29 +51,67 @@ namespace Solfeggio.Views
 				if (e.LeftButton.IsNot(MouseButtonState.Pressed))
 					return;
 
-				var p = e.GetPosition(this);
-				if (d.Is(default))
+				var till = e.GetPosition(this);
+				if (from.Is(default))
 				{
-					d = p;
+					from = till;
 					return;
 				}
 
-				var deltaX = d.X - p.X;
-				var deltaY = d.Y - p.Y;
+				var deltaX = from.X - till.X;
+				var deltaY = from.Y - till.Y;
 				var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;
-				var delta = isHorizontalMove ? deltaX : deltaY;
 
-				d = p;
-
-				var lowerDirection = isHorizontalMove ? +1 : -1;
-				var upperDirection = +1;
-
+				var control = (FrameworkElement)o;
 				var bandwidth = o.Is(FrameCanvas)
 					? musicalPresenter.Frame.Offset
 					: musicalPresenter.Spectrum.Frequency;
 
-				var factor = bandwidth.Threshold.Length / bandwidth.Limit.Length;
-				Shift(bandwidth, delta * factor / (o.Is(FrameCanvas) ? 32 : 2), lowerDirection, upperDirection);
+				if (isHorizontalMove)
+				{
+					var originalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualWidth);
+					var originalFromOffset = originalScaler.GetLogicalOffset(from.X);
+					var originalTillOffset = originalScaler.GetLogicalOffset(till.X);
+
+					bandwidth.ShiftThreshold(originalFromOffset, originalTillOffset);
+				}
+				else
+				{
+					var center = control.ActualWidth / 2;
+
+					var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualHeight);
+					var basicFromOffset = basicScaler.GetLogicalOffset(from.Y);
+					var basicTillOffset = basicScaler.GetLogicalOffset(till.Y);
+
+					var alignScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualWidth);
+					var alignFromOffset = alignScaler.GetLogicalOffset(from.X);
+					var alignTillOffset = alignScaler.GetLogicalOffset(center);
+
+					bandwidth.ShiftThreshold(alignFromOffset, alignTillOffset);
+
+					bandwidth.ScaleThreshold(basicFromOffset, basicTillOffset);
+
+					var finalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualWidth);
+					var finalFromOffset = finalScaler.GetLogicalOffset(center);
+					var finalTillOffset = finalScaler.GetLogicalOffset(from.X);
+
+					bandwidth.ShiftThreshold(finalFromOffset, finalTillOffset);
+				}
+
+				from = till;
+
+				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+				{
+					if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+					{
+						bandwidth.Limit.Lower = bandwidth.Threshold.Lower;
+						bandwidth.Limit.Upper = bandwidth.Threshold.Upper;
+					}
+
+					return;
+				}
+
+				bandwidth.LimitThreshold();
 			};
 
 			MouseWheel += (o, e) =>
@@ -101,6 +139,7 @@ namespace Solfeggio.Views
 				};
 
 				e.Handled = lowerDirection.IsNot(0) && upperDirection.IsNot(0);
+				if (e.Handled.Not()) return;
 
 				Shift(musicalPresenter.Spectrum.Frequency, + 1, lowerDirection, upperDirection);
 			};
@@ -139,33 +178,42 @@ namespace Solfeggio.Views
 
 				var width = FrameCanvas.ActualWidth;
 				var height = FrameCanvas.ActualHeight;
+				if (height > 0 && width > 0)
+				{
+					if (IsVisible(Polyline_Frame_Direct))
+						musicalPresenter.DrawFrame(processingManager.OuterFrame, width, height).
+						Use(Polyline_Frame_Direct.Points.AppendRange);
 
-				if (IsVisible(Polyline_Frame_Direct))
-					musicalPresenter.DrawFrame(processingManager.OuterFrame, width, height).
-					Use(Polyline_Frame_Direct.Points.AppendRange);
+					if (IsVisible(Polyline_Frame_Window))
+						musicalPresenter.DrawFrame(processingManager.InnerFrame, width, height).
+						Use(Polyline_Frame_Window.Points.AppendRange);
+				}
 
-				if (IsVisible(Polyline_Frame_Window))
-					musicalPresenter.DrawFrame(processingManager.InnerFrame, width, height).
-					Use(Polyline_Frame_Window.Points.AppendRange);
+				width = PhaseCanvas.ActualWidth;
+				height = PhaseCanvas.ActualHeight;
+				if (height > 0 && width > 0)
+				{
+					if (IsVisible(Polyline_Phase_FFT))
+						musicalPresenter.DrawPhase(spectrum, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
+						Use(Polyline_Phase_FFT.Points.AppendRange);
+
+					if (IsVisible(Polyline_Phase_PMI))
+						musicalPresenter.DrawPhase(spectrumInterpolated, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
+						Use(Polyline_Phase_PMI.Points.AppendRange);
+				}
 
 				width = MagnitudeCanvas.ActualWidth;
 				height = MagnitudeCanvas.ActualHeight;
+				if (height > 0 && width > 0)
+				{
+					if (IsVisible(Polyline_Magnitude_FFT))
+						musicalPresenter.DrawMagnitude(spectrum, width, height).
+						Use(Polyline_Magnitude_FFT.Points.AppendRange);
 
-				if (IsVisible(Polyline_Magnitude_FFT))
-					musicalPresenter.DrawMagnitude(spectrum, width, height).
-					Use(Polyline_Magnitude_FFT.Points.AppendRange);
-
-				if (IsVisible(Polyline_Magnitude_PMI))
-					musicalPresenter.DrawMagnitude(spectrumInterpolated, width, height).
-					Use(Polyline_Magnitude_PMI.Points.AppendRange);
-
-				if (IsVisible(Polyline_Phase_FFT))
-					musicalPresenter.DrawPhase(spectrum, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
-					Use(Polyline_Phase_FFT.Points.AppendRange);
-
-				if (IsVisible(Polyline_Phase_PMI))
-					musicalPresenter.DrawPhase(spectrumInterpolated, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
-					Use(Polyline_Phase_PMI.Points.AppendRange);
+					if (IsVisible(Polyline_Magnitude_PMI))
+						musicalPresenter.DrawMagnitude(spectrumInterpolated, width, height).
+						Use(Polyline_Magnitude_PMI.Points.AppendRange);
+				}
 
 				var discreteStep = processingManager.ActiveProfile.SampleRate / processingManager.ActiveProfile.FrameSize;
 
@@ -209,9 +257,9 @@ namespace Solfeggio.Views
 
 				var w = MagnitudeCanvas.ActualWidth;
 				var h = MagnitudeCanvas.ActualHeight;
-				var stops = Polyline_Magnitude_PMI.Points
+				var stops = spectrumInterpolated
 					.Select(p => new GradientStop(Color.FromArgb((byte)
-					(512d * (h - p.Y)/ h), 255, 0, 0), p.X / w));
+					p.Magnitude, 255, 0, 0), p.Frequency / w));
 				var brush = new LinearGradientBrush(new(stops), 0d);
 
 				var count = 255;

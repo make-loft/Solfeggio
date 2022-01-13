@@ -34,11 +34,10 @@ namespace Solfeggio.Presenters
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
 		{
-			Spectrum.Frequency.Threshold.Deconstruct(width,
-				Spectrum.Frequency.VisualScaleFunc.To(out var hVisualScaleFunc),
-				out var lowerFrequency, out var upperFrequency,
-				out var hLowerVisualOffset, out _,
-				out var hVisualStretchFactor);
+			var hBand = Spectrum.Frequency;
+			var hScaleTransformer = GetScaleTransformer(hBand, width);
+
+			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var allMarkers = markers.ToArray();
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
@@ -51,11 +50,7 @@ namespace Solfeggio.Presenters
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
-				var hVisualOffset = activeFrequency.
-					Project(hVisualScaleFunc).
-					Stretch(hVisualStretchFactor).
-					Decrement(hLowerVisualOffset);
-
+				var hVisualOffset = hScaleTransformer.GetVisualOffset(activeFrequency);
 				var offset = hVisualOffset.Is(double.NaN) ? 0d : hVisualOffset;
 
 				CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
@@ -63,7 +58,7 @@ namespace Solfeggio.Presenters
 				if (skipLabel) continue;
 
 				var panel = new StackPanel();
-				var fontSize = hVisualScaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
+				var fontSize = hScaleTransformer.InscaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
 				fontSize = fontSize > 20d || fontSize < 5d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
 				{
@@ -111,7 +106,7 @@ namespace Solfeggio.Presenters
 
 		public delegate void Deconstruct<TIn, TOut>(in TIn p, out TOut h, out TOut v);
 
-		private static IEnumerable<TIn> EnuerateActivePoints<TIn>(
+		private static IEnumerable<TIn> EnumerateActivePoints<TIn>(
 			IEnumerable<TIn> items,
 			Deconstruct<TIn, double> deconstruct,
 			double hLowerValue,
@@ -146,6 +141,10 @@ namespace Solfeggio.Presenters
 			}
 		}
 
+		public static ScaleTransformer GetScaleTransformer(Bandwidth band, double visualLength,
+			Projection correction = default) => new(band.VisualScaleFunc, visualLength,
+				band.Threshold.Lower, band.Threshold.Upper, correction);
+
 		public static IEnumerable<TOut> Draw<TIn, TOut>(
 			IEnumerable<TIn> points,
 			Create<TOut> create,
@@ -156,36 +155,21 @@ namespace Solfeggio.Presenters
 			Projection hCorrection,
 			Projection vCorrection)
 		{
-			hBand.Threshold.Deconstruct(hLength,
-				hBand.VisualScaleFunc.To(out var hVisualScaleFunc),
-				out var hLowerValue, out var hUpperValue,
-				out var hLowerVisualOffset, out _,
-				out var hVisualLengthStretchFactor);
+			var hScaleTransformer = GetScaleTransformer(hBand, hLength, hCorrection);
+			var vScaleTransformer = GetScaleTransformer(vBand, vLength, vCorrection);
 
-			vBand.Threshold.Deconstruct(vLength,
-				vBand.VisualScaleFunc.To(out var vVisualScaleFunc),
-				out _, out var vUpperValue,
-				out var vLowerVisualOffset, out _,
-				out var vVisualLengthStretchFactor);
+			hBand.Threshold.Deconstruct(out var hLowerValue, out var hUpperValue);
+			vBand.Threshold.Deconstruct(out var vLowerValue, out var vUpperValue);
+			vScaleTransformer.GetVisualOffset(0d).To(out var vZeroLevel);
 
-			vLowerVisualOffset.Increment(vLength).To(out var vZeroLevel);
 			if (createWithContent.IsNot()) yield return create(0d, in vZeroLevel);
 
-			foreach(var activePoint in EnuerateActivePoints(points, deconstruct, hLowerValue, hUpperValue))
+			foreach(var activePoint in EnumerateActivePoints(points, deconstruct, hLowerValue, hUpperValue))
 			{
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
-				var hVisualOffset = hActiveValue
-					.Project(hVisualScaleFunc)
-					.Stretch(hVisualLengthStretchFactor)
-					.Decrement(hLowerVisualOffset)
-					.Project(hCorrection);
-
-				var vVisualOffset = vActiveValue
-					.Project(vVisualScaleFunc)
-					.Stretch(vVisualLengthStretchFactor)
-					.Decrement(vLowerVisualOffset)
-					.Project(vCorrection);
+				var hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
+				var vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
 
 				yield return createWithContent.IsNot()
 					? create(in hVisualOffset, in vVisualOffset)
@@ -310,11 +294,10 @@ namespace Solfeggio.Presenters
 			var useNoteFilter = UseNoteFilter;
 			var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
 
-			Spectrum.Frequency.Threshold.Deconstruct(width,
-				Spectrum.Frequency.VisualScaleFunc.To(out var frequencyVisualScaleFunc),
-				out var lowerFrequency, out var upperFrequency,
-				out var hLowerVisualOffset, out _,
-				out var hVisualStretchFactor);
+			var hBand = Spectrum.Frequency;
+			var hScaleTransformer = GetScaleTransformer(hBand, width);
+
+			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var keys = new List<PianoKey>();
 			var oktavesCount = MusicalOptions.HalfTonesCount + 1;
@@ -369,9 +352,9 @@ namespace Solfeggio.Presenters
 				var basicBrush = MusicalOptions.OktaveBrushes()[key.NoteNumber];
 				var noteNumber = key.NoteNumber;
 				var isTone = MusicalOptions.Tones[key.NoteNumber];
-				var lowerOffset = frequencyVisualScaleFunc(key.LowerFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
-				var upperOffset = frequencyVisualScaleFunc(key.UpperFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
-				var ethalonOffset = frequencyVisualScaleFunc(key.EthalonFrequency).Stretch(hVisualStretchFactor).Decrement(hLowerVisualOffset);
+				var lowerOffset = hScaleTransformer.GetVisualOffset(key.LowerFrequency);
+				var upperOffset = hScaleTransformer.GetVisualOffset(key.UpperFrequency);
+				var ethalonOffset = hScaleTransformer.GetVisualOffset(key.EthalonFrequency);
 				var offset = ethalonOffset.Is(double.NaN) ? 0d : ethalonOffset;
 
 				var actualHeight = isTone ? height : height * 0.618d;
