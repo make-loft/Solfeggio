@@ -43,7 +43,7 @@
     <StartupObject>Solfeggio.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -280,7 +280,7 @@
     <None Include="Assemblies\Ace.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="App.ico" />
+    <Resource Include="..\..\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

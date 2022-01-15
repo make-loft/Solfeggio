@@ -35,7 +35,7 @@
     <StartupObject>Solfeggio.Launcher.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework" />
@@ -80,7 +80,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.ico" />
+    <Content Include="..\..\logo.ico" />
     <Content Include="ReadMe.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
