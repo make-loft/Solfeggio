@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,6 +8,9 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
+
+using Rainbow;
+
 using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 
@@ -57,7 +62,6 @@ namespace Solfeggio.Views
 					from = till;
 					return;
 				}
-
 				var deltaX = from.X - till.X;
 				var deltaY = from.Y - till.Y;
 				var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;
@@ -239,7 +243,7 @@ namespace Solfeggio.Views
 						musicalPresenter.EnumerateNotes());
 
 					musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
-						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
 						musicalPresenter.EnumerateNotes());
 				}
 
@@ -253,24 +257,85 @@ namespace Solfeggio.Views
 						p.Margin = new(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 8d, 0d, 0d);
 					});
 
+				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
+					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency));
+
+				musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
+					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency));
+
 				appViewModel.Harmonics = dominanats;
 
-				var w = MagnitudeCanvas.ActualWidth;
-				var h = MagnitudeCanvas.ActualHeight;
-				var stops = spectrumInterpolated
-					.Select(p => new GradientStop(Color.FromArgb((byte)
-					p.Magnitude, 255, 0, 0), p.Frequency / w));
-				var brush = new LinearGradientBrush(new(stops), 0d);
+				var w = SpectrogramCanvas.ActualWidth;
+				var h = SpectrogramCanvas.ActualHeight;
 
-				var count = 255;
+				var actualBand = musicalPresenter.Spectrum.Frequency;
+
+				var count = 127;
 				if (SpectrogramCanvas.Children.Count > count)
 					SpectrogramCanvas.Children.RemoveAt(count);
-				SpectrogramCanvas.Children.Insert(0, new Rectangle { Fill = brush, Height = 4 });
+
+				SpectrogramCanvas.Children.Insert(0, new Rectangle 
+				{
+					Tag = spectrumInterpolated,
+					Fill = GetSpectrogramLineBrush(spectrumInterpolated, actualBand, w, h),
+				});
+
 				var hh = SpectrogramFrame.ActualHeight / count;
-				SpectrogramCanvas.Children.Cast<Rectangle>().ForEach(c => c.Height = hh);
+				SpectrogramCanvas.Children.OfType<Rectangle>().ForEach(r => r.Height = hh);
+
+				void FullSpectrogramRefresh() => SpectrogramCanvas.Children
+					.OfType<Rectangle>()
+					.ForEach(r => r.Fill = GetSpectrogramLineBrush((IList<Bin>)r.Tag, actualBand, w, h));
+
+				async void RequestFullSpectrogramRefresh(int delay)
+				{
+					_requestsCount++;
+					await Task.Delay(delay);
+					_requestsCount--;
+					if (_requestsCount > 0)
+						return;
+
+					FullSpectrogramRefresh();
+				}
+
+				var threshold = actualBand.Threshold;
+				if (IsStateChanged(actualBand.VisualScaleFunc, threshold).Not())
+					return;
+
+				KeepState(actualBand.VisualScaleFunc, threshold);
+				RequestFullSpectrogramRefresh(500);
 			};
 
 			timer.Start();
+		}
+
+		int _requestsCount = 0;
+		Projection _previousScaleFunc;
+		double _previousLower, _previousUpper;
+
+		bool IsStateChanged(Projection actualScaleFunc, SmartRange threshold) =>
+			threshold.Lower.IsNot(_previousLower) ||
+			threshold.Upper.IsNot(_previousUpper) ||
+			actualScaleFunc.IsNot(_previousScaleFunc);
+
+		void KeepState(Projection actualScaleFunc, SmartRange threshold)
+		{
+			_previousLower = threshold.Lower;
+			_previousUpper = threshold.Upper;
+			_previousScaleFunc = actualScaleFunc;
+		}
+
+		private static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, Bandwidth bandwidth, double w, double h)
+		{
+			var transformer = MusicalPresenter.GetScaleTransformer(bandwidth, w);
+
+			var from = transformer.GetLogicalOffset(0);
+			var till = transformer.GetLogicalOffset(w);
+
+			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
+				.Select(p => new GradientStop(Color.FromArgb(
+					(byte)(p.Magnitude * 255), 255, 255, 255), transformer.GetVisualOffset(p.Frequency) / w)).ToList();
+			return new(new(stops), 0d);
 		}
 	}
 }

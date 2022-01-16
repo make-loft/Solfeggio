@@ -43,6 +43,7 @@ namespace Solfeggio.Presenters
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
+			var skipLabels = textBrush.IsNot();
 
 			foreach (var activeFrequency in markers)
 			{
@@ -55,7 +56,7 @@ namespace Solfeggio.Presenters
 
 				CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
 
-				if (skipLabel) continue;
+				if (skipLabels || skipLabel) continue;
 
 				var panel = new StackPanel();
 				var fontSize = hScaleTransformer.InscaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;

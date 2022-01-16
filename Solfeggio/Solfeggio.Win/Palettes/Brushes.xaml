@@ -284,6 +284,18 @@
 			Color="{DynamicResource ColorD}" />
 	</LinearGradientBrush>
 
+	<LinearGradientBrush
+		x:Key="SpectrogramBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{DynamicResource ColorC}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{DynamicResource ColorC}" />
+	</LinearGradientBrush>
+
 	<Color x:Key="PressedFullToneKeyColor">Red</Color>
 	<LinearGradientBrush
 		x:Key="PressToneKeyBrush"
@@ -351,5 +363,35 @@
 		x:Key="HzBrush"
 		Color="Blue"
 		Opacity="0.3" />
+
+	<LinearGradientBrush
+		x:Key="MagnitudePeakBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{DynamicResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{DynamicResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{DynamicResource ColorA}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="PhasePeakBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{DynamicResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{DynamicResource ColorA}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{DynamicResource ColorC}" />
+	</LinearGradientBrush>
 
 </ResourceDictionary>

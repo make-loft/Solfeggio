@@ -126,7 +126,7 @@
 				Rack.Cell="R2"
 				Name="SpectrogramCanvas"
 				HorizontalAlignment="Stretch"
-				Background="{DynamicResource PianoBackgroundBrush}"
+				Background="{DynamicResource SpectrogramBackgroundBrush}"
 				/>
 		</Grid>
 
