@@ -224,6 +224,7 @@ namespace Solfeggio.Views
 				var resources = App.Current.Resources;
 
 				var vA = resources["Visibility.FrequencyDiscreteGrid"];
+				var zIndexA = resources["ZIndex.FrequencyDiscreteGrid"];
 				if (vA.Is(Visibility.Visible))
 				{
 					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
@@ -236,6 +237,7 @@ namespace Solfeggio.Views
 				}
 
 				var vB = resources["Visibility.FrequencyNotesGrid"];
+				var zIndexB = resources["ZIndex.FrequencyNotesGrid"];
 				if (vB.Is(Visibility.Visible))
 				{
 					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,

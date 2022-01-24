@@ -193,6 +193,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Palettes\Sets.Visualization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Palettes\Sets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

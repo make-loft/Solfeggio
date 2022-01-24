@@ -10,7 +10,7 @@
 	Width="{Smart MonitorWidth, DefaultValue=1000}"
 	Left="{Smart MonitorLeft, DefaultValue=NaN}"
 	Top="{Smart MonitorTop, DefaultValue=NaN}"
-	Title="{Localizing Key=Monitor}"
+	Title="{Localizing Key=Monitor, Modifiers=ToUpper}"
 	ResizeMode="CanResizeWithGrip"
 	>
 	<v:OptionsView

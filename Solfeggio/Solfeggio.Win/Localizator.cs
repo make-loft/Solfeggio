@@ -25,6 +25,7 @@ namespace Solfeggio
 			{ Belorussian, bel ?? rus ?? eng },
 		};
 
+		public static o Solfeggio = _("Solfeggio", "Сольфеджио");
 		public static o Сalibration = _("Сalibration", "Калибровка", "Каліброўка");
 		public static o Visualization = _("Visualization", "Визуализация", "Візуалізацыя");
 		public static o Advanced = _("Advanced", "Расширенные");

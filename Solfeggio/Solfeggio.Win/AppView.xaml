@@ -9,7 +9,7 @@
 	Width="{Smart Width, DefaultValue=1000}"
 	Left="{Smart Left, DefaultValue=NaN}"
 	Top="{Smart Top, DefaultValue=NaN}"
-	Title="Solfeggio">
+	Title="{Localizing Key=Solfeggio, Modifiers=ToUpper}">
 
 	<views:SolfeggioView/>
 

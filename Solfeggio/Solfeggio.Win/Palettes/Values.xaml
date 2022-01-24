@@ -26,17 +26,17 @@
 	<Double x:Key="StrokeThickness.FrequencyNotesGrid">1</Double>
 	<Double x:Key="StrokeThickness.FrequencyDiscreteGrid">1</Double>
 
-	<Int32 x:Key="ZIndex.MagnitudeFFT">0</Int32>
-	<Int32 x:Key="ZIndex.MagnitudePMI">1</Int32>
+	<Int32 x:Key="ZIndex.MagnitudeFFT">3</Int32>
+	<Int32 x:Key="ZIndex.MagnitudePMI">2</Int32>
 
-	<Int32 x:Key="ZIndex.PhaseFFT">2</Int32>
-	<Int32 x:Key="ZIndex.PhasePMI">3</Int32>
+	<Int32 x:Key="ZIndex.PhaseFFT">3</Int32>
+	<Int32 x:Key="ZIndex.PhasePMI">2</Int32>
 
-	<Int32 x:Key="ZIndex.MagnitudeRawFrame">4</Int32>
-	<Int32 x:Key="ZIndex.MagnitudeWindowFrame">5</Int32>
+	<Int32 x:Key="ZIndex.MagnitudeRawFrame">0</Int32>
+	<Int32 x:Key="ZIndex.MagnitudeWindowFrame">1</Int32>
 
-	<Int32 x:Key="ZIndex.FrequencyNotesGrid">6</Int32>
-	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">7</Int32>
+	<Int32 x:Key="ZIndex.FrequencyNotesGrid">0</Int32>
+	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">1</Int32>
 
 	<p:Visibility x:Key="Visibility.MagnitudeFFT">Collapsed</p:Visibility>
 	<p:Visibility x:Key="Visibility.MagnitudePMI">Visible</p:Visibility>

@@ -8,6 +8,7 @@ using System.Windows;
 using Ace;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
+
 using static System.Environment;
 using static Solfeggio.Editions;
 
@@ -88,15 +89,16 @@ namespace Solfeggio
 			_startupTimestamp = DateTime.Now;
 
 
-			var theme = Store.ActiveBox.Revive<Dictionary<object, object>>("Theme");
+			var theme = Store.ActiveBox.Revive<Dictionary<string, object>>("Theme");
 			//var brushes = Resources.MergedDictionaries[2];
 			theme.ForEach(p => Resources[p.Key] = p.Value);
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
-			var brushes = Resources.MergedDictionaries[2];
-			var keysForSave = Resources.Keys.Cast<object>().Where(brushes.Contains).Where(k => Resources[k].EqualsAsStrings(brushes[k]).Not()).ToList();
+			var keysForSave =
+				Resources.MergedDictionaries[2].Keys.Cast<string>()
+				.Concat(Resources.MergedDictionaries[1].Keys.Cast<string>()).ToList();
 			var forSave = keysForSave.ToDictionary(k => k, k => Resources[k]);
 
 			Store.ActiveBox.TryKeep(forSave, "Theme");

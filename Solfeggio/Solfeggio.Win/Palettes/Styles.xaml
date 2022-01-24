@@ -18,6 +18,19 @@
 	</Style>-->
 
 	<Style
+		TargetType="TextBlock"
+		>
+		<Setter
+			Property="VerticalAlignment"
+			Value="Center"
+			/>
+		<Setter
+			Property="Margin"
+			Value="4 0"
+			/>
+	</Style>
+
+	<Style
 		TargetType="xamarin:Pivot">
 		<Setter
 			Property="Background"

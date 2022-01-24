@@ -371,53 +371,49 @@
 		x:Key="RangeGridTemplate">
 
 		<Grid
-			Rack.Rows="^ ^ ^ ^"
-			Rack.Columns="^ ^ ^"
+			Rack.Rows="^ ^ ^"
+			Rack.Columns="^ ^ ^ ^"
 			HorizontalAlignment="Center">
 
 			<Label
-				Rack.Cell="R0 C0"
-				Text="" />
-
-			<Label
-				Rack.Cell="R1 C0"
+				Rack.Cell="R0 C1"
 				Text="{Localizing Key=Upper}" />
 			<Label
-				Rack.Cell="R2 C0"
+				Rack.Cell="R0 C2"
 				Text="{Localizing Key=Lower}" />
 			<Label
-				Rack.Cell="R3 C0"
+				Rack.Cell="R0 C3"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Localizing Key=Length}" />
 
 			<Label
-				Rack.Cell="R0 C1"
+				Rack.Cell="R1 C0"
 				Text="{Localizing Key=Threshold}" />
 			<Label
-				Rack.Cell="R0 C2"
+				Rack.Cell="R2 C0"
 				Text="{Localizing Key=Limit}" />
 
 			<Entry
 				Rack.Cell="R1 C1"
 				Text="{Binding Threshold.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				Rack.Cell="R2 C1"
+				Rack.Cell="R1 C2"
 				Text="{Binding Threshold.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				Rack.Cell="R1 C2"
+				Rack.Cell="R2 C1"
 				Text="{Binding Limit.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
 				Rack.Cell="R2 C2"
 				Text="{Binding Limit.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
 
 			<Entry
-				Rack.Cell="R3 C1"
+				Rack.Cell="R1 C3"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Binding Threshold.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
 			<Entry
-				Rack.Cell="R3 C2"
+				Rack.Cell="R2 C3"
 				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Binding Limit.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
