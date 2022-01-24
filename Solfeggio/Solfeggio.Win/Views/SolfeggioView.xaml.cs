@@ -224,29 +224,29 @@ namespace Solfeggio.Views
 				var resources = App.Current.Resources;
 
 				var vA = resources["Visibility.FrequencyDiscreteGrid"];
-				var zIndexA = resources["ZIndex.FrequencyDiscreteGrid"];
+				var zIndexA = (int)resources["ZIndex.FrequencyDiscreteGrid"];
 				if (vA.Is(Visibility.Visible))
 				{
 					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-						musicalPresenter.EnumerateGrid(discreteStep));
+						musicalPresenter.EnumerateGrid(discreteStep), zIndexA);
 
 					musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-						musicalPresenter.EnumerateGrid(discreteStep));
+						musicalPresenter.EnumerateGrid(discreteStep), zIndexA);
 				}
 
 				var vB = resources["Visibility.FrequencyNotesGrid"];
-				var zIndexB = resources["ZIndex.FrequencyNotesGrid"];
+				var zIndexB = (int)resources["ZIndex.FrequencyNotesGrid"];
 				if (vB.Is(Visibility.Visible))
 				{
 					musicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
 						AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
-						musicalPresenter.EnumerateNotes());
+						musicalPresenter.EnumerateNotes(), zIndexB);
 
 					musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
 						AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-						musicalPresenter.EnumerateNotes());
+						musicalPresenter.EnumerateNotes(), zIndexB);
 				}
 
 				var dominanats = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
@@ -260,10 +260,10 @@ namespace Solfeggio.Views
 					});
 
 				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
-					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency));
+					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
 				musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
-					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency));
+					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
 				appViewModel.Harmonics = dominanats;
 

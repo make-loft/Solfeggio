@@ -32,7 +32,7 @@ namespace Solfeggio.Presenters
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
-			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, double vLabelOffset = 0d)
+			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, int zIndex = 0, double vLabelOffset = 0d)
 		{
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
@@ -54,11 +54,15 @@ namespace Solfeggio.Presenters
 				var hVisualOffset = hScaleTransformer.GetVisualOffset(activeFrequency);
 				var offset = hVisualOffset.Is(double.NaN) ? 0d : hVisualOffset;
 
-				CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush).Use(items.Add);
+				var line = CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush);
+				Panel.SetZIndex(line, zIndex);
+
+				items.Add(line);
 
 				if (skipLabels || skipLabel) continue;
 
 				var panel = new StackPanel();
+				Panel.SetZIndex(panel, zIndex);
 				var fontSize = hScaleTransformer.InscaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
 				fontSize = fontSize > 20d || fontSize < 5d ? 20d : fontSize;
 				panel.Children.Add(new TextBlock

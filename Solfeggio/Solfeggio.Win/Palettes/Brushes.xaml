@@ -176,24 +176,23 @@
 
 	<SolidColorBrush
 		x:Key="Fill.MagnitudeFFT"
-		Color="Transparent" />
+		Color="#44FF0000" />
 
 	<SolidColorBrush
 		x:Key="Stroke.MagnitudeFFT"
-		Color="{DynamicResource ColorC}"/>
+		Color="Red" />
 	
 	<SolidColorBrush
 		x:Key="Fill.PhaseFFT"
-		Color="Transparent"
-		/>
+		Color="Transparent" />
 
 	<SolidColorBrush
 		x:Key="Stroke.PhaseFFT"
-		Color="{DynamicResource ColorC}"/>
+		Color="Red" />
 
 	<SolidColorBrush
 		x:Key="Stroke.PhasePMI"
-		Color="{DynamicResource ColorC}"/>
+		Color="{DynamicResource ColorC}" />
 
 	<LinearGradientBrush
 		x:Key="Fill.PhasePMI"
