@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
+	x:Class="Solfeggio.Palettes.Sets_Visualization"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
+	xmlns:local="clr-namespace:Solfeggio"
 	>
 
 	<Set
@@ -355,34 +357,48 @@
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=Palette}">
+			Header="{Localizing Key=Palette}"
+			>
 			<Grid
-				Rack.Columns="^ ^ ^ ^ ^ ^"
 				Rack.Rows="^ ^"
+				Rack.Columns="^ ^ ^ ^ ^ ^"
+				DataContext="{Binding MergedDictionaries[3]}"
 				>
-				<Label
-					Rack.Cell="R0 C0"
-					Text="{Localizing Key=Color}"
-					/>
+				<StackLayout
+					Rack.Cell="R1 C0"
+					Orientation="Horizontal">
+					<Label
+						Text="{Localizing Key=Base}"
+						/>
+					<Picker
+						Width="17"
+						DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
+						ItemsSource="{Binding MergedDictionaries[2]}"
+						SelectedValue="{Binding MergedDictionaries[3], Mode=OneWayToSource}"
+						SelectionChanged="Picker_SelectionChanged"
+						SelectedValuePath="Value"
+						DisplayMemberPath="Key"
+						/>
+				</StackLayout>
 				<Label
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=A}"
+					Text="A"
 					/>
 				<Label
 					Rack.Cell="R0 C2"
-					Text="{Localizing Key=B}"
+					Text="B"
 					/>
 				<Label
 					Rack.Cell="R0 C3"
-					Text="{Localizing Key=C}"
+					Text="C"
 					/>
 				<Label
 					Rack.Cell="R0 C4"
-					Text="{Localizing Key=D}"
+					Text="D"
 					/>
 				<Label
 					Rack.Cell="R0 C5"
-					Text="{Localizing Key=E}"
+					Text="E"
 					/>
 				<ContentView
 					Rack.Cell="R1 C1"
@@ -531,6 +547,12 @@
 			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}"
 			/>
 
+		<Expander
+			IsExpanded="True"
+			Header="{Localizing Key=More}"
+			ContentTemplate="{StaticResource NumericFormattingTemplate}"
+			Content="{Store Key=p:MusicalPresenter}"
+			/>
 	</Set>
 
 </ResourceDictionary>

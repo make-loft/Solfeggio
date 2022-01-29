@@ -13,7 +13,9 @@
 	<Double x:Key="InfoTextOpacityLevel">0.4</Double>
 	<Double x:Key="MinWidth">0</Double>
 	<String x:Key="DefaultStringFormat">F2</String>
-	
+	<Double x:Key="MonospaceFontSize">14</Double>
+	<p:FontFamily x:Key="MonospaceFontFamily">Consolas</p:FontFamily>
+
 	<Double x:Key="StrokeThickness.MagnitudeFFT">1</Double>
 	<Double x:Key="StrokeThickness.MagnitudePMI">1</Double>
 	

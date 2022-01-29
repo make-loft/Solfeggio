@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -125,14 +127,29 @@ namespace Xamarin.Forms
 
 	public class Entry : TextBox
 	{
-		public Entry() => KeyDown += (o, e) =>
-		{
-			if (e.Key != System.Windows.Input.Key.Enter)
-				return;
+		public static readonly List<WeakReference<Entry>> Entres = new();
+		readonly WeakReference<Entry> _this;
 
-			IsReadOnly = true;
-			IsReadOnly = false;
-		};
+		public Entry()
+		{
+			Entres.Add(_this = new(this));
+
+			KeyDown += (o, e) =>
+			{
+				if (e.Key != System.Windows.Input.Key.Enter)
+					return;
+
+				GetBindingExpression(Entry.TextProperty).UpdateSource();
+			};
+		}
+
+		~Entry() => Entres.Remove(_this);
+
+		public static void GlobalTextBindingRefresh() => Entres.ForEach(w =>
+		{
+			if (w.TryGetTarget(out var e))
+				e.GetBindingExpression(Entry.TextProperty).UpdateTarget();
+		});
 	}
 
 	public class Label : TextBlock

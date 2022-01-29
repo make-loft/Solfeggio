@@ -63,7 +63,7 @@
 				Value="{Binding InputLevel, Mode=TwoWay}" />
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding InputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 		</Grid>
 
 		<Grid
@@ -86,7 +86,7 @@
 				Value="{Binding OutputLevel, Mode=TwoWay}"/>
 			<Entry
 				Rack.Cell="C3"
-				Text="{Binding OutputLevel, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}"/>
+				Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"/>
 		</Grid>
 
 		<Picker

@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
+
 using Ace;
+
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 
@@ -69,8 +72,6 @@ namespace Solfeggio
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
 				AgreementManager.CheckExpirationStatus(Edition);
-
-				//Current.Resources.MergedDictionaries[3].Values.OfType<Brush>().ForEach(b => b.Freeze());
 			}
 			catch (Exception exception)
 			{
@@ -90,16 +91,31 @@ namespace Solfeggio
 
 
 			var theme = Store.ActiveBox.Revive<Dictionary<string, object>>("Theme");
-			//var brushes = Resources.MergedDictionaries[2];
-			theme.ForEach(p => Resources[p.Key] = p.Value);
+			theme.ForEach(p =>
+			{
+				if (p.Value is Color)
+					Colors[p.Key] = p.Value;
+				else Resources[p.Key] = p.Value;
+			});
 		}
+
+		public ResourceDictionary Values => Resources.MergedDictionaries[1];
+		public ResourceDictionary Colors => Resources.MergedDictionaries[3];
+		public ResourceDictionary Brushes => Resources.MergedDictionaries[4];
 
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
-			var keysForSave =
-				Resources.MergedDictionaries[2].Keys.Cast<string>()
-				.Concat(Resources.MergedDictionaries[1].Keys.Cast<string>()).ToList();
-			var forSave = keysForSave.ToDictionary(k => k, k => Resources[k]);
+			var values = Values;
+			var colors = Colors;
+			var brushes = Brushes;
+			var valueKeys = values.Keys.Cast<string>();
+			var colorsKeys = colors.Keys.Cast<string>().Concat(colors.MergedDictionaries[0].Keys.Cast<string>()).Distinct();
+			var brushKeys = brushes.Keys.Cast<string>().Where(k => Resources[k].IsNot(brushes[k]));
+
+			var forSave =
+				colorsKeys.OrderBy()
+				.Concat(valueKeys.Concat(brushKeys).OrderBy())
+				.ToDictionary(k => k, k => Resources[k]);
 
 			Store.ActiveBox.TryKeep(forSave, "Theme");
 			Store.Snapshot();
@@ -113,14 +129,14 @@ namespace Solfeggio
 			{
 				if (Debugger.IsAttached)
 					MessageBox.Show($"{key} : {item}\n{exception}");
-				YandexMetrica.ReportError($"{key} : {item}", exception);
+				else YandexMetrica.ReportError($"{key} : {item}", exception);
 			};
 
 			memoryBox.DecodeFailed += (key, type, exception) =>
 			{
 				if (Debugger.IsAttached)
 					MessageBox.Show($"{key} - {type}\n{exception}");
-				YandexMetrica.ReportError($"{key} - {type}", exception);
+				else YandexMetrica.ReportError($"{key} - {type}", exception);
 			};
 		}
 

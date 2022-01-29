@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using Ace;
 using Rainbow;
 using Solfeggio.Models;
+
 #if NETSTANDARD
 using Xamarin.Forms;
 using Colors = Xamarin.Forms.Color;
@@ -20,16 +21,33 @@ using Point = System.Windows.Point;
 namespace Solfeggio.Presenters
 {
 	[DataContract]
-	public class MusicalPresenter : ContextObject
+	public class MusicalPresenter : ContextObject, IExposable
 	{
 		[DataMember] public FrameOptions Frame { get; set; } = new();
 		[DataMember] public MusicalOptions Music { get; set; } = new();
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
 		[DataMember] public VisualProfile VisualProfile { get; set; } = new();
 
-		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
-		[DataMember] public string[] NumericFormats { get; } = new[] { "F0", "F1", "F2", "F3", "F4", "F5" };
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
+		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
+		[DataMember] public string[] NumericFormats { get; set; } = { "F0", "F1", "F2", "F3", "F4", "F5" };
+		
+		[DataMember] public string CommonNumericFormat
+		{
+			get => Get(() => CommonNumericFormat, "F2");
+			set => Set(() => CommonNumericFormat, value);
+		}
+
+		[DataMember] public string NoteNumericFormat
+		{
+			get => Get(() => NoteNumericFormat, "F2");
+			set => Set(() => NoteNumericFormat, value);
+		}
+
+		public void Expose()
+		{
+			this[() => CommonNumericFormat].PropertyChanged += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+		}
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, int zIndex = 0, double vLabelOffset = 0d)
@@ -74,7 +92,7 @@ namespace Solfeggio.Presenters
 
 				items.Add(panel);
 				panel.UpdateLayout();
-				panel.Margin = new Thickness(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
+				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
 			}
 		}
 
@@ -278,7 +296,7 @@ namespace Solfeggio.Presenters
 
 			return VisualProfile.TopProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
 			{
-				Text = string.Format(p.Value.StringFormat ?? "{0}", GetValueByKey(p.Key)),
+				Text = string.Format(p.Value.StringFormat ?? NoteNumericFormat, GetValueByKey(p.Key)),
 				HorizontalAlignment = HorizontalAlignment.Center,
 				FontSize = p.Value.FontSize * expressionLevel * (height > 0.1 ? height : 0.1) / 256,
 #if NETSTANDARD
@@ -297,7 +315,9 @@ namespace Solfeggio.Presenters
 
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
 			var useNoteFilter = UseNoteFilter;
-			var noteNames = Music.ActiveNotation.Value ?? (Music.ActiveNotation = Music.Notations.First()).Value;
+			var noteNames = Music.Notations.TryGetValue(Music.ActiveNotation ?? "", out var names)
+				? names
+				: Music.Notations[Music.ActiveNotation = Music.Notations.First().Key];
 
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);

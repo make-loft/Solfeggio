@@ -104,10 +104,9 @@
 		<Picker
 			Rack.Cell="R0 C1"
 			Width="17"
-			Height="18"
+			Height="20"
 			HorizontalAlignment="Right"
 			ItemsSource="{Binding NamedColors}"
-
 			SelectedItem="{Binding ActiveNamedColor, Mode=TwoWay}">
 			<Picker.ItemTemplate>
 				<DataTemplate>
@@ -121,8 +120,10 @@
 						</Frame>
 						<Entry
 							Width="80"
+							IsReadOnly="True"
 							Text="{Binding Color}" />
 						<Entry
+							IsReadOnly="True"
 							Text="{Binding Name}" />
 					</StackLayout>
 				</DataTemplate>
@@ -154,16 +155,16 @@
 		<Entry
 			Width="30"
 			Rack.Cell="R1 C3"
-			Text="{Binding A, Mode=TwoWay, StringFormat=X2}" />
+			Text="{Binding A, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 		<Entry
 			Rack.Cell="R2 C3"
-			Text="{Binding R, Mode=TwoWay, StringFormat=X2}" />
+			Text="{Binding R, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 		<Entry
 			Rack.Cell="R3 C3"
-			Text="{Binding G, Mode=TwoWay, StringFormat=X2}" />
+			Text="{Binding G, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 		<Entry
 			Rack.Cell="R4 C3"
-			Text="{Binding B, Mode=TwoWay, StringFormat=X2}" />
+			Text="{Binding B, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 
 	</Grid>
 </GroupBox>

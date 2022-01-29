@@ -7,18 +7,20 @@
 	Exit="App_OnExit"
 	>
 	<Application.Resources>
-		<ResourceDictionary>
+		<Map>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/Ace;component/Ace.Zest/Dictionaries/AppConverters.xaml" />
-				<ResourceDictionary Source="Palettes/Values.xaml" />
-				<ResourceDictionary Source="Palettes/Brushes.xaml" />
-				<ResourceDictionary Source="Palettes/Converters.xaml" />
-				<ResourceDictionary Source="Palettes/Templates.Desktop.xaml" />
-				<ResourceDictionary Source="Palettes/Templates.xaml" />
-				<ResourceDictionary Source="Palettes/Styles.xaml" />
-				<ResourceDictionary Source="Palettes/Sets.xaml" />
-				<ResourceDictionary Source="Palettes/Sets.Visualization.xaml" />
+				<Map Source="pack://application:,,,/Ace;component/Ace.Zest/Dictionaries/AppConverters.xaml" />
+				<Map Source="Palettes/Values.xaml" />
+				<Map Source="Palettes/ColorPalettes.xaml" />
+				<Map BasedOn="{StaticResource Nature}" />
+				<Map Source="Palettes/Brushes.xaml" />
+				<Map Source="Palettes/Converters.xaml" />
+				<Map Source="Palettes/Templates.Desktop.xaml" />
+				<Map Source="Palettes/Templates.xaml" />
+				<Map Source="Palettes/Styles.xaml" />
+				<Map Source="Palettes/Sets.xaml" />
+				<Map Source="Palettes/Sets.Visualization.xaml" />
 			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
+		</Map>
 	</Application.Resources>
 </Application>

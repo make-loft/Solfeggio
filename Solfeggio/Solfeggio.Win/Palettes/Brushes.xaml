@@ -2,20 +2,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	<!--
-	<Color x:Key="ColorA">#FF880022</Color>
-	<Color x:Key="ColorB">#FFFFBE22</Color>
-	<Color x:Key="ColorC">#FF884488</Color>
-	<Color x:Key="ColorD">WhiteSmoke</Color>
-	<Color x:Key="ColorE">#FF3F3E3E</Color>
-	-->
-
-	<Color x:Key="ColorA">#FF3F9FFF</Color>
-	<Color x:Key="ColorB">#FFFFFF5F</Color>
-	<Color x:Key="ColorC">#FFBF7FBF</Color>
-	<Color x:Key="ColorD">WhiteSmoke</Color>
-	<Color x:Key="ColorE">#FF3F3E3E</Color>
-
 	<SolidColorBrush
 		x:Key="LabelBrush"
 		Color="#88FFFFFF"/>
@@ -295,7 +281,6 @@
 			Color="{DynamicResource ColorC}" />
 	</LinearGradientBrush>
 
-	<Color x:Key="PressedFullToneKeyColor">Red</Color>
 	<LinearGradientBrush
 		x:Key="PressToneKeyBrush"
 		StartPoint="0,0"
@@ -308,7 +293,6 @@
 			Color="{DynamicResource PressedFullToneKeyColor}" />
 	</LinearGradientBrush>
 
-	<Color x:Key="PressedHalfToneKeyColor">Red</Color>
 	<LinearGradientBrush
 		x:Key="PressHalfToneKeyBrush"
 		StartPoint="0,0"

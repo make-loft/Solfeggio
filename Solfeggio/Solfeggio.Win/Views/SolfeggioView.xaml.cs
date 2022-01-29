@@ -62,6 +62,7 @@ namespace Solfeggio.Views
 					from = till;
 					return;
 				}
+
 				var deltaX = from.X - till.X;
 				var deltaY = from.Y - till.Y;
 				var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;

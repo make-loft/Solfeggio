@@ -41,6 +41,17 @@
 	</Set>
 
 	<Set
+		x:Key="NumericFormats"
+		>
+		<s:String>F0</s:String>
+		<s:String>F1</s:String>
+		<s:String>F2</s:String>
+		<s:String>F3</s:String>
+		<s:String>F4</s:String>
+		<s:String>F5</s:String>
+	</Set>
+
+	<Set
         x:Shared="False"
         x:Key="ShowStateSet">
 
@@ -72,19 +83,20 @@
 
 	<Set
         x:Shared="False"
-        x:Key="MusicOptionsSet">
-
+        x:Key="MusicOptionsSet"
+		>
 		<Picker
-            Tag="{Localizing Key=Standard, StringFormat='{}{0} [A1] (Hz)'}"
+            Tag="{Localizing Key=Standard, StringFormat='{}{0} [A1] (Hz)', ForceStringFormat=True}"
 			ItemsSource="{Binding PitchStandards}"
-			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}" />
-
+			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}"
+			/>
 		<Picker
             Tag="{Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
 			ItemsSource="{Binding Notations}"
-			SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
-            DisplayMemberPath="Key" />
-
+			SelectedValue="{Binding ActiveNotation, Mode=TwoWay}"
+			SelectedValuePath="Key"
+            DisplayMemberPath="Key"
+			/>
 	</Set>
 
 </ResourceDictionary>

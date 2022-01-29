@@ -1,20 +1,11 @@
-﻿using System.Windows;
-
-namespace Solfeggio.Converters
+﻿namespace Solfeggio.Converters
 {
 	public class Int32ToStringTwoWayConverter : Ace.Converters.Patterns.AValueConverter
 	{
-		public static DependencyProperty StringFormatProperty =
-			DependencyProperty.Register(nameof(StringFormat), typeof(string), typeof(Int32ToStringTwoWayConverter));
+		public override object Convert(object value) => ((int)(value ?? 0)).ToString();
 
-		public string StringFormat
-		{
-			get => GetValue(StringFormatProperty) as string;
-			set => SetValue(StringFormatProperty, value);
-		}
-
-		public override object Convert(object value) => ((int)(value ?? 0)).ToString(StringFormat);
-
-		public override object ConvertBack(object value) => int.Parse((string)value);
+		public override object ConvertBack(object value) => value is int i
+			? i
+			: int.TryParse((string)value, out var v) ? v : default;
 	}
 }

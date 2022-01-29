@@ -11,7 +11,12 @@
 		/>
 	<c:DoubleToStringTwoWayConverter
 		x:Key="DoubleToStringTwoWayConverter"
-		StringFormat="{DynamicResource DefaultStringFormat}"
+		/>
+	<c:ColorToStringTwoWayConverter
+		x:Key="ColorToStringTwoWayConverter"
+		/>
+	<c:ByteToHexStringTwoWayConverter
+		x:Key="ByteToHexStringTwoWayConverter"
 		/>
 	<c:ColorToSolidBrushConverter
 		x:Key="ColorToSolidBrushConverter"

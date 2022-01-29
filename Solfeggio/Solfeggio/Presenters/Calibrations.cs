@@ -195,7 +195,7 @@ namespace Solfeggio.Presenters
 			{ "Combined", Notes }
 		};
 
-		[DataMember] public KeyValuePair<string, string[]> ActiveNotation { get; set; }
+		[DataMember] public string ActiveNotation { get; set; }
 
 		protected static readonly string[] Notes =
 			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};

@@ -21,34 +21,35 @@
 				Maximum="+1.0"
 				TickFrequency="0.01"
 				TickPlacement="TopLeft"
-				Value="{Binding Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
+				Value="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Slider
 				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
 				Minimum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
 				Maximum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
-				Value="{Binding Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
+				Value="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Slider
 				Rack.Cell="C2 R1"
 				TickFrequency="0.207"
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding Phase, StringFormat={StaticResource DefaultStringFormat}}" />
+				Value="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 
 			<Entry
 				Rack.Cell="C0 R0"
-				Text="{Binding Magnitude, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C1 R0"
-				Text="{Binding Frequency, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C2 R0"
-				Text="{Binding Phase, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
 			<Entry
 				Rack.Cell="C3 R2"
-				Text="{Binding Gap, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
+				ToolTip="{Localizing Gap}"
+				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
 			<Picker
 				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
@@ -338,29 +339,39 @@
 			Rack.Columns="32 64 64 64 *">
 			<Label
 				Rack.Cell="C0"
+				FontSize="{StaticResource MonospaceFontSize}"
+				FontFamily="{StaticResource MonospaceFontFamily}"
 				Text="{Binding NoteName}" />
 			<Label
 				Rack.Cell="C1"
-				Text="{Binding EthalonFrequency, StringFormat={StaticResource DefaultStringFormat}}" />
+				FontSize="{StaticResource MonospaceFontSize}"
+				FontFamily="{StaticResource MonospaceFontFamily}"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Label
 				Rack.Cell="C2"
+				FontSize="{StaticResource MonospaceFontSize}"
+				FontFamily="{StaticResource MonospaceFontFamily}"
 				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
 			<Label
 				Rack.Cell="C3"
-				Text="{Binding Harmonic.Frequency, StringFormat={StaticResource DefaultStringFormat}}" />
+				FontSize="{StaticResource MonospaceFontSize}"
+				FontFamily="{StaticResource MonospaceFontFamily}"
+				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Label
 				Rack.Cell="C4"
-				Text="{Binding Harmonic.Magnitude, StringFormat={StaticResource DefaultStringFormat}}" />
+				FontSize="{StaticResource MonospaceFontSize}"
+				FontFamily="{StaticResource MonospaceFontFamily}"
+				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 		</Grid>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="OptionTemplate">
 		<Grid
-			Rack.Columns="7* 5* *">
-			<ContentPresenter
+			Rack.Columns="* * 5*">
+			<Label
 				Rack.Cell="C0"
-				Content="{Binding Tag}" />
+				Text="{Binding Tag}" />
 			<ContentPresenter
 				Rack.Cell="C1"
 				Content="{Binding}" />
@@ -383,40 +394,39 @@
 				Text="{Localizing Key=Lower}" />
 			<Label
 				Rack.Cell="R0 C3"
-				IsEnabled="False"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Localizing Key=Length}" />
 
 			<Label
-				Rack.Cell="R1 C0"
+				Rack.Cell="R2 C0"
 				Text="{Localizing Key=Threshold}" />
 			<Label
-				Rack.Cell="R2 C0"
+				Rack.Cell="R1 C0"
 				Text="{Localizing Key=Limit}" />
 
 			<Entry
-				Rack.Cell="R1 C1"
-				Text="{Binding Threshold.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
-			<Entry
-				Rack.Cell="R1 C2"
-				Text="{Binding Threshold.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
-			<Entry
 				Rack.Cell="R2 C1"
-				Text="{Binding Limit.Upper, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Entry
 				Rack.Cell="R2 C2"
-				Text="{Binding Limit.Lower, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+			<Entry
+				Rack.Cell="R1 C1"
+				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+			<Entry
+				Rack.Cell="R1 C2"
+				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 
 			<Entry
-				Rack.Cell="R1 C3"
-				IsEnabled="False"
-				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Binding Threshold.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
-			<Entry
 				Rack.Cell="R2 C3"
-				IsEnabled="False"
+				Style="{StaticResource ReadOnlyEntryStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Binding Limit.Length, Mode=OneWay, StringFormat={StaticResource DefaultStringFormat}}" />
+				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+			<Entry
+				Rack.Cell="R1 C3"
+				Style="{StaticResource ReadOnlyEntryStyle}"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 		</Grid>
 
 	</DataTemplate>
@@ -462,9 +472,25 @@
 
 	<DataTemplate
 		x:Key="NumericFormattingTemplate">
-		<ItemsView
-			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource NumericFormattingSet}" />
+		<Grid
+			Rack.Rows="^ ^"
+			Rack.Columns="^ ^ *"
+			>
+			<Label
+				Rack.Cell="R0 C0"
+				Text="{Localizing Key=Common}" />
+			<Picker
+				Rack.Cell="R0 C1"
+				ItemsSource="{Binding NumericFormats}"
+				SelectedItem="{Binding CommonNumericFormat, Mode=TwoWay}" />
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Key=NumericFormat}" />
+			<Picker
+				Rack.Cell="R1 C1"
+				ItemsSource="{Binding NumericFormats}"
+				SelectedItem="{Binding NoteNumericFormat, Mode=TwoWay}" />
+		</Grid>
 	</DataTemplate>
 
 	<DataTemplate
@@ -517,7 +543,7 @@
 				x:Name="TemplateRoot">
 				<Expander.Header>
 					<Entry
-						Text="{Binding DataContext, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
 				</Expander.Header>
 				<views:PopupView
@@ -542,7 +568,7 @@
 			<Entry
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
-				Text="{Binding DataContext, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}, Converter={StaticResource Int32ToStringTwoWayConverter}}"
+				Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToStringTwoWayConverter}}"
 				/>
 		</Grid>
 	</ControlTemplate>
@@ -564,7 +590,7 @@
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
 						<Entry
 							Rack.Cell="R0 C0"
-							Text="{Binding Threshold.Upper, StringFormat={StaticResource DefaultStringFormat}}"
+							Text="{Binding Threshold.Upper, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
 						<Label
 							Rack.Cell="R0 C1"
@@ -572,16 +598,17 @@
 							/>
 						<Entry
 							Rack.Cell="R0 C2"
-							Text="{Binding Threshold.Lower, StringFormat={StaticResource DefaultStringFormat}}"
+							Text="{Binding Threshold.Lower, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
 						<Label
 							Rack.Cell="R1 C1"
 							Text="="
 							/>
-						<Label
+						<Entry
 							Rack.Cell="R1 C2"
-							Text="{Binding Threshold.Length, StringFormat={StaticResource DefaultStringFormat}}"
-						/>
+							Style="{StaticResource ReadOnlyEntryStyle}"
+							Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							/>
 					</Grid>
 				</Expander.Header>
 				<views:PopupView
@@ -630,7 +657,7 @@
 						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
 					<Entry
 						Margin="10 4"
-						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
 				</Grid>
 			</Expander.Header>
 			<views:PopupView
@@ -668,15 +695,21 @@
 				Width="17"
 				Height="17"
 				SelectedValuePath="Value"
-				ItemsSource="{Binding Resources.MergedDictionaries[2], Source={x:Static local:App.Current}}"
+				ItemsSource="{Binding Resources.Brushes, Source={x:Static local:App.Current}}"
 				SelectedValue="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
 				<Picker.ItemTemplate>
 					<DataTemplate>
 						<StackLayout
 							Orientation="Horizontal">
-							<Label
-								Text="{Binding Key}"
-								/>
+							<Frame
+								Background="{Binding ChessBrush}">
+								<Frame
+									Style="{StaticResource FrameStyle}"
+									Background="{Binding Value}" />
+							</Frame>
+							<Entry
+								IsReadOnly="True"
+								Text="{Binding Key}" />
 						</StackLayout>
 					</DataTemplate>
 				</Picker.ItemTemplate>

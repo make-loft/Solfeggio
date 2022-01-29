@@ -68,11 +68,32 @@
 			Property="MinWidth"
 			Value="64" />
 		<Setter
+			Property="VerticalContentAlignment"
+			Value="Center" />
+		<Setter
 			Property="HorizontalContentAlignment"
 			Value="Right" />
 		<Setter
 			Property="MinWidth"
 			Value="{StaticResource MinWidth}" />
+		<Setter
+			Property="FontFamily"
+			Value="{StaticResource MonospaceFontFamily}" />
+		<Setter
+			Property="FontSize"
+			Value="{StaticResource MonospaceFontSize}" />
+	</Style>
+
+	<Style
+		x:Key="ReadOnlyEntryStyle"
+		TargetType="Entry"
+		BasedOn="{StaticResource {x:Type Entry}}">
+		<Setter
+			Property="IsReadOnly"
+			Value="True" />
+		<Setter
+			Property="Opacity"
+			Value="0.61" />
 	</Style>
 
 	<Style
@@ -239,6 +260,9 @@
 	<Style
 		x:Key="CenteredLabel"
 		TargetType="xamarin:Label">
+		<Setter
+			Property="Padding"
+			Value="2" />
 		<Setter
 			Property="VerticalAlignment"
 			Value="Center" />

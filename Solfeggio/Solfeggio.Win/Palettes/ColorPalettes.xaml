@@ -1,0 +1,47 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	>
+
+	<Map
+		x:Key="Nature"
+		>
+		<Color x:Key="ColorA">#3F9FFF</Color>
+		<Color x:Key="ColorB">#FFFF5F</Color>
+		<Color x:Key="ColorC">#D87FBF</Color>
+		<Color x:Key="ColorD">#F5F5F5</Color>
+		<Color x:Key="ColorE">#3F3E3E</Color>
+		<Color x:Key="PressedFullToneKeyColor">Red</Color>
+		<Color x:Key="PressedHalfToneKeyColor">Red</Color>
+	</Map>
+
+	<Map
+		x:Key="Flame"
+		BasedOn="{StaticResource Nature}"
+		>
+		<Color x:Key="ColorA">#880022</Color>
+		<Color x:Key="ColorB">#FFBE22</Color>
+		<Color x:Key="ColorC">#991E66</Color>
+	</Map>
+
+	<Map
+		x:Key="Ocean"
+		BasedOn="{StaticResource Nature}"
+		>
+		<Color x:Key="ColorA">#66A5AD</Color>
+		<Color x:Key="ColorB">#07575B</Color>
+		<Color x:Key="ColorC">#003B46</Color>
+		<Color x:Key="ColorD">#C4DFE6</Color>
+		<Color x:Key="ColorE">#1F3E3E</Color>
+	</Map>
+
+	<Map
+		x:Key="Beet"
+		BasedOn="{StaticResource Nature}"
+		>
+		<Color x:Key="ColorA">#008AC3</Color>
+		<Color x:Key="ColorB">#FFFFFF</Color>
+		<Color x:Key="ColorC">#991E66</Color>
+	</Map>
+
+</ResourceDictionary>

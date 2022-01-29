@@ -139,7 +139,7 @@
 				Rack.Cell="R1 C0"
 				FontSize="18"
 				Opacity="0.7"
-				Foreground="IndianRed"
+				Foreground="{DynamicResource SpectrogramBackgroundBrush}"
 				Text="🎼"
 				/>
 			<xamarin:Switch
@@ -151,7 +151,7 @@
 				Rack.Cell="R2 C0"
 				FontSize="18"
 				Opacity="0.7"
-				Foreground="IndianRed"
+				Foreground="{DynamicResource SpectrogramBackgroundBrush}"
 				Text="📷"
 				/>
 			<xamarin:Switch

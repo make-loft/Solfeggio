@@ -10,7 +10,7 @@
 		DataContext="{Binding ElementName=This}"
 		Orientation="Horizontal">
 		<Entry
-			Text="{Binding Value, Mode=TwoWay, StringFormat={StaticResource DefaultStringFormat}, UpdateSourceTrigger=PropertyChanged}" />
+			Text="{Binding Value, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 		<Slider
 			Minimum="0"
 			Maximum="1"

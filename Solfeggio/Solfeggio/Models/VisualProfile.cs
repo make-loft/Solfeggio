@@ -91,7 +91,7 @@ namespace Solfeggio.Models
 		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
 
 		//[DataMember]
-		public Dictionary<string, TopProfile> TopProfiles { get; set; } = new Dictionary<string, TopProfile>
+		public Dictionary<string, TopProfile> TopProfiles { get; set; } = new()
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
