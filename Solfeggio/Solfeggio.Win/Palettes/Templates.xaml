@@ -465,29 +465,63 @@
 
 	<DataTemplate
 		x:Key="MusicOptionsTemplate">
-		<ItemsView
-			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource MusicOptionsSet}" />
+		<Grid
+			Rack.Columns="^ ^ ^ 24 ^ ^">
+			<Label
+				Rack.Cell="C0"
+				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
+				/>
+			<Picker
+				Rack.Cell="C1"
+				ItemsSource="{Binding PitchStandards}"
+				SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>
+			<Entry
+				Rack.Cell="C1"
+				Margin="4 4 22 4"
+				Text="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>
+			<Label
+				Rack.Cell="C2"
+				Text="{Localizing Hz}"
+				/>
+			<Label
+				Rack.Cell="C4"
+				Text="{Localizing Notation}"
+				/>
+			<Picker
+				Rack.Cell="C5"
+				ItemsSource="{Binding Notations}"
+				SelectedValue="{Binding ActiveNotation, Mode=TwoWay}"
+				SelectedValuePath="Key"
+				DisplayMemberPath="Key"
+				/>
+		</Grid>
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="NumericFormattingTemplate">
+		x:Key="FormattingTemplate">
 		<Grid
-			Rack.Rows="^ ^"
-			Rack.Columns="^ ^ *"
+			Rack.Rows="* *"
+			Rack.Columns="^ ^ ^"
 			>
 			<Label
-				Rack.Cell="R0 C0"
-				Text="{Localizing Key=Common}" />
-			<Picker
+				Rack.Cell="R1 C0"
+				Text="{Localizing Key=Numeric}" />
+			<Label
 				Rack.Cell="R0 C1"
+				Text="{Localizing Key=Monitor}" />
+			<Picker
+				Rack.Cell="R1 C1"
+				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
 				SelectedItem="{Binding CommonNumericFormat, Mode=TwoWay}" />
 			<Label
-				Rack.Cell="R1 C0"
-				Text="{Localizing Key=NumericFormat}" />
+				Rack.Cell="R0 C2"
+				Text="{Localizing Key=Screen}" />
 			<Picker
-				Rack.Cell="R1 C1"
+				Rack.Cell="R1 C2"
+				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
 				SelectedItem="{Binding NoteNumericFormat, Mode=TwoWay}" />
 		</Grid>

@@ -84,7 +84,6 @@ namespace Solfeggio.Presenters
 		[DataMember] public SmartRange Threshold { get; set; }
 		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
-		[DataMember] public string NumericFormat { get; set; } = "F2";
 
 		public void LimitThreshold()
 		{
@@ -131,7 +130,6 @@ namespace Solfeggio.Presenters
 			Limit = SmartRange.Create(10d, AudioInputDevice.DefaultSampleRate / 2),
 			Threshold = SmartRange.Create(20d, 3000d),
 			VisualScaleFunc = Log2,
-			NumericFormat = "F1",
 		};
 
 		[DataMember]

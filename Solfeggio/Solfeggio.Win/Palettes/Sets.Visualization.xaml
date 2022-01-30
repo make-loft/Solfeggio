@@ -548,9 +548,8 @@
 			/>
 
 		<Expander
-			IsExpanded="True"
-			Header="{Localizing Key=More}"
-			ContentTemplate="{StaticResource NumericFormattingTemplate}"
+			Header="{Localizing Key=Format}"
+			ContentTemplate="{StaticResource FormattingTemplate}"
 			Content="{Store Key=p:MusicalPresenter}"
 			/>
 	</Set>

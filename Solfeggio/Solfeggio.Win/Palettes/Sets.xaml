@@ -81,22 +81,4 @@
 
 	</Set>
 
-	<Set
-        x:Shared="False"
-        x:Key="MusicOptionsSet"
-		>
-		<Picker
-            Tag="{Localizing Key=Standard, StringFormat='{}{0} [A1] (Hz)', ForceStringFormat=True}"
-			ItemsSource="{Binding PitchStandards}"
-			SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}"
-			/>
-		<Picker
-            Tag="{Localizing Key=Notation, StringFormat='{}{0} (Hz)'}"
-			ItemsSource="{Binding Notations}"
-			SelectedValue="{Binding ActiveNotation, Mode=TwoWay}"
-			SelectedValuePath="Key"
-            DisplayMemberPath="Key"
-			/>
-	</Set>
-
 </ResourceDictionary>

@@ -40,13 +40,20 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public string NoteNumericFormat
 		{
-			get => Get(() => NoteNumericFormat, "F2");
+			get => Get(() => NoteNumericFormat, "F1");
 			set => Set(() => NoteNumericFormat, value);
 		}
 
 		public void Expose()
 		{
 			this[() => CommonNumericFormat].PropertyChanged += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+			this[() => NoteNumericFormat].PropertyChanged += (o, e) =>
+			{
+				var digitsCountPart = NoteNumericFormat.Length > 1 ? NoteNumericFormat.Substring(1) : "1";
+				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
+				var zeros = new string('0', digitsCount);
+				VisualProfile.TopProfiles[nameof(VisualProfile.DeltaFrequancy)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
+			};
 		}
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
@@ -87,7 +94,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(Spectrum.Frequency.NumericFormat)
+					Text = activeFrequency.ToString(NoteNumericFormat)
 				});
 
 				items.Add(panel);
@@ -286,19 +293,18 @@ namespace Solfeggio.Presenters
 			var weightValue = (int)(300d * expressionLevel);
 			var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);
 
-			object GetValueByKey(string key) =>
+			double GetValueByKey(string key) =>
 				key.Is("ActualMagnitude") ? activeMagnitude :
 				key.Is("ActualFrequancy") ? activeFrequency :
 				key.Is("DeltaFrequancy") ? pianoKey.DeltaFrequency :
 				key.Is("EthalonFrequncy") ? pianoKey.EthalonFrequency :
-				key.Is("NoteName") ? pianoKey.NoteName :
-				default(object);
+				default;
 
 			return VisualProfile.TopProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
 			{
-				Text = string.Format(p.Value.StringFormat ?? NoteNumericFormat, GetValueByKey(p.Key)),
-				HorizontalAlignment = HorizontalAlignment.Center,
-				FontSize = p.Value.FontSize * expressionLevel * (height > 0.1 ? height : 0.1) / 256,
+				Text = p.Key.Is("NoteName")
+					? pianoKey.NoteName
+					: GetValueByKey(p.Key).ToString(p.Value.StringFormat ?? NoteNumericFormat),
 #if NETSTANDARD
 				FontFamily = p.Value.FontFamilyName,
 #else
@@ -306,6 +312,8 @@ namespace Solfeggio.Presenters
 #endif
 				FontWeight = p.Key.Is("NoteName") ? FontWeights.SemiBold : fontWeight,
 				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
+				FontSize = p.Value.FontSize * expressionLevel * (height > 0.1 ? height : 0.1) / 256,
+				HorizontalAlignment = HorizontalAlignment.Center,
 			});
 		}
 

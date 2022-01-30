@@ -84,6 +84,7 @@ namespace Solfeggio
 		public static o Input = _("Input", "Ввод");
 		public static o Output = _("Output", "Вывод");
 		public static o Monitor = _("Monitor", "Монитор");
+		public static o Screen = _("Screen", "Экран");
 		public static o Brush = _("Brush", "Кисть");
 		public static o Color = _("Color", "Цвет");
 		public static o Gradient = _("Gradient", "Градиент");
@@ -116,6 +117,8 @@ namespace Solfeggio
 		public static o Palette = _("Palette", "Палитра");
 		public static o Rate = _("Rate", "Мера");
 		public static o Buffers = _("Buffers", "Буферы");
+		public static o Format = _("Format", "Формат");
+		public static o Numeric = _("Numeric", "Числовой");
 
 		public static o Pcs = _("Pcs", "шт.");
 		public static o Hz = _("Hz", "Гц");

@@ -52,7 +52,7 @@ namespace Solfeggio.Models
 		private static TopProfile CreateProfile(
 			Color color,
 			double fontSize,
-			string stringFormat = "{0:0.0;-0.0;0.0}",
+			string stringFormat = default,
 			bool isVisible = true) => new()
 			{
 				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
@@ -95,7 +95,7 @@ namespace Solfeggio.Models
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
-			{ nameof(DeltaFrequancy), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "{0:+0.0;-0.0; 0.0}") },
+			{ nameof(DeltaFrequancy), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "+0.0;-0.0; 0.0") },
 			{ nameof(EthalonFrequncy), CreateProfile(White, 14d) },
 			{ nameof(NoteName), CreateProfile(White, 16d, default) },
 		};
