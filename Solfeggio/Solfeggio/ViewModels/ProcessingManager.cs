@@ -21,35 +21,30 @@ namespace Solfeggio.ViewModels
 		public IList<Complex> OuterFrame { get; private set; }
 		public IList<Complex> InnerFrame { get; private set; }
 
-		public override ProcessingProfile Create() => new();
+		public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
+		{
+			yield return new()
+			{
+				Title = "Musical Tuning & Vocal Trainings",
+				FramePow = 11
+			};
+
+			yield return new()
+			{
+				Title = "Research of Ideal Signals",
+				OutputLevel = 0.4f,
+				FramePow = 10
+			};
+
+			yield return new()
+			{
+				Title = "Low Latency Realtime Analize",
+				FramePow = 10
+			};
+		}
 
 		public override void Expose()
 		{
-			if (Profiles.Count.Is(0))
-			{
-				var p = default(ProcessingProfile);
-
-				Create().To(out p).With
-				(
-					p.Title = "Musical Tuning & Vocal Trainings",
-					p.FramePow = 11
-				).Use(Profiles.Add);
-
-				Create().To(out p).With
-				(
-					p.Title = "Research of Ideal Signals",
-					p.FramePow = 10,
-					p.ActiveInputDevice = p.InputDevices.LastOrDefault(),
-					p.OutputLevel = 1.0f
-				).Use(Profiles.Add);
-
-				Create().To(out p).With
-				(
-					p.Title = "Low Latency Realtime Analize",
-					p.FramePow = 10
-				).Use(Profiles.Add);
-			}
-
 			base.Expose();
 
 			this[() => ActiveProfile].PropertyChanging += (sender, args) =>

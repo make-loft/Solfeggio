@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Media;
 
 using Ace;
 
@@ -88,37 +87,12 @@ namespace Solfeggio
 
 			Store.Get<AppViewModel>();
 			_startupTimestamp = DateTime.Now;
-
-
-			var theme = Store.ActiveBox.Revive<Dictionary<string, object>>("Theme");
-			theme.ForEach(p =>
-			{
-				if (p.Value is Color)
-					Colors[p.Key] = p.Value;
-				else Resources[p.Key] = p.Value;
-			});
 		}
-
-		public ResourceDictionary Values => Resources.MergedDictionaries[1];
-		public ResourceDictionary Colors => Resources.MergedDictionaries[3];
-		public ResourceDictionary Brushes => Resources.MergedDictionaries[4];
 
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
-			var values = Values;
-			var colors = Colors;
-			var brushes = Brushes;
-			var valueKeys = values.Keys.Cast<string>();
-			var colorsKeys = colors.Keys.Cast<string>().Concat(colors.MergedDictionaries[0].Keys.Cast<string>()).Distinct();
-			var brushKeys = brushes.Keys.Cast<string>().Where(k => Resources[k].IsNot(brushes[k]));
-
-			var forSave =
-				colorsKeys.OrderBy()
-				.Concat(valueKeys.Concat(brushKeys).OrderBy())
-				.ToDictionary(k => k, k => Resources[k]);
-
-			Store.ActiveBox.TryKeep(forSave, "Theme");
 			Store.Snapshot();
+			Store.Get<VisualizationManager>().ActiveProfile?.Keep();
 
 			AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
 		}

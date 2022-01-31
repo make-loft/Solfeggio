@@ -115,6 +115,7 @@ namespace Solfeggio
 		public static o Soundless = _("Soundless", "Беззвучный");
 		public static o Sounding = _("Sounding", "Звучащий");
 		public static o Palette = _("Palette", "Палитра");
+		public static o Reset = _("Reset", "Сброс");
 		public static o Rate = _("Rate", "Мера");
 		public static o Buffers = _("Buffers", "Буферы");
 		public static o Format = _("Format", "Формат");

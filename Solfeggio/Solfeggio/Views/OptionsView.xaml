@@ -52,11 +52,19 @@
 			Header="{Localizing Key=Visualization}"
 			>
 			<ScrollView>
-				<ItemsView
-					Background="Transparent"
-					DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
-					ItemsSource="{StaticResource VisualizationSet}"
-					/>
+				<StackView
+					DataContext="{Store Key=vm:VisualizationManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
+					<Pivot
+						ItemsSource="{Binding Profiles}"
+						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+						ContentTemplate="{StaticResource VisualizationTemplate}"
+						/>
+				</StackView>
 			</ScrollView>
 		</PivotItem>
 

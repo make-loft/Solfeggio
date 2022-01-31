@@ -1,8 +1,6 @@
-﻿using System.Windows;
-
-namespace Solfeggio
+﻿namespace Solfeggio
 {
-	public partial class MonitorView : Window
+	public partial class MonitorView
 	{
 		public MonitorView() => InitializeComponent();
 	}

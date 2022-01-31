@@ -10,15 +10,8 @@ using static Rainbow.Windowing;
 namespace Solfeggio.Models
 {
 	[DataContract]
-	public class ProcessingProfile : ContextObject, IAudioInputDevice, IExposable, IDisposable
+	public class ProcessingProfile : AProfile, IAudioInputDevice, IExposable, IDisposable
 	{
-		[DataMember]
-		public string Title
-		{
-			get => Get(() => Title, DateTime.Now.Millisecond.ToString());
-			set => Set(() => Title, value);
-		}
-
 		public double[] SampleRates { get; } = AudioInputDevice.StandardSampleRates;
 
 		[DataMember]
@@ -43,13 +36,13 @@ namespace Solfeggio.Models
 
 		public Wave.In.DeviceInfo ActiveInputDevice
 		{
-			get => Get(() => ActiveInputDevice);
+			get => Get(() => ActiveInputDevice, InputDevices.LastOrDefault());
 			set => Set(() => ActiveInputDevice, value);
 		}
 
 		public Wave.Out.DeviceInfo ActiveOutputDevice
 		{
-			get => Get(() => ActiveOutputDevice);
+			get => Get(() => ActiveOutputDevice, OutputDevices.LastOrDefault());
 			set => Set(() => ActiveOutputDevice, value);
 		}
 

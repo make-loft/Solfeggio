@@ -110,7 +110,7 @@
 	</Style>
 
 	<Style
-		x:Key="VerticalGridSplitter"
+		x:Key="VerticalGridSplitterStyle"
 		BasedOn="{StaticResource {x:Type GridSplitter}}"
 		TargetType="GridSplitter">
 		<Setter
@@ -122,7 +122,7 @@
 	</Style>
 
 	<Style
-		x:Key="HorizontalGridSplitter"
+		x:Key="HorizontalGridSplitterStyle"
 		BasedOn="{StaticResource {x:Type GridSplitter}}"
 		TargetType="GridSplitter">
 		<Setter

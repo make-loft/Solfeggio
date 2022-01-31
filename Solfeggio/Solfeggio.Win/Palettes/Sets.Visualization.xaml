@@ -11,349 +11,11 @@
 		x:Shared="False"
 		x:Key="VisualizationSet"
 		>
-		<Grid
-			Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^"
-			Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
-			>
-			<Label
-				Rack.Cell="R0 C1"
-				Text="{Localizing Key=Visibility}"
-				/>
-			<Label
-				Rack.Cell="R0 C2"
-				Text="{Localizing Key=Fill}"
-				/>
-			<Label
-				Rack.Cell="R0 C3"
-				Text="{Localizing Key=Stroke}"
-				/>
-			<Label
-				Rack.Cell="R0 C4"
-				Text="{Localizing Key=Thickness}"
-				/>
-			<Label
-				Rack.Cell="R0 C5"
-				Text="{Localizing Key=Index, StringFormat='Z-{0}'}"
-				/>
-			<Label
-				Rack.Cell="R0 C6"
-				Text="{Localizing Key=Offset, StringFormat='Y-{0}'}"
-				/>
-			<Label
-				Rack.Cell="R0 C7"
-				Text="{Localizing Key=Offset, StringFormat='X-{0}'}"
-				/>
 
-			<Grid
-				Rack.Cell="R1 C0 RS2"
-				Rack.Rows="* *"
-				Rack.Columns="* ^"
-				>
-				<Label
-					Rack.Cell="R0 C0 RS2"
-					Text="{Localizing Key=Frame}"
-					/>
-				<Picker
-					Rack.Cell="R1 C0"
-					Opacity="0.75"
-					VerticalAlignment="Center"
-					DataContext="{StoreBinding StoreKey=vm:ProcessingManager, Path=ActiveProfile}"
-					ItemsSource="{Binding Windows}"
-					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-				<Label
-					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Raw}"
-					/>
-				<Label
-					Rack.Cell="R1 C1"
-					Text="{Localizing Key=Window, StringFormat='+{0}'}"
-					/>
-			</Grid>
-
-			<Grid
-				Rack.Cell="R3 C0 RS2"
-				Rack.Rows="* *"
-				Rack.Columns="* ^"
-				>
-				<Label
-					Rack.Cell="R0 C0 RS2"
-					Text="{Localizing Key=Frequency}"
-					/>
-				<Label
-					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Notes}"
-					/>
-				<Label
-					Rack.Cell="R1 C1"
-					Text="{Localizing Key=Grid}"
-					/>
-			</Grid>
-
-			<Grid
-				Rack.Cell="R5 C0 RS2"
-				Rack.Rows="* *"
-				Rack.Columns="* ^"
-				>
-				<Label
-					Rack.Cell="R0 C0 RS2"
-					Text="{Localizing Key=Phase}"
-					/>
-				<Label
-					Rack.Cell="R0 C1"
-					Text="{Localizing Key=PMI}"
-					/>
-				<Label
-					Rack.Cell="R1 C1"
-					Text="{Localizing Key=FFT}"
-					/>
-			</Grid>
-
-			<Grid
-				Rack.Cell="R7 C0 RS2"
-				Rack.Rows="* *"
-				Rack.Columns="* ^"
-				>
-				<Label
-					Rack.Cell="R0 C0 RS2"
-					Text="{Localizing Key=Magnitude}"
-					/>
-				<Label
-					Rack.Cell="R0 C1"
-					Text="{Localizing Key=PMI}"
-					/>
-				<Label
-					Rack.Cell="R1 C1"
-					Text="{Localizing Key=FFT}"
-					/>
-			</Grid>
-
-			<ContentView
-				Rack.Cell="R7 C6 RS2"
-				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Magnitude}"
-				Template="{StaticResource RangePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C6 RS2"
-				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Phase}"
-				Template="{StaticResource RangePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C6 RS2"
-				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Level}"
-				Template="{StaticResource RangePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C7 RS2"
-				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Offset}"
-				Template="{StaticResource RangePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R3 C7 RS6"
-				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency}"
-				Template="{StaticResource RangePickerTemplate}"
-				/>
-			
-			
-			<ContentView
-				Rack.Cell="R1 C1"
-				DataContext="{Binding [Visibility.MagnitudeRawFrame], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C2"
-				DataContext="{Binding [Fill.MagnitudeRawFrame], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C3"
-				DataContext="{Binding [Stroke.MagnitudeRawFrame], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C4"
-				DataContext="{Binding [StrokeThickness.MagnitudeRawFrame], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R1 C5"
-				DataContext="{Binding [ZIndex.MagnitudeRawFrame], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R2 C1"
-				DataContext="{Binding [Visibility.MagnitudeWindowFrame], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R2 C2"
-				DataContext="{Binding [Fill.MagnitudeWindowFrame], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R2 C3"
-				DataContext="{Binding [Stroke.MagnitudeWindowFrame], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R2 C4"
-				DataContext="{Binding [StrokeThickness.MagnitudeWindowFrame], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R2 C5"
-				DataContext="{Binding [ZIndex.MagnitudeWindowFrame], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R3 C1"
-				DataContext="{Binding [Visibility.FrequencyNotesGrid], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R3 C3"
-				DataContext="{Binding [Stroke.FrequencyNotesGrid], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R3 C4"
-				DataContext="{Binding [StrokeThickness.FrequencyNotesGrid], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R3 C5"
-				DataContext="{Binding [ZIndex.FrequencyNotesGrid], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R4 C1"
-				DataContext="{Binding [Visibility.FrequencyDiscreteGrid], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R4 C3"
-				DataContext="{Binding [Stroke.FrequencyDiscreteGrid], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R4 C4"
-				DataContext="{Binding [StrokeThickness.FrequencyDiscreteGrid], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R4 C5"
-				DataContext="{Binding [ZIndex.FrequencyDiscreteGrid], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R5 C1"
-				DataContext="{Binding [Visibility.PhasePMI], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C2"
-				DataContext="{Binding [Fill.PhasePMI], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C3"
-				Tag="{Localizing Key=Stroke}"
-				DataContext="{Binding [Stroke.PhasePMI], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C4"
-				DataContext="{Binding [StrokeThickness.PhasePMI], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R5 C5"
-				DataContext="{Binding [ZIndex.PhasePMI], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R6 C1"
-				DataContext="{Binding [Visibility.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R6 C2"
-				DataContext="{Binding [Fill.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R6 C3"
-				DataContext="{Binding [Stroke.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R6 C4"
-				DataContext="{Binding [StrokeThickness.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R6 C5"
-				DataContext="{Binding [ZIndex.PhaseFFT], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R7 C1"
-				DataContext="{Binding [Visibility.MagnitudePMI], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R7 C2"
-				DataContext="{Binding [Fill.MagnitudePMI], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R7 C3"
-				DataContext="{Binding [Stroke.MagnitudePMI], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R7 C4"
-				DataContext="{Binding [StrokeThickness.MagnitudePMI], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R7 C5"
-				DataContext="{Binding [ZIndex.MagnitudePMI], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-
-			<ContentView
-				Rack.Cell="R8 C1"
-				DataContext="{Binding [Visibility.MagnitudeFFT], Mode=TwoWay}"
-				Template="{StaticResource VisibilityTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R8 C2"
-				DataContext="{Binding [Fill.MagnitudeFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R8 C3"
-				DataContext="{Binding [Stroke.MagnitudeFFT], Mode=TwoWay}"
-				Template="{StaticResource BrushPickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R8 C4"
-				DataContext="{Binding [StrokeThickness.MagnitudeFFT], Mode=TwoWay}"
-				Template="{StaticResource ValuePickerTemplate}"
-				/>
-			<ContentView
-				Rack.Cell="R8 C5"
-				DataContext="{Binding [ZIndex.MagnitudeFFT], Mode=TwoWay}"
-				Template="{StaticResource ZIndexTemplate}"
-				/>
-		</Grid>
+		<ContentView
+			DataContext="{StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=vm:VisualizationManager}"
+			Template="{StaticResource TitleProfileTemplate}"
+			/>
 
 		<Expander
 			IsExpanded="True"
@@ -367,15 +29,17 @@
 				<StackLayout
 					Rack.Cell="R1 C0"
 					Orientation="Horizontal">
-					<Label
-						Text="{Localizing Key=Base}"
+					<Button
+						Margin="4 8 0 8"
+						Click="ResetButton_Click"
+						Content="{Localizing Key=Reset}"
 						/>
 					<Picker
 						Width="17"
 						DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 						ItemsSource="{Binding MergedDictionaries[2]}"
 						SelectedValue="{Binding MergedDictionaries[3], Mode=OneWayToSource}"
-						SelectionChanged="Picker_SelectionChanged"
+						SelectionChanged="ResetPicker_SelectionChanged"
 						SelectedValuePath="Value"
 						DisplayMemberPath="Key"
 						/>
@@ -426,6 +90,358 @@
 					Template="{StaticResource ColorValueTemplate}"
 					/>
 			</Grid>
+		</Expander>
+
+		<Expander
+			IsExpanded="True"
+			Header="{Localizing Key=Visualization}"
+			>
+
+			<Grid
+			Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^"
+			Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
+			DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
+			>
+				<Label
+				Rack.Cell="R0 C1"
+				Text="{Localizing Key=Visibility}"
+				/>
+				<Label
+				Rack.Cell="R0 C2"
+				Text="{Localizing Key=Fill}"
+				/>
+				<Label
+				Rack.Cell="R0 C3"
+				Text="{Localizing Key=Stroke}"
+				/>
+				<Label
+				Rack.Cell="R0 C4"
+				Text="{Localizing Key=Thickness}"
+				/>
+				<Label
+				Rack.Cell="R0 C5"
+				Text="{Localizing Key=Index, StringFormat='Z-{0}'}"
+				/>
+				<Label
+				Rack.Cell="R0 C6"
+				Text="{Localizing Key=Offset, StringFormat='Y-{0}'}"
+				/>
+				<Label
+				Rack.Cell="R0 C7"
+				Text="{Localizing Key=Offset, StringFormat='X-{0}'}"
+				/>
+
+				<Grid
+				Rack.Cell="R1 C0 RS2"
+				Rack.Rows="* *"
+				Rack.Columns="* ^"
+				>
+					<Label
+					Rack.Cell="R0 C0 RS2"
+					Text="{Localizing Key=Frame}"
+					/>
+					<Picker
+					Rack.Cell="R1 C0"
+					Opacity="0.75"
+					VerticalAlignment="Center"
+					DataContext="{StoreBinding StoreKey=vm:ProcessingManager, Path=ActiveProfile}"
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+					<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Raw}"
+					/>
+					<Label
+					Rack.Cell="R1 C1"
+					Text="{Localizing Key=Window, StringFormat='+{0}'}"
+					/>
+				</Grid>
+
+				<Grid
+				Rack.Cell="R3 C0 RS2"
+				Rack.Rows="* *"
+				Rack.Columns="* ^"
+				>
+					<Label
+					Rack.Cell="R0 C0 RS2"
+					Text="{Localizing Key=Frequency}"
+					/>
+					<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=Notes}"
+					/>
+					<Label
+					Rack.Cell="R1 C1"
+					Text="{Localizing Key=Grid}"
+					/>
+				</Grid>
+
+				<Grid
+				Rack.Cell="R5 C0 RS2"
+				Rack.Rows="* *"
+				Rack.Columns="* ^"
+				>
+					<Label
+					Rack.Cell="R0 C0 RS2"
+					Text="{Localizing Key=Phase}"
+					/>
+					<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=PMI}"
+					/>
+					<Label
+					Rack.Cell="R1 C1"
+					Text="{Localizing Key=FFT}"
+					/>
+				</Grid>
+
+				<Grid
+				Rack.Cell="R7 C0 RS2"
+				Rack.Rows="* *"
+				Rack.Columns="* ^"
+				>
+					<Label
+					Rack.Cell="R0 C0 RS2"
+					Text="{Localizing Key=Magnitude}"
+					/>
+					<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Key=PMI}"
+					/>
+					<Label
+					Rack.Cell="R1 C1"
+					Text="{Localizing Key=FFT}"
+					/>
+				</Grid>
+
+				<ContentView
+				Rack.Cell="R7 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Magnitude}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R5 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Phase}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C6 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Level}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C7 RS2"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Frame.Offset}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R3 C7 RS6"
+				DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency}"
+				Template="{StaticResource RangePickerTemplate}"
+				/>
+
+
+				<ContentView
+				Rack.Cell="R1 C1"
+				DataContext="{Binding [Visibility.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C2"
+				DataContext="{Binding [Fill.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C3"
+				DataContext="{Binding [Stroke.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R1 C5"
+				DataContext="{Binding [ZIndex.MagnitudeRawFrame], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R2 C1"
+				DataContext="{Binding [Visibility.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R2 C2"
+				DataContext="{Binding [Fill.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R2 C3"
+				DataContext="{Binding [Stroke.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R2 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R2 C5"
+				DataContext="{Binding [ZIndex.MagnitudeWindowFrame], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R3 C1"
+				DataContext="{Binding [Visibility.FrequencyNotesGrid], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R3 C3"
+				DataContext="{Binding [Stroke.FrequencyNotesGrid], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R3 C4"
+				DataContext="{Binding [StrokeThickness.FrequencyNotesGrid], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R3 C5"
+				DataContext="{Binding [ZIndex.FrequencyNotesGrid], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R4 C1"
+				DataContext="{Binding [Visibility.FrequencyDiscreteGrid], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R4 C3"
+				DataContext="{Binding [Stroke.FrequencyDiscreteGrid], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R4 C4"
+				DataContext="{Binding [StrokeThickness.FrequencyDiscreteGrid], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R4 C5"
+				DataContext="{Binding [ZIndex.FrequencyDiscreteGrid], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R5 C1"
+				DataContext="{Binding [Visibility.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R5 C2"
+				DataContext="{Binding [Fill.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R5 C3"
+				Tag="{Localizing Key=Stroke}"
+				DataContext="{Binding [Stroke.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R5 C4"
+				DataContext="{Binding [StrokeThickness.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R5 C5"
+				DataContext="{Binding [ZIndex.PhasePMI], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R6 C1"
+				DataContext="{Binding [Visibility.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R6 C2"
+				DataContext="{Binding [Fill.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R6 C3"
+				DataContext="{Binding [Stroke.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R6 C4"
+				DataContext="{Binding [StrokeThickness.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R6 C5"
+				DataContext="{Binding [ZIndex.PhaseFFT], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R7 C1"
+				DataContext="{Binding [Visibility.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R7 C2"
+				DataContext="{Binding [Fill.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R7 C3"
+				DataContext="{Binding [Stroke.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R7 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R7 C5"
+				DataContext="{Binding [ZIndex.MagnitudePMI], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+
+				<ContentView
+				Rack.Cell="R8 C1"
+				DataContext="{Binding [Visibility.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R8 C2"
+				DataContext="{Binding [Fill.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R8 C3"
+				DataContext="{Binding [Stroke.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource BrushPickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R8 C4"
+				DataContext="{Binding [StrokeThickness.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource ValuePickerTemplate}"
+				/>
+				<ContentView
+				Rack.Cell="R8 C5"
+				DataContext="{Binding [ZIndex.MagnitudeFFT], Mode=TwoWay}"
+				Template="{StaticResource ZIndexTemplate}"
+				/>
+			</Grid>
+
 		</Expander>
 
 		<Expander

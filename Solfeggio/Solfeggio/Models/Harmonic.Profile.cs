@@ -1,6 +1,5 @@
 ﻿using Ace;
 using Solfeggio.Presenters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,16 +8,9 @@ namespace Solfeggio.Models
 	public partial class Harmonic
 	{
 		[DataContract]
-		public class Profile : ContextObject, IExposable
+		public class Profile : AProfile, IExposable
 		{
 			private static readonly MusicalPresenter presenter = Store.Get<MusicalPresenter>();
-
-			[DataMember]
-			public string Title
-			{
-				get => Get(() => Title, DateTime.Now.ToString());
-				set => Set(() => Title, value);
-			}
 
 			[DataMember]
 			public SmartSet<Harmonic> Harmonics { get; set; } = new()

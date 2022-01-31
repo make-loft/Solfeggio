@@ -39,7 +39,7 @@
 			
 			<GridSplitter
 				Rack.Cell="R1"
-				Style="{StaticResource HorizontalGridSplitter}"
+				Style="{StaticResource HorizontalGridSplitterStyle}"
 				Background="{DynamicResource SplitterBackgroundBrush}"
 				/>
 			<Grid
@@ -70,7 +70,7 @@
 				</Canvas>
 				<GridSplitter
 					Rack.Cell="R1"
-					Style="{StaticResource HorizontalGridSplitter}"
+					Style="{StaticResource HorizontalGridSplitterStyle}"
 					Background="{DynamicResource SplitterBackgroundBrush}"
 				/>
 				<Canvas
@@ -100,7 +100,7 @@
 		
 		<GridSplitter
 			Rack.Cell="R1"
-			Style="{StaticResource HorizontalGridSplitter}"
+			Style="{StaticResource HorizontalGridSplitterStyle}"
 			Background="{DynamicResource SplitterBackgroundBrush}"
 			/>
 		<Grid
@@ -115,7 +115,7 @@
 				/>
 			<GridSplitter
 				Rack.Cell="R1"
-				Style="{StaticResource HorizontalGridSplitter}"
+				Style="{StaticResource HorizontalGridSplitterStyle}"
 				Background="{DynamicResource SplitterBackgroundBrush}"
 				/>
 			<Border

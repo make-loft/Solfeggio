@@ -67,11 +67,17 @@
     <Compile Include="..\Solfeggio\Api\IWave.cs">
       <Link>Api\IWave.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\AppPalette.cs">
+      <Link>AppPalette.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Models\AProfile.cs">
+      <Link>Models\AProfile.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Models\Harmonic.cs">
       <Link>Models\Harmonic.cs</Link>
@@ -82,11 +88,11 @@
     <Compile Include="..\Solfeggio\Models\ProcessingProfile.cs">
       <Link>Models\ProcessingProfile.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Models\VisualizationProfile.cs">
+      <Link>Models\VisualizationProfile.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Models\VisualProfile.cs">
       <Link>Models\VisualProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\Solfeggio\Presenters\AppPalette.cs">
-      <Link>Presenters\AppPalette.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\Calibrations.cs">
       <Link>Presenters\Calibrations.cs</Link>
@@ -111,6 +117,9 @@
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\ProcessingManager.cs">
       <Link>ViewModels\ProcessingManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\ViewModels\VisualizationManager.cs">
+      <Link>ViewModels\VisualizationManager.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Views\OptionsView.xaml.cs">
       <Link>Views\OptionsView.xaml.cs</Link>

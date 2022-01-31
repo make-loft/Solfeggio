@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Ace.Markup;
+
+using System.Runtime.CompilerServices;
 #if NETSTANDARD
 using Xamarin.Forms;
 using static Xamarin.Forms.Application;
@@ -6,10 +8,16 @@ using static Xamarin.Forms.Application;
 using System.Windows.Media;
 using static System.Windows.Application;
 #endif
-namespace Solfeggio.Presenters
+namespace Solfeggio
 {
 	class AppPalette
 	{
+		public static Map Resources => (Map)App.Current.Resources;
+		public static Map Values => (Map)Resources.MergedDictionaries[1];
+		public static Map ColorPalettes => (Map)Resources.MergedDictionaries[2];
+		public static Map Colors => (Map)Resources.MergedDictionaries[3];
+		public static Map Brushes => (Map)Resources.MergedDictionaries[4];
+
 		public static Brush GetBrush([CallerMemberName]string key = default) =>	(Brush)Current.Resources[key];
 
 		public static Brush PressHalfToneKeyBrush => GetBrush();

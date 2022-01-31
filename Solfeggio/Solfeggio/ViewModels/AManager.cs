@@ -1,13 +1,16 @@
 ﻿using Ace;
+
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
 	public abstract class AManager<TProfile> : ContextObject, IExposable
+		where TProfile : Models.AProfile, new()
 	{
 		[DataMember]
-		public SmartSet<TProfile> Profiles { get; set; } = new SmartSet<TProfile>();
+		public SmartSet<TProfile> Profiles { get; set; } = new();
 
 		[DataMember]
 		public TProfile ActiveProfile
@@ -18,15 +21,23 @@ namespace Solfeggio.ViewModels
 
 		public virtual void Expose()
 		{
+			if (Profiles.Count.Is(0))
+			{
+				CreateDefaultProfiles()?.ForEach(Profiles.Add);
+				Profiles.ForEach(p => p.IsDefault = true);
+			}
+
 			this[Context.Set.Create].Executed += (o, e) => Create().Use(Profiles.Add);
 			this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<TProfile>().Use(Profiles.Remove);
-			this[Context.Set.Delete].CanExecute += (o, e) => e.CanExecute = Profiles.IndexOf(e.Parameter.To<TProfile>()) > 2;
+			this[Context.Set.Delete].CanExecute += (o, e) => e.CanExecute = e.Parameter.Is(out TProfile p) && p.IsDefault.Not();
 
 			//this[() => ActiveProfile].PropertyChanged += (o, e) => Context.Set.Delete.EvokeCanExecuteChanged();
 
 			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}
 
-		public abstract TProfile Create();
+		public virtual IEnumerable<TProfile> CreateDefaultProfiles() => default;
+
+		public virtual TProfile Create() => new() { Title = ActiveProfile.Is(out var p) ? $"{p.Title} ~" : "~~~" };
 	}
 }

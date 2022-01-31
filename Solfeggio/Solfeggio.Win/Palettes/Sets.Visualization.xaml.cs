@@ -1,22 +1,19 @@
 ﻿using Ace;
 
-using System.Windows.Media;
+using System.Collections;
+
+using Xamarin.Forms;
 
 namespace Solfeggio.Palettes
 {
 	partial class Sets_Visualization
 	{
-		private void Picker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-			var resources = App.Current.Resources.To<Ace.Markup.Map>();
-			var brushes = resources.MergedDictionaries[4];
-			foreach (var key in brushes.Keys)
-			{
-				if (brushes[key].Is(out Brush b))
-					resources[key] = b.Clone();
-			}
+		void ResetPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) =>
+			Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
+			.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.ToStr());
 
-			resources.EvokePropertyChanged();
-		}
+		void ResetButton_Click(object sender, System.Windows.RoutedEventArgs e) =>
+			Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
+			.Reset();
 	}
 }

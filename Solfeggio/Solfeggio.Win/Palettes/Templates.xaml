@@ -6,8 +6,7 @@
 	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
 	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
 	xmlns:views="clr-namespace:Solfeggio.Views"
-	xmlns:local="clr-namespace:Solfeggio"
-	>
+	xmlns:local="clr-namespace:Solfeggio" xmlns:wpf="http://schemas.microsoft.com/netfx/2009/xaml/presentation">
 	<DataTemplate
 		x:Key="HarmonicTemplate">
 		<Grid
@@ -729,7 +728,7 @@
 				Width="17"
 				Height="17"
 				SelectedValuePath="Value"
-				ItemsSource="{Binding Resources.Brushes, Source={x:Static local:App.Current}}"
+				ItemsSource="{Binding Resources.MergedDictionaries[4], Source={x:Static local:App.Current}}"
 				SelectedValue="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
 				<Picker.ItemTemplate>
 					<DataTemplate>
@@ -750,5 +749,26 @@
 			</Picker>
 		</Grid>
 	</ControlTemplate>
+
+	<DataTemplate
+		x:Key="VisualizationTemplate">
+		<Grid>
+			<ItemsView
+				Visibility="{StoreBinding StoreKey=viewModels:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToCollapsedConverter}}"
+				Background="Transparent"
+				DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
+				ItemsSource="{StaticResource VisualizationSet}"
+				/>
+			<Label
+				Text="⏳"
+				Padding="16"
+				Margin="16 64"
+				FontSize="64"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				Visibility="{StoreBinding StoreKey=viewModels:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToVisibleConverter}}"
+				/>
+		</Grid>
+	</DataTemplate>
 
 </ResourceDictionary>

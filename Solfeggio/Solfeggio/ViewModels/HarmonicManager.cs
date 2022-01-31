@@ -1,40 +1,37 @@
 ﻿using Ace;
 using Solfeggio.Models;
-using System;
+using System.Collections.Generic;
 
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
 	public class HarmonicManager : AManager<Harmonic.Profile>
 	{
-		public override Harmonic.Profile Create() => new() { Title = DateTime.Now.Millisecond.ToString() };
-
-		public override void Expose()
+		public override IEnumerable<Harmonic.Profile> CreateDefaultProfiles()
 		{
-			if (Profiles.Count.Is(0))
+			yield return new()
 			{
-				var p = default(Harmonic.Profile);
+				Title = "Two Waves Resonance",
+				Harmonics =
+				{
+					[2] = { IsEnabled = false }
+				}
+			};
 
-				Create().To(out p).With
-				(
-					p.Title = "Two Waves Resonance",
-					p.Harmonics[2].IsEnabled = false
-				).Use(Profiles.Add);
+			yield return new()
+			{
+				Title = "Three Waves Resonance",
+			};
 
-				Create().To(out p).With
-				(
-					p.Title = "Three Waves Resonance"
-				).Use(Profiles.Add);
-
-				Create().To(out p).With
-				(
-					p.Title = "Sin Wave",
-					p.Harmonics[1].IsEnabled = false,
-					p.Harmonics[2].IsEnabled = false
-				).Use(Profiles.Add);
-			}
-
-			base.Expose();
+			yield return new()
+			{
+				Title = "Sin Wave",
+				Harmonics = 
+				{
+					[1] = { IsEnabled = false },
+					[1] = { IsEnabled = false },
+				}
+			};
 		}
 	}
 }
