@@ -70,7 +70,7 @@ namespace Solfeggio.Models
 
 		const int AsyncDelay = 64;
 
-		public async void Keep()
+		public async void Keep(bool asyncDelay = true)
 		{
 			var resources = AppPalette.Resources;
 			var valueKeys = AppPalette.Values.Keys.OfType<string>();
@@ -82,19 +82,24 @@ namespace Solfeggio.Models
 				.Concat(valueKeys.Concat(brushKeys).OrderBy())
 				.ToDictionary(k => k, k => resources[k]);
 
-			await Task.Delay(AsyncDelay);
+			if (asyncDelay)
+				await Task.Delay(AsyncDelay);
+
 			Ace.Store.ActiveBox.TryKeep(theme, FileName);
 		}
 
-		public async void Load()
+		public async void Load(bool asyncDelay = true)
 		{
 			IsBusy = true;
-			await Task.Delay(AsyncDelay);
+
+			if (asyncDelay)
+				await Task.Delay(AsyncDelay);
 
 			Reset();
 
 			if (Ace.Store.ActiveBox.Check<object>(FileName).Not())
 			{
+				IsBusy = false;
 				Keep();
 				return;
 			}

@@ -29,12 +29,13 @@ namespace Solfeggio.ViewModels
 				FramePow = 11
 			};
 
-			yield return new()
-			{
-				Title = "Research of Ideal Signals",
-				OutputLevel = 0.4f,
-				FramePow = 10
-			};
+			yield return Create().To(out var b).With
+			(
+				b.Title = "Research of Ideal Signals",
+				b.OutputLevel = 0.4f,
+				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+				b.FramePow = 10
+			);
 
 			yield return new()
 			{

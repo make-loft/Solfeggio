@@ -36,13 +36,13 @@ namespace Solfeggio.Models
 
 		public Wave.In.DeviceInfo ActiveInputDevice
 		{
-			get => Get(() => ActiveInputDevice, InputDevices.LastOrDefault());
+			get => Get(() => ActiveInputDevice);
 			set => Set(() => ActiveInputDevice, value);
 		}
 
 		public Wave.Out.DeviceInfo ActiveOutputDevice
 		{
-			get => Get(() => ActiveOutputDevice, OutputDevices.LastOrDefault());
+			get => Get(() => ActiveOutputDevice);
 			set => Set(() => ActiveOutputDevice, value);
 		}
 

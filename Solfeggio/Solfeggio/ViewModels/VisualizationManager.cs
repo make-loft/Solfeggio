@@ -25,6 +25,8 @@ namespace Solfeggio.ViewModels
 				Palette = k,
 			});
 
+		public override VisualizationProfile GetDefault() => Profiles.FirstOrDefault(p => p.Palette.Is("Nature"));
+
 		public override void Expose()
 		{
 			base.Expose();
@@ -32,7 +34,6 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveProfile].PropertyChanging += (o, e) => ActiveProfile?.Keep();
 			this[() => ActiveProfile].PropertyChanged += (o, e) => ActiveProfile?.Load();
 
-			ActiveProfile ??= Profiles.FirstOrDefault(p => p.Palette.Is("Nature"));
 			ActiveProfile?.Load();
 		}
 	}

@@ -1,12 +1,14 @@
 ﻿<ResourceDictionary
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:models="clr-namespace:Solfeggio.Models"
-	xmlns:controls="clr-namespace:Solfeggio.Controls"
-	xmlns:presenters="clr-namespace:Solfeggio.Presenters"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
-	xmlns:views="clr-namespace:Solfeggio.Views"
-	xmlns:local="clr-namespace:Solfeggio" xmlns:wpf="http://schemas.microsoft.com/netfx/2009/xaml/presentation">
+	xmlns:m="clr-namespace:Solfeggio.Models"
+	xmlns:c="clr-namespace:Solfeggio.Controls"
+	xmlns:p="clr-namespace:Solfeggio.Presenters"
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:v="clr-namespace:Solfeggio.Views"
+	xmlns:local="clr-namespace:Solfeggio"
+	>
+	
 	<DataTemplate
 		x:Key="HarmonicTemplate">
 		<Grid
@@ -25,8 +27,8 @@
 				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
-				Minimum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
-				Maximum="{StoreBinding StoreKey=presenters:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
+				Minimum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
+				Maximum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
 				Value="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Slider
 				Rack.Cell="C2 R1"
@@ -56,7 +58,7 @@
 				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
 			<Picker
 				Rack.Cell="C4 R0"
-				ItemsSource="{Enum Type=models:PhaseMode}"
+				ItemsSource="{Enum Type=m:PhaseMode}"
 				SelectedItem="{Binding PhaseMode, Mode=TwoWay}" />
 
 			<Switch
@@ -71,7 +73,7 @@
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, StoreKey=viewModels:HarmonicManager, KeyPath=ActiveProfile}" />
+					Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}" />
 			</StackLayout>
 		</Grid>
 	</DataTemplate>
@@ -439,7 +441,7 @@
 				Content="{Binding}"
 				ContentTemplate="{StaticResource RangeGridTemplate}" />
 
-			<controls:RangeBar
+			<c:RangeBar
 				Maximum="{Binding Limit.Upper, Mode=TwoWay}"
 				Minimum="{Binding Limit.Lower, Mode=TwoWay}"
 				SelectionEnd="{Binding Threshold.Upper, Mode=TwoWay}"
@@ -579,12 +581,12 @@
 						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
 				</Expander.Header>
-				<views:PopupView
+				<v:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
-					<views:ValuePicker
+					<v:ValuePicker
 						Value="{Binding DataContext, Mode=TwoWay}"
 						/>
-				</views:PopupView>
+				</v:PopupView>
 			</Expander>
 		</Grid>
 	</ControlTemplate>
@@ -644,13 +646,13 @@
 							/>
 					</Grid>
 				</Expander.Header>
-				<views:PopupView
+				<v:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
 					<ContentPresenter
 						Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
 						ContentTemplate="{StaticResource RangeTemplate}"
 						/>
-				</views:PopupView>
+				</v:PopupView>
 			</Expander>
 		</Grid>
 	</ControlTemplate>
@@ -693,11 +695,11 @@
 						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
 				</Grid>
 			</Expander.Header>
-			<views:PopupView
+			<v:PopupView
 				IsOpen="{Binding IsExpanded, ElementName=Root}">
-				<views:ColorPicker
+				<v:ColorPicker
 					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
-			</views:PopupView>
+			</v:PopupView>
 		</Expander>
 	</ControlTemplate>
 
@@ -716,12 +718,12 @@
 				x:Name="Root"
 				Header="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
 				HeaderTemplate="{StaticResource BrushPreviewTemplate}">
-				<views:PopupView
+				<v:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=Root}">
-					<views:BrushPicker
+					<v:BrushPicker
 						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
 						/>
-				</views:PopupView>
+				</v:PopupView>
 			</Expander>
 			<Picker
 				Rack.Cell="C1"
@@ -754,20 +756,24 @@
 		x:Key="VisualizationTemplate">
 		<Grid>
 			<ItemsView
-				Visibility="{StoreBinding StoreKey=viewModels:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToCollapsedConverter}}"
 				Background="Transparent"
 				DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 				ItemsSource="{StaticResource VisualizationSet}"
 				/>
-			<Label
-				Text="⏳"
-				Padding="16"
-				Margin="16 64"
-				FontSize="64"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center"
-				Visibility="{StoreBinding StoreKey=viewModels:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToVisibleConverter}}"
-				/>
+			<Grid
+				Background="#55FFFFFF"
+				Visibility="{StoreBinding StoreKey=vm:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToVisibleConverter}}"
+				>
+				<Label
+					Text="⏳"
+					Padding="16"
+					Margin="16 64"
+					FontSize="64"
+					VerticalAlignment="Top"
+					HorizontalAlignment="Center"
+					Foreground="{StaticResource SpectrogramBackgroundBrush}"
+					/>
+			</Grid>
 		</Grid>
 	</DataTemplate>
 

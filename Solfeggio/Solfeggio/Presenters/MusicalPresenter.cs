@@ -23,33 +23,33 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class MusicalPresenter : ContextObject, IExposable
 	{
+		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
 		[DataMember] public FrameOptions Frame { get; set; } = new();
 		[DataMember] public MusicalOptions Music { get; set; } = new();
-		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
-		[DataMember] public VisualProfile VisualProfile { get; set; } = new();
+		public VisualProfile VisualProfile { get; set; } = new();
 
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
 		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
 		[DataMember] public string[] NumericFormats { get; set; } = { "F0", "F1", "F2", "F3", "F4", "F5" };
 		
-		[DataMember] public string CommonNumericFormat
+		[DataMember] public string MonitorNumericFormat
 		{
-			get => Get(() => CommonNumericFormat, "F2");
-			set => Set(() => CommonNumericFormat, value);
+			get => Get(() => MonitorNumericFormat, "F2");
+			set => Set(() => MonitorNumericFormat, value);
 		}
 
-		[DataMember] public string NoteNumericFormat
+		[DataMember] public string ScreenNumericFormat
 		{
-			get => Get(() => NoteNumericFormat, "F1");
-			set => Set(() => NoteNumericFormat, value);
+			get => Get(() => ScreenNumericFormat, "F1");
+			set => Set(() => ScreenNumericFormat, value);
 		}
 
 		public void Expose()
 		{
-			this[() => CommonNumericFormat].PropertyChanged += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
-			this[() => NoteNumericFormat].PropertyChanged += (o, e) =>
+			this[() => MonitorNumericFormat].PropertyChanged += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+			this[() => ScreenNumericFormat].PropertyChanged += (o, e) =>
 			{
-				var digitsCountPart = NoteNumericFormat.Length > 1 ? NoteNumericFormat.Substring(1) : "1";
+				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
 				var zeros = new string('0', digitsCount);
 				VisualProfile.TopProfiles[nameof(VisualProfile.DeltaFrequancy)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
@@ -94,7 +94,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(NoteNumericFormat)
+					Text = activeFrequency.ToString(ScreenNumericFormat)
 				});
 
 				items.Add(panel);
@@ -304,7 +304,7 @@ namespace Solfeggio.Presenters
 			{
 				Text = p.Key.Is("NoteName")
 					? pianoKey.NoteName
-					: GetValueByKey(p.Key).ToString(p.Value.StringFormat ?? NoteNumericFormat),
+					: GetValueByKey(p.Key).ToString(p.Value.StringFormat ?? ScreenNumericFormat),
 #if NETSTANDARD
 				FontFamily = p.Value.FontFamilyName,
 #else

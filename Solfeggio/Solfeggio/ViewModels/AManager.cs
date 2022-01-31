@@ -15,7 +15,7 @@ namespace Solfeggio.ViewModels
 		[DataMember]
 		public TProfile ActiveProfile
 		{
-			get => Get(() => ActiveProfile, Profiles.FirstOrDefault());
+			get => Get(() => ActiveProfile, GetDefault());
 			set => Set(() => ActiveProfile, value);
 		}
 
@@ -35,6 +35,8 @@ namespace Solfeggio.ViewModels
 
 			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}
+
+		public virtual TProfile GetDefault() => Profiles.FirstOrDefault();
 
 		public virtual IEnumerable<TProfile> CreateDefaultProfiles() => default;
 

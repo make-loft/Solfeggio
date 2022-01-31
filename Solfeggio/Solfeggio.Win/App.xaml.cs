@@ -92,7 +92,7 @@ namespace Solfeggio
 		private void App_OnExit(object sender, ExitEventArgs e)
 		{
 			Store.Snapshot();
-			Store.Get<VisualizationManager>().ActiveProfile?.Keep();
+			Store.Get<VisualizationManager>().ActiveProfile?.Keep(asyncDelay: false);
 
 			AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
 		}

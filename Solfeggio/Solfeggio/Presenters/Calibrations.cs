@@ -82,8 +82,8 @@ namespace Solfeggio.Presenters
 
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
-		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = AllScaleFuncs;
+		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 
 		public void LimitThreshold()
 		{

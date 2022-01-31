@@ -13,7 +13,7 @@ namespace Solfeggio.Converters
 			value is float f ? f :
 			0d;
 
-		public override object Convert(object value) => ToDouble(value).ToString(MusicalPresenter.CommonNumericFormat);
+		public override object Convert(object value) => ToDouble(value).ToString(MusicalPresenter.MonitorNumericFormat);
 
 		public override object ConvertBack(object value) => value is double d
 			? d 

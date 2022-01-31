@@ -8,11 +8,13 @@
 	DataContext="{Store Key=vm:ProcessingManager}"
 	>
 	<Grid
-		Rack.Rows="1.61* ^ *"
+		Rack.IsTwoWayMode="True"
+		Rack.Rows="{Smart GridA, DefaultValue='1.61* ^ *'}"
 		>
 		<Grid
 			Rack.Cell="R0"
-			Rack.Rows="* ^ 4*"
+			Rack.IsTwoWayMode="True"
+			Rack.Rows="{Smart GridB, DefaultValue='* ^ 7*'}"
 			>
 			<Canvas
 				Rack.Cell="R0"
@@ -44,7 +46,8 @@
 				/>
 			<Grid
 				Rack.Cell="R2"
-				Rack.Rows="* ^ 1.61*"
+				Rack.IsTwoWayMode="True"
+				Rack.Rows="{Smart GridC, DefaultValue='* ^ 5*'}"
 				>
 				<Canvas
 					Rack.Cell="R0"
@@ -105,7 +108,8 @@
 			/>
 		<Grid
 			Rack.Cell="R2"
-			Rack.Rows="1.61* ^ *"
+			Rack.IsTwoWayMode="True"
+			Rack.Rows="{Smart GridD, DefaultValue='1.61* ^ *'}"
 			>
 			<Canvas
 				Rack.Cell="R0"
