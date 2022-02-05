@@ -128,7 +128,7 @@ namespace Solfeggio.Presenters
 		public Bandwidth Frequency { get; set; } = new()
 		{
 			Limit = SmartRange.Create(10d, AudioInputDevice.DefaultSampleRate / 2),
-			Threshold = SmartRange.Create(20d, 3000d),
+			Threshold = SmartRange.Create(20d, 2870d),
 			VisualScaleFunc = Log2,
 		};
 

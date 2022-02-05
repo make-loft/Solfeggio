@@ -51,6 +51,7 @@
 		<Color x:Key="ColorA">#151435</Color>
 		<Color x:Key="ColorB">#253569</Color>
 		<Color x:Key="ColorC">#4A65BD</Color>
+		<Color x:Key="ColorD">#E0E8FF</Color>
 	</Map>
 
 </ResourceDictionary>

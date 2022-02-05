@@ -19,7 +19,7 @@ namespace Solfeggio
 {
 	public partial class App
 	{
-		public static Editions Edition { get; } = Developer;
+		public static Editions Edition { get; } = Scientific;
 
 		public static Dictionary<Editions, string> YandexMetricaKeys = new()
 		{
