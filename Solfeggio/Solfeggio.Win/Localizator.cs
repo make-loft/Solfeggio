@@ -139,9 +139,9 @@ namespace Solfeggio
 		public static o NumericFormatting = _("Numeric Formatting", "Числовое форматирование");
 
 		public static o AgreementMessage = _(Messages.Agreement.English, Messages.Agreement.Russian);
-		public static o DesignedByMessage = _(Messages.DesignedBy.English, Messages.DesignedBy.Russian);
-		public static o IAmReadyToHelpMessage = _(Messages.IAmReadyToHelpMessage.English, Messages.IAmReadyToHelpMessage.Russian);
-		public static o IAmReadyToHelpLink = _(Messages.IAmReadyToHelpLink.English, Messages.IAmReadyToHelpLink.Russian);
+		public static o MadeByMessage = _(Messages.MadeBy.English, Messages.MadeBy.Russian);
+		public static o ReadyToHelpMessage = _(Messages.ReadyToHelpMessage.English, Messages.ReadyToHelpMessage.Russian);
+		public static o ReadyToHelpLink = _(Messages.ReadyToHelpLink.English, Messages.ReadyToHelpLink.Russian);
 		public static o ExpirationMessage = _(Messages.ExpirationMessage.English, Messages.ExpirationMessage.Russian);
 		public static o HomeLink = _(Messages.HomeLink.English, Messages.HomeLink.Russian);
 
@@ -184,19 +184,19 @@ Your help is needed and priceless!";
 Ваша помощь необходима и бесценна!";
 		}
 
-		public static class DesignedBy
+		public static class MadeBy
 		{
-			public const string English = @"Developed by Makeloft Sientific Research Studio";
-			public const string Russian = @"Разработано научно-исследовательской студией Makeloft";
+			public const string English = @"Made by Makeloft Studio";
+			public const string Russian = @"Сделано студией Makeloft";
 		}
 
-		public static class IAmReadyToHelpMessage
+		public static class ReadyToHelpMessage
 		{
-			public const string English = @"I am ready to help!";
-			public const string Russian = @"Я готов помочь!";
+			public const string English = @"Ready to help!";
+			public const string Russian = @"Готов помочь!";
 		}
 
-		public static class IAmReadyToHelpLink
+		public static class ReadyToHelpLink
 		{
 			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
 			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";

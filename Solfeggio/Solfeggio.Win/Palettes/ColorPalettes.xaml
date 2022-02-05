@@ -44,4 +44,13 @@
 		<Color x:Key="ColorC">#991E66</Color>
 	</Map>
 
+	<Map
+		x:Key="Night"
+		BasedOn="{StaticResource Nature}"
+		>
+		<Color x:Key="ColorA">#151435</Color>
+		<Color x:Key="ColorB">#253569</Color>
+		<Color x:Key="ColorC">#4A65BD</Color>
+	</Map>
+
 </ResourceDictionary>

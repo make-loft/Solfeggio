@@ -92,8 +92,10 @@
 			Header="{Localizing Key=Agreement}"
 			>
 			<ScrollView>
-				<StackView>
+				<Grid
+					Rack.Rows="^ ^ ^ * ^ ^">
 					<StackView
+						Rack.Cell="R0"
 						Style="{StaticResource TitlePanelStyle}"
 						>
 						<Label
@@ -104,28 +106,36 @@
 							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=vm:AppViewModel}"
 							/>
 					</StackView>
-
 					<Label
+						Rack.Cell="R1"
+						FontSize="10"
+						FontFamily="Consolas"
+						Text="{Binding Source={x:Static local:App.Edition}, StringFormat='{}{0} Edition'}"
+						/>
+					<Label
+						Rack.Cell="R2"
 						FontSize="14"
+						Padding="16"
 						Text="{Localizing Key=AgreementMessage}"
 						/>
 					<Button
-						FontSize="13"
+						Rack.Cell="R3"
+						FontSize="14"
+						Padding="6"
+						FontFamily="Consolas"
+						VerticalAlignment="Center"
 						HorizontalAlignment="Center"
-						CommandParameter="{Localizing Key=IAmReadyToHelpLink}"
+						CommandParameter="{Localizing Key=ReadyToHelpLink}"
 						Command="{Context Key=Navigate, StoreKey=vm:AppViewModel}"
-						Content="{Localizing Key=IAmReadyToHelpMessage}"
+						Content="{Localizing Key=ReadyToHelpMessage, Modifiers=ToUpper}"
 						/>
 					<Label
+						Rack.Cell="R4"
 						FontSize="10"
-						HorizontalAlignment="Left"
-						Text="{Binding Source={x:Static local:App.Edition}}"
+						FontFamily="Consolas"
+						Text="{Localizing Key=MadeByMessage}"
 						/>
-					<Label
-						FontSize="10"
-						Text="{Localizing Key=DesignedByMessage}"
-						/>
-				</StackView>
+				</Grid>
 			</ScrollView>
 		</PivotItem>
 

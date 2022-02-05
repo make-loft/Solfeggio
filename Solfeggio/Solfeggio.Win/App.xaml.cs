@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 
 using Ace;
+using Ace.Replication.MemberProviders;
 
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
@@ -63,8 +64,10 @@ namespace Solfeggio
 			try
 			{
 				if (Directory.Exists(settingsFolder).Not()) Directory.CreateDirectory(settingsFolder);
-				Store.ActiveBox = new Memory(new Ace.Specific.KeyFileStorage(), Path.Combine(settingsFolder, "{0}.json"));
-				SetHandlers(Store.ActiveBox);
+				var box = Store.ActiveBox = new Memory(new Ace.Specific.KeyFileStorage(), Path.Combine(settingsFolder, "{0}.json"));
+				box.ReplicationProfile.MemberProviders[1] =
+					new ContractMemberProvider(BindingFlags.Public | BindingFlags.Instance, Member.CanReadWrite);
+				SetHandlers(box);
 
 				var metricaFolder = Path.Combine(settingsFolder, "Metric");
 
