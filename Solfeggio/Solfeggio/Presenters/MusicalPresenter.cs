@@ -317,6 +317,30 @@ namespace Solfeggio.Presenters
 			});
 		}
 
+		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate, double centerX, double centerY)
+		{
+			var radiusMax = Math.Min(centerX, centerY);
+
+			for (var i = 0; i < sampleSize; i++)
+			{
+				var a = 0d;
+				var b = 0d;
+
+				for (var j = 0; j < peaks.Length; j++)
+				{
+					var peak = peaks[j];
+					var w = Pi.Double * peak.Frequency;
+					var t = i / sampleRate;
+					var phase = peak.Phase + w * t;
+					var radius = peak.Magnitude * radiusMax;
+					a += radius * Math.Cos(phase);
+					b += radius * Math.Sin(phase);
+				}
+
+				yield return new(a + centerX, b + centerY);
+			}
+		}
+
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, out Bin[] peaks)
 		{
 			Spectrum.Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);

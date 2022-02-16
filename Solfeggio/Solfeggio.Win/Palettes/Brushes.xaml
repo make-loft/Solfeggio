@@ -377,4 +377,25 @@
 			Color="{DynamicResource ColorC}" />
 	</LinearGradientBrush>
 
+	<RadialGradientBrush
+		x:Key="Stroke.Geometry"
+		RadiusX="0.73"
+		RadiusY="0.73"
+		Center="0.5,0.5"
+		GradientStops="{StaticResource RainbowGradient}"
+		/>
+
+	<RadialGradientBrush
+		x:Key="GeometryBackgroundBrush"
+		RadiusX="0.5"
+		RadiusY="0.5"
+		Center="0.5,0.5">
+		<GradientStop
+			Offset="0.0"
+			Color="#07575B" />
+		<GradientStop
+			Offset="1.0"
+			Color="#003B46" />
+	</RadialGradientBrush>
+	
 </ResourceDictionary>

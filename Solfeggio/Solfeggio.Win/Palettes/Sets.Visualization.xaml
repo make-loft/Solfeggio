@@ -450,7 +450,7 @@
 			>
 			<Grid
 				Rack.Rows="^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^"
+				Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
 				>
 				<Label
 					Rack.Cell="R0 C0"
@@ -475,6 +475,14 @@
 				<Label
 					Rack.Cell="R0 C5"
 					Text="{Localizing Key=Spectrogram}"
+					/>
+				<Label
+					Rack.Cell="R0 C6"
+					Text="{Localizing Key=Geometry}"
+					/>
+				<Label
+					Rack.Cell="R0 C7"
+					Text="{Localizing Key=Flower}"
 					/>
 
 				<ContentView
@@ -505,6 +513,16 @@
 				<ContentView
 					Rack.Cell="R1 C5"
 					DataContext="{Binding [SpectrogramBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R1 C6"
+					DataContext="{Binding [GeometryBackgroundBrush], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R1 C7"
+					DataContext="{Binding [Stroke.Geometry], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 			</Grid>

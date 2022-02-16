@@ -44,6 +44,10 @@
 			<Entry
 				Rack.Cell="C1 R0"
 				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
+			<Picker
+				Rack.Cell="C1 R0"
+				HorizontalAlignment="Left"
+				Width="21" />
 			<Entry
 				Rack.Cell="C2 R0"
 				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />

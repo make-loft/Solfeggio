@@ -145,7 +145,10 @@
     <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Editions.cs" />
-    <Compile Include="MonitorView.xaml.cs">
+    <Compile Include="Views\GeometryView.xaml.cs">
+      <DependentUpon>GeometryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="AgreementManager.cs" />
@@ -195,7 +198,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MonitorView.xaml">
+    <Page Include="Views\GeometryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MonitorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -175,6 +176,7 @@ namespace Solfeggio.Views
 					{
 						Polyline_Magnitude_FFT,
 						Polyline_Magnitude_PMI,
+						//Polyline_Flower
 					}
 				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
 				FrameCanvas.Children.OfType<Polyline>().ForEach(p => p.Points.Clear());
@@ -260,6 +262,9 @@ namespace Solfeggio.Views
 						p.Margin = new(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 8d, 0d, 0d);
 					});
 
+				var activeProfile = processingManager.ActiveProfile;
+				AppView.GeometryView.Draw(peaks, activeProfile.SampleSize, activeProfile.SampleRate);
+
 				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
 					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
@@ -267,6 +272,9 @@ namespace Solfeggio.Views
 					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
 				appViewModel.Harmonics = dominanats;
+
+				if (processingManager.IsPaused)
+					return;
 
 				var w = SpectrogramCanvas.ActualWidth;
 				var h = SpectrogramCanvas.ActualHeight;

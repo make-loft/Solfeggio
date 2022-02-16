@@ -99,6 +99,12 @@
 				/>
 		</Canvas>
 
+		<Canvas
+			Rack.Cell="R2"
+			x:Name="GeometryCanvas">
+
+		</Canvas>
+
 		<GridSplitter
 			Rack.Cell="R3"
 			Style="{StaticResource HorizontalGridSplitterStyle}"
