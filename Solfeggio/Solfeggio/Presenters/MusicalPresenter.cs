@@ -317,11 +317,12 @@ namespace Solfeggio.Presenters
 			});
 		}
 
-		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate, double centerX, double centerY)
+		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate,
+			double centerX = 0d, double centerY = 0d)
 		{
-			var radiusMax = Math.Min(centerX, centerY);
+			var radiusMax = Math.Max(Math.Min(centerX, centerY), 1d);
 
-			for (var i = 0; i < sampleSize; i++)
+			for (var i = 0; i < 4 * sampleSize; i++)
 			{
 				var a = 0d;
 				var b = 0d;
@@ -330,7 +331,7 @@ namespace Solfeggio.Presenters
 				{
 					var peak = peaks[j];
 					var w = Pi.Double * peak.Frequency;
-					var t = i / sampleRate;
+					var t = 0.5 * i / sampleRate;
 					var phase = peak.Phase + w * t;
 					var radius = peak.Magnitude * radiusMax;
 					a += radius * Math.Cos(phase);

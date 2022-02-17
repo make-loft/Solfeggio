@@ -1,11 +1,12 @@
-﻿using Rainbow;
+﻿using Ace.Zest.Extensions;
+
+using Rainbow;
 
 using Solfeggio.Presenters;
 
-using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Media3D;
 
 namespace Solfeggio.Views
 {
@@ -19,6 +20,14 @@ namespace Solfeggio.Views
 		int _sampleSize;
 		double _sampleRate;
 
+		public void DrawFlower(Bin[] peaks, int sampleSize, double sampleRate)
+		{
+			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate, ActualWidth / 2d, ActualHeight / 2d).ToList();
+			var polyline = Polyline_Geometry;
+			polyline.Points.Clear();
+			geometry.ForEach(polyline.Points.Add);
+		}
+
 		public void Draw(Bin[] peaks, int sampleSize, double sampleRate)
 		{
 			if (IsPaused is false)
@@ -28,28 +37,29 @@ namespace Solfeggio.Views
 				_sampleRate = sampleRate;
 			}
 
-			var geometry = MusicalPresenter.DrawGeometry(_peaks, _sampleSize, _sampleRate, ActualWidth / 2d, ActualHeight / 2d).ToList();
-			//var polyline = Polyline_Geometry;
-			//polyline.Points.Clear();
-			//geometry.ForEach(polyline.Points.Add);
+			if (TabControl.SelectedIndex == 0)
+				DrawFlower(_peaks, _sampleSize, _sampleRate);
 
+			if (TabControl.SelectedIndex == 1)
+				DrawStripe(_peaks, _sampleSize, _sampleRate);
+		}
+		public void DrawStripe(Bin[] peaks, int sampleSize, double sampleRate)
+		{
+			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate).ToList();
 			geo.TriangleIndices.Clear();
 			geo.Positions.Clear();
 
 			int k = 0;
 			for (var n = 0; n < geometry.Count; n++)
 			{
-				//calculate the current Point3D based on the equations of the curve
-				var x = geometry[n].X - ActualWidth / 2d;
-				var y = geometry[n].Y - ActualHeight / 2d;
-				var z = 1000 * n / geometry.Count;
-				//the current Point3D
-				var p = new Point3D(x, y, z);
-				//here is where we make it thin, 
-				//you can replace .1 with such as 10 to enlarge the strip
-				var u = new Point3D(x, y, z - 5d);
-				geo.Positions.Add(p);
-				geo.Positions.Add(u);
+				var x = geometry[n].X;
+				var y = geometry[n].Y;
+				var z = 32d * n / geometry.Count;
+				var thin = 0.05d / 2;
+
+				geo.Positions.Add(new(x, y, z + thin));
+				geo.Positions.Add(new(x, y, z - thin));
+
 				if (k > 0)
 				{
 					geo.TriangleIndices.Add(k);
@@ -57,43 +67,49 @@ namespace Solfeggio.Views
 					geo.TriangleIndices.Add(k + 1);
 					geo.TriangleIndices.Add(k);
 				}
+
 				geo.TriangleIndices.Add(k);
 				geo.TriangleIndices.Add(k + 1);
+
 				k++;
 			}
 		}
 
 		private void SwitchPause() => IsPaused = !IsPaused;
 
+	
+
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
+			e.Handled = true;
 			if (e.Key is Key.Space)
 				SwitchPause();
 
-			var step = 10;
-			var direction = Camera.Position;
-			switch (e.Key)
-			{
-				case Key.W:
-					direction.Z += step;
-					break;
-				case Key.S:
-					direction.Z -= step;
-					break;
-				case Key.A:
-					direction.X += step;
-					break;
-				case Key.D:
-					direction.X -= step;
-					break;
-			}
-
-			Camera.Position = direction;
+			Camera.MoveBy(e.Key).RotateBy(e.Key);
 		}
 
 		private void Window_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			SwitchPause();
+		}
+
+		Point from;
+		private void Window_PreviewMouseMove(object sender, MouseEventArgs e)
+		{
+			var till = e.GetPosition(sender as IInputElement);
+			double dx = till.X - from.X;
+			double dy = till.Y - from.Y;
+			from = till;
+
+			var distance = dx * dx + dy * dy;
+			if (distance <= 0)
+				return;
+
+			if (e.MouseDevice.LeftButton is MouseButtonState.Pressed)
+			{
+				var angle = (distance / Camera.FieldOfView) % 45;
+				Camera.Rotate(new(dy, -dx, 0d), angle);
+			}
 		}
 	}
 }
