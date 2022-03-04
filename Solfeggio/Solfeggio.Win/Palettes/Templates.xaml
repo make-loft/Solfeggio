@@ -8,76 +8,119 @@
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:local="clr-namespace:Solfeggio"
 	>
+
+	<DataTemplate
+		x:Key="NoteNameToFrequencyTemplate">
+		<Grid
+			Rack.Columns="* *"
+			>
+			<Frame
+				Rack.Cell="C0 CS2"
+				Opacity="0.61"
+				CornerRadius="4"
+				Background="{Binding Converter={StaticResource PianoKeyToBrushConverter}}"
+				/>
+			<Label
+				Rack.Cell="C0"
+				FontWeight="SemiBold"
+				FontFamily="Consolas"
+				Text="{Binding NoteName}"
+				/>
+			<Label
+				Rack.Cell="C1"
+				FontFamily="Consolas"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+		</Grid>
+	</DataTemplate>
 	
 	<DataTemplate
 		x:Key="HarmonicTemplate">
 		<Grid
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
 			Rack.Columns="2* 2* 2* * * * *"
-			Rack.Rows="* *">
-
+			Rack.Rows="* *"
+			>
 			<Slider
 				Rack.Cell="C0 R1"
 				Minimum="+0.0"
 				Maximum="+1.0"
 				TickFrequency="0.01"
 				TickPlacement="TopLeft"
-				Value="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Value="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 			<Slider
 				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
 				Minimum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
 				Maximum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
-				Value="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Value="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 			<Slider
 				Rack.Cell="C2 R1"
 				TickFrequency="0.207"
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Value="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 
 			<Entry
 				Rack.Cell="C0 R0"
-				Text="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
+				/>
 			<Entry
 				Rack.Cell="C1 R0"
-				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
+				/>
 			<Picker
 				Rack.Cell="C1 R0"
 				HorizontalAlignment="Left"
-				Width="21" />
+				ItemTemplate="{StaticResource NoteNameToFrequencyTemplate}"
+				ItemsSource="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music.PianoKeys}"
+				SelectedValue="{Binding Frequency, Mode=TwoWay}"
+				SelectedValuePath="EthalonFrequency"
+				Height="22"
+				Width="20"
+				/>
 			<Entry
 				Rack.Cell="C2 R0"
-				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
+				/>
 			<Entry
 				Rack.Cell="C3 R2"
 				ToolTip="{Localizing Gap}"
-				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
+				/>
 			<Picker
 				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
 				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+				/>
 			<Picker
 				Rack.Cell="C4 R0"
 				ItemsSource="{Enum Type=m:PhaseMode}"
-				SelectedItem="{Binding PhaseMode, Mode=TwoWay}" />
+				SelectedItem="{Binding PhaseMode, Mode=TwoWay}"
+				/>
 
 			<Switch
 				Rack.Cell="C5 R0"
 				HorizontalAlignment="Right"
-				IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
+				IsToggled="{Binding IsEnabled, Mode=TwoWay}"
+				/>
 
 			<StackLayout
 				Rack.Cell="C6 R0"
 				Orientation="Horizontal"
-				HorizontalAlignment="Right">
+				HorizontalAlignment="Right"
+				>
 				<Button
 					Content="✗"
 					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}" />
+					Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
+					/>
 			</StackLayout>
 		</Grid>
 	</DataTemplate>

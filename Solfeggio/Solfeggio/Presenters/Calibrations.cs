@@ -1,5 +1,8 @@
 ﻿using Ace;
 using Rainbow;
+
+using Solfeggio.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -172,7 +175,7 @@ namespace Solfeggio.Presenters
 	public class MusicalOptions : ContextObject
 	{
 
-		[DataMember] public double[] PitchStandards { get; } = new[] { 415d, 420d, 432d, 435d, 440d, 444d };
+		[DataMember] public double[] PitchStandards { get; } = { 415d, 420d, 432d, 435d, 440d, 444d };
 		public static double DefaultPitchStandard = 440d;
 
 		[DataMember]
@@ -183,6 +186,8 @@ namespace Solfeggio.Presenters
 			{
 				Set(() => ActivePitchStandard, value);
 				BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
+				PianoKeys = EnumeratePianoKeys().ToList();
+				EvokePropertyChanged(nameof(PianoKeys));
 			}
 		}
 
@@ -213,5 +218,24 @@ namespace Solfeggio.Presenters
 			Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halftoneStep, dt)).ToArray();
 
 		public double[] BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
+
+		public List<PianoKey> PianoKeys { get; private set; }
+
+		public IEnumerable<PianoKey> EnumeratePianoKeys()
+		{
+			var noteNames = Notations.TryGetValue(ActiveNotation ?? "", out var names)
+				? names
+				: Notations[ActiveNotation = Notations.First().Key];
+
+			var oktavesCount = HalfTonesCount + 1;
+
+			for (var oktaveNumber = 1; oktaveNumber < oktavesCount; oktaveNumber++)
+			{
+				var oktaveNotes = BaseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
+				var notesCount = oktaveNotes.Length;
+				for (var noteIndex = 0; noteIndex < notesCount; noteIndex++)
+					yield return PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]);
+			}
+		}
 	}
 }

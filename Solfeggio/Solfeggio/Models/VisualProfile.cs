@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Solfeggio.Presenters;
+using System.Windows.Controls;
+using Ace.Zest.Extensions;
+using System.Windows;
 #if NETSTANDARD
 using Xamarin.Forms;
 using Color = Xamarin.Forms.Color;
@@ -68,22 +71,17 @@ namespace Solfeggio.Models
 		public TopProfile EthalonFrequncy => GetProfile();
 		public TopProfile NoteName => GetProfile();
 
-		public static Color[] Rainbow =	new[]
+		static readonly Window RainbowView = new Window
 		{
-			PaleVioletRed,
-			SkyBlue, //Color.Multiply(SkyBlue, 0.5f),
-			Orange,
-			Blue, //Color.Multiply(Blue, 0.5f),
-			Yellow,
+			Width = 120,
+			Height = 120,
+			Background = (Brush)App.Current.Resources["RainbowBrush.H"]
+		}.To(out var b).Call(() => b.Show());
 
-			YellowGreen,
-			PaleVioletRed, //Color.Multiply(Red, 0.5f),
-			SkyBlue,
-			Orange, //Color.Multiply(Orange, 0.5f),
-			Blue,
-			Yellow, //Color.Multiply(Yellow, 0.5f),
-			BlueViolet
-		};
+		static readonly int PointsCount = 12;
+		public static Color[] Rainbow = Enumerable.Range(0, PointsCount)
+			.Select(i => RainbowView.GetPixelColor(new(RainbowView.ActualWidth * i / PointsCount, 0)))
+			.ToArray();
 
 		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
 		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();

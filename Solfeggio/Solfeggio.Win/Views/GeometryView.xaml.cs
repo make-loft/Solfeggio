@@ -2,9 +2,11 @@
 
 using Rainbow;
 
+using Solfeggio.Extensions;
 using Solfeggio.Presenters;
 
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -77,16 +79,24 @@ namespace Solfeggio.Views
 
 		private void SwitchPause() => IsPaused = !IsPaused;
 
-	
-
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
 			if (e.Key is Key.Space)
 				SwitchPause();
-
-			Camera.MoveBy(e.Key).RotateBy(e.Key);
 		}
+
+		private async void Window_Activated(object sender, System.EventArgs e)
+		{
+			while (IsActive)
+			{
+				NavigationKeys.Where(Keyboard.IsKeyDown).ForEach(key => Camera.MoveBy(key).RotateBy(key));
+
+				await Task.Delay(16);
+			}
+		}
+
+		readonly Key[] NavigationKeys = { Key.Down, Key.Up, Key.Left, Key.Right, Key.W, Key.S, Key.A, Key.D };
 
 		private void Window_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{

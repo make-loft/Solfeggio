@@ -1,13 +1,11 @@
 ﻿using Ace;
+using Ace.Zest.Extensions;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using static System.Reflection.BindingFlags;
 
@@ -116,37 +114,11 @@ namespace Solfeggio.Views
 			};
 		}
 
-		private Color PickColor(FrameworkElement element, Point position, bool pickA = false)
+		public Color PickColor(FrameworkElement element, Point position, bool pickA = false)
 		{
-			var rect = new Rect(element.RenderSize);
-			var visual = new DrawingVisual();
-
-			using (var dc = visual.RenderOpen())
-			{
-				dc.DrawRectangle(new VisualBrush(element), null, rect);
-			}
-
-			var bitmap = new RenderTargetBitmap((int)rect.Width, (int)rect.Height, 96, 96, PixelFormats.Pbgra32);
-			bitmap.Render(visual);
-
-			var rawColor = GetPixel(bitmap, (int)position.X, (int)position.Y);
-			var bytes = BitConverter.GetBytes(rawColor);
+			var bytes = element.GetPixelBytes(position);
 			var color = Color.FromArgb(pickA ? bytes[3] : Value.A, bytes[2], bytes[1], bytes[0]);
 
-			return color;
-		}
-
-		public static int GetPixel(BitmapSource bitmap, int x, int y)
-		{
-			var offset = (y * bitmap.PixelWidth + x) * (bitmap.Format.BitsPerPixel / 8);
-			var stride = bitmap.PixelWidth * (bitmap.Format.BitsPerPixel / 8);
-			var length = bitmap.PixelHeight * stride;
-			if (length <= offset) return 0x00888888;
-
-			var pixels = new byte[length];
-			bitmap.CopyPixels(pixels, stride, 0);
-
-			var color = BitConverter.ToInt32(pixels, offset);
 			return color;
 		}
 

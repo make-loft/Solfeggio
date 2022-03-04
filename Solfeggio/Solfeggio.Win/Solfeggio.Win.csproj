@@ -144,7 +144,9 @@
     <Compile Include="Converters\Int32ToStringTwoWayConverter.cs" />
     <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
+    <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Editions.cs" />
+    <Compile Include="Extensions\CameraExtensions.cs" />
     <Compile Include="Views\GeometryView.xaml.cs">
       <DependentUpon>GeometryView.xaml</DependentUpon>
     </Compile>

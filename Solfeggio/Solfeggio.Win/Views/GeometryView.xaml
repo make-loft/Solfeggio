@@ -11,6 +11,7 @@
 	Title="{Localizing Key=Geometry, Modifiers=ToUpper}"
 	PreviewMouseDoubleClick="Window_PreviewMouseDoubleClick"
 	PreviewKeyDown="Window_PreviewKeyDown"
+	Activated="Window_Activated"
 	Background="DimGray"
 	>
 	<TabControl

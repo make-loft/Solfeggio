@@ -356,22 +356,12 @@ namespace Solfeggio.Presenters
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
 
 			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
-
-			var keys = new List<PianoKey>();
-			var oktavesCount = MusicalOptions.HalfTonesCount + 1;
-
-			for (var oktaveNumber = 1; oktaveNumber < oktavesCount; oktaveNumber++)
-			{
-				var oktaveNotes = Music.BaseOktaveFrequencySet.Select(d => d * Math.Pow(2, oktaveNumber)).ToArray();
-				var notesCount = oktaveNotes.Length;
-				for (var noteIndex = 0; noteIndex < notesCount; noteIndex++)
-					PianoKey.Construct(oktaveNotes, noteIndex, oktaveNumber, noteNames[noteIndex]).Use(keys.Add);
-			}
-
 			peaks = data.EnumeratePeaks().OrderByDescending(p => p.Magnitude).Take(10).ToArray();
 
 			var m = 0;
 			var averageMagnitude = 0d;
+			var keys = Music.EnumeratePianoKeys().ToList();
+
 			foreach (var bin in peaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
