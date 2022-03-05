@@ -14,86 +14,205 @@
 	Activated="Window_Activated"
 	Background="DimGray"
 	>
-	<TabControl
-		Background="DimGray"
-		x:Name="TabControl"
-		>
-		<TabItem
-			Header="{Localizing Key=Flower}"
+	<Grid>
+		<TabControl
+			Background="DimGray"
+			x:Name="TabControl"
 			>
-			<Canvas
-				Background="{DynamicResource GeometryBackgroundBrush}"
+			<TabItem
+				Header="{Localizing Key=Flower}"
 				>
-				<Polyline
-					Name="Polyline_Geometry"
-					Stroke="{DynamicResource Stroke.Geometry}"
-					StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
-					Visibility="{DynamicResource Visibility.PhasePMI}"
-					Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
-					/>
-			</Canvas>
-		</TabItem>
-		<TabItem
-			Header="{Localizing Key=Stripe}"
+				<Canvas
+					Background="{DynamicResource GeometryBackgroundBrush}"
+					>
+					<Polyline
+						Name="Polyline_Geometry"
+						Stroke="{DynamicResource Stroke.Geometry}"
+						StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
+						Visibility="{DynamicResource Visibility.PhasePMI}"
+						Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
+						/>
+				</Canvas>
+			</TabItem>
+			<TabItem
+				Header="{Localizing Key=Tape}"
+				>
+				<Grid
+					PreviewMouseMove="Window_PreviewMouseMove"
+					Background="{DynamicResource GeometryBackgroundBrush}"
+					>
+					<Viewport3D
+						x:Name="TapeView"
+						Camera="{Binding ElementName=CameraPicker, Path=SelectedItem, Mode=TwoWay}"
+						>
+						<Viewport3D.Children>
+							<ModelVisual3D>
+								<ModelVisual3D.Content>
+									<Model3DGroup>
+										<DirectionalLight
+											Color="White"
+											Direction="1,1,0"
+											/>
+										<AmbientLight
+											Color="Yellow"
+											/>
+										<GeometryModel3D>
+											<GeometryModel3D.Material>
+												<MaterialGroup>
+													<SpecularMaterial SpecularPower="85.3333">
+														<SpecularMaterial.Brush>
+															<SolidColorBrush Color="#FFFFFF" Opacity="1.000000"/>
+														</SpecularMaterial.Brush>
+													</SpecularMaterial>
+													<DiffuseMaterial Brush="#00FF00"/>
+													<EmissiveMaterial Brush="#330000ff"/>
+												</MaterialGroup>
+											</GeometryModel3D.Material>
+											<GeometryModel3D.BackMaterial>
+												<MaterialGroup>
+													<DiffuseMaterial Brush="#00FF00"/>
+													<EmissiveMaterial Brush="#330000ff"/>
+												</MaterialGroup>
+											</GeometryModel3D.BackMaterial>
+											<GeometryModel3D.Geometry>
+												<MeshGeometry3D x:Name="geo"/>
+											</GeometryModel3D.Geometry>
+										</GeometryModel3D>
+									</Model3DGroup>
+								</ModelVisual3D.Content>
+							</ModelVisual3D>
+						</Viewport3D.Children>
+					</Viewport3D>
+				</Grid>
+			</TabItem>
+		</TabControl>
+
+		<Expander
+			VerticalAlignment="Top"
+			HorizontalAlignment="Right"
 			>
+			<Expander.Header>
+				<Grid>
+					<ToggleButton
+						x:Name="PlayPauseToggleButton"
+						HorizontalAlignment="Right"
+						IsChecked="{StoreBinding StoreKey=vm:ProcessingManager, Path=IsPaused, Mode=TwoWay}"
+						Content="📷"
+						/>
+				</Grid>
+			</Expander.Header>
 			<Grid
-				PreviewMouseMove="Window_PreviewMouseMove"
-				Background="{DynamicResource GeometryBackgroundBrush}"
+				Rack.Rows="* * * *"
+				Rack.Columns="^ ^ ^"
 				>
+				<Grid.Resources>
+					<SwitchConverter
+						x:Key="PespectiveToVsibleConverter"
+						ByDefault="Collapsed"
+						>
+						<TypedCase
+							Key="PerspectiveCamera"
+							Value="Visible"
+							/>
+					</SwitchConverter>
+				</Grid.Resources>
+
+				<Border
+					Rack.Cell="R0 C0 RS4 CS4"
+					CornerRadius="0 0 0 4"
+					Background="{DynamicResource LabelBrush}"
+					/>
+
+				<TextBlock
+					Rack.Cell="R0 C0"
+					Text="{Localizing Projection}"
+					/>
+				<Picker
+					Rack.Cell="R0 C1"
+					x:Name="CameraPicker"
+					VerticalAlignment="Bottom"
+					SelectedIndex="0"
+					>
+					<Picker.Resources>
+						<SwitchConverter
+							x:Key="CameraToTextConverter">
+							<TypedCase
+								Key="PerspectiveCamera"
+								Value="{Localizing Perspective}"
+								/>
+							<TypedCase
+								Key="OrthographicCamera"
+								Value="{Localizing Orthographic}"
+								/>
+						</SwitchConverter>
+					</Picker.Resources>
+					<Picker.ItemTemplate>
+						<DataTemplate>
+							<TextBlock
+								Text="{Binding Converter={StaticResource CameraToTextConverter}}"
+								/>
+						</DataTemplate>
+					</Picker.ItemTemplate>
+					<PerspectiveCamera
+						x:Name="PerspectiveCamera"
+						Position="0,0,-4"
+						LookDirection="0,0,1"
+						UpDirection="0,1,0"
+						/>
+					<OrthographicCamera
+						x:Name="OrthographicCamera"
+						Position="0,0,-4"
+						LookDirection="0,0,1"
+						UpDirection="0,1,0">
+						<OrthographicCamera.Transform>
+							<ScaleTransform3D
+								x:Name="ScaleTransform"
+								ScaleX="2"
+								ScaleY="2"
+								ScaleZ="2"
+								/>
+						</OrthographicCamera.Transform>
+					</OrthographicCamera>
+				</Picker>
+
+				<TextBlock
+					Rack.Cell="R1 C0"
+					Visibility="{Binding ElementName=TapeView, Path=Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
+					Text="{Localizing Angle, StringFormat='{}{0} (0-180)'}"
+					/>
 				<Slider
-					DataContext="{Binding ElementName=Camera}"
+					Rack.Cell="R1 C1"
+					DataContext="{Binding ElementName=PerspectiveCamera}"
+					Visibility="{Binding ElementName=TapeView, Path=Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
 					Minimum="0"
 					Maximum="180"
 					Value="{Binding FieldOfView, Mode=TwoWay}"
 					/>
-				<Viewport3D>
-					<Viewport3D.Camera>
-						<PerspectiveCamera
-							x:Name="Camera"
-							Position="0,0,-4"
-							LookDirection="0,0,1"
-							UpDirection="0,1,0"
-							/>
-					</Viewport3D.Camera>
-					<Viewport3D.Children>
-						<ModelVisual3D>
-							<ModelVisual3D.Content>
-								<Model3DGroup>
-									<DirectionalLight
-										Color="White"
-										Direction="1,1,0"
-										/>
-									<AmbientLight
-										Color="Yellow"
-										/>
-									<GeometryModel3D>
-										<GeometryModel3D.Material>
-											<MaterialGroup>
-												<SpecularMaterial SpecularPower="85.3333">
-													<SpecularMaterial.Brush>
-														<SolidColorBrush Color="#FFFFFF" Opacity="1.000000"/>
-													</SpecularMaterial.Brush>
-												</SpecularMaterial>
-												<DiffuseMaterial Brush="#00FF00"/>
-												<EmissiveMaterial Brush="#330000ff"/>
-											</MaterialGroup>
-										</GeometryModel3D.Material>
-										<GeometryModel3D.BackMaterial>
-											<MaterialGroup>
-												<DiffuseMaterial Brush="#00FF00"/>
-												<EmissiveMaterial Brush="#330000ff"/>
-											</MaterialGroup>
-										</GeometryModel3D.BackMaterial>
-										<GeometryModel3D.Geometry>
-											<MeshGeometry3D x:Name="geo"/>
-										</GeometryModel3D.Geometry>
-									</GeometryModel3D>
-								</Model3DGroup>
-							</ModelVisual3D.Content>
-						</ModelVisual3D>
-					</Viewport3D.Children>
-				</Viewport3D>
+
+				<TextBlock
+					Rack.Cell="R2 C0"
+					Text="{Localizing Depth, StringFormat='{}{0} (0-256)'}"
+					/>
+				<Slider
+					Rack.Cell="R2 C1"
+					x:Name="DepthSlider"
+					Minimum="0"
+					Maximum="256"
+					Value="32"
+					/>
+
+				<TextBlock
+					Rack.Cell="R3 C0"
+					Text="{Localizing Thin, StringFormat='{}{0} (0-16)'}"
+					/>
+				<Slider
+					Rack.Cell="R3 C1"
+					x:Name="ThinSlider"
+					Minimum="0"
+					Maximum="16"
+					Value="4"
+					/>
 			</Grid>
-		</TabItem>
-	</TabControl>
+		</Expander>
+	</Grid>
 </Window>

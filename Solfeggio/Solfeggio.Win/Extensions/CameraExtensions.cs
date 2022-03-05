@@ -11,10 +11,7 @@ namespace Solfeggio.Extensions
 {
 	public static class CameraExtensions
 	{
-		public static PerspectiveCamera MoveBy(this PerspectiveCamera camera, Key key) => camera.MoveBy(key, camera.FieldOfView / 360d);
-		public static PerspectiveCamera RotateBy(this PerspectiveCamera camera, Key key) => camera.RotateBy(key, camera.FieldOfView / 45d);
-
-		public static TCamera MoveBy<TCamera>(this TCamera camera, Key key, double step) where TCamera : ProjectionCamera =>
+		public static TCamera MoveBy<TCamera>(this TCamera camera, double step) where TCamera : ProjectionCamera =>
 			camera.Move(camera.GetDirectionAxis(), step);
 
 		public static Vector3D GetDirectionAxis<TCamera>(this TCamera camera) where TCamera : ProjectionCamera =>

@@ -43,6 +43,9 @@ namespace Solfeggio.Views
 
 			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
 			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
+			PreviewKeyDown += (o, e) => processingManager.IsPaused = e.Key.Is(Key.Space)
+				? processingManager.IsPaused.Not()
+				: processingManager.IsPaused;
 
 			Point from = default;
 			MouseLeftButtonUp += (o, e) => from = default;

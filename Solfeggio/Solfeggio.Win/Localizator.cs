@@ -122,6 +122,13 @@ namespace Solfeggio
 		public static o Buffers = _("Buffers", "Буферы");
 		public static o Format = _("Format", "Формат");
 		public static o Numeric = _("Numeric", "Числовой");
+		public static o Projection = _("Projection", "Проекция");
+		public static o Perspective = _("Perspective", "Перспектива");
+		public static o Orthographic = _("Orthographic", "Ортография");
+		public static o Depth = _("Depth", "Глубина");
+		public static o Thin = _("Thin", "Утончение");
+		public static o Angle = _("Angle", "Угол");
+		public static o Tape = _("Tape", "Лента");
 
 		public static o Pcs = _("Pcs", "шт.");
 		public static o Hz = _("Hz", "Гц");

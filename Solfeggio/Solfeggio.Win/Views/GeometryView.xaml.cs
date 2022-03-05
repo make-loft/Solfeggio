@@ -1,22 +1,23 @@
-﻿using Ace.Zest.Extensions;
+﻿using Ace;
+using Ace.Zest.Extensions;
 
 using Rainbow;
 
 using Solfeggio.Extensions;
 using Solfeggio.Presenters;
+using Solfeggio.ViewModels;
 
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
 
 namespace Solfeggio.Views
 {
 	public partial class GeometryView
 	{
 		public GeometryView() => InitializeComponent();
-
-		public bool IsPaused { get; set; }
 
 		Bin[] _peaks;
 		int _sampleSize;
@@ -30,9 +31,11 @@ namespace Solfeggio.Views
 			geometry.ForEach(polyline.Points.Add);
 		}
 
+		ProcessingManager processingManager = Store.Get<ProcessingManager>();
+
 		public void Draw(Bin[] peaks, int sampleSize, double sampleRate)
 		{
-			if (IsPaused is false)
+			if (processingManager.IsPaused is false)
 			{
 				_peaks = peaks;
 				_sampleSize = sampleSize;
@@ -43,21 +46,22 @@ namespace Solfeggio.Views
 				DrawFlower(_peaks, _sampleSize, _sampleRate);
 
 			if (TabControl.SelectedIndex == 1)
-				DrawStripe(_peaks, _sampleSize, _sampleRate);
+				DrawTape(_peaks, _sampleSize, _sampleRate);
 		}
-		public void DrawStripe(Bin[] peaks, int sampleSize, double sampleRate)
+		public void DrawTape(Bin[] peaks, int sampleSize, double sampleRate)
 		{
 			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate).ToList();
 			geo.TriangleIndices.Clear();
 			geo.Positions.Clear();
 
+			var depth = DepthSlider.Value;
+			var thin = ThinSlider.Value / 128;
 			int k = 0;
 			for (var n = 0; n < geometry.Count; n++)
 			{
 				var x = geometry[n].X;
 				var y = geometry[n].Y;
-				var z = 32d * n / geometry.Count;
-				var thin = 0.05d / 2;
+				var z = depth * n / geometry.Count;
 
 				geo.Positions.Add(new(x, y, z + thin));
 				geo.Positions.Add(new(x, y, z - thin));
@@ -77,7 +81,7 @@ namespace Solfeggio.Views
 			}
 		}
 
-		private void SwitchPause() => IsPaused = !IsPaused;
+		private void SwitchPause() => processingManager.IsPaused = processingManager.IsPaused.Not();
 
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
@@ -90,7 +94,26 @@ namespace Solfeggio.Views
 		{
 			while (IsActive)
 			{
-				NavigationKeys.Where(Keyboard.IsKeyDown).ForEach(key => Camera.MoveBy(key).RotateBy(key));
+				var step = PerspectiveCamera.FieldOfView / 360d;
+				var angle = PerspectiveCamera.FieldOfView / 45d;
+
+				NavigationKeys.Where(Keyboard.IsKeyDown)
+					.ForEach(key => PerspectiveCamera.MoveBy(step).RotateBy(key, angle));
+
+				NavigationKeys.Where(Keyboard.IsKeyDown)
+					.ForEach(key => OrthographicCamera.MoveBy(step).RotateBy(key, angle));
+
+				var scale =
+					Keyboard.IsKeyDown(Key.S) ? 1 * 1.05 :
+					Keyboard.IsKeyDown(Key.W) ? 1 / 1.05 :
+					1d;
+
+				if (scale != 1d)
+				{
+					ScaleTransform.ScaleX *= scale;
+					ScaleTransform.ScaleY *= scale;
+					ScaleTransform.ScaleZ *= scale;
+				}
 
 				await Task.Delay(16);
 			}
@@ -117,8 +140,9 @@ namespace Solfeggio.Views
 
 			if (e.MouseDevice.LeftButton is MouseButtonState.Pressed)
 			{
-				var angle = (distance / Camera.FieldOfView) % 45;
-				Camera.Rotate(new(dy, -dx, 0d), angle);
+				var angle = (distance / PerspectiveCamera.FieldOfView) % 45;
+				PerspectiveCamera.Rotate(new(dy, -dx, 0d), angle);
+				OrthographicCamera.Rotate(new(dy, -dx, 0d), angle);
 			}
 		}
 	}

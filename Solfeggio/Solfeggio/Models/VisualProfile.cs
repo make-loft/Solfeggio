@@ -71,17 +71,27 @@ namespace Solfeggio.Models
 		public TopProfile EthalonFrequncy => GetProfile();
 		public TopProfile NoteName => GetProfile();
 
-		static readonly Window RainbowView = new Window
+		static readonly Window RainbowView = new()
 		{
 			Width = 120,
 			Height = 120,
+			WindowStyle = WindowStyle.None,
+			ResizeMode = ResizeMode.NoResize,
+			WindowStartupLocation = WindowStartupLocation.CenterScreen,
 			Background = (Brush)App.Current.Resources["RainbowBrush.H"]
-		}.To(out var b).Call(() => b.Show());
+		};
+
+		static VisualProfile()
+		{
+			RainbowView.Show();
+			Rainbow = Enumerable.Range(0, PointsCount)
+				.Select(i => RainbowView.GetPixelColor(new(RainbowView.ActualWidth * i / PointsCount, 0)))
+				.ToArray();
+			RainbowView.Close();
+		}
 
 		static readonly int PointsCount = 12;
-		public static Color[] Rainbow = Enumerable.Range(0, PointsCount)
-			.Select(i => RainbowView.GetPixelColor(new(RainbowView.ActualWidth * i / PointsCount, 0)))
-			.ToArray();
+		public static Color[] Rainbow;
 
 		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
 		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
