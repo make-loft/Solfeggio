@@ -254,7 +254,7 @@ namespace Solfeggio.Presenters
 
 				var strokeBorder = new Border
 				{
-					BorderThickness = new Thickness(1 + 4d * activeMagnitude),
+					BorderThickness = new(1 + 4d * activeMagnitude),
 					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 					CornerRadius = new(4d * expressionLevel * height / 256),
 				};
@@ -279,7 +279,7 @@ namespace Solfeggio.Presenters
 					Opacity = 0.5d + activeMagnitude
 				};
 
-				Panel.SetZIndex(grid, (int)(expressionLevel * 100));
+				Panel.SetZIndex(grid, (int)(expressionLevel * 1024));
 				return grid;
 			},
 			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),

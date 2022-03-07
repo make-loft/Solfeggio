@@ -48,19 +48,21 @@ namespace Solfeggio.Views
 			if (TabControl.SelectedIndex == 1)
 				DrawTape(_peaks, _sampleSize, _sampleRate);
 		}
+
 		public void DrawTape(Bin[] peaks, int sampleSize, double sampleRate)
 		{
 			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate).ToList();
 			geo.TriangleIndices.Clear();
 			geo.Positions.Clear();
 
+			var radius = RadiusSlider.Value;
 			var depth = DepthSlider.Value;
-			var thin = ThinSlider.Value / 128;
+			var thin = ThinSlider.Value;
 			int k = 0;
 			for (var n = 0; n < geometry.Count; n++)
 			{
-				var x = geometry[n].X;
-				var y = geometry[n].Y;
+				var x = radius * geometry[n].X;
+				var y = radius * geometry[n].Y;
 				var z = depth * n / geometry.Count;
 
 				geo.Positions.Add(new(x, y, z + thin));
@@ -83,9 +85,11 @@ namespace Solfeggio.Views
 
 		private void SwitchPause() => processingManager.IsPaused = processingManager.IsPaused.Not();
 
+		readonly Key[] HandleKeys = { Key.Space, Key.W, Key.S, Key.D, Key.A, Key.Left, Key.Right, Key.Up, Key.Down };
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			e.Handled = true;
+			var key = e.Key;
+			e.Handled = HandleKeys.Contains(key);
 			if (e.Key is Key.Space)
 				SwitchPause();
 		}
@@ -145,5 +149,18 @@ namespace Solfeggio.Views
 				OrthographicCamera.Rotate(new(dy, -dx, 0d), angle);
 			}
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e) => MessageBox.Show
+		(
+			"Move:\n" +
+			"W,S,D,A and combination\n\n" +
+			"Rise:\n" +
+			"W+D+A\n\n" +
+			"Fall:\n" +
+			"S+D+A\n\n" +
+			"Orientation:\n" +
+			"mouse or Up,Down,Left,Right Arrows\n",
+			"3D FLY!"
+		);
 	}
 }
