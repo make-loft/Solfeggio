@@ -223,7 +223,21 @@ namespace Solfeggio.Views
 					if (IsVisible(Polyline_Magnitude_PMI))
 						musicalPresenter.DrawMagnitude(spectrumInterpolated, width, height).
 						Use(Polyline_Magnitude_PMI.Points.AppendRange);
+
+					FFTHistogramCanvas.Children.Clear();
+					PMIHistogramCanvas.Children.Clear();
+
+					if (IsVisible(FFTHistogramCanvas))
+						musicalPresenter.DrawHistogram(spectrum, width, height).
+							ForEach(FFTHistogramCanvas.Children.Add);
+
+					if (IsVisible(PMIHistogramCanvas))
+						musicalPresenter.DrawHistogram(spectrumInterpolated, width, height).
+							ForEach(PMIHistogramCanvas.Children.Add);
 				}
+
+				MagnitudeCanvas.Children.Add(FFTHistogramCanvas);
+				MagnitudeCanvas.Children.Add(PMIHistogramCanvas);
 
 				var discreteStep = processingManager.ActiveProfile.SampleRate / processingManager.ActiveProfile.FrameSize;
 
@@ -256,7 +270,8 @@ namespace Solfeggio.Views
 				}
 
 				var dominanats = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
-				if (musicalPresenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
+				var vC = resources["Visibility.Top"];
+				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
 					musicalPresenter.DrawTops(dominanats, width, height)
 					.ForEach(p =>
 					{
@@ -288,10 +303,11 @@ namespace Solfeggio.Views
 				if (SpectrogramCanvas.Children.Count > count)
 					SpectrogramCanvas.Children.RemoveAt(count);
 
+				var magnitudeProjection = musicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
 				SpectrogramCanvas.Children.Insert(0, new Rectangle 
 				{
 					Tag = spectrumInterpolated,
-					Fill = GetSpectrogramLineBrush(spectrumInterpolated, actualBand, w, h),
+					Fill = GetSpectrogramLineBrush(spectrumInterpolated, actualBand, w, h, magnitudeProjection),
 				});
 
 				var hh = SpectrogramFrame.ActualHeight / count;
@@ -299,7 +315,7 @@ namespace Solfeggio.Views
 
 				void FullSpectrogramRefresh() => SpectrogramCanvas.Children
 					.OfType<Rectangle>()
-					.ForEach(r => r.Fill = GetSpectrogramLineBrush((IList<Bin>)r.Tag, actualBand, w, h));
+					.ForEach(r => r.Fill = GetSpectrogramLineBrush((IList<Bin>)r.Tag, actualBand, w, h, magnitudeProjection));
 
 				async void RequestFullSpectrogramRefresh(int delay)
 				{
@@ -339,7 +355,7 @@ namespace Solfeggio.Views
 			_previousScaleFunc = actualScaleFunc;
 		}
 
-		private static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, Bandwidth bandwidth, double w, double h)
+		private static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, Bandwidth bandwidth, double w, double h, Projection magnitudeProjection)
 		{
 			var transformer = MusicalPresenter.GetScaleTransformer(bandwidth, w);
 
@@ -348,7 +364,7 @@ namespace Solfeggio.Views
 
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
 				.Select(p => new GradientStop(Color.FromArgb(
-					(byte)(p.Magnitude * 255), 255, 255, 255), transformer.GetVisualOffset(p.Frequency) / w)).ToList();
+					(byte)(magnitudeProjection(p.Magnitude) * 255), 255, 255, 255), transformer.GetVisualOffset(p.Frequency) / w)).ToList();
 			return new(new(stops), 0d);
 		}
 	}

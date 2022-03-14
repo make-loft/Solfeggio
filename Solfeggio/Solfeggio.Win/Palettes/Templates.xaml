@@ -514,7 +514,7 @@
 	<DataTemplate
 		x:Key="MusicOptionsTemplate">
 		<Grid
-			Rack.Columns="^ ^ ^ 24 ^ ^">
+			Rack.Columns="^ ^ ^ 24 ^ ^ 24 ^ ^">
 			<Label
 				Rack.Cell="C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
@@ -544,6 +544,15 @@
 				SelectedValuePath="Key"
 				DisplayMemberPath="Key"
 				/>
+			<Label
+				Rack.Cell="C7"
+				Text="{Localizing Top}"
+				/>
+			<ContentView
+				Rack.Cell="C8"
+				DataContext="{Binding Resources[Visibility.Top], Mode=TwoWay, Source={x:Static local:App.Current}}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>
 		</Grid>
 	</DataTemplate>
 
@@ -563,7 +572,7 @@
 				Rack.Cell="R1 C1"
 				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
-				SelectedItem="{Binding CommonNumericFormat, Mode=TwoWay}" />
+				SelectedItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
 			<Label
 				Rack.Cell="R0 C2"
 				Text="{Localizing Key=Screen}" />
@@ -571,7 +580,7 @@
 				Rack.Cell="R1 C2"
 				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
-				SelectedItem="{Binding NoteNumericFormat, Mode=TwoWay}" />
+				SelectedItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
 		</Grid>
 	</DataTemplate>
 

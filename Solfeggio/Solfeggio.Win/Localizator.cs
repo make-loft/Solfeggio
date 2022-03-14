@@ -64,6 +64,7 @@ namespace Solfeggio
 		public static o Length = _("Length", "Длина");
 		public static o Spectrum = _("Spectrum", "Спектр");
 		public static o Spectrogram = _("Spectrogram", "Спектрограмма");
+		public static o Histogram = _("Histogram", "Гистограмма");
 		public static o Geometry = _("Geometry", "Геометрия");
 		public static o Flower = _("Flower", "Цветок");
 		public static o Piano = _("Piano", "Пианино");
@@ -110,6 +111,7 @@ namespace Solfeggio
 		public static o Base = _("Base", "База");
 		public static o Gap = _("Gap", "Зазор");
 		public static o Raw = _("Raw", "Сырой");
+		public static o Top = _("Top", "Вершина");
 		public static o Music = _("Music", "Музыка");
 		public static o Standard = _("Standard", "Стандарт");
 		public static o Visibility = _("Visibility", "Видимость");

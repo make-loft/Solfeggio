@@ -243,6 +243,42 @@ namespace Solfeggio.Presenters
 			v => v.Negation().Increment(height)
 		);
 
+		public IEnumerable<Border> DrawHistogram(IList<Bin> spectrum, double width, double height)
+		{
+			var hBand = Spectrum.Frequency;
+			var vBand = Spectrum.Magnitude;
+			var hLength = width;
+			var vLength = height;
+			var hScaleTransformer = GetScaleTransformer(hBand, hLength, default);
+			var vScaleTransformer = GetScaleTransformer(vBand, vLength, v => v.Negation().Increment(height));
+
+			hBand.Threshold.Deconstruct(out var hLowerValue, out var hUpperValue);
+			vBand.Threshold.Deconstruct(out var vLowerValue, out var vUpperValue);
+
+			for (int i = 1; i < spectrum.Count - 1; i++)
+			{
+				var magnitude = spectrum[i].Magnitude;
+				var middleFrequency = spectrum[i].Frequency;
+				var lowerFrequency = (spectrum[i - 1].Frequency + middleFrequency) / 2d;
+				var upperFrequency = (spectrum[i + 1].Frequency + middleFrequency) / 2d;
+				if (upperFrequency < hLowerValue || hUpperValue < lowerFrequency)
+					continue;
+
+				var hLowerVisualOffset = hScaleTransformer.GetVisualOffset(lowerFrequency);
+				var hUpperVisualOffset = hScaleTransformer.GetVisualOffset(upperFrequency);
+				var vVisualOffset = vScaleTransformer.GetVisualOffset(magnitude);
+
+				yield return new()
+				{
+					Width = (hUpperVisualOffset - hLowerVisualOffset).To(out var w),
+					CornerRadius = new(w / 8, w / 8, w / 8, w / 8),
+					Margin = new(hLowerVisualOffset, vVisualOffset, 0d, 0d),
+					Height = height - vVisualOffset,
+					Opacity = Spectrum.Magnitude.VisualScaleFunc(magnitude)
+				};
+			}
+		}
+
 		public IEnumerable<Grid> DrawTops(IList<PianoKey> keys, double width, double height) => Draw
 		(
 			keys, default,
@@ -408,7 +444,7 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.618d;
 				var strokeThickness = upperOffset - lowerOffset;
 
-				CreateBorder(lowerOffset, upperOffset, actualHeight, basicBrush).Use(items.Add);
+				CreateBorder(lowerOffset, upperOffset, actualHeight, default, basicBrush).Use(items.Add);
 
 				if (key.Peaks.Count.Is(0)) continue;
 				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
@@ -416,18 +452,21 @@ namespace Solfeggio.Presenters
 				var value = Math.Sqrt(key.Magnitude);
 				gradientBrush.GradientStops[0].Offset = 1.0 - value;
 
-				CreateBorder(lowerOffset, upperOffset, actualHeight, gradientBrush).Use(items.Add);
+				CreateBorder(lowerOffset, upperOffset, actualHeight, default, gradientBrush).Use(items.Add);
 			}
 
 			return harmonics;
 		}
 
-		private static Border CreateBorder(double lowerOffset, double upperOffset, double height, Brush strokeBrush) => new()
+		private static Border CreateBorder(double lowerOffset, double upperOffset, double height,
+			Brush strokeBrush, Brush fillBrush, Thickness borderThickness = default) => new()
 		{
-			Width = (upperOffset - lowerOffset).To(out var width),
-			CornerRadius = new(width / 16, width / 16, width / 4, width / 4),
+			Width = (upperOffset - lowerOffset).To(out var w),
+			CornerRadius = new(w / 16, w / 16, w / 4, w / 4),
 			Margin = new(lowerOffset, 0d, 0d, 0d),
-			Background = strokeBrush,
+			BorderThickness = borderThickness,
+			BorderBrush = strokeBrush,
+			Background = fillBrush,
 			Height = height,
 		};
 

@@ -81,6 +81,46 @@
 			Name="MagnitudeCanvas"
 			Background="{DynamicResource SpectrumBackgroundBrush}"
 			>
+			<Canvas.Resources>
+				<Style
+					TargetType="Grid"
+					>
+					<Setter Property="Visibility" Value="{DynamicResource Visibility.Tops}" />
+				</Style>
+			</Canvas.Resources>
+			
+			<Canvas
+				Name="FFTHistogramCanvas"
+				Visibility="{DynamicResource Visibility.MagnitudeFFT_Histogram}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudeFFT_Histogram}"
+				>
+				<Canvas.Resources>
+					<Style
+						TargetType="Border"
+						>
+						<Setter Property="BorderThickness" Value="{DynamicResource StrokeThickness.MagnitudeFFT_Histogram}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource Stroke.MagnitudeFFT_Histogram}" />
+						<Setter Property="Background" Value="{DynamicResource Fill.MagnitudeFFT_Histogram}" />
+					</Style>
+				</Canvas.Resources>
+			</Canvas>
+			
+			<Canvas
+				Name="PMIHistogramCanvas"
+				Visibility="{DynamicResource Visibility.MagnitudePMI_Histogram}"
+				Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI_Histogram}"
+				>
+				<Canvas.Resources>
+					<Style
+						TargetType="Border"
+						>
+						<Setter Property="BorderThickness" Value="{DynamicResource StrokeThickness.MagnitudePMI_Histogram}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource Stroke.MagnitudePMI_Histogram}" />
+						<Setter Property="Background" Value="{DynamicResource Fill.MagnitudePMI_Histogram}" />
+					</Style>
+				</Canvas.Resources>
+			</Canvas>
+			
 			<Polyline
 				Name="Polyline_Magnitude_FFT"
 				Fill="{DynamicResource Fill.MagnitudeFFT}"

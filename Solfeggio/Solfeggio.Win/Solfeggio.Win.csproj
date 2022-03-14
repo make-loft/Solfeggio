@@ -141,6 +141,7 @@
     <Compile Include="Converters\ByteToHexStringTwoWayConverter.cs" />
     <Compile Include="Converters\ColorToSolidBrushConverter.cs" />
     <Compile Include="Converters\ColorToStringTwoWayConverter.cs" />
+    <Compile Include="Converters\ThicknessToDoubleTwoWayConverter.cs" />
     <Compile Include="Converters\Int32ToStringTwoWayConverter.cs" />
     <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />

@@ -10,6 +10,9 @@
 	<c:Int32ToStringTwoWayConverter
 		x:Key="Int32ToStringTwoWayConverter"
 		/>
+	<c:ThicknessToDoubleTwoWayConverter
+		x:Key="ThicknessToDoubleTwoWayConverter"
+		/>
 	<c:DoubleToStringTwoWayConverter
 		x:Key="DoubleToStringTwoWayConverter"
 		/>

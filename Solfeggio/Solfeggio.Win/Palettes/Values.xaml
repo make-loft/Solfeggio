@@ -1,7 +1,8 @@
 ﻿<p:ResourceDictionary
 	xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns="clr-namespace:System;assembly=mscorlib">
+	xmlns="clr-namespace:System;assembly=mscorlib"
+	>
 
 	<Double x:Key="PlusSinglePi">+3.1415926535897931</Double>
 	<Double x:Key="MinusSinglePi">-3.1415926535897931</Double>
@@ -18,6 +19,9 @@
 
 	<Double x:Key="StrokeThickness.MagnitudeFFT">1</Double>
 	<Double x:Key="StrokeThickness.MagnitudePMI">1</Double>
+
+	<p:Thickness x:Key="StrokeThickness.MagnitudeFFT_Histogram">1</p:Thickness>
+	<p:Thickness x:Key="StrokeThickness.MagnitudePMI_Histogram">1</p:Thickness>
 	
 	<Double x:Key="StrokeThickness.PhaseFFT">1</Double>
 	<Double x:Key="StrokeThickness.PhasePMI">1</Double>
@@ -30,6 +34,9 @@
 
 	<Int32 x:Key="ZIndex.MagnitudeFFT">3</Int32>
 	<Int32 x:Key="ZIndex.MagnitudePMI">2</Int32>
+	
+	<Int32 x:Key="ZIndex.MagnitudeFFT_Histogram">4</Int32>
+	<Int32 x:Key="ZIndex.MagnitudePMI_Histogram">5</Int32>
 
 	<Int32 x:Key="ZIndex.PhaseFFT">3</Int32>
 	<Int32 x:Key="ZIndex.PhasePMI">2</Int32>
@@ -40,8 +47,13 @@
 	<Int32 x:Key="ZIndex.FrequencyNotesGrid">0</Int32>
 	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">1</Int32>
 
+	<p:Visibility x:Key="Visibility.Top">Visible</p:Visibility>
+	
 	<p:Visibility x:Key="Visibility.MagnitudeFFT">Collapsed</p:Visibility>
 	<p:Visibility x:Key="Visibility.MagnitudePMI">Visible</p:Visibility>
+
+	<p:Visibility x:Key="Visibility.MagnitudeFFT_Histogram">Collapsed</p:Visibility>
+	<p:Visibility x:Key="Visibility.MagnitudePMI_Histogram">Collapsed</p:Visibility>
 
 	<p:Visibility x:Key="Visibility.PhaseFFT">Collapsed</p:Visibility>
 	<p:Visibility x:Key="Visibility.PhasePMI">Visible</p:Visibility>
