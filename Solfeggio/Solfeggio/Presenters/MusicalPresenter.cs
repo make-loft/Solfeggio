@@ -52,7 +52,7 @@ namespace Solfeggio.Presenters
 				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
 				var zeros = new string('0', digitsCount);
-				VisualProfile.TopProfiles[nameof(VisualProfile.DeltaFrequancy)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
+				VisualProfile.PeakProfiles[nameof(VisualProfile.DeltaFrequancy)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
 			};
 		}
 
@@ -279,7 +279,7 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public IEnumerable<Grid> DrawTops(IList<PianoKey> keys, double width, double height) => Draw
+		public IEnumerable<Grid> DrawPeakLabels(IList<PianoKey> keys, double width, double height) => Draw
 		(
 			keys, default,
 			(in double x, in double y,
@@ -336,7 +336,7 @@ namespace Solfeggio.Presenters
 				key.Is("EthalonFrequncy") ? pianoKey.EthalonFrequency :
 				default;
 
-			return VisualProfile.TopProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
+			return VisualProfile.PeakProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
 			{
 				Text = p.Key.Is("NoteName")
 					? pianoKey.NoteName

@@ -40,6 +40,6 @@ namespace Solfeggio.ViewModels
 
 		public virtual IEnumerable<TProfile> CreateDefaultProfiles() => default;
 
-		public virtual TProfile Create() => new() { Title = ActiveProfile.Is(out var p) ? $"{p.Title} ~" : "~~~" };
+		public virtual TProfile Create() => new() { Title = "~~~" };
 	}
 }

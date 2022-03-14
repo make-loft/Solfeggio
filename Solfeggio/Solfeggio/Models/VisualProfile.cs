@@ -21,7 +21,7 @@ using static System.Windows.Media.Colors;
 namespace Solfeggio.Models
 {
 	[DataContract]
-	public class TopProfile
+	public class PeakProfile
 	{
 		public Brush Brush { get; set; }
 		[DataMember] public string FontFamilyName { get; set; }
@@ -52,7 +52,7 @@ namespace Solfeggio.Models
 			set => Set(() => Harmonics, value);
 		}
 
-		private static TopProfile CreateProfile(
+		private static PeakProfile CreateProfile(
 			Color color,
 			double fontSize,
 			string stringFormat = default,
@@ -65,11 +65,11 @@ namespace Solfeggio.Models
 				FontSize = fontSize,
 			};
 
-		public TopProfile ActualMagnitude => GetProfile();
-		public TopProfile ActualFrequancy => GetProfile();
-		public TopProfile DeltaFrequancy => GetProfile();
-		public TopProfile EthalonFrequncy => GetProfile();
-		public TopProfile NoteName => GetProfile();
+		public PeakProfile ActualMagnitude => GetProfile();
+		public PeakProfile ActualFrequancy => GetProfile();
+		public PeakProfile DeltaFrequancy => GetProfile();
+		public PeakProfile EthalonFrequncy => GetProfile();
+		public PeakProfile NoteName => GetProfile();
 
 		static readonly Window RainbowView = new()
 		{
@@ -96,10 +96,10 @@ namespace Solfeggio.Models
 		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
 		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
 
-		private TopProfile GetProfile([CallerMemberName]string key = default) => TopProfiles[key];
+		private PeakProfile GetProfile([CallerMemberName]string key = default) => PeakProfiles[key];
 
 		//[DataMember]
-		public Dictionary<string, TopProfile> TopProfiles { get; set; } = new()
+		public Dictionary<string, PeakProfile> PeakProfiles { get; set; } = new()
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },

@@ -25,7 +25,7 @@ namespace Solfeggio.ViewModels
 
 			yield return new()
 			{
-				Title = "Sin Wave",
+				Title = "Cos Wave",
 				Harmonics = 
 				{
 					[1] = { IsEnabled = false },

@@ -47,7 +47,7 @@
 	<Int32 x:Key="ZIndex.FrequencyNotesGrid">0</Int32>
 	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">1</Int32>
 
-	<p:Visibility x:Key="Visibility.Top">Visible</p:Visibility>
+	<p:Visibility x:Key="Visibility.Peak">Visible</p:Visibility>
 	
 	<p:Visibility x:Key="Visibility.MagnitudeFFT">Collapsed</p:Visibility>
 	<p:Visibility x:Key="Visibility.MagnitudePMI">Visible</p:Visibility>

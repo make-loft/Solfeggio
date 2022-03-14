@@ -139,7 +139,8 @@
 	</DataTemplate>
 
 	<ControlTemplate
-		x:Key="TitleTemplate">
+		x:Key="TitleTemplate"
+		>
 		<StackView
 			Style="{StaticResource TitlePanelStyle}"
 			>
@@ -164,19 +165,23 @@
 	</ControlTemplate>
 
 	<ControlTemplate
-		x:Key="TitleProfileTemplate">
+		x:Key="TitleProfileTemplate"
+		>
 		<StackLayout
 			Rack.Cell="R0 C0 CS2"
 			Style="{StaticResource TitlePanelStyle}"
 			>
 			<Label
-				Text="{Localizing Key=Title}" />
+				Text="{Localizing Key=Title}"
+				/>
 			<Entry
-				Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				/>
 			<Button
 				Content="✗"
 				CommandParameter="{Binding}"
-				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}" />
+				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
+				/>
 		</StackLayout>
 	</ControlTemplate>
 	
@@ -546,11 +551,11 @@
 				/>
 			<Label
 				Rack.Cell="C7"
-				Text="{Localizing Top}"
+				Text="{Localizing Peak}"
 				/>
 			<ContentView
 				Rack.Cell="C8"
-				DataContext="{Binding Resources[Visibility.Top], Mode=TwoWay, Source={x:Static local:App.Current}}"
+				DataContext="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
 				Template="{StaticResource VisibilityTemplate}"
 				/>
 		</Grid>
@@ -809,7 +814,7 @@
 	</ControlTemplate>
 
 	<DataTemplate
-		x:Key="VisualizationTemplate">
+		x:Key="VisualizationProfileTemplate">
 		<Grid>
 			<ItemsView
 				Background="Transparent"

@@ -14,7 +14,7 @@ namespace Solfeggio.ViewModels
 		{
 			Id = Profiles.Select(p => p.Id).Max() + 1,
 			Title = ActiveProfile?.Title + " ~",
-			Palette = ActiveProfile?.Title ?? "Nature",
+			Palette = ActiveProfile?.Palette ?? "Nature",
 		};
 
 		public override IEnumerable<VisualizationProfile> CreateDefaultProfiles() => AppPalette.ColorPalettes.Keys.OfType<string>()

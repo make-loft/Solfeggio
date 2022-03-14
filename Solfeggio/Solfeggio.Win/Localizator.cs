@@ -111,7 +111,7 @@ namespace Solfeggio
 		public static o Base = _("Base", "База");
 		public static o Gap = _("Gap", "Зазор");
 		public static o Raw = _("Raw", "Сырой");
-		public static o Top = _("Top", "Вершина");
+		public static o Peak = _("Peak", "Пик");
 		public static o Music = _("Music", "Музыка");
 		public static o Standard = _("Standard", "Стандарт");
 		public static o Visibility = _("Visibility", "Видимость");

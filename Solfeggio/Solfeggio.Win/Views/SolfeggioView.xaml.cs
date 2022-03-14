@@ -269,10 +269,10 @@ namespace Solfeggio.Views
 						musicalPresenter.EnumerateNotes(), zIndexB);
 				}
 
-				var dominanats = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
-				var vC = resources["Visibility.Top"];
-				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.TopProfiles.Any(p => p.Value.IsVisible))
-					musicalPresenter.DrawTops(dominanats, width, height)
+				var peakKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
+				var vC = resources["Visibility.Peak"];
+				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.PeakProfiles.Any(p => p.Value.IsVisible))
+					musicalPresenter.DrawPeakLabels(peakKeys, width, height)
 					.ForEach(p =>
 					{
 						MagnitudeCanvas.Children.Add(p);
@@ -289,7 +289,7 @@ namespace Solfeggio.Views
 				musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
 					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
-				appViewModel.Harmonics = dominanats;
+				appViewModel.Harmonics = peakKeys;
 
 				if (processingManager.IsPaused)
 					return;
