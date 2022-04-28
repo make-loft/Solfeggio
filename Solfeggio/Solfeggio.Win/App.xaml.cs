@@ -19,15 +19,27 @@ namespace Solfeggio
 {
 	public partial class App
 	{
-		public static Editions Edition { get; } = Scientific;
+		public static Editions Edition { get; } = Developer;
 
 		public static Dictionary<Editions, string> YandexMetricaKeys = new()
 		{
 			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
 			{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
 			{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
-			{ Scientific, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
+			{ Gratitude, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
 		};
+
+		#region Launching
+		/* should not use nested assemblies during App static initialization */
+
+		private static readonly Type ArrayOfBytesType = typeof(byte[]);
+
+		public static IEnumerable<byte[]> EnumerateNestedRawAssemblies() => typeof(Properties.Assemblies)
+				.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+				.Where(p => p.PropertyType == ArrayOfBytesType)
+				.Select(p => p.GetValue(null, null))
+				.Cast<byte[]>();
+		#endregion
 
 		public static readonly string Location = Assembly.GetEntryAssembly().Location;
 		public static readonly string EntryFolder = Path.GetDirectoryName(Location);
@@ -73,7 +85,7 @@ namespace Solfeggio
 
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
-				AgreementManager.CheckExpirationStatus(Edition);
+				//AgreementManager.CheckExpirationStatus(Edition);
 			}
 			catch (Exception exception)
 			{
@@ -116,17 +128,5 @@ namespace Solfeggio
 				else YandexMetrica.ReportError($"{key} - {type}", exception);
 			};
 		}
-
-		#region Launching
-		/* should not directly use nested assemblies into this region */
-
-		private static readonly Type ArrayOfBytesType = typeof(byte[]);
-
-		public static IEnumerable<byte[]> EnumerateNestedRawAssemblies() => typeof(Properties.Assemblies)
-				.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-				.Where(p => p.PropertyType == ArrayOfBytesType)
-				.Select(p => p.GetValue(null, null))
-				.Cast<byte[]>();
-		#endregion
 	}
 }

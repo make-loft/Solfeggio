@@ -138,6 +138,7 @@
     <Compile Include="Controls\RangeBar.xaml.cs">
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WindowView.cs" />
     <Compile Include="Converters\ByteToHexStringTwoWayConverter.cs" />
     <Compile Include="Converters\ColorToSolidBrushConverter.cs" />
     <Compile Include="Converters\ColorToStringTwoWayConverter.cs" />
@@ -148,8 +149,11 @@
     <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Editions.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
-    <Compile Include="Views\GeometryView.xaml.cs">
-      <DependentUpon>GeometryView.xaml</DependentUpon>
+    <Compile Include="Views\TapeView.xaml.cs">
+      <DependentUpon>TapeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FlowerView.xaml.cs">
+      <DependentUpon>FlowerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
@@ -201,7 +205,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\GeometryView.xaml">
+    <Page Include="Views\TapeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FlowerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

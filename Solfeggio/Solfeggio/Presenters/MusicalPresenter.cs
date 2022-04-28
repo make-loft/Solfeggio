@@ -302,7 +302,7 @@ namespace Solfeggio.Presenters
 					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
 
-				var infoPanel = new StackPanel();
+				var infoPanel = new StackPanel { Margin = new(activeMagnitude * 6d) };
 				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel, width, height).
 					ForEach(infoPanel.Children.Add);
 
@@ -353,12 +353,14 @@ namespace Solfeggio.Presenters
 			});
 		}
 
-		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate,
-			double centerX = 0d, double centerY = 0d)
+		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate, double approximation = 1d)
 		{
-			var radiusMax = Math.Max(Math.Min(centerX, centerY), 1d);
+			if (peaks.Length.Is(0))
+				yield break;
 
-			for (var i = 0; i < 4 * sampleSize; i++)
+			var maxFrequancy = peaks.Last().Frequency;
+			var pointsCount = (int)(sampleSize / approximation);
+			for (var i = 0; i < pointsCount; i++)
 			{
 				var a = 0d;
 				var b = 0d;
@@ -367,14 +369,14 @@ namespace Solfeggio.Presenters
 				{
 					var peak = peaks[j];
 					var w = Pi.Double * peak.Frequency;
-					var t = 0.5 * i / sampleRate;
+					var t = 2 * i / sampleRate * approximation;
 					var phase = peak.Phase + w * t;
-					var radius = peak.Magnitude * radiusMax;
-					a += radius * Math.Cos(phase);
-					b += radius * Math.Sin(phase);
+					var magnitude = peak.Magnitude;
+					a += magnitude * Math.Cos(phase);
+					b += magnitude * Math.Sin(phase);
 				}
 
-				yield return new(a + centerX, b + centerY);
+				yield return new(a, b);
 			}
 		}
 

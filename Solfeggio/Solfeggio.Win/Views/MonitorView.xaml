@@ -1,18 +1,21 @@
-﻿<Window
+﻿<controls:WindowView
 	x:Class="Solfeggio.Views.MonitorView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	DataContext="{Store Key=vm:AppViewModel}"
-	Background="{DynamicResource SpectrumBackgroundBrush}"
+	Visibility="{Smart MonitorVisibility, DefaultValue=Visible}"
+	Topmost="{Smart MonitorTopmost, DefaultValue=False}"
 	Height="{Smart MonitorHeight, DefaultValue=510}"
 	Width="{Smart MonitorWidth, DefaultValue=960}"
 	Left="{Smart MonitorLeft, DefaultValue=NaN}"
 	Top="{Smart MonitorTop, DefaultValue=NaN}"
 	Title="{Localizing Key=Monitor, Modifiers=ToUpper}"
+	Background="{DynamicResource SpectrumBackgroundBrush}"
 	ResizeMode="CanResizeWithGrip"
 	>
 	<v:OptionsView
 		/>
-</Window>
+</controls:WindowView>

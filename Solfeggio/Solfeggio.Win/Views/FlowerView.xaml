@@ -1,0 +1,32 @@
+﻿<controls:WindowView
+	x:Class="Solfeggio.Views.FlowerView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:controls="clr-namespace:Solfeggio.Controls"
+	DataContext="{Store Key=vm:AppViewModel}"
+	Visibility="{Smart FlowerVisibility, DefaultValue=Visible}"
+	Topmost="{Smart FlowerTopmost, DefaultValue=True}"
+	Height="{Smart FlowerHeight, DefaultValue=256}"
+	Width="{Smart FlowerWidth, DefaultValue=256}"
+	Left="{Smart FlowerLeft, DefaultValue=NaN}"
+	Top="{Smart FlowerTop, DefaultValue=NaN}"
+	Title="{Localizing Key=Flower, Modifiers=ToUpper}"
+	PreviewMouseDoubleClick="Window_PreviewMouseDoubleClick"
+	PreviewKeyDown="Window_PreviewKeyDown"
+	Background="DimGray"
+	>
+	<Canvas
+		Rack.Cell="R0"
+		Name="PolylineCanvas"
+		Background="{DynamicResource GeometryBackgroundBrush}"
+		>
+		<Polyline
+			Name="Polyline_Geometry"
+			Stroke="{DynamicResource Stroke.Geometry}"
+			StrokeThickness="{DynamicResource StrokeThickness.PhasePMI}"
+			Visibility="{DynamicResource Visibility.PhasePMI}"
+			Panel.ZIndex="{DynamicResource ZIndex.PhasePMI}"
+			/>
+	</Canvas>
+</controls:WindowView>

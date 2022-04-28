@@ -3,8 +3,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:v="clr-namespace:Solfeggio.Views"
-	xmlns:xamarin="http://xamarin.com/schemas/2014/forms"
 	DataContext="{Store Key=vm:ProcessingManager}"
 	>
 	<Grid
@@ -150,7 +148,7 @@
 			Style="{StaticResource HorizontalGridSplitterStyle}"
 			Background="{DynamicResource SplitterBackgroundBrush}"
 			/>
-		
+
 		<Grid
 			Rack.Cell="R4"
 			Rack.IsTwoWayMode="True"
@@ -162,7 +160,7 @@
 				HorizontalAlignment="Stretch"
 				Background="{DynamicResource PianoBackgroundBrush}"
 				/>
-			
+
 			<GridSplitter
 				Rack.Cell="R1"
 				Style="{StaticResource HorizontalGridSplitterStyle}"
@@ -179,49 +177,6 @@
 					Background="{DynamicResource SpectrogramBackgroundBrush}"
 					/>
 			</Border>
-		</Grid>
-
-		<Grid
-			Rack.Cell="R4"
-			Rack.Rows="* ^ ^"
-			Rack.Columns="^ ^ *"
-			>
-			<xamarin:Label
-				Rack.Cell="R1 C0"
-				FontSize="18"
-				Opacity="0.7"
-				Foreground="{DynamicResource SpectrogramBackgroundBrush}"
-				Text="🎼"
-				/>
-			<xamarin:Switch
-				Rack.Cell="R1 C1"
-				Name="OptionsToggleButton"
-				IsChecked="False"
-				/>
-			<xamarin:Label
-				Rack.Cell="R2 C0"
-				FontSize="18"
-				Opacity="0.7"
-				Foreground="{DynamicResource SpectrogramBackgroundBrush}"
-				Text="📷"
-				/>
-			<xamarin:Switch
-				Rack.Cell="R2 C1"
-				IsChecked="{Binding IsPaused, Mode=TwoWay}"
-				/>
-		</Grid>
-
-		<Grid
-			Rack.Cell="R0 RS3"
-			Visibility="{Binding ElementName=OptionsToggleButton, Path=IsChecked, Converter={StaticResource TrueToVisibleConverter}}"
-			>
-			<Grid>
-				<Border
-					Background="DimGray"
-					Opacity=".5"
-					/>
-				<v:OptionsView />
-			</Grid>
 		</Grid>
 	</Grid>
 </ContentControl>

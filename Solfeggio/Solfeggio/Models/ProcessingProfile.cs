@@ -84,6 +84,9 @@ namespace Solfeggio.Models
 		public int ShiftSize => ShiftsPerFrame.Is(0d) ? 0 : (int)(FrameSize / ShiftsPerFrame);
 		public int FrameSize => (int)Math.Pow(2.0d, FramePow);
 
+		public double FrameStep => SampleRate / FrameSize;
+		public double Accuracy => 0.02 * FrameStep;
+
 		public TimeSpan FrameDuration => TimeSpan.FromSeconds(FrameSize / SampleRate);
 		public TimeSpan SampleDuration => TimeSpan.FromSeconds(SampleSize / SampleRate);
 
@@ -102,8 +105,7 @@ namespace Solfeggio.Models
 			this[() => FramePow].PropertyChanged += (o, e) =>
 			{
 				SampleSize = FrameSize + ShiftSize;
-				EvokePropertyChanged(nameof(FrameDuration));
-				EvokePropertyChanged(nameof(FrameSize));
+				EvokeFramePropertiesChanged();
 			};
 
 			this[() => InputBoost].PropertyChanged += (o, e) =>
@@ -114,6 +116,14 @@ namespace Solfeggio.Models
 				outputProcessor.To(out var p)?.With(p.Boost = OutputBoost);
 			this[() => OutputLevel].PropertyChanged += (o, e) =>
 				outputProcessor.To(out var p)?.With(p.Level = OutputLevel);
+		}
+
+		private void EvokeFramePropertiesChanged()
+		{
+			EvokePropertyChanged(nameof(FrameDuration));
+			EvokePropertyChanged(nameof(FrameSize));
+			EvokePropertyChanged(nameof(FrameStep));
+			EvokePropertyChanged(nameof(Accuracy));
 		}
 
 		private bool CheckIndex(int index, int count) => 0 <= index && index < count;
@@ -167,8 +177,7 @@ namespace Solfeggio.Models
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (LifecyclePropertyNames.Contains(e.PropertyName).Not()) return;
-			EvokePropertyChanged(nameof(SampleDuration));
-			EvokePropertyChanged(nameof(FrameDuration));
+			EvokeFramePropertiesChanged();
 			Dispose();
 			Expose();
 		}

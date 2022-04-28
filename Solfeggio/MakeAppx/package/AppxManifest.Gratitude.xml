@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="40705VladimirMakarevich.SolfeggioScientificEdition" Version="3.4.0.0" Publisher="CN=639023F6-28BC-4C02-9C21-1E1CDFE62E6A" ProcessorArchitecture="x86" />
+  <Identity Name="40705VladimirMakarevich.SolfeggioGratitudeEdition" Version="3.4.0.0" Publisher="CN=639023F6-28BC-4C02-9C21-1E1CDFE62E6A" ProcessorArchitecture="x86" />
   <Properties>
-    <DisplayName>Solfeggio (Scientific Edition)</DisplayName>
+    <DisplayName>Solfeggio (Gratitude Edition)</DisplayName>
     <PublisherDisplayName>Makeloft Studio</PublisherDisplayName>
     <Description>Spectral Analyzer, Camerton and Musical Tuner</Description>
     <Logo>App.png</Logo>

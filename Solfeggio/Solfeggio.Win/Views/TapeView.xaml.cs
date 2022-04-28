@@ -1,12 +1,10 @@
 ﻿using Ace;
 using Ace.Zest.Extensions;
 
-using Rainbow;
-
 using Solfeggio.Extensions;
-using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,45 +13,17 @@ using System.Windows.Media.Media3D;
 
 namespace Solfeggio.Views
 {
-	public partial class GeometryView
+	public partial class TapeView
 	{
-		public GeometryView() => InitializeComponent();
+		public TapeView() => InitializeComponent();
 
-		Bin[] _peaks;
-		int _sampleSize;
-		double _sampleRate;
-
-		public void DrawFlower(Bin[] peaks, int sampleSize, double sampleRate)
+		public void Draw(IList<Point> geometry)
 		{
-			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate, ActualWidth / 2d, ActualHeight / 2d).ToList();
-			var polyline = Polyline_Geometry;
-			polyline.Points.Clear();
-			geometry.ForEach(polyline.Points.Add);
-		}
-
-		ProcessingManager processingManager = Store.Get<ProcessingManager>();
-
-		public void Draw(Bin[] peaks, int sampleSize, double sampleRate)
-		{
-			if (processingManager.IsPaused is false)
-			{
-				_peaks = peaks;
-				_sampleSize = sampleSize;
-				_sampleRate = sampleRate;
-			}
-
-			if (TabControl.SelectedIndex == 0)
-				DrawFlower(_peaks, _sampleSize, _sampleRate);
-
-			if (TabControl.SelectedIndex == 1)
-				DrawTape(_peaks, _sampleSize, _sampleRate);
-		}
-
-		public void DrawTape(Bin[] peaks, int sampleSize, double sampleRate)
-		{
-			var geometry = MusicalPresenter.DrawGeometry(peaks, sampleSize, sampleRate).ToList();
 			geo.TriangleIndices.Clear();
 			geo.Positions.Clear();
+
+			wave.TriangleIndices.Clear();
+			wave.Positions.Clear();
 
 			var radius = RadiusSlider.Value;
 			var depth = DepthSlider.Value;
@@ -68,22 +38,31 @@ namespace Solfeggio.Views
 				geo.Positions.Add(new(x, y, z + thin));
 				geo.Positions.Add(new(x, y, z - thin));
 
-				if (k > 0)
-				{
-					geo.TriangleIndices.Add(k);
-					geo.TriangleIndices.Add(k - 1);
-					geo.TriangleIndices.Add(k + 1);
-					geo.TriangleIndices.Add(k);
-				}
+				wave.Positions.Add(new(x, 0d, z + thin));
+				wave.Positions.Add(new(x, 0d, z - thin));
 
-				geo.TriangleIndices.Add(k);
-				geo.TriangleIndices.Add(k + 1);
+				AddTriangle(geo, k);
+				AddTriangle(wave, k);
 
 				k++;
 			}
 		}
 
-		private void SwitchPause() => processingManager.IsPaused = processingManager.IsPaused.Not();
+		static void AddTriangle(MeshGeometry3D geometry, int k)
+		{
+			if (k > 0)
+			{
+				geometry.TriangleIndices.Add(k);
+				geometry.TriangleIndices.Add(k - 1);
+				geometry.TriangleIndices.Add(k + 1);
+				geometry.TriangleIndices.Add(k);
+			}
+
+			geometry.TriangleIndices.Add(k);
+			geometry.TriangleIndices.Add(k + 1);
+		}
+
+		private void SwitchPause() => Store.Get<ProcessingManager>().To(out var m).IsPaused = m.IsPaused.Not();
 
 		readonly Key[] HandleKeys = { Key.Space, Key.W, Key.S, Key.D, Key.A, Key.Left, Key.Right, Key.Up, Key.Down };
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

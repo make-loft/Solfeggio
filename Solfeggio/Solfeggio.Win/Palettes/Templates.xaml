@@ -168,7 +168,6 @@
 		x:Key="TitleProfileTemplate"
 		>
 		<StackLayout
-			Rack.Cell="R0 C0 CS2"
 			Style="{StaticResource TitlePanelStyle}"
 			>
 			<Label
@@ -263,7 +262,7 @@
 
 			<Grid
 				Rack.Cell="R1 C1"
-				Rack.Rows="^ ^ ^ ^ ^"
+				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
 				Rack.Columns="^ ^ ^"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
@@ -281,7 +280,11 @@
 					Text="{Localizing Key=Rate}"
 					/>
 				<Label
-					Rack.Cell="R3 C0"
+					Rack.Cell="R3 C1 CS2"
+					Text="{Localizing Key=Frame}"
+					/>
+				<Label
+					Rack.Cell="R4 C0"
 					Text="{Localizing Key=Length}"
 					/>
 
@@ -290,12 +293,20 @@
 					Text="{Localizing Key=Hz}"
 					/>
 				<Label
-					Rack.Cell="R3 C2"
+					Rack.Cell="R4 C2"
 					Text="{Localizing Key=Pcs}"
 					/>
 				<Label
-					Rack.Cell="R34 C2"
+					Rack.Cell="R5 C2"
 					Text="{Localizing Key=ms}"
+					/>
+				<Label
+					Rack.Cell="R6 C2"
+					Text="{Localizing Key=Hz}"
+					/>
+				<Label
+					Rack.Cell="R7 C2"
+					Text="{Localizing Key=Hz}"
 					/>
 
 				<Picker
@@ -307,8 +318,9 @@
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding SampleRates}"
 					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
 				<StackLayout
-					Rack.Cell="R3 C1"
+					Rack.Cell="R4 C1"
 					Orientation="Horizontal"
 					>
 					<Label
@@ -322,21 +334,33 @@
 						Text="{Binding FrameSize, StringFormat='= {0}'}"
 						/>
 				</StackLayout>
-				<Grid
-					Rack.Cell="R4 C0 CS2"
-					Rack.Columns="* ^"
-					>
-					<Label
-						Rack.Cell="C0"
-						HorizontalAlignment="Left"
-						Text="{Localizing Key=Duration}"
-						/>
-					<Label
-						Rack.Cell="C1"
-						HorizontalAlignment="Right"
-						Text="{Binding FrameDuration.TotalMilliseconds}"
-						/>
-				</Grid>
+				<Label
+					Rack.Cell="R5 C0"
+					Text="{Localizing Key=Duration}"
+					/>
+				<Label
+					Rack.Cell="R5 C1"
+					HorizontalAlignment="Right"
+					Text="{Binding FrameDuration.TotalMilliseconds}"
+					/>
+				<Label
+					Rack.Cell="R6 C0"
+					Text="{Localizing Key=Step}"
+					/>
+				<Label
+					Rack.Cell="R6 C1"
+					HorizontalAlignment="Right"
+					Text="{Binding FrameStep}"
+					/>
+				<Label
+					Rack.Cell="R7 C0"
+					Text="{Localizing Key=Accuracy}"
+					/>
+				<Label
+					Rack.Cell="R7 C1"
+					HorizontalAlignment="Right"
+					Text="{Binding Accuracy, StringFormat='±{0}'}"
+					/>
 			</Grid>
 		</Grid>
 	</DataTemplate>
@@ -835,6 +859,118 @@
 					Foreground="{StaticResource SpectrogramBackgroundBrush}"
 					/>
 			</Grid>
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="WindowMenuTemplate"
+		>
+		<Grid
+			Rack.Rows="^ ^ ^ ^ ^"
+			Rack.Columns="^ ^ ^"
+			DataContext="{Store Key=vm:AppViewModel}"
+			>
+			<Label
+				Rack.Cell="R1 C1"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Key=Visible}"
+				Text="🗔"
+				/>
+			<Label
+				Rack.Cell="R1 C2"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Key=Topmost}"
+				Text="📌"
+				/>
+
+			<Label
+				Rack.Cell="R2 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Key=Flower}"
+				Text="🌸"
+				/>
+			<Switch
+				Rack.Cell="R2 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R2 C2"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+
+			<Label
+				Rack.Cell="R3 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Key=Tape}"
+				Text="📼"
+				/>
+			<Switch
+				Rack.Cell="R3 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R3 C2"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+
+			<Label
+				Rack.Cell="R4 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Key=Monitor}"
+				Text="🎚️"
+				/>
+			<Switch
+				Rack.Cell="R4 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R4 C2"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="MenuTemplate"
+		>
+		<Grid
+			Rack.Rows="^ ^ ^ ^ ^"
+			Rack.Columns="^ ^ ^"
+			DataContext="{Store Key=vm:AppViewModel}"
+			>
+			<GroupBox
+				Rack.Cell="R0 C0 CS0"
+				BorderThickness="0"
+				HorizontalAlignment="Right"
+				Background="{StaticResource LabelBrush}"
+				ToolTip="{Localizing Key=Snapshot}"
+				>
+				<StackLayout
+					Margin="0 5 0 0"
+					Orientation="Horizontal"
+					>
+					<Switch
+						IsChecked="{StoreBinding Path=IsPaused, StoreKey=vm:ProcessingManager, Mode=TwoWay}"
+						/>
+					<Label
+						Foreground="{StaticResource SpectrogramBackgroundBrush}"
+						FontSize="20"
+						Text="📷"
+						/>
+				</StackLayout>
+			</GroupBox>
+
+			<GroupBox
+				Rack.Cell="R1 C0 RS0 CS0"
+				BorderThickness="0"
+				Background="{StaticResource LabelBrush}"
+				ContentTemplate="{StaticResource WindowMenuTemplate}"
+				/>
 		</Grid>
 	</DataTemplate>
 

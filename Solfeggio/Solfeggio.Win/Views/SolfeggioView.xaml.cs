@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,14 +31,15 @@ namespace Solfeggio.Views
 			bandwidth.Threshold.Shift(lowerOffsetS, upperOffsetS, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
 		}
 
+		AppViewModel appViewModel = Store.Get<AppViewModel>();
+		MusicalPresenter musicalPresenter = Store.Get<MusicalPresenter>();
+		ProcessingManager processingManager = Store.Get<ProcessingManager>();
+
 		public SolfeggioView()
 		{
 			InitializeComponent();
 			Focus();
 
-			var appViewModel = Store.Get<AppViewModel>();
-			var musicalPresenter = Store.Get<MusicalPresenter>();
-			var processingManager = Store.Get<ProcessingManager>();
 
 			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
 			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
@@ -50,6 +50,7 @@ namespace Solfeggio.Views
 			Point from = default;
 			MouseLeftButtonUp += (o, e) => from = default;
 			MouseLeftButtonDown += (o, e) => from = e.GetPosition(this);
+			SpectrogramCanvas.MouseMove += MouseMove;
 			MagnitudeCanvas.MouseMove += MouseMove;
 			PhaseCanvas.MouseMove += MouseMove;
 			PianoCanvas.MouseMove += MouseMove;
@@ -179,7 +180,6 @@ namespace Solfeggio.Views
 					{
 						Polyline_Magnitude_FFT,
 						Polyline_Magnitude_PMI,
-						//Polyline_Flower
 					}
 				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
 				FrameCanvas.Children.OfType<Polyline>().ForEach(p => p.Points.Clear());
@@ -281,7 +281,8 @@ namespace Solfeggio.Views
 					});
 
 				var activeProfile = processingManager.ActiveProfile;
-				AppView.GeometryView.Draw(peaks, activeProfile.SampleSize, activeProfile.SampleRate);
+
+				Draw(peaks, activeProfile.SampleSize, activeProfile.SampleRate);
 
 				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
 					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
@@ -298,24 +299,63 @@ namespace Solfeggio.Views
 				var h = SpectrogramCanvas.ActualHeight;
 
 				var actualBand = musicalPresenter.Spectrum.Frequency;
+				var transformer = MusicalPresenter.GetScaleTransformer(actualBand, w);
 
 				var count = 127;
 				if (SpectrogramCanvas.Children.Count > count)
 					SpectrogramCanvas.Children.RemoveAt(count);
 
 				var magnitudeProjection = musicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
-				SpectrogramCanvas.Children.Insert(0, new Rectangle 
+				SpectrogramCanvas.Children.Insert(0, DrawKeys(new Grid 
 				{
 					Tag = spectrumInterpolated,
-					Fill = GetSpectrogramLineBrush(spectrumInterpolated, actualBand, w, h, magnitudeProjection),
-				});
+					DataContext = peakKeys,
+					Background = GetSpectrogramLineBrush(spectrumInterpolated, transformer, w, magnitudeProjection),
+				}));
+
+				Grid DrawKeys(Grid grid)
+				{
+					var pressedHalfToneKeyColor = (Color)App.Current.Resources["PressedHalfToneKeyColor"];
+					var pressedFullToneKeyColor = (Color)App.Current.Resources["PressedFullToneKeyColor"];
+
+					grid.Children.Clear();
+					grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
+					{
+						Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
+						Fill = new SolidColorBrush(SetAlpha(color, magnitudeProjection(k.Magnitude))),
+						Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
+						Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, 0, 0),
+						HorizontalAlignment = HorizontalAlignment.Left,
+					})
+					.ForEach(grid.Children.Add);
+
+					grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
+					{
+						Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
+						Fill = new SolidColorBrush(FromArgb
+						(
+							//1d,
+							//System.Math.Sqrt(magnitudeProjection(k.Magnitude)),
+							0.8 + 0.2 * magnitudeProjection(k.Magnitude),
+							0.0,
+							1.0 - 2.0 * System.Math.Abs(k.DeltaFrequency) / (k.UpperFrequency - k.LowerFrequency),
+							0.5 + 1.0 * System.Math.Abs(k.DeltaFrequency) / (k.UpperFrequency - k.LowerFrequency)
+						)),
+						Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
+						Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency) - w / 2d, 0, 0, 0),
+						HorizontalAlignment = HorizontalAlignment.Left,
+					})
+					.ForEach(grid.Children.Add);
+
+					return grid;
+				}
 
 				var hh = SpectrogramFrame.ActualHeight / count;
-				SpectrogramCanvas.Children.OfType<Rectangle>().ForEach(r => r.Height = hh);
+				SpectrogramCanvas.Children.OfType<Grid>().ForEach(r => r.Height = hh);
 
 				void FullSpectrogramRefresh() => SpectrogramCanvas.Children
-					.OfType<Rectangle>()
-					.ForEach(r => r.Fill = GetSpectrogramLineBrush((IList<Bin>)r.Tag, actualBand, w, h, magnitudeProjection));
+					.OfType<Grid>()
+					.ForEach(g => DrawKeys(g).Background = GetSpectrogramLineBrush((IList<Bin>)g.Tag, transformer, w, magnitudeProjection));
 
 				async void RequestFullSpectrogramRefresh(int delay)
 				{
@@ -343,6 +383,26 @@ namespace Solfeggio.Views
 		Projection _previousScaleFunc;
 		double _previousLower, _previousUpper;
 
+		Bin[] _peaks;
+		int _sampleSize;
+		double _sampleRate;
+
+		void Draw(Bin[] peaks, int sampleSize, double sampleRate)
+		{
+			if (processingManager.IsPaused is false)
+			{
+				_peaks = peaks;
+				_sampleSize = sampleSize;
+				_sampleRate = sampleRate;
+			}
+
+			var approximation = AppView.TapeView.ApproximationSlider.Value;
+			var geometry = MusicalPresenter.DrawGeometry(_peaks, _sampleSize, _sampleRate, approximation).ToList();
+
+			if (AppView.FlowerView.To(out var flowerView).IsVisible) flowerView.Draw(geometry);
+			if (AppView.TapeView.To(out var tapeView).IsVisible) tapeView.Draw(geometry);
+		}
+
 		bool IsStateChanged(Projection actualScaleFunc, SmartRange threshold) =>
 			threshold.Lower.IsNot(_previousLower) ||
 			threshold.Upper.IsNot(_previousUpper) ||
@@ -355,17 +415,19 @@ namespace Solfeggio.Views
 			_previousScaleFunc = actualScaleFunc;
 		}
 
-		private static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, Bandwidth bandwidth, double w, double h, Projection magnitudeProjection)
+		static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, ScaleTransformer transformer, double width, Projection magnitudeProjection)
 		{
-			var transformer = MusicalPresenter.GetScaleTransformer(bandwidth, w);
-
 			var from = transformer.GetLogicalOffset(0);
-			var till = transformer.GetLogicalOffset(w);
+			var till = transformer.GetLogicalOffset(width);
 
+			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
-				.Select(p => new GradientStop(Color.FromArgb(
-					(byte)(magnitudeProjection(p.Magnitude) * 255), 255, 255, 255), transformer.GetVisualOffset(p.Frequency) / w)).ToList();
+				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), transformer.GetVisualOffset(p.Frequency) / width));
 			return new(new(stops), 0d);
 		}
+
+		static Color SetAlpha(Color color, double alpha) => Color.FromArgb((byte)(alpha * 255), color.R, color.G, color.B);
+		static Color FromArgb(double a, double r, double g, double b) =>
+			Color.FromArgb((byte)(a * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
 	}
 }

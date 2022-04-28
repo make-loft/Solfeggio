@@ -11,6 +11,23 @@
 	Top="{Smart Top, DefaultValue=NaN}"
 	Title="{Localizing Key=Solfeggio, Modifiers=ToUpper}"
 	>
-	<v:SolfeggioView
-		/>
+	<Grid>
+		<v:SolfeggioView
+			/>
+		
+		<Grid
+			VerticalAlignment="Bottom"
+			HorizontalAlignment="Left"
+			>
+			<Border
+				Background="{DynamicResource LabelBrush}"
+				CornerRadius="0 5 0 0"
+				/>
+			<Expander
+				Margin="4"
+				ExpandDirection="Right"
+				ContentTemplate="{StaticResource MenuTemplate}"
+				/>
+		</Grid>
+	</Grid>
 </Window>

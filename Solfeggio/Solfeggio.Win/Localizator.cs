@@ -35,7 +35,6 @@ namespace Solfeggio
 		public static o Short = _("Short", "Кратко");
 		public static o Long = _("Long", "Долго");
 		public static o Speed = _("Speed", "Скорость");
-		public static o Accurate = _("Accurate", "Точность");
 		public static o Manually = _("Manually", "Вручную");
 		public static o Automatically = _("Automatically", "Автоматичеки");
 		public static o Whisper = _("Whisper", "Шёпот");
@@ -43,6 +42,8 @@ namespace Solfeggio
 		public static o Frame = _("Frame", "Кадр");
 		public static o Framing = _("Framing", "Кадрирование");
 		public static o Duration = _("Duration", "Длительность");
+		public static o Accuracy = _("Accuracy", "Точность");
+		public static o Step = _("Step", "Шаг");
 		public static o Wave = _("Wave", "Волна");
 		public static o Language = _("Language", "Язык");
 		public static o Device = _("Device", "Устройство");
@@ -102,6 +103,9 @@ namespace Solfeggio
 		public static o Till = _("Till", "До");
 		public static o Fill = _("Fill", "Заливка");
 		public static o Stroke = _("Stroke", "Обводка");
+		public static o Topmost = _("Topmost", "Поверх");
+		public static o Visible = _("Visible", "Видимый");
+		public static o Snapshot = _("Snapshot", "Снимок");
 		public static o Background = _("Background", "Фон");
 		public static o Thickness = _("Thickness", "Толщина");
 		public static o Rectangle = _("Rectangle", "Прямоугольник");
@@ -127,6 +131,7 @@ namespace Solfeggio
 		public static o Projection = _("Projection", "Проекция");
 		public static o Perspective = _("Perspective", "Перспектива");
 		public static o Orthographic = _("Orthographic", "Ортография");
+		public static o Approximation = _("Approximation", "Апроксимация");
 		public static o Depth = _("Depth", "Глубина");
 		public static o Thin = _("Thin", "Утончение");
 		public static o Angle = _("Angle", "Угол");
