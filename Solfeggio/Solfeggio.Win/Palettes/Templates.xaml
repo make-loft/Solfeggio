@@ -47,7 +47,7 @@
 				Maximum="+1.0"
 				TickFrequency="0.01"
 				TickPlacement="TopLeft"
-				Value="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Magnitude}"
 				/>
 			<Slider
 				Rack.Cell="C1 R1"
@@ -55,7 +55,7 @@
 				TickPlacement="TopLeft"
 				Minimum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
 				Maximum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
-				Value="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Frequency}"
 				/>
 			<Slider
 				Rack.Cell="C2 R1"
@@ -63,7 +63,7 @@
 				TickPlacement="TopLeft"
 				Minimum="{StaticResource MinusSinglePi}"
 				Maximum="{StaticResource PlusSinglePi}"
-				Value="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Phase}"
 				/>
 
 			<Entry
@@ -89,6 +89,12 @@
 				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 				/>
 			<Entry
+				Rack.Cell="C2 R0"
+				Width="70"
+				HorizontalAlignment="Left"
+				Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
+				/>
+			<Entry
 				Rack.Cell="C3 R2"
 				ToolTip="{Localizing Gap}"
 				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
@@ -107,21 +113,44 @@
 
 			<Switch
 				Rack.Cell="C5 R0"
-				HorizontalAlignment="Right"
+				HorizontalAlignment="Center"
+				ToolTip="{Binding IsEnabled, Converter={StaticResource SoundToTitleConverter}}"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}"
 				/>
 
-			<StackLayout
+			<Expander
+				Margin="4"
 				Rack.Cell="C6 R0"
-				Orientation="Horizontal"
-				HorizontalAlignment="Right"
+				HorizontalAlignment="Center"
+				x:Name="Expander"
 				>
-				<Button
-					Content="✗"
-					CommandParameter="{Binding}"
-					Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
-					/>
-			</StackLayout>
+				<v:PopupView
+					IsOpen="{Binding ElementName=Expander, Path=IsExpanded, Mode=TwoWay}"
+					>
+					<GroupBox
+						BorderThickness="0"
+						Background="{StaticResource LabelBrush}"
+						>
+						<StackLayout
+							Orientation="Horizontal"
+							HorizontalAlignment="Right"
+							>
+							<Button
+								Content="📝"
+								ToolTip="{Localizing Key=Copy}"
+								CommandParameter="{Binding}"
+								Command="{Context Key=Set.Create, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
+								/>
+							<Button
+								Content="✗"
+								ToolTip="{Localizing Key=Delete}"
+								CommandParameter="{Binding}"
+								Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
+								/>
+						</StackLayout>
+					</GroupBox>
+				</v:PopupView>
+			</Expander>
 		</Grid>
 	</DataTemplate>
 
@@ -371,31 +400,103 @@
 			<ContentView
 				Template="{StaticResource TitleProfileTemplate}"
 				/>
-
+			<Expander
+				Margin="0 -32 0 0"
+				x:Name="Expander"
+				HorizontalAlignment="Right"
+				>
+				<Expander.Header>
+					<Label
+						Text="{Localizing Each}"
+						/>
+				</Expander.Header>
+				<v:PopupView
+					IsOpen="{Binding ElementName=Expander, Path=IsExpanded}">
+					<StackLayout
+						Orientation="Horizontal"
+						>
+						<GroupBox
+							BorderThickness="0"
+							Background="{StaticResource LabelBrush}"
+							Header="{Localizing Key=Mode}"
+							>
+							<StackLayout
+								Orientation="Vertical"
+								>
+								<Button
+									Command="{Context Loop, TrackedPath=DataContext}"
+									Content="{Localizing Key=Loop}"
+									/>
+								<Button
+									Command="{Context Flow, TrackedPath=DataContext}"
+									Content="{Localizing Key=Flow}"
+									/>
+							</StackLayout>
+						</GroupBox>
+						<GroupBox
+							BorderThickness="0"
+							Background="{StaticResource LabelBrush}"
+							Header="{Localizing Key=Sound}"
+							>
+							<StackLayout
+								Orientation="Vertical"
+								>
+								<Button
+									Command="{Context Mute, TrackedPath=DataContext}"
+									Content="{Localizing Key=Mute}"
+									/>
+								<Button
+									Command="{Context Unmute, TrackedPath=DataContext}"
+									Content="{Localizing Key=Loud}"
+									/>
+							</StackLayout>
+						</GroupBox>
+					</StackLayout>
+				</v:PopupView>
+			</Expander>
 			<Grid
 				Rack.Columns="2* 2* 2* * * * *"
 				Rack.Rows="* *">
 				<Label
 					Rack.Cell="C0"
-					Text="{Localizing Key=Magnitude}" />
+					Text="{Localizing Key=Magnitude}"
+					/>
 				<Label
 					Rack.Cell="C1"
-					Text="{Localizing Key=Frequency}" />
+					Text="{Localizing Key=Frequency}"
+					/>
+				<Label
+					Rack.Cell="C1"
+					Opacity="0.35"
+					HorizontalAlignment="Right"
+					Text="{Localizing Key=Hz}"
+					/>
 				<Label
 					Rack.Cell="C2"
-					Text="{Localizing Key=Phase}" />
+					Text="{Localizing Key=Phase}"
+					/>
+				<Label
+					Rack.Cell="C2"
+					Opacity="0.35"
+					HorizontalAlignment="Right"
+					Text="{Localizing Key=Rad}"
+					/>
 				<Label
 					Rack.Cell="C3"
-					Text="{Localizing Key=Basis}" />
+					Text="{Localizing Key=Basis}"
+					/>
 				<Label
 					Rack.Cell="C4"
-					Text="{Localizing Key=Mode}" />
+					Text="{Localizing Key=Mode}"
+					/>
 				<Label
 					Rack.Cell="C5"
-					Text="{Localizing Key=Sound}" />
+					Text="{Localizing Key=Sound}"
+					/>
 				<Label
 					Rack.Cell="C6"
-					Text="{Localizing Key=Action}" />
+					Text="{Localizing Key=Action}"
+					/>
 			</Grid>
 
 			<ItemsView
@@ -939,6 +1040,7 @@
 		x:Key="MenuTemplate"
 		>
 		<Grid
+			Margin="-22 0 0 0"
 			Rack.Rows="^ ^ ^ ^ ^"
 			Rack.Columns="^ ^ ^"
 			DataContext="{Store Key=vm:AppViewModel}"

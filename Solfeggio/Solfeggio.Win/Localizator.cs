@@ -76,11 +76,15 @@ namespace Solfeggio
 		public static o Agreement = _("Agreement", "Соглашение");
 		public static o Create = _("Create", "Создать");
 		public static o Delete = _("Delete", "Удалить");
+		public static o Copy = _("Copy", "Копировать");
 		public static o Basis = _("Basis", "Базис");
 		public static o Mode = _("Mode", "Режим");
 		public static o Title = _("Title", "Заголовок");
 		public static o Command = _("Command", "Команда");
 		public static o Action = _("Action", "Действие");
+		public static o Each = _("Each", "Каждый");
+		public static o Mute = _("Mute", "Немой");
+		public static o Loud = _("Loud", "Громкий");
 		public static o Flow = _("Flow", "Поток");
 		public static o Loop = _("Loop", "Петля");
 		public static o Sound = _("Sound", "Звук");
@@ -138,6 +142,7 @@ namespace Solfeggio
 		public static o Tape = _("Tape", "Лента");
 
 		public static o Pcs = _("Pcs", "шт.");
+		public static o Rad = _("rad", "рад");
 		public static o Hz = _("Hz", "Гц");
 		public static o ms = _("ms", "мс");
 

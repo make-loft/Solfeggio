@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Globalization;
-using System.Windows.Data;
 using Ace;
+using Ace.Converters.Patterns;
+
 using Rainbow;
 
 namespace Solfeggio.Converters
@@ -13,7 +13,7 @@ namespace Solfeggio.Converters
 		Identity, Negation, Increment, Decrement, Stretch, Squeeze, Log, Pow
 	}
 
-	public class MathConverter : IValueConverter
+	public class MathConverter : AValueConverter
 	{
 		public MathConverter() => Parameter = Math.E;
 
@@ -23,10 +23,10 @@ namespace Solfeggio.Converters
 		private double GetBase(object parameter) =>
 			parameter.Is(out double value) || double.TryParse(parameter.ToStr(), out value) ? value : Parameter;
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		public override object Convert(object value, object parameter) =>
 			Apply(Operation, (double)value, GetBase(parameter));
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		public override object ConvertBack(object value, object parameter) =>
 			Apply(Back(Operation), (double)value, GetBase(parameter));
 
 		private double Apply(Operations code, double value, double parameter) =>

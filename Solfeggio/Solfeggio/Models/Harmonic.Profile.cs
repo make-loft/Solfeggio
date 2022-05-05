@@ -24,13 +24,25 @@ namespace Solfeggio.Models
 
 			public void Expose()
 			{
-				this[Context.Set.Create].Executed += (o, e) => CreateFor(Harmonics).Use(Harmonics.Add);
+				this[Context.Set.Create].Executed += (o, e) => CreateFor(Harmonics, e.Parameter as Harmonic).Use(Harmonics.Add);
 				this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
+
+				this[Context.Get("Loop")].Executed += (o, e) => Harmonics.ForEach(h => h.PhaseMode = PhaseMode.Loop);
+				this[Context.Get("Flow")].Executed += (o, e) => Harmonics.ForEach(h => h.PhaseMode = PhaseMode.Flow);
+				this[Context.Get("Mute")].Executed += (o, e) => Harmonics.ForEach(h => h.IsEnabled = false);
+				this[Context.Get("Loud")].Executed += (o, e) => Harmonics.ForEach(h => h.IsEnabled = true);
+
+				this[Context.Get("Loop")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Loop));
+				this[Context.Get("Flow")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Flow));
+				this[Context.Get("Mute")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(true));
+				this[Context.Get("Loud")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(false));
+
+				this[Context.Get("Delete")].Executed += (o, e) => Harmonics.ToArray().ForEach(Harmonics.Remove);
 			}
 
-			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics) => new()
+			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics, Harmonic harmonic) => new()
 			{
-				Frequency = harmonics.LastOrDefault().Is(out var harmonic)
+				Frequency = harmonic.Is() || harmonics.LastOrDefault().Is(out harmonic)
 					? harmonic.Frequency + (harmonics.Count + 1)
 					: presenter.Music.ActivePitchStandard
 			};

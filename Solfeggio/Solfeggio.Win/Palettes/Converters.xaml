@@ -33,6 +33,21 @@
 		Operation="Increment"
 		Parameter="{StaticResource MinHarmonicOpacityLevel}"
 		/>
+	<c:MathConverter
+		x:Key="RadianDegreeConverter"
+		Operation="Stretch"
+		Parameter="57.295779513082320876798154814105"
+		/>
+	<AggregateConverter
+		x:Key="RadianDegreeFormattedConverter"
+		>
+		<RemoteConverter
+			Source="{StaticResource RadianDegreeConverter}"
+			/>
+		<c:DoubleToStringTwoWayConverter
+			Tail="°"
+			/>
+	</AggregateConverter>
 
 	<SwitchConverter
 		x:Key="ModeToTitleConverter"
@@ -44,6 +59,19 @@
 		<Case
 			Key="Loop"
 			Value="{Localizing Key=Loop}"
+			/>
+	</SwitchConverter>
+
+	<SwitchConverter
+		x:Key="SoundToTitleConverter"
+		>
+		<Case
+			Key="{True}"
+			Value="{Localizing Key=Loud, StringFormat='🔊 {0}', ForceStringFormat=True}"
+			/>
+		<Case
+			Key="{False}"
+			Value="{Localizing Key=Mute, StringFormat='🔇 {0}', ForceStringFormat=True}"
 			/>
 	</SwitchConverter>
 
