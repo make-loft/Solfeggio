@@ -38,7 +38,7 @@
 		x:Key="HarmonicTemplate">
 		<Grid
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			Rack.Columns="2* 2* 2* * * * *"
+			Rack.Columns="2* 3* 3* * * * *"
 			Rack.Rows="* *"
 			>
 			<Slider
@@ -68,10 +68,12 @@
 
 			<Entry
 				Rack.Cell="C0 R0"
+				ToolTip="{Binding Magnitude}"
 				Text="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 				/>
 			<Entry
 				Rack.Cell="C1 R0"
+				ToolTip="{Binding Frequency}"
 				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 				/>
 			<Picker
@@ -84,16 +86,26 @@
 				Height="22"
 				Width="20"
 				/>
-			<Entry
+			<Grid
 				Rack.Cell="C2 R0"
-				Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
-				/>
-			<Entry
-				Rack.Cell="C2 R0"
-				Width="70"
-				HorizontalAlignment="Left"
-				Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
-				/>
+				Rack.Columns="* * *"
+				>
+				<Entry
+					Rack.Cell="C0 CS0"
+					ToolTip="{Binding Phase}"
+					Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<Entry
+					Rack.Cell="C0"
+					ToolTip="{Binding Phase, Converter={StaticResource RadianDegreeConverter}}"
+					Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<Entry
+					Rack.Cell="C1"
+					ToolTip="{Binding Phase, Converter={StaticResource RadianPiConverter}}"
+					Text="{Binding Phase, Converter={StaticResource RadianPiFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</Grid>
 			<Entry
 				Rack.Cell="C3 R2"
 				ToolTip="{Localizing Gap}"
@@ -379,7 +391,8 @@
 				<Label
 					Rack.Cell="R6 C1"
 					HorizontalAlignment="Right"
-					Text="{Binding FrameStep}"
+					ToolTip="{Binding FrameStep}"
+					Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
 				<Label
 					Rack.Cell="R7 C0"
@@ -388,7 +401,8 @@
 				<Label
 					Rack.Cell="R7 C1"
 					HorizontalAlignment="Right"
-					Text="{Binding Accuracy, StringFormat='±{0}'}"
+					ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
+					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
 			</Grid>
 		</Grid>
@@ -455,7 +469,7 @@
 				</v:PopupView>
 			</Expander>
 			<Grid
-				Rack.Columns="2* 2* 2* * * * *"
+				Rack.Columns="2* 3* 3* * * * *"
 				Rack.Rows="* *">
 				<Label
 					Rack.Cell="C0"
@@ -501,61 +515,60 @@
 
 			<ItemsView
 				ItemsSource="{Binding Harmonics}"
-				ItemTemplate="{StaticResource HarmonicTemplate}" />
-
+				ItemTemplate="{StaticResource HarmonicTemplate}"
+				/>
 			<Button
 				HorizontalAlignment="Center"
-				Content="{Localizing Key=Create}"
-				Command="{Context Key=Set.Create, TrackedPath=DataContext}" />
+				Content="{Localizing Key=Create, StringFormat='{}{0} ➕', ForceStringFormat=True}"
+				Command="{Context Key=Set.Create, TrackedPath=DataContext}"
+				/>
 		</StackLayout>
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="HarmonicOutTemplate">
+		x:Key="HarmonicOutTemplate"
+		>
 		<Grid
 			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			Rack.Columns="32 64 64 64 *">
+			Rack.Columns="32 64 64 64 *"
+			>
 			<Label
 				Rack.Cell="C0"
 				FontSize="{StaticResource MonospaceFontSize}"
 				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding NoteName}" />
+				Text="{Binding NoteName}"
+				/>
 			<Label
 				Rack.Cell="C1"
 				FontSize="{StaticResource MonospaceFontSize}"
 				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				ToolTip="{Binding EthalonFrequency}"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 			<Label
 				Rack.Cell="C2"
 				FontSize="{StaticResource MonospaceFontSize}"
 				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}" />
+				ToolTip="{Binding DeltaFrequency}"
+				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}"
+				/>
 			<Label
 				Rack.Cell="C3"
 				FontSize="{StaticResource MonospaceFontSize}"
 				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				ToolTip="{Binding Harmonic.Frequency}"
+				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 			<Label
 				Rack.Cell="C4"
 				FontSize="{StaticResource MonospaceFontSize}"
 				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				ToolTip="{Binding Harmonic.Magnitude}"
+				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 		</Grid>
 	</DataTemplate>
-
-	<DataTemplate
-		x:Key="OptionTemplate">
-		<Grid
-			Rack.Columns="* * 5*">
-			<Label
-				Rack.Cell="C0"
-				Text="{Binding Tag}" />
-			<ContentPresenter
-				Rack.Cell="C1"
-				Content="{Binding}" />
-		</Grid>
-	</DataTemplate>
-
+	
 	<DataTemplate
 		x:Key="RangeGridTemplate">
 
@@ -584,26 +597,32 @@
 
 			<Entry
 				Rack.Cell="R2 C1"
+				ToolTip="{Binding Threshold.Upper}"
 				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Entry
 				Rack.Cell="R2 C2"
+				ToolTip="{Binding Threshold.Lower}"
 				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Entry
 				Rack.Cell="R1 C1"
+				ToolTip="{Binding Limit.Upper}"
 				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Entry
 				Rack.Cell="R1 C2"
+				ToolTip="{Binding Limit.Lower}"
 				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 
 			<Entry
 				Rack.Cell="R2 C3"
 				Style="{StaticResource ReadOnlyEntryStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
+				ToolTip="{Binding Threshold.Length}"
 				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 			<Entry
 				Rack.Cell="R1 C3"
 				Style="{StaticResource ReadOnlyEntryStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
+				ToolTip="{Binding Limit.Length}"
 				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 		</Grid>
 
@@ -715,13 +734,6 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="ShowStateTemplate">
-		<ItemsView
-			ItemTemplate="{StaticResource OptionTemplate}"
-			ItemsSource="{StaticResource ShowStateSet}" />
-	</DataTemplate>
-
-	<DataTemplate
 		x:Key="NamedColorTemplate">
 		<StackLayout
 			Orientation="Horizontal">
@@ -811,16 +823,18 @@
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
 						<Entry
 							Rack.Cell="R0 C0"
+							ToolTip="{Binding Threshold.Upper}"
 							Text="{Binding Threshold.Upper, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
+							/>
 						<Label
 							Rack.Cell="R0 C1"
 							Text="-"
 							/>
 						<Entry
 							Rack.Cell="R0 C2"
+							ToolTip="{Binding Threshold.Lower}"
 							Text="{Binding Threshold.Lower, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
+							/>
 						<Label
 							Rack.Cell="R1 C1"
 							Text="="
@@ -828,6 +842,7 @@
 						<Entry
 							Rack.Cell="R1 C2"
 							Style="{StaticResource ReadOnlyEntryStyle}"
+							ToolTip="{Binding Threshold.Length}"
 							Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
 					</Grid>
@@ -999,6 +1014,7 @@
 				/>
 			<Switch
 				Rack.Cell="R2 C2"
+				Opacity="0.5"
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
 
@@ -1015,6 +1031,7 @@
 				/>
 			<Switch
 				Rack.Cell="R3 C2"
+				Opacity="0.5"
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
 
@@ -1031,6 +1048,7 @@
 				/>
 			<Switch
 				Rack.Cell="R4 C2"
+				Opacity="0.5"
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
 		</Grid>

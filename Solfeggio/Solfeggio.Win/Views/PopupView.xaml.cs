@@ -29,6 +29,8 @@ namespace Solfeggio.Views
 			Opened += (o, e) => Child.MoveFocus(new(FocusNavigationDirection.Next));
 			Closed += (o, e) => Popups.LastOrDefault()?.Child.MoveFocus(new(FocusNavigationDirection.Next));
 
+			MouseMove += (o, e) => e.Handled = true;
+
 			PreviewMouseLeftButtonDown += (o, e) =>
 			{
 				if (e.Source.Is(ContentControl))

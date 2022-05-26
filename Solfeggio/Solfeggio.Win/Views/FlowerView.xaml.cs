@@ -21,7 +21,7 @@ namespace Solfeggio.Views
 			var radius = Math.Max(Math.Min(centerX, centerY), 1d);
 			var polyline = Polyline_Geometry;
 			polyline.Points.Clear();
-			geometry.ForEach(p => polyline.Points.Add(new(p.X * radius + centerX, p.Y * radius + centerY)));
+			geometry.ForEach(p => polyline.Points.Add(new(centerX - p.X * radius, centerY - p.Y * radius)));
 		}
 
 		private void SwitchPause() => Store.Get<ProcessingManager>().To(out var m).IsPaused = m.IsPaused.Not();
@@ -35,29 +35,6 @@ namespace Solfeggio.Views
 				SwitchPause();
 		}
 
-		private void Window_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			SwitchPause();
-		}
-
-		Point from;
-		private void Window_PreviewMouseMove(object sender, MouseEventArgs e)
-		{
-			var till = e.GetPosition(sender as IInputElement);
-			double dx = till.X - from.X;
-			double dy = till.Y - from.Y;
-			from = till;
-
-			var distance = dx * dx + dy * dy;
-			if (distance <= 0)
-				return;
-
-			if (e.MouseDevice.LeftButton is MouseButtonState.Pressed)
-			{
-				//var angle = (distance / PerspectiveCamera.FieldOfView) % 45;
-				//PerspectiveCamera.Rotate(new(dy, -dx, 0d), angle);
-				//OrthographicCamera.Rotate(new(dy, -dx, 0d), angle);
-			}
-		}
+		private void Window_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e) => SwitchPause();
 	}
 }

@@ -18,17 +18,35 @@ namespace Solfeggio.Views
 {
 	public partial class SolfeggioView
 	{
-		static void Shift(Bandwidth bandwidth, double delta, double lowerDirection, double upperDirection)
+		static void Transform(Bandwidth bandwidth, double width, double offset, bool shift)
 		{
-			var scaleFunc = bandwidth.VisualScaleFunc;
-			var center = (bandwidth.Threshold.Upper - bandwidth.Threshold.Lower) / 2;
-			var centerS = (scaleFunc(bandwidth.Threshold.Upper) - scaleFunc(bandwidth.Threshold.Lower)) / 2;
-			var offsetS = delta * bandwidth.Threshold.Length * centerS / (8 * center);
+			var center = width / 2d;
+			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var from = basicScaler.GetLogicalOffset(center);
+			var till = basicScaler.GetLogicalOffset(center + offset);
+			bandwidth.TransformThreshold(from, till, shift);
+		}
 
-			var lowerOffsetS = lowerDirection * offsetS;
-			var upperOffsetS = upperDirection * offsetS;
+		static void TransformRelative(Bandwidth bandwidth, double width, double height, Point from, Point till)
+		{
+			var center = width / 2d;
 
-			bandwidth.Threshold.Shift(lowerOffsetS, upperOffsetS, scaleFunc, bandwidth.Limit.Lower, bandwidth.Limit.Upper);
+			var alignScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var alignFromOffset = alignScaler.GetLogicalOffset(from.X);
+			var alignTillOffset = alignScaler.GetLogicalOffset(center);
+			bandwidth.ShiftThreshold(alignFromOffset, alignTillOffset);
+
+			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, height);
+			var centerY = height / 2d;
+			var offsetY = from.Y - till.Y;
+			var basicFromOffset = basicScaler.GetLogicalOffset(centerY);
+			var basicTillOffset = basicScaler.GetLogicalOffset(centerY + offsetY);
+			bandwidth.ScaleThreshold(basicFromOffset, basicTillOffset);
+
+			var finalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var finalFromOffset = finalScaler.GetLogicalOffset(center);
+			var finalTillOffset = finalScaler.GetLogicalOffset(from.X);
+			bandwidth.ShiftThreshold(finalFromOffset, finalTillOffset);
 		}
 
 		AppViewModel appViewModel = Store.Get<AppViewModel>();
@@ -38,8 +56,7 @@ namespace Solfeggio.Views
 		public SolfeggioView()
 		{
 			InitializeComponent();
-			Focus();
-
+			Loaded += (o, e) => Focus();
 
 			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
 			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
@@ -73,9 +90,10 @@ namespace Solfeggio.Views
 				var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;
 
 				var control = (FrameworkElement)o;
+				var flip = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && isHorizontalMove.Not();
 				var bandwidth = o.Is(FrameCanvas)
-					? musicalPresenter.Frame.Offset
-					: musicalPresenter.Spectrum.Frequency;
+					? flip ? musicalPresenter.Frame.Level : musicalPresenter.Frame.Offset
+					: flip ? musicalPresenter.Spectrum.Magnitude : musicalPresenter.Spectrum.Frequency;
 
 				if (isHorizontalMove)
 				{
@@ -87,25 +105,7 @@ namespace Solfeggio.Views
 				}
 				else
 				{
-					var center = control.ActualWidth / 2;
-
-					var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualHeight);
-					var basicFromOffset = basicScaler.GetLogicalOffset(from.Y);
-					var basicTillOffset = basicScaler.GetLogicalOffset(till.Y);
-
-					var alignScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualWidth);
-					var alignFromOffset = alignScaler.GetLogicalOffset(from.X);
-					var alignTillOffset = alignScaler.GetLogicalOffset(center);
-
-					bandwidth.ShiftThreshold(alignFromOffset, alignTillOffset);
-
-					bandwidth.ScaleThreshold(basicFromOffset, basicTillOffset);
-
-					var finalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, control.ActualWidth);
-					var finalFromOffset = finalScaler.GetLogicalOffset(center);
-					var finalTillOffset = finalScaler.GetLogicalOffset(from.X);
-
-					bandwidth.ShiftThreshold(finalFromOffset, finalTillOffset);
+					TransformRelative(bandwidth, control.ActualWidth, control.ActualHeight, from, till);
 				}
 
 				from = till;
@@ -126,14 +126,38 @@ namespace Solfeggio.Views
 
 			MouseWheel += (o, e) =>
 			{
-				var lowerDirection = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? +1 : -1;
-				var upperDirection = +1;
+				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+				{
+					var offset = e.Delta * ActualWidth / 32d;
+					Transform(musicalPresenter.Spectrum.Frequency, ActualWidth, offset, true);
+					return;
+				}
 
-				Shift(musicalPresenter.Spectrum.Frequency, e.Delta / 16, lowerDirection, upperDirection);
+				var control = o as FrameworkElement;
+				//var control = Mouse.DirectlyOver.As<DependencyObject>()
+				//	?.EnumerateSelfAndVisualAncestors().OfType<Canvas>().FirstOrDefault()
+				//	?? Mouse.DirectlyOver.As<FrameworkElement>();
+
+				var bandwidth = o.Is(FrameCanvas)
+					? musicalPresenter.Frame.Offset
+					: musicalPresenter.Spectrum.Frequency;
+
+				var from = Mouse.GetPosition(control);
+				var till = new Point { X = from.X, Y = from.Y + e.Delta / 8d };
+
+				if (control.Is())
+					TransformRelative(bandwidth, control.ActualWidth, control.ActualHeight, from, till);
 			};
 
-			PreviewKeyDown += (o, e) =>
+			var navigationKeys = new[] { Key.Left, Key.Up, Key.Right, Key.Down };
+
+			PreviewKeyDown += async (o, e) =>
 			{
+				var control = Mouse.DirectlyOver.As<DependencyObject>()
+					?.EnumerateSelfAndVisualAncestors().OfType<Canvas>().FirstOrDefault()
+					?? Mouse.DirectlyOver.As<object>();
+
+				var pressedKeys = navigationKeys.Where(Keyboard.IsKeyDown).ToList();
 				var upperDirection = e.Key switch
 				{
 					Key.Left or Key.Up => -1,
@@ -151,7 +175,23 @@ namespace Solfeggio.Views
 				e.Handled = lowerDirection.IsNot(0) && upperDirection.IsNot(0);
 				if (e.Handled.Not()) return;
 
-				Shift(musicalPresenter.Spectrum.Frequency, + 1, lowerDirection, upperDirection);
+				var shift = lowerDirection == upperDirection;
+				var delta = shift
+					? lowerDirection
+					: lowerDirection < upperDirection ? -1 : +1;
+				var offset = delta * ActualWidth / 32d;
+
+				var flip = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+				var bandwidth = control.Is(FrameCanvas)
+					? flip ? musicalPresenter.Frame.Level : musicalPresenter.Frame.Offset
+					: flip ? musicalPresenter.Spectrum.Magnitude : musicalPresenter.Spectrum.Frequency;
+
+				var stepsCount = 16;
+				for (var step = 0; step < stepsCount; step++)
+				{
+					Transform(bandwidth, ActualWidth, offset / stepsCount, shift);
+					await Task.Delay(8);
+				}
 			};
 
 			var timer = new DispatcherTimer();
@@ -396,7 +436,7 @@ namespace Solfeggio.Views
 				_sampleRate = sampleRate;
 			}
 
-			var approximation = AppView.TapeView.ApproximationSlider.Value;
+			var approximation = AppView.TapeView.TapeViewModel.Approximation;
 			var geometry = MusicalPresenter.DrawGeometry(_peaks, _sampleSize, _sampleRate, approximation).ToList();
 
 			if (AppView.FlowerView.To(out var flowerView).IsVisible) flowerView.Draw(geometry);

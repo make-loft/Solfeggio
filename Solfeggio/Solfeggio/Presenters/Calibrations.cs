@@ -54,27 +54,6 @@ namespace Solfeggio.Presenters
 			value < lowerLimit ? lowerLimit :
 			value > upperLimit ? upperLimit :
 			value;
-
-		static double GetScale(double value, double offsetS, Projection scaleFunc, double lowerLimit, double upperLimit)
-		{
-			var valueS = scaleFunc(value);
-			var lowerLimitS = scaleFunc(lowerLimit);
-			var upperLimitS = scaleFunc(upperLimit);
-			var valueSL = Limit(valueS + offsetS, lowerLimitS, upperLimitS);
-			var scale = valueSL / valueS;
-			return scale;
-		}
-
-		public void Shift(double lowerOffsetS, double upperOffsetS, Projection scaleFunc, double lowerLimit, double upperLimit)
-		{
-			var lowerS = Lower * GetScale(Lower, lowerOffsetS, scaleFunc, lowerLimit, upperLimit);
-			var upperS = Upper * GetScale(Upper, upperOffsetS, scaleFunc, lowerLimit, upperLimit);
-			lowerS = lowerS.Is(double.NaN) ? lowerOffsetS : lowerS;
-			upperS = upperS.Is(double.NaN) ? upperOffsetS : upperS;
-			if (lowerS > upperS) return;
-			Lower = lowerS < lowerLimit ? lowerLimit : lowerS;
-			Upper = upperS > upperLimit ? upperLimit : upperS;
-		}
 	}
 
 	[DataContract]
@@ -120,6 +99,18 @@ namespace Solfeggio.Presenters
 
 				Threshold.Lower *= shift ? scale : (1 / scale);
 				Threshold.Upper *= scale;
+			}
+
+			if (Threshold.Lower < Limit.Lower)
+				Threshold.Lower = Limit.Lower;
+
+			if (Threshold.Upper > Limit.Upper)
+				Threshold.Upper = Limit.Upper;
+
+			if (Threshold.Length < Limit.Length / 1024d && Limit.Lower < Limit.Upper)
+			{
+				Threshold.Lower = Limit.Lower;
+				Threshold.Upper = Limit.Upper;
 			}
 		}
 	}

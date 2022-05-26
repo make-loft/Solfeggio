@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Xamarin.Forms
@@ -200,6 +201,16 @@ namespace Xamarin.Forms
 	{
 		public Slider()
 		{
+			PreviewKeyDown += (o, e) =>
+			{
+				if (Value == Minimum)
+					if (e.Key is Key.Left || e.Key is Key.Down)
+						Value = Maximum;
+				if (Value == Maximum)
+					if (e.Key is Key.Right || e.Key is Key.Up)
+						Value = Minimum;
+			};
+
 			MouseWheel += (o, e) =>
 			{
 				var delta = (Maximum - Minimum) / 256;

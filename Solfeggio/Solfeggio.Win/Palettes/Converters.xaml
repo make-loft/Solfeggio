@@ -38,6 +38,12 @@
 		Operation="Stretch"
 		Parameter="57.295779513082320876798154814105"
 		/>
+	<c:MathConverter
+		x:Key="RadianPiConverter"
+		Operation="Squeeze"
+		Parameter="3.1415926535897932384626433832795"
+		/>
+	
 	<AggregateConverter
 		x:Key="RadianDegreeFormattedConverter"
 		>
@@ -46,6 +52,16 @@
 			/>
 		<c:DoubleToStringTwoWayConverter
 			Tail="°"
+			/>
+	</AggregateConverter>
+	<AggregateConverter
+		x:Key="RadianPiFormattedConverter"
+		>
+		<RemoteConverter
+			Source="{StaticResource RadianPiConverter}"
+			/>
+		<c:DoubleToStringTwoWayConverter
+			Tail="π"
 			/>
 	</AggregateConverter>
 

@@ -136,6 +136,8 @@ namespace Solfeggio
 		public static o Perspective = _("Perspective", "Перспектива");
 		public static o Orthographic = _("Orthographic", "Ортография");
 		public static o Approximation = _("Approximation", "Апроксимация");
+		public static o Joystick = _("Joystick", "Джойстик");
+		public static o Camera = _("Camera", "Камера");
 		public static o Depth = _("Depth", "Глубина");
 		public static o Thin = _("Thin", "Утончение");
 		public static o Angle = _("Angle", "Угол");

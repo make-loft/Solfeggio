@@ -13,8 +13,12 @@ namespace Solfeggio.Controls
 			Closing += (o, e) =>
 			{
 				if (AppView.IsShutdown) return;
-				Visibility = Collapsed;
-				e.Cancel = true;
+				try
+				{
+					Visibility = Collapsed;
+					e.Cancel = true;
+				}
+				catch { }
 			};
 
 			IsVisibleChanged += async (o, e) =>

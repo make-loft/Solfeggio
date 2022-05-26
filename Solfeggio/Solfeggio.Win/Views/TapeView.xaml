@@ -6,26 +6,92 @@
 	xmlns:xa="http://xamarin.com/schemas/2014/forms"
 	xmlns:views="clr-namespace:Solfeggio.Views"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
-	DataContext="{Store Key=vm:AppViewModel}"
-	Visibility="{Smart TapeVisibility, DefaultValue=Collapsed}"
-	Topmost="{Smart TapeTopmost, DefaultValue=True}"
-	Height="{Smart TapeHeight, DefaultValue=512}"
-	Width="{Smart TapeWidth, DefaultValue=512}"
-	Left="{Smart TapeLeft, DefaultValue=NaN}"
-	Top="{Smart TapeTop, DefaultValue=NaN}"
+	DataContext="{StoreBinding StoreKey=vm:AppViewModel, Path=Tape}"
+	Visibility="{Smart Visibility, DefaultValue={StaticResource Visible}}"
+	Topmost="{Smart Topmost, DefaultValue=True}"
+	Height="{Smart Height, DefaultValue=512}"
+	Width="{Smart Width, DefaultValue=512}"
+	Left="{Smart Left, DefaultValue=NaN}"
+	Top="{Smart Top, DefaultValue=NaN}"
 	Title="{Localizing Key=Tape, Modifiers=ToUpper}"
-	PreviewMouseDoubleClick="Window_PreviewMouseDoubleClick"
-	PreviewKeyDown="Window_PreviewKeyDown"
+	MouseDoubleClick="Window_MouseDoubleClick"
+	MouseDown="Window_MouseDown"
+	MouseMove="Window_MouseMove"
 	Activated="Window_Activated"
+	KeyDown="Window_KeyDown"
 	Background="DimGray"
 	>
+	<Control.Resources>
+		<Set
+			x:Key="Cameras"
+			>
+			<PerspectiveCamera
+				Position="0,0,-3"
+				LookDirection="0,0,1"
+				UpDirection="0,1,0"
+				FieldOfView="{Binding Angle, Mode=TwoWay}"
+				/>
+			<PerspectiveCamera
+				Position="0,0,-3"
+				LookDirection="0,0,1"
+				UpDirection="0,1,0"
+				FieldOfView="{Binding Angle, Mode=TwoWay}"
+				/>
+			<PerspectiveCamera
+				Position="0,0,-3"
+				LookDirection="0,0,1"
+				UpDirection="0,1,0"
+				FieldOfView="{Binding Angle, Mode=TwoWay}"
+				/>
+			<OrthographicCamera
+				Position="0,0,-3"
+				LookDirection="0,0,1"
+				UpDirection="0,1,0">
+				<OrthographicCamera.Transform>
+					<ScaleTransform3D
+						ScaleX="2"
+						ScaleY="2"
+						ScaleZ="2"
+						/>
+				</OrthographicCamera.Transform>
+			</OrthographicCamera>
+			<OrthographicCamera
+				Position="0,0,-2"
+				LookDirection="0,0,1"
+				UpDirection="0,1,0">
+				<OrthographicCamera.Transform>
+					<ScaleTransform3D
+						ScaleX="2"
+						ScaleY="2"
+						ScaleZ="2"
+						/>
+				</OrthographicCamera.Transform>
+			</OrthographicCamera>
+		</Set>
+		
+		<SwitchConverter
+			x:Key="PespectiveToVsibleConverter"
+			ByDefault="Collapsed"
+			>
+			<TypedCase
+				Key="PerspectiveCamera"
+				Value="Visible"
+				/>
+		</SwitchConverter>
+		
+		<KeyToValueConverter
+			x:Key="FalseToOpacityConverter"
+			Key="{False}"
+			Value="0.5"
+			ByDefault="1.0"
+			/>
+	</Control.Resources>
 	<Grid
-		PreviewMouseMove="Window_PreviewMouseMove"
 		Background="{DynamicResource GeometryBackgroundBrush}"
 		>
 		<Viewport3D
 			Name="Tape"
-			Camera="{Binding ElementName=CameraPicker, Path=SelectedItem, Mode=TwoWay}"
+			Camera="{Binding Camera}"
 			>
 			<Viewport3D.Children>
 				<ModelVisual3D>
@@ -38,17 +104,17 @@
 									<MaterialGroup>
 										<SpecularMaterial SpecularPower="85.3333">
 											<SpecularMaterial.Brush>
-												<SolidColorBrush Color="#FFFFFF" Opacity="1.000000"/>
+												<SolidColorBrush Color="#FFFFFF" Opacity="1.0"/>
 											</SpecularMaterial.Brush>
 										</SpecularMaterial>
 										<DiffuseMaterial Brush="#00FF00"/>
-										<EmissiveMaterial Brush="#330000ff"/>
+										<EmissiveMaterial Brush="#330000FF"/>
 									</MaterialGroup>
 								</GeometryModel3D.Material>
 								<GeometryModel3D.BackMaterial>
 									<MaterialGroup>
 										<DiffuseMaterial Brush="#00FF00"/>
-										<EmissiveMaterial Brush="#330000ff"/>
+										<EmissiveMaterial Brush="#330000FF"/>
 									</MaterialGroup>
 								</GeometryModel3D.BackMaterial>
 								<GeometryModel3D.Geometry>
@@ -61,17 +127,17 @@
 									<MaterialGroup>
 										<SpecularMaterial SpecularPower="85.3333">
 											<SpecularMaterial.Brush>
-												<SolidColorBrush Color="#FFFFFF" Opacity="0.500000"/>
+												<SolidColorBrush Color="#FFFFFF" Opacity="0.5"/>
 											</SpecularMaterial.Brush>
 										</SpecularMaterial>
 										<DiffuseMaterial Brush="#FF0000"/>
-										<EmissiveMaterial Brush="#330000ff"/>
+										<EmissiveMaterial Brush="#330000FF"/>
 									</MaterialGroup>
 								</GeometryModel3D.Material>
 								<GeometryModel3D.BackMaterial>
 									<MaterialGroup>
 										<DiffuseMaterial Brush="#FF0000"/>
-										<EmissiveMaterial Brush="#330000ff"/>
+										<EmissiveMaterial Brush="#330000FF"/>
 									</MaterialGroup>
 								</GeometryModel3D.BackMaterial>
 								<GeometryModel3D.Geometry>
@@ -83,165 +149,320 @@
 				</ModelVisual3D>
 			</Viewport3D.Children>
 		</Viewport3D>
+
+		<ToggleButton
+			x:Name="PlayPauseToggleButton"
+			Margin="5"
+			VerticalAlignment="Top"
+			HorizontalAlignment="Left"
+			IsChecked="{StoreBinding StoreKey=vm:ProcessingManager, Path=IsPaused, Mode=TwoWay}"
+			Opacity="{SelfBinding Path=IsChecked, Converter={StaticResource FalseToOpacityConverter}}"
+			Visibility="{Binding Joystick, Converter={StaticResource TrueToVisibleConverter}}"
+			Content="📷"
+			/>
+
 		<Expander
 			Name="Expander"
+			Opacity="0.5"
+			Margin="0 3"
 			VerticalAlignment="Top"
 			HorizontalAlignment="Right"
 			>
-			<Expander.Header>
-				<StackPanel
-					Orientation="Horizontal"
-					>
-					<ToggleButton
-						x:Name="PlayPauseToggleButton"
-						HorizontalAlignment="Right"
-						IsChecked="{StoreBinding StoreKey=vm:ProcessingManager, Path=IsPaused, Mode=TwoWay}"
-						Content="📷"
-						/>
-					<Button
-						Visibility="{Binding ElementName=Expander, Path=IsExpanded, Converter={StaticResource TrueToVisibleConverter}}"
-						Content="3D FLY!"
-						Click="Button_Click"
-						/>
-				</StackPanel>
-			</Expander.Header>
-			<Grid
-				Rack.Rows="^ ^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^"
+			<views:PopupView
+				IsOpen="{Binding ElementName=Expander, Path=IsExpanded, Mode=TwoWay}"
 				>
-				<Grid.Resources>
-					<SwitchConverter
-						x:Key="PespectiveToVsibleConverter"
-						ByDefault="Collapsed"
-						>
-						<TypedCase
-							Key="PerspectiveCamera"
-							Value="Visible"
-							/>
-					</SwitchConverter>
-				</Grid.Resources>
-
-				<Border
-					Rack.Cell="R0 C0 RS0 CS0"
-					CornerRadius="0 0 0 5"
-					Background="{DynamicResource LabelBrush}"
-					/>
-
-				<xa:Label
-					Rack.Cell="R0 C0"
-					Text="{Localizing Projection}"
-					/>
-				<Picker
-					Rack.Cell="R0 C1"
-					x:Name="CameraPicker"
-					VerticalAlignment="Bottom"
-					SelectedIndex="0"
+				<Grid
+					Rack.Rows="^ ^ ^ ^ ^ ^ ^"
+					Rack.Columns="^ ^ ^"
 					>
-					<Picker.Resources>
-						<SwitchConverter
-							x:Key="CameraToTextConverter">
-							<TypedCase
-								Key="PerspectiveCamera"
-								Value="{Localizing Perspective}"
-								/>
-							<TypedCase
-								Key="OrthographicCamera"
-								Value="{Localizing Orthographic}"
-								/>
-						</SwitchConverter>
-					</Picker.Resources>
-					<Picker.ItemTemplate>
-						<DataTemplate>
-							<TextBlock
-								Text="{Binding Converter={StaticResource CameraToTextConverter}}"
-								/>
-						</DataTemplate>
-					</Picker.ItemTemplate>
-					<PerspectiveCamera
-						x:Name="PerspectiveCamera"
-						Position="0,0,-2"
-						LookDirection="0,0,1"
-						UpDirection="0,1,0"
+
+					<Border
+						Rack.Cell="R0 C0 RS0 CS0"
+						CornerRadius="0 0 0 5"
+						Background="{DynamicResource LabelBrush}"
 						/>
-					<OrthographicCamera
-						x:Name="OrthographicCamera"
-						Position="0,0,-2"
-						LookDirection="0,0,1"
-						UpDirection="0,1,0">
-						<OrthographicCamera.Transform>
-							<ScaleTransform3D
-								x:Name="ScaleTransform"
-								ScaleX="2"
-								ScaleY="2"
-								ScaleZ="2"
-								/>
-						</OrthographicCamera.Transform>
-					</OrthographicCamera>
-				</Picker>
 
-				<xa:Label
-					Rack.Cell="R1 C0"
-					Visibility="{Binding ElementName=Tape, Path=Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
-					Text="{Localizing Angle}"
-					/>
-				<views:ValuePicker
-					Rack.Cell="R1 C1"
-					DataContext="{Binding ElementName=PerspectiveCamera}"
-					Visibility="{Binding ElementName=Tape, Path=Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
-					Minimum="0"
-					Maximum="180"
-					Value="{Binding FieldOfView, Mode=TwoWay}"
-					/>
+					<xa:Label
+						Rack.Cell="R0 C0"
+						Text="{Localizing Camera}"
+						/>
+					<Picker
+						Rack.Cell="R0 C1"
+						VerticalAlignment="Bottom"
+						SelectedIndex="0"
+						SelectedItem="{Binding Camera, Mode=TwoWay}"
+						ItemsSource="{StaticResource Cameras}"
+						>
+						<Picker.Resources>
+							<SwitchConverter
+								x:Key="CameraToTextConverter">
+								<TypedCase
+									Key="PerspectiveCamera"
+									Value="{Localizing Perspective}"
+									/>
+								<TypedCase
+									Key="OrthographicCamera"
+									Value="{Localizing Orthographic}"
+									/>
+							</SwitchConverter>
+						</Picker.Resources>
+						<Picker.ItemTemplate>
+							<DataTemplate>
+								<StackPanel
+									Orientation="Horizontal">
+									<TextBlock
+										Text="{Binding Converter={StaticResource CameraToTextConverter}}"
+										/>
+									<TextBlock
+										Text="{Binding Name, StringFormat='qwe{0}'}"
+										/>
+								</StackPanel>
+							</DataTemplate>
+						</Picker.ItemTemplate>
+					</Picker>
 
-				<xa:Label
-					Rack.Cell="R2 C0"
-					Text="{Localizing Radius}"
-					/>
-				<views:ValuePicker
-					Rack.Cell="R2 C1"
-					x:Name="RadiusSlider"
-					Minimum="0"
-					Maximum="32"
-					Value="1"
-					/>
+					<xa:Label
+						Rack.Cell="R1 C0"
+						HorizontalAlignment="Right"
+						Visibility="{Binding Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
+						Text="{Localizing Angle}"
+						/>
+					<views:ValuePicker
+						Rack.Cell="R1 C1"
+						Visibility="{Binding Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
+						Minimum="0"
+						Maximum="180"
+						Value="{Binding Camera.FieldOfView}"
+						/>
 
-				<xa:Label
-					Rack.Cell="R3 C0"
-					Text="{Localizing Depth}"
-					/>
-				<views:ValuePicker
-					Rack.Cell="R3 C1"
-					x:Name="DepthSlider"
-					Minimum="0"
-					Maximum="256"
-					Value="32"
-					/>
+					<xa:Label
+						Rack.Cell="R2 C0"
+						Text="{Localizing Radius}"
+						/>
+					<views:ValuePicker
+						Rack.Cell="R2 C1"
+						Minimum="0"
+						Maximum="32"
+						Value="{Binding Radius}"
+						/>
 
-				<xa:Label
-					Rack.Cell="R4 C0"
-					Text="{Localizing Thin}"
-					/>
-				<views:ValuePicker
-					Rack.Cell="R4 C1"
-					x:Name="ThinSlider"
-					Minimum="0"
-					Maximum="1"
-					Value="0.04"
-					/>
+					<xa:Label
+						Rack.Cell="R3 C0"
+						Text="{Localizing Depth}"
+						/>
+					<views:ValuePicker
+						Rack.Cell="R3 C1"
+						Minimum="0"
+						Maximum="256"
+						Value="{Binding Depth}"
+						/>
 
-				<xa:Label
-					Rack.Cell="R5 C0"
-					Text="{Localizing Approximation}"
+					<xa:Label
+						Rack.Cell="R4 C0"
+						Text="{Localizing Thin}"
+						/>
+					<views:ValuePicker
+						Rack.Cell="R4 C1"
+						Minimum="0"
+						Maximum="1"
+						Value="{Binding Thin}"
+						/>
+
+					<xa:Label
+						Rack.Cell="R5 C0"
+						Text="{Localizing Approximation}"
+						/>
+					<views:ValuePicker
+						Rack.Cell="R5 C1"
+						Minimum="0"
+						Maximum="16"
+						Value="{Binding Approximation}"
+						/>
+
+					<xa:Label
+						Rack.Cell="R6 C0"
+						Text="{Localizing Joystick}"
+						/>
+					<Switch
+						Rack.Cell="R6 C1"
+						IsToggled="{Binding Joystick, Mode=TwoWay}"
+						/>
+				</Grid>
+			</views:PopupView>
+		</Expander>
+
+		<Grid
+			Rack.Cell="R0 C0 RS0 CS0"
+			Rack.Rows="* * *"
+			Rack.Columns="^ ^ ^ * ^ ^ ^"
+			VerticalAlignment="Bottom"
+			Visibility="{Binding Joystick, Converter={StaticResource TrueToVisibleConverter}}"
+			>
+			<Grid.Resources>
+				<Style
+					TargetType="ButtonBase"
+					>
+					<Setter
+						Property="Opacity"
+						Value="0.5"
+						/>
+					<Setter
+						Property="Margin"
+						Value="5"
+						/>
+				</Style>
+				<Style
+					TargetType="ToggleButton"
+					BasedOn="{StaticResource {x:Type ButtonBase}}"
 					/>
-				<views:ValuePicker
-					Rack.Cell="R5 C1"
-					x:Name="ApproximationSlider"
-					Minimum="0"
-					Maximum="16"
-					Value="1.0"
+				<Style
+					TargetType="Button"
+					BasedOn="{StaticResource {x:Type ButtonBase}}"
+					/>
+			</Grid.Resources>
+
+			<Button
+				Rack.Cell="R0 C0"
+				x:Name="WA"
+				Content="🡼"
+				/>
+			<Button
+				Rack.Cell="R0 C1"
+				x:Name="W"
+				Content="W"
+				/>
+			<Button
+				Rack.Cell="R0 C2"
+				x:Name="WD"
+				Content="🡽"
+				/>
+			<Button
+				Rack.Cell="R2 C1"
+				x:Name="S"
+				Content="S"
+				/>
+			<Button
+				Rack.Cell="R2 C2"
+				x:Name="SD"
+				Content="🡾"
+				/>
+			<Button
+				Rack.Cell="R1 C0"
+				x:Name="A"
+				Content="A"
+				/>
+			<Button
+				Rack.Cell="R2 C0"
+				x:Name="SA"
+				Content="🡿"
+				/>
+			<Button
+				Rack.Cell="R1 C2"
+				x:Name="D"
+				Content="D"
+				/>
+			<Grid
+				Rack.Cell="R1 C1"
+				Rack.Rows="* *"
+				>
+				<Button
+					Rack.Cell="R0"
+					x:Name="WAD"
+					Content="🠽"
+					Height="12"
+					Margin="5 5 5 0"
+					/>
+				<Button
+					Rack.Cell="R1"
+					x:Name="SDA"
+					Content="🠿"
+					Height="12"
+					Margin="5 0 5 5"
 					/>
 			</Grid>
-		</Expander>
+
+			<WrapPanel
+				Rack.Cell="R0 C3 RS0"
+				Orientation="Horizontal"
+				VerticalAlignment="Bottom"
+				HorizontalAlignment="Center"
+				>
+				<ToggleButton
+					x:Name="Alt"
+					Content="Alt"
+					/>
+				<ToggleButton
+					x:Name="Shift"
+					Content="Shift"
+					/>
+				<ToggleButton
+					x:Name="Control"
+					Content="Ctrl"
+					/>
+			</WrapPanel>
+
+
+			<Button
+				Rack.Cell="R0 C4"
+				x:Name="UpLeft"
+				Content="🡼"
+				/>
+			<Button
+				Rack.Cell="R0 C5"
+				x:Name="Up"
+				Content="🡹"
+				/>
+			<Button
+				Rack.Cell="R0 C6"
+				x:Name="UpRight"
+				Content="🡽"
+				/>
+			<Button
+				Rack.Cell="R1 C6"
+				x:Name="Right"
+				Content="🡺"
+				/>
+			<Button
+				Rack.Cell="R2 C6"
+				x:Name="DownRight"
+				Content="🡾"
+				/>
+			<Button
+				Rack.Cell="R2 C5"
+				x:Name="Down"
+				Content="🡻"
+				/>
+			<Button
+				Rack.Cell="R2 C4"
+				x:Name="DownLeft"
+				Content="🡿"
+				/>
+			<Button
+				Rack.Cell="R1 C4"
+				x:Name="Left"
+				Content="🡸"
+				/>
+
+			<Grid
+				Rack.Cell="R1 C5"
+				Rack.Rows="* *"
+				>
+				<Button
+					Rack.Cell="R0"
+					x:Name="AngleInc"
+					Content="🠽"
+					Height="12"
+					Margin="4 4 4 0"
+					/>
+				<Button
+					Rack.Cell="R1"
+					x:Name="AngleDec"
+					Content="🠿"
+					Height="12"
+					Margin="4 0 4 4"
+					/>
+			</Grid>
+		</Grid>
 	</Grid>
 
 </controls:WindowView>

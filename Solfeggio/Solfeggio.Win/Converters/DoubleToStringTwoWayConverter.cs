@@ -29,6 +29,8 @@ namespace Solfeggio.Converters
 				Tail.Is() && str.EndsWith(Tail) ? str.Length - Tail.Length - 1 : str.Length - 1)
 			: value?.ToString();
 
-		string Clip(string str, int from, int till) => str.Substring(from, till - from);
+		string Clip(string str, int from, int till) => (till - from).To(out var length) < 0
+			? default
+			: str.Substring(from, length);
 	}
 }
