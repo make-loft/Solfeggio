@@ -65,7 +65,7 @@ namespace Solfeggio.Models
 			set => value.To(out _phaseMode).Notify(this);
 		}
 
-		bool _isEnabled;
+		bool _isEnabled = true;
 		[DataMember] public bool IsEnabled
 		{
 			get => _isEnabled;

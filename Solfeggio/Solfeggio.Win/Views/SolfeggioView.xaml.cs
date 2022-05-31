@@ -498,7 +498,7 @@ namespace Solfeggio.Views
 				var harmonicManager = Store.Get<HarmonicManager>();
 				harmonicManager.Profiles.Add(new Models.Harmonic.Profile
 				{
-					Title = System.IO.Path.GetFileName(dialog.FileName),
+					Title = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName),
 					Harmonics = new(peaks.Select(b => new Models.Harmonic
 					{
 						Magnitude = b.Magnitude,
@@ -510,7 +510,7 @@ namespace Solfeggio.Views
 				harmonicManager.ActiveProfile = harmonicManager.Profiles.Last();
 
 				var processingManager = Store.Get<ProcessingManager>();
-				processingManager.ActiveProfile = processingManager.Profiles[1];
+				processingManager.ActiveProfile = processingManager.Profiles[0];
 				processingManager.IsPaused = false;
 			}
 			catch (Exception exception)

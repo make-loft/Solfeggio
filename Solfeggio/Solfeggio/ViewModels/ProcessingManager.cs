@@ -23,12 +23,6 @@ namespace Solfeggio.ViewModels
 
 		public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
 		{
-			yield return new()
-			{
-				Title = "Musical Tuning & Vocal Trainings",
-				FramePow = 11
-			};
-
 			yield return Create().To(out var b).With
 			(
 				b.Title = "Camerton & Research of Ideal Signals",
@@ -36,6 +30,12 @@ namespace Solfeggio.ViewModels
 				b.OutputLevel = 0.1f,
 				b.FramePow = 10
 			);
+
+			yield return new()
+			{
+				Title = "Musical Tuning & Vocal Trainings",
+				FramePow = 11
+			};
 
 			yield return new()
 			{
