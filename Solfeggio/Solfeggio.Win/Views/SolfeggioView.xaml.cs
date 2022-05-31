@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
+
+using Microsoft.Win32;
 
 using Rainbow;
 
@@ -57,6 +60,7 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 			Loaded += (o, e) => Focus();
+			SizeChanged += (o, e) => _sizeChanged = true;
 
 			MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
 			MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
@@ -441,15 +445,87 @@ namespace Solfeggio.Views
 
 			if (AppView.FlowerView.To(out var flowerView).IsVisible) flowerView.Draw(geometry);
 			if (AppView.TapeView.To(out var tapeView).IsVisible) tapeView.Draw(geometry);
+
+			Peaks = peaks;
 		}
 
+		static IList<Bin> Peaks;
+		public static void SaveActiveFrame()
+		{
+			var sample = Peaks.Aggregate("", (s, b) => s += $"{b}|");
+
+			var dialog = new SaveFileDialog
+			{
+				Filter = "Frame files (*.frame.txt)|*.frame.txt|All files (*.*)|*.*"
+			};
+
+			if (dialog.ShowDialog() is false)
+				return;
+
+			try
+			{
+				System.IO.File.WriteAllText(dialog.FileName, sample);
+			}
+			catch (Exception exception)
+			{
+				MessageBox.Show(exception.ToString());
+			}
+		}
+
+		public static void LoadActiveFrame()
+		{
+			var dialog = new OpenFileDialog
+			{
+				Filter = "Frame files (*.frame.txt)|*.frame.txt|All files (*.*)|*.*"
+			};
+
+			if (dialog.ShowDialog() is false)
+				return;
+
+			try
+			{
+				var text = System.IO.File.ReadAllText(dialog.FileName);
+				var peaks = text.SplitByChars("|\n").Select(l => l.SplitByChars(" ")).Select(l => new Bin
+				{
+					Magnitude = double.Parse(l[0]),
+					Frequency = double.Parse(l[1]),
+					Phase = double.Parse(l[2]),
+				});
+
+				var harmonicManager = Store.Get<HarmonicManager>();
+				harmonicManager.Profiles.Add(new Models.Harmonic.Profile
+				{
+					Title = System.IO.Path.GetFileName(dialog.FileName),
+					Harmonics = new(peaks.Select(b => new Models.Harmonic
+					{
+						Magnitude = b.Magnitude,
+						Frequency = b.Frequency,
+						Phase = b.Phase,
+						IsEnabled = true
+					}))
+				});
+				harmonicManager.ActiveProfile = harmonicManager.Profiles.Last();
+
+				var processingManager = Store.Get<ProcessingManager>();
+				processingManager.ActiveProfile = processingManager.Profiles[1];
+			}
+			catch (Exception exception)
+			{
+				MessageBox.Show(exception.ToString());
+			}
+		}
+
+		bool _sizeChanged;
+
 		bool IsStateChanged(Projection actualScaleFunc, SmartRange threshold) =>
+			_sizeChanged ||
 			threshold.Lower.IsNot(_previousLower) ||
 			threshold.Upper.IsNot(_previousUpper) ||
 			actualScaleFunc.IsNot(_previousScaleFunc);
 
 		void KeepState(Projection actualScaleFunc, SmartRange threshold)
 		{
+			_sizeChanged = false;
 			_previousLower = threshold.Lower;
 			_previousUpper = threshold.Upper;
 			_previousScaleFunc = actualScaleFunc;

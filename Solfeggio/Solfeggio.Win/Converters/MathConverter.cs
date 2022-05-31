@@ -27,7 +27,7 @@ namespace Solfeggio.Converters
 			Apply(Operation, (double)value, GetBase(parameter));
 
 		public override object ConvertBack(object value, object parameter) =>
-			Apply(Back(Operation), (double)value, GetBase(parameter));
+			Apply(Back(Operation), GetBase(parameter), (double)value);
 
 		private double Apply(Operations code, double value, double parameter) =>
 			code.Is(Identity) ? value.Identity() :

@@ -460,7 +460,7 @@
 									Content="{Localizing Key=Mute}"
 									/>
 								<Button
-									Command="{Context Unmute, TrackedPath=DataContext}"
+									Command="{Context Loud, TrackedPath=DataContext}"
 									Content="{Localizing Key=Loud}"
 									/>
 							</StackLayout>
@@ -1068,21 +1068,38 @@
 				BorderThickness="0"
 				HorizontalAlignment="Right"
 				Background="{StaticResource LabelBrush}"
-				ToolTip="{Localizing Key=Snapshot}"
 				>
-				<StackLayout
+				<Grid
 					Margin="0 5 0 0"
-					Orientation="Horizontal"
+					Rack.Rows="* *"
+					Rack.Columns="* *"
 					>
+					<Button
+						Rack.Cell="R0 C0"
+						Opacity="0.5"
+						Command="{Context Key=OpenActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Key=Open}"
+						Content="📂"
+						/>
+					<Button
+						Rack.Cell="R0 C1"
+						Opacity="0.5"
+						Command="{Context Key=SaveActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Key=Save}"
+						Content="💾"
+						/>
 					<Switch
+						Rack.Cell="R1 C0"
 						IsChecked="{StoreBinding Path=IsPaused, StoreKey=vm:ProcessingManager, Mode=TwoWay}"
 						/>
 					<Label
+						Rack.Cell="R1 C1"
 						Foreground="{StaticResource SpectrogramBackgroundBrush}"
+						ToolTip="{Localizing Key=Frame}"
 						FontSize="20"
 						Text="📷"
 						/>
-				</StackLayout>
+				</Grid>
 			</GroupBox>
 
 			<GroupBox

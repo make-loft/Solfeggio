@@ -36,14 +36,14 @@
 	<c:MathConverter
 		x:Key="RadianDegreeConverter"
 		Operation="Stretch"
-		Parameter="57.295779513082320876798154814105"
+		Parameter="{Double Value=57.295779513082320876798154814105}"
 		/>
 	<c:MathConverter
 		x:Key="RadianPiConverter"
 		Operation="Squeeze"
-		Parameter="3.1415926535897932384626433832795"
+		Parameter="{StaticResource PlusSinglePi}"
 		/>
-	
+
 	<AggregateConverter
 		x:Key="RadianDegreeFormattedConverter"
 		>

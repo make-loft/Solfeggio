@@ -21,8 +21,12 @@ namespace Solfeggio.Views
 
 		public TapeViewModel TapeViewModel => (TapeViewModel)DataContext;
 
+		IList<Point> _geometry;
+
 		public void Draw(IList<Point> geometry)
 		{
+			_geometry = geometry;
+
 			geo.TriangleIndices.Clear();
 			geo.Positions.Clear();
 

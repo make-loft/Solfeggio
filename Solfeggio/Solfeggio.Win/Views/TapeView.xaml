@@ -242,7 +242,7 @@
 					<views:ValuePicker
 						Rack.Cell="R2 C1"
 						Minimum="0"
-						Maximum="32"
+						Maximum="128"
 						Value="{Binding Radius}"
 						/>
 
@@ -253,7 +253,7 @@
 					<views:ValuePicker
 						Rack.Cell="R3 C1"
 						Minimum="0"
-						Maximum="256"
+						Maximum="512"
 						Value="{Binding Depth}"
 						/>
 
@@ -263,8 +263,8 @@
 						/>
 					<views:ValuePicker
 						Rack.Cell="R4 C1"
-						Minimum="0"
-						Maximum="1"
+						Minimum="0.01"
+						Maximum="32"
 						Value="{Binding Thin}"
 						/>
 
@@ -274,8 +274,8 @@
 						/>
 					<views:ValuePicker
 						Rack.Cell="R5 C1"
-						Minimum="0"
-						Maximum="16"
+						Minimum="0.04"
+						Maximum="64"
 						Value="{Binding Approximation}"
 						/>
 

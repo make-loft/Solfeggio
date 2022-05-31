@@ -6,6 +6,22 @@
 	Padding="4"
 	x:Name="This"
 	>
+	<Slider.Resources>
+		<Converter
+			x:Key="ScaleValueConverter"
+			Convert="Converter_Convert"
+			ConvertBack="Converter_ConvertBack"
+			/>
+		<AggregateConverter
+			x:Key="EntryValueConverter">
+			<Converter
+				Convert="ExpandRange"
+				/>
+			<RemoteConverter
+				Source="{StaticResource DoubleToStringTwoWayConverter}"
+				/>
+		</AggregateConverter>
+	</Slider.Resources>
 	<Slider.Template>
 		<ControlTemplate>
 			<GroupBox
@@ -17,15 +33,18 @@
 					Orientation="Horizontal"
 					>
 					<Entry
-						Text="{Binding Value, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						Width="60"
+						Text="{Binding Value, Mode=TwoWay, Converter={StaticResource EntryValueConverter}}"
+						ToolTip="{Binding Value}"
 						/>
 					<Slider
+						x:Name="VisualSlider"
 						Width="128"
 						TickPlacement="None"
 						VerticalAlignment="Center"
-						Minimum="{Binding Minimum}"
-						Maximum="{Binding Maximum}"
-						Value="{Binding Value, Mode=TwoWay}"
+						Minimum="{Binding Minimum, Converter={StaticResource ScaleValueConverter}}"
+						Maximum="{Binding Maximum, Converter={StaticResource ScaleValueConverter}}"
+						Value="{Binding Value, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
 				</StackLayout>
 			</GroupBox>

@@ -1,6 +1,7 @@
 ﻿using Ace;
 
 using Solfeggio.Models;
+using Solfeggio.Views;
 
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,9 @@ namespace Solfeggio.ViewModels
 
 			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());
 			this[Context.Navigate].Executed += (o, e) => Yandex.Metrica.YandexMetrica.ReportEvent($"{e.Parameter}");
+
+			this[Context.Get("OpenActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();
+			this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
 
 			Tape ??= new();
 			EvokePropertyChanged(nameof(ActiveLanguage));
