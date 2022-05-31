@@ -11,6 +11,16 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
+				Title = "Cos Wave",
+				Harmonics =
+				{
+					[1] = { IsEnabled = false },
+					[2] = { IsEnabled = false },
+				}
+			};
+
+			yield return new()
+			{
 				Title = "Two Waves Resonance",
 				Harmonics =
 				{
@@ -21,16 +31,6 @@ namespace Solfeggio.ViewModels
 			yield return new()
 			{
 				Title = "Three Waves Resonance",
-			};
-
-			yield return new()
-			{
-				Title = "Cos Wave",
-				Harmonics = 
-				{
-					[1] = { IsEnabled = false },
-					[1] = { IsEnabled = false },
-				}
 			};
 		}
 	}

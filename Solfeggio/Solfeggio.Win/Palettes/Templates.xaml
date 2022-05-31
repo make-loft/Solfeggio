@@ -1077,8 +1077,8 @@
 					<Button
 						Rack.Cell="R0 C0"
 						Opacity="0.5"
-						Command="{Context Key=OpenActiveFrame, StoreKey=vm:AppViewModel}"
-						ToolTip="{Localizing Key=Open}"
+						Command="{Context Key=LoadActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Key=Load}"
 						Content="📂"
 						/>
 					<Button

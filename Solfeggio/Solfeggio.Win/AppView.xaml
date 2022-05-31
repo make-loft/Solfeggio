@@ -26,6 +26,7 @@
 			<Expander
 				Margin="4"
 				ExpandDirection="Right"
+				IsExpanded="{Smart IsMenuExpanded, DefaultValue={False}}"
 				ContentTemplate="{StaticResource MenuTemplate}"
 				/>
 		</Grid>

@@ -7,7 +7,7 @@
 	xmlns:views="clr-namespace:Solfeggio.Views"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	DataContext="{StoreBinding StoreKey=vm:AppViewModel, Path=Tape}"
-	Visibility="{Smart Visibility, DefaultValue={StaticResource Visible}}"
+	Visibility="{Smart Visibility, DefaultValue={Visible}}"
 	Topmost="{Smart Topmost, DefaultValue=True}"
 	Height="{Smart Height, DefaultValue=512}"
 	Width="{Smart Width, DefaultValue=512}"
@@ -270,7 +270,13 @@
 
 					<xa:Label
 						Rack.Cell="R5 C0"
+						VerticalAlignment="Top"
 						Text="{Localizing Approximation}"
+						/>
+					<xa:Label
+						Rack.Cell="R5 C0"
+						VerticalAlignment="Bottom"
+						Text="{Smart GeometryPointsCount}"
 						/>
 					<views:ValuePicker
 						Rack.Cell="R5 C1"

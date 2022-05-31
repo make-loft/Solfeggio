@@ -149,6 +149,8 @@
     <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Editions.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
+    <Compile Include="ViewModels\FlowerViewModel.cs" />
+    <Compile Include="ViewModels\TapeViewModel.cs" />
     <Compile Include="Views\TapeView.xaml.cs">
       <DependentUpon>TapeView.xaml</DependentUpon>
     </Compile>

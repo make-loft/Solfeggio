@@ -77,6 +77,7 @@ namespace Solfeggio
 		public static o Create = _("Create", "Создать");
 		public static o Delete = _("Delete", "Удалить");
 		public static o Copy = _("Copy", "Копировать");
+		public static o Load = _("Load", "Загрузить");
 		public static o Open = _("Open", "Открыть");
 		public static o Save = _("Save", "Сохранить");
 		public static o Basis = _("Basis", "Базис");

@@ -334,6 +334,9 @@ namespace Solfeggio.Views
 				musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
 					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
 
+				if (App.Current.MainWindow.IsNot())
+					return;
+
 				appViewModel.Harmonics = peakKeys;
 
 				if (processingManager.IsPaused)
@@ -508,6 +511,7 @@ namespace Solfeggio.Views
 
 				var processingManager = Store.Get<ProcessingManager>();
 				processingManager.ActiveProfile = processingManager.Profiles[1];
+				processingManager.IsPaused = false;
 			}
 			catch (Exception exception)
 			{

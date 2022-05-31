@@ -31,9 +31,9 @@ namespace Solfeggio.ViewModels
 
 			yield return Create().To(out var b).With
 			(
-				b.Title = "Research of Ideal Signals",
-				b.OutputLevel = 0.1f,
+				b.Title = "Camerton & Research of Ideal Signals",
 				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+				b.OutputLevel = 0.1f,
 				b.FramePow = 10
 			);
 

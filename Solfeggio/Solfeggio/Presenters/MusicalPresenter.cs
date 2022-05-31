@@ -358,7 +358,6 @@ namespace Solfeggio.Presenters
 			if (peaks.Length.Is(0))
 				yield break;
 
-			var maxFrequancy = peaks.Last().Frequency;
 			var pointsCount = (int)(sampleSize / approximation);
 			for (var i = 0; i < pointsCount; i++)
 			{
