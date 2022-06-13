@@ -1,78 +1,149 @@
 ﻿using Ace;
+
+using Rainbow;
+
 using Solfeggio.Api;
-using Solfeggio.ViewModels;
+using Solfeggio.Extensions;
+
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Windows.Threading;
 
 namespace Solfeggio.Processors
 {
-	public class SoftwareGenerator : Wave.In.DeviceInfo
+	public static class FileDialogFilters
 	{
-		public SoftwareGenerator() : base(int.MinValue) { }
-
-		public override string ProductName => "Software Signal Generator";
-
-		public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
-
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-			new SoftwareProcessor(waveFormat.SampleRate, sampleSize, buffersCount);
+		public static string Pcm = "Pulse-code modulation files (*.pcm)|*.pcm|(*.raw)|*.raw|All files (*.*)|*.*";
+		public static string PcmTxt = "Frame files (*.txt)|*.txt|All files (*.*)|*.*";
+		public static string PcmBin = "Frame files (*.bin)|*.bin|All files (*.*)|*.*";
 	}
 
-	class SoftwareProcessor : IProcessor
+	class PcmBinDecoder : AStreamProcessor<BinaryReader>
 	{
-		public int BufferMilliseconds
+
+		public class DeviceInfo : Wave.In.DeviceInfo
 		{
-			get => (int)_timer.Interval.TotalMilliseconds;
-			set => _timer.Interval = TimeSpan.FromMilliseconds(value);
+			public DeviceInfo() : base(int.MinValue) { }
+
+			public override string ProductName => "PCM.BIN Decoder";
+
+			public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
+
+			public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
+				new PcmBinDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
 		}
 
-		public double Level { get; set; } = 1d;
-		public double Boost { get; set; } = 1d;
+	public PcmBinDecoder(int sampleRate, int sampleSize, int buffersCount)
+			: base(sampleRate, sampleSize, buffersCount) { }
 
-		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
-		private readonly DispatcherTimer _timer = new();
-		private readonly HarmonicManager _manager = Store.Get<HarmonicManager>();
-		private readonly int _sampleRate;
-		private readonly int _sampleSize;
+		protected override string Filter { get; } = FileDialogFilters.PcmBin;
 
-		public SoftwareProcessor(int sampleRate, int sampleSize, int buffersCount)
+		public override short[] ReadFrame()
 		{
-			_sampleRate = sampleRate;
-			_sampleSize = sampleSize;
-			_timer.Interval = TimeSpan.FromSeconds(0.5 * sampleSize / sampleRate);
-			_timer.Tick += OnTimerTick;
-			_bins = Next();
+			var peaksCount = reader.ReadInt32();
+			var peaks = new List<Bin>();
+			for (var i = 0; i < peaksCount; i++)
+			{
+				var peak = new Bin
+				{
+					Magnitude = reader.ReadSingle(),
+					Frequency = reader.ReadSingle(),
+					Phase = reader.ReadSingle(),
+				};
+
+				peaks.Add(peak);
+			}
+
+
+			return Next(peaks);
 		}
 
-		public void Tick()
+		double[] overlap;
+		public short[] Next(IList<Bin> peaks)
 		{
-			DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _bins, _bins.Length));
-			_bins = Next();
-		}
+			var profile = new Models.Harmonic.Profile
+			{
+				Harmonics = new(peaks.Select(b => new Models.Harmonic
+				{
+					Magnitude = b.Magnitude,
+					Frequency = b.Frequency,
+					Phase = b.Phase,
+				}))
+			};
 
-		public short[] Next()
-		{
-			var signal = _manager.ActiveProfile.GenerateSignalSample(_sampleSize, _sampleRate, false);
-			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue / 2d)).ToArray();
+			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			if (overlap.Is())
+				signal = signal.Raise(0.00, 0.25).Add(overlap.Fade(0.00, 0.25));
+			overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false); ;
+
+			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
 			return bins.Scale(Boost);
 		}
 
-		short[] _bins;
+		public override BinaryReader CreateReader(Stream stream) => new(stream);
+	}
 
-		public bool IsTimerEnabled { get; set; }
-#if NETSTANDARD
-		= true;
-#endif
-
-		private void OnTimerTick(object sender, EventArgs e)
+	class StreamPcmTxtDecoder : AStreamProcessor<StreamReader>
+	{
+		public class DeviceInfo : Wave.In.DeviceInfo
 		{
-			if (IsTimerEnabled) Tick();
+			public DeviceInfo() : base(int.MinValue) { }
+
+			public override string ProductName => "PCM.TXT Decoder";
+
+			public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
+
+			public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
+				new StreamPcmTxtDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
 		}
 
-		public void Free() => _timer.Stop();
-		public void Lull() => _timer.Stop();
-		public void Wake() => _timer.Start();
+
+		public StreamPcmTxtDecoder(int sampleRate, int sampleSize, int buffersCount)
+			: base(sampleRate, sampleSize, buffersCount) { }
+
+		protected override string Filter { get; } = FileDialogFilters.PcmTxt;
+
+		public override StreamReader CreateReader(Stream stream) => new(stream);
+
+		public override short[] ReadFrame()
+		{
+			var line = reader.ReadLine();
+
+			var peaks = line.SplitByChars("|").Select(l => l.SplitByChars("\t ")).Select(l => new Bin
+			{
+				Magnitude = double.Parse(l[0]),
+				Frequency = double.Parse(l[1]),
+				Phase = l.Length is 3 ? double.Parse(l[2]) : 0d,
+			}).ToList();
+
+			return Next(peaks);
+		}
+		double[] overlap;
+		public short[] Next(IList<Bin> peaks)
+		{
+			var profile = new Models.Harmonic.Profile
+			{
+				Harmonics = new(peaks.Select(b => new Models.Harmonic
+				{
+					Magnitude = b.Magnitude,
+					Frequency = b.Frequency,
+					Phase = b.Phase,
+				}))
+			};
+
+			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+
+			if (Console.CapsLock)
+			{
+				if (overlap.Is() && Console.CapsLock)
+					signal = signal.Raise(0.00, 0.25).Add(overlap.Fade(0.00, 0.25));
+				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			}
+
+			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
+			return bins.Scale(Boost);
+		}
 	}
 }

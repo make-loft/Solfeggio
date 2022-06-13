@@ -84,8 +84,9 @@ namespace Solfeggio.ViewModels
 			else
 			{
 				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-				SpectrumBetter = Filtering.Interpolate(spectrum).ToArray();
+				SpectrumBetter = Filtering.Interpolate(spectrum, out var peaks).ToArray();
 				Spectrum = spectrum;
+				Peaks = peaks;
 			}
 
 			var (j, k) = 0d;
@@ -93,6 +94,8 @@ namespace Solfeggio.ViewModels
 			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
 			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
 		}
+
+		public IList<Bin> Peaks { get; set; }
 
 		private Complex[] GetSpectrum(Complex[] timeFrame, ApodizationFunc activeWindow)
 		{

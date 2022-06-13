@@ -47,6 +47,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -72,6 +74,9 @@
     </Compile>
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Headers\WavePcmFormat.cs">
+      <Link>Headers\WavePcmFormat.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
@@ -149,8 +154,16 @@
     <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Editions.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
+    <Compile Include="Extensions\SignalExtensions.cs" />
+    <Compile Include="Processors\EncodeProcessor.cs" />
+    <Compile Include="Processors\PcmReader.cs" />
+    <Compile Include="Processors\ASoftwareSignalProcessor.cs" />
+    <Compile Include="Processors\SoftwareSignalGenerator.cs" />
     <Compile Include="ViewModels\FlowerViewModel.cs" />
     <Compile Include="ViewModels\TapeViewModel.cs" />
+    <Compile Include="Views\EncoderView.xaml.cs">
+      <DependentUpon>EncoderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TapeView.xaml.cs">
       <DependentUpon>TapeView.xaml</DependentUpon>
     </Compile>
@@ -206,6 +219,10 @@
     <Page Include="Controls\RangeBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EncoderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TapeView.xaml">
       <Generator>MSBuild:Compile</Generator>

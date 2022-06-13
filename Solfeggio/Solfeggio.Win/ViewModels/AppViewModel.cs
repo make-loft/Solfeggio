@@ -42,6 +42,8 @@ namespace Solfeggio.ViewModels
 			this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
 
 			Tape ??= new();
+			Flower ??= new();
+
 			EvokePropertyChanged(nameof(ActiveLanguage));
 		}
 	}

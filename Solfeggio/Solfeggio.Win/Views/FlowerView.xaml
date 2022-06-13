@@ -5,7 +5,7 @@
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	DataContext="{StoreBinding StoreKey=vm:AppViewModel, Path=Flower}"
-	Visibility="{Smart FlowerVisibility, DefaultValue={Visible}}"
+	Visibility="{Smart Visibility, DefaultValue={Visible}}"
 	Topmost="{Smart Topmost, DefaultValue=True}"
 	Height="{Smart Height, DefaultValue=256}"
 	Width="{Smart Width, DefaultValue=256}"

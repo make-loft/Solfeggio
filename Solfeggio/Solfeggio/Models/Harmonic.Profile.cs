@@ -54,7 +54,7 @@ namespace Solfeggio.Models
 			{
 				var signalSample = new double[length];
 				var harmonicSamples = harmonics.
-					Where(h => h.IsEnabled).
+					Where(h => h.IsEnabled && h.Frequency > 0d).
 					Select(h => h.EnumerateBins(rate, gobalLoop).Take(length).ToArray()).
 					ToArray();
 

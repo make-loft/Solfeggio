@@ -353,9 +353,9 @@ namespace Solfeggio.Presenters
 			});
 		}
 
-		public static IEnumerable<Point> DrawGeometry(Bin[] peaks, int sampleSize, double sampleRate, double approximation = 1d)
+		public static IEnumerable<Point> DrawGeometry(IList<Bin> peaks, int sampleSize, double sampleRate, double approximation = 1d)
 		{
-			if (peaks.Length.Is(0))
+			if (peaks.Count.Is(0))
 				yield break;
 
 			var pointsCount = (int)(sampleSize / approximation);
@@ -364,7 +364,7 @@ namespace Solfeggio.Presenters
 				var a = 0d;
 				var b = 0d;
 
-				for (var j = 0; j < peaks.Length; j++)
+				for (var j = 0; j < peaks.Count; j++)
 				{
 					var peak = peaks[j];
 					var w = Pi.Double * peak.Frequency;
@@ -379,7 +379,7 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, out Bin[] peaks)
+		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, IList<Bin> peaks)
 		{
 			Spectrum.Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
 
@@ -393,7 +393,6 @@ namespace Solfeggio.Presenters
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
 
 			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
-			peaks = data.EnumeratePeaks().OrderByDescending(p => p.Magnitude).Take(10).ToArray();
 
 			var m = 0;
 			var averageMagnitude = 0d;

@@ -1,0 +1,132 @@
+﻿<Window
+	x:Class="Solfeggio.Views.EncoderView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="EncoderView"
+	Height="300"
+	Width="300"
+	Name="This"
+	>
+	<Grid
+		Rack.Rows="^ ^ ^ ^ ^ ^ *"
+		Rack.Columns="^ *"
+		>
+
+
+		<GroupBox
+			Rack.Cell="R0 C0 CS0"
+			Header="Source"
+			>
+			<Grid
+				Rack.Rows="^ ^ ^ ^"
+				Rack.Columns="^ *"
+				Name="SourceMetadata"
+				>
+				<Button
+					Rack.Cell="R0 C0"
+					Content="Choose"
+					Click="Button_Click_1"
+					/>
+				<TextBox
+					Rack.Cell="R0 C1"
+					x:Name="SourceFile"
+					/>
+				
+				<TextBlock
+					Rack.Cell="R1 C0"
+					Text="Channels"
+					/>
+				<TextBlock
+					Rack.Cell="R1 C1"
+					Text="{Binding NumChannels}"
+					/>
+				<TextBlock
+					Rack.Cell="R2 C0"
+					Text="Sample Rate"
+					/>
+				<TextBlock
+					Rack.Cell="R2 C1"
+					Text="{Binding SampleRate}"
+					/>
+
+				<CheckBox
+					Rack.Cell="R3 C1"
+					IsChecked="{Binding KeepPhase, ElementName=This}"
+					Content="Keep Phase"
+					/>
+			</Grid>
+		</GroupBox>
+		<GroupBox
+			Rack.Cell="R1 C0 CS0"
+			Header="Target"
+			>
+			<Grid
+				Rack.Cell="R3 C0 CS0"
+				Rack.Rows="^ ^ ^ ^ ^"
+				Rack.Columns="^ *"
+				Name="TargetMetadata"
+				>
+				<TextBox
+					Rack.Cell="R0 C1"
+					x:Name="TargetFile"
+					/>
+				<Button
+					Rack.Cell="R0 C0"
+					Content="Choose"
+					Click="Button_Click_2"
+					/>
+
+				<TextBlock
+					Rack.Cell="R1 C0"
+					Text="Channels"
+					/>
+				<TextBlock
+					Rack.Cell="R1 C1"
+					Text="{Binding NumChannels}"
+					/>
+				<TextBlock
+					Rack.Cell="R2 C0"
+					Text="Sample Rate"
+					/>
+				<TextBox
+					Rack.Cell="R2 C1"
+					Text="{Binding SampleRate}"
+					/>
+				<ComboBox
+					Rack.Cell="R3 C1"
+					DataContext="{Binding ElementName=This}"
+					ItemsSource="{Binding FrameSizes}"
+					SelectedItem="{Binding FrameSize, Mode=TwoWay}"
+					/>
+				<TextBlock
+					Rack.Cell="R3 C0"
+					Text="Frame Size"
+					/>
+				<CheckBox
+					Rack.Cell="R4 C1"
+					IsChecked="{Binding UseOverlapping, ElementName=This}"
+					Content="Overlaping"
+					/>
+			</Grid>
+		</GroupBox>
+
+		<Button
+			Rack.Cell="R2 C0"
+			Content="Encode"
+			Click="Button_Click"
+			/>
+		<ProgressBar
+			Rack.Cell="R2 C1"
+			x:Name="EncodeProgress"
+			/>
+		<Button
+			Rack.Cell="R3 C0"
+			Content="Decode"
+			Click="Button_Click"
+			/>
+		<ProgressBar
+			Rack.Cell="R3 C1"
+			x:Name="DecodeProgress"
+			/>
+	</Grid>
+</Window>

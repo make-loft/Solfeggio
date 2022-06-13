@@ -18,7 +18,7 @@ namespace Solfeggio.Api
 					return capabilities;
 				}
 
-				public Session CreateSession(WaveFormat format) => new Session(_number, format);
+				public Session CreateSession(WaveFormat format) => new(_number, format);
 
 				public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source) =>
 					new Processor(CreateSession(waveFormat), sampleSize, buffersCount, source);
@@ -30,10 +30,10 @@ namespace Solfeggio.Api
 			{
 				var devicesCount = GetDevicesCount();
 				for (var i = 0; i < devicesCount; i++)
-					yield return new DeviceInfo(i);
+					yield return new(i);
 			}
 
-			public static readonly DeviceInfo DefaultDevice = new DeviceInfo(-1);
+			public static readonly DeviceInfo DefaultDevice = new(-1);
 
 			public class Session : ASession
 			{

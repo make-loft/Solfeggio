@@ -123,13 +123,13 @@ namespace Solfeggio.Api
 					{
 						if (message.Is(Message.WaveInData))
 						{
-							DataAvailable?.Invoke(this, new ProcessingEventArgs(this, buffer.Data.Scale(Boost), buffer.BinsCount));
+							DataAvailable?.Invoke(this, new(this, buffer.Data.Scale(Boost), buffer.BinsCount));
 							if (State.Is(Processing)) buffer.MarkForProcessing();
 						}
 
 						if (message.Is(Message.WaveOutDone))
 						{
-							_source.Tick();
+							_source?.Tick();
 						}
 					}
 				}

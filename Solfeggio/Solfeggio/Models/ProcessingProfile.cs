@@ -49,7 +49,7 @@ namespace Solfeggio.Models
 		[DataMember]
 		public int BuffersCount
 		{
-			get => Get(() => BuffersCount, 4);
+			get => Get(() => BuffersCount, 16);
 			set => Set(() => BuffersCount, value);
 		}
 
@@ -94,7 +94,13 @@ namespace Solfeggio.Models
 		{
 			InputDevices = Wave.In.EnumerateDevices().ToSet();
 			OutputDevices = Wave.Out.EnumerateDevices().ToSet();
-			InputDevices.Add(new SoftwareGenerator());
+
+			InputDevices.Add(new SoftwareSignalGenerator.DeviceInfo());
+			InputDevices.Add(new PcmBinDecoder.DeviceInfo());
+			InputDevices.Add(new StreamPcmTxtDecoder.DeviceInfo());
+			InputDevices.Add(new PcmReader.DeviceInfo());
+
+			OutputDevices.Add(new EncodeProcessor.DeviceInfo());
 
 			this[() => ActiveInputDevice].PropertyChanged += (o, e) =>
 				ActiveInputDeviceIndex = InputDevices.IndexOf(ActiveInputDevice);

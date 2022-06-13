@@ -313,7 +313,8 @@ namespace Solfeggio.Views
 						musicalPresenter.EnumerateNotes(), zIndexB);
 				}
 
-				var peakKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, out var peaks);
+				var peaks = processingManager.Peaks;
+				var peakKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, peaks);
 				var vC = resources["Visibility.Peak"];
 				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.PeakProfiles.Any(p => p.Value.IsVisible))
 					musicalPresenter.DrawPeakLabels(peakKeys, width, height)
@@ -430,11 +431,11 @@ namespace Solfeggio.Views
 		Projection _previousScaleFunc;
 		double _previousLower, _previousUpper;
 
-		Bin[] _peaks;
+		IList<Bin> _peaks;
 		int _sampleSize;
 		double _sampleRate;
 
-		void Draw(Bin[] peaks, int sampleSize, double sampleRate)
+		void Draw(IList<Bin> peaks, int sampleSize, double sampleRate)
 		{
 			if (processingManager.IsPaused is false)
 			{

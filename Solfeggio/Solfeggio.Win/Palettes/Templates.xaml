@@ -782,6 +782,8 @@
 				<v:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
 					<v:ValuePicker
+						Minimum="0"
+						Maximum="1"
 						Value="{Binding DataContext, Mode=TwoWay}"
 						/>
 				</v:PopupView>
