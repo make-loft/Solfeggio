@@ -19,10 +19,10 @@ namespace Solfeggio.Models
 
 		public void Expose()
 		{
-			this[() => PhaseMode].PropertyChanged += (o, e) => Context.Get("Loop").EvokeCanExecuteChanged();
-			this[() => PhaseMode].PropertyChanged += (o, e) => Context.Get("Flow").EvokeCanExecuteChanged();
-			this[() => IsEnabled].PropertyChanged += (o, e) => Context.Get("Mute").EvokeCanExecuteChanged();
-			this[() => IsEnabled].PropertyChanged += (o, e) => Context.Get("Loud").EvokeCanExecuteChanged();
+			this[() => PhaseMode].Changed += (o, e) => Context.Get("Loop").EvokeCanExecuteChanged();
+			this[() => PhaseMode].Changed += (o, e) => Context.Get("Flow").EvokeCanExecuteChanged();
+			this[() => IsEnabled].Changed += (o, e) => Context.Get("Mute").EvokeCanExecuteChanged();
+			this[() => IsEnabled].Changed += (o, e) => Context.Get("Loud").EvokeCanExecuteChanged();
 		}
 
 		public delegate double Basis(double v);

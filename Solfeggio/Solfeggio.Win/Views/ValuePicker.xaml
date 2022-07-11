@@ -9,8 +9,8 @@
 	<Slider.Resources>
 		<Converter
 			x:Key="ScaleValueConverter"
-			Convert="Converter_Convert"
-			ConvertBack="Converter_ConvertBack"
+			Convert="LogBase2"
+			ConvertBack="PowBase2"
 			/>
 		<AggregateConverter
 			x:Key="EntryValueConverter">

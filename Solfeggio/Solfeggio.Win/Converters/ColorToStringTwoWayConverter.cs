@@ -2,7 +2,7 @@
 
 namespace Solfeggio.Converters
 {
-	public class ColorToStringTwoWayConverter : Ace.Converters.Patterns.AValueConverter
+	public class ColorToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 	{
 		public override object Convert(object value) => value?.ToString();
 

@@ -1,6 +1,6 @@
 ﻿namespace Solfeggio.Converters
 {
-	class ByteToHexStringTwoWayConverter : Ace.Converters.Patterns.AValueConverter
+	class ByteToHexStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 	{
 		public override object Convert(object value) => ((byte)value).ToString("X2");
 		public override object ConvertBack(object value)

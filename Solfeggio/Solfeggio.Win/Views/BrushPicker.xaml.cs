@@ -1,4 +1,5 @@
 ﻿using Ace;
+using Ace.Markup.Converters;
 
 using System;
 using System.Linq;
@@ -121,12 +122,12 @@ namespace Solfeggio.Views
 		private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
 			_activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
 
-		private object Converter_Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		private object Converter_Convert(ConvertArgs args)
 		{
-			if (_stops.Is(value))
+			if (_stops.Is(args.Value))
 				return _activeGradientStopCollection;
 
-			_activeGradientStopCollection = value.To(out _stops).ToSet();
+			_activeGradientStopCollection = args.Value.To(out _stops).ToSet();
 			_activeGradientStopCollection.CollectionChangeCompleted += (o, e) =>
 			{
 				_stops.Clear();

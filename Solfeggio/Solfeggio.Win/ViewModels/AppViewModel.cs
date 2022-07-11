@@ -32,7 +32,7 @@ namespace Solfeggio.ViewModels
 
 		public void Expose()
 		{
-			this[() => ActiveLanguage].PropertyChanged += (o, e) =>
+			this[() => ActiveLanguage].Changed += (o, e) =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
 			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());

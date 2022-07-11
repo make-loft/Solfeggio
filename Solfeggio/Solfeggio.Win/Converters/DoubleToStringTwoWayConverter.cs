@@ -4,7 +4,7 @@ using Solfeggio.Presenters;
 
 namespace Solfeggio.Converters
 {
-	public class DoubleToStringTwoWayConverter : Ace.Converters.Patterns.AValueConverter
+	public class DoubleToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 	{
 		static readonly MusicalPresenter MusicalPresenter = Store.Get<MusicalPresenter>();
 

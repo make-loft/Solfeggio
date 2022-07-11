@@ -1,7 +1,7 @@
 ﻿using Ace;
+using Ace.Markup.Converters;
 
 using System;
-using System.Globalization;
 
 namespace Solfeggio.Views
 {
@@ -9,15 +9,9 @@ namespace Solfeggio.Views
 	{
 		public ValuePicker() => InitializeComponent();
 
-		private object Converter_Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-			value.To(out double d) > 0d ? Math.Log(d, 2d) : -16d;
-
-		private object Converter_ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-			Math.Pow(2d, (double)value);
-
-		private object ExpandRange(object value, Type targetType, object parameter, CultureInfo culture) =>
-			ExpandRange((double)value);
-
+		object LogBase2(ConvertArgs args) => args.Value.To(out double d) > 0d ? Math.Log(d, 2d) : -16d;
+		object PowBase2(ConvertArgs args) => Math.Pow(2d, (double)args.Value);
+		object ExpandRange(ConvertArgs args) => ExpandRange((double)args.Value);
 		double ExpandRange(double value)
 		{
 			if (Maximum < value) Maximum = value;

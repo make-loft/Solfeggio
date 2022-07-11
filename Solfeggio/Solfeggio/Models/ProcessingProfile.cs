@@ -102,25 +102,25 @@ namespace Solfeggio.Models
 
 			OutputDevices.Add(new EncodeProcessor.DeviceInfo());
 
-			this[() => ActiveInputDevice].PropertyChanged += (o, e) =>
+			this[() => ActiveInputDevice].Changed += (o, e) =>
 				ActiveInputDeviceIndex = InputDevices.IndexOf(ActiveInputDevice);
 
-			this[() => ActiveOutputDevice].PropertyChanged += (o, e) =>
+			this[() => ActiveOutputDevice].Changed += (o, e) =>
 				ActiveOutputDeviceIndex = OutputDevices.IndexOf(ActiveOutputDevice);
 
-			this[() => FramePow].PropertyChanged += (o, e) =>
+			this[() => FramePow].Changed += (o, e) =>
 			{
 				SampleSize = FrameSize + ShiftSize;
 				EvokeFramePropertiesChanged();
 			};
 
-			this[() => InputBoost].PropertyChanged += (o, e) =>
+			this[() => InputBoost].Changed += (o, e) =>
 				inputProcessor.To(out var p)?.With(p.Boost = InputBoost);
-			this[() => InputLevel].PropertyChanged += (o, e) =>
+			this[() => InputLevel].Changed += (o, e) =>
 				inputProcessor.To(out var p)?.With(p.Level = InputLevel);
-			this[() => OutputBoost].PropertyChanged += (o, e) =>
+			this[() => OutputBoost].Changed += (o, e) =>
 				outputProcessor.To(out var p)?.With(p.Boost = OutputBoost);
-			this[() => OutputLevel].PropertyChanged += (o, e) =>
+			this[() => OutputLevel].Changed += (o, e) =>
 				outputProcessor.To(out var p)?.With(p.Level = OutputLevel);
 		}
 

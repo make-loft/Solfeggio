@@ -31,8 +31,8 @@ namespace Solfeggio.ViewModels
 		{
 			base.Expose();
 
-			this[() => ActiveProfile].PropertyChanging += (o, e) => ActiveProfile?.Keep();
-			this[() => ActiveProfile].PropertyChanged += (o, e) => ActiveProfile?.Load();
+			this[() => ActiveProfile].Changing += (o, e) => ActiveProfile?.Keep();
+			this[() => ActiveProfile].Changed += (o, e) => ActiveProfile?.Load();
 
 			ActiveProfile?.Load();
 		}

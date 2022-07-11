@@ -48,14 +48,14 @@ namespace Solfeggio.ViewModels
 		{
 			base.Expose();
 
-			this[() => ActiveProfile].PropertyChanging += (sender, args) =>
+			this[() => ActiveProfile].Changing += (sender, args) =>
 			{
 				if (ActiveProfile.IsNot()) return;
 				ActiveProfile.SampleReady -= OnActiveProfileOnDataReady;
 				ActiveProfile.Dispose();
 			};
 
-			this[() => ActiveProfile].PropertyChanged += (sender, args) =>
+			this[() => ActiveProfile].Changed += (sender, args) =>
 			{
 				if (ActiveProfile.IsNot()) return;
 				ActiveProfile.SampleReady += OnActiveProfileOnDataReady;
