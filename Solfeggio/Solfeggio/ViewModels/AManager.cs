@@ -31,7 +31,7 @@ namespace Solfeggio.ViewModels
 			this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<TProfile>().Use(Profiles.Remove);
 			this[Context.Set.Delete].CanExecute += (o, e) => e.CanExecute = e.Parameter.Is(out TProfile p) && p.IsDefault.Not();
 
-			//this[() => ActiveProfile].PropertyChanged += (o, e) => Context.Set.Delete.EvokeCanExecuteChanged();
+			//this[() => ActiveProfile].Changed += (o, e) => Context.Set.Delete.EvokeCanExecuteChanged();
 
 			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}

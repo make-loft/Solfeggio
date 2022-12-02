@@ -14,7 +14,7 @@ namespace Solfeggio.Processors
 {
 	public static class FileDialogFilters
 	{
-		public static string Pcm = "Pulse-code modulation files (*.pcm)|*.pcm|(*.raw)|*.raw|All files (*.*)|*.*";
+		public static string Pcm = "Pulse-code modulation files (*.wav)|*.wav|(*.raw)|*.raw|All files (*.*)|*.*";
 		public static string PcmTxt = "Frame files (*.txt)|*.txt|All files (*.*)|*.*";
 		public static string PcmBin = "Frame files (*.bin)|*.bin|All files (*.*)|*.*";
 	}
@@ -42,15 +42,17 @@ namespace Solfeggio.Processors
 
 		public override short[] ReadFrame()
 		{
-			var peaksCount = reader.ReadInt32();
+			var peaksCount = reader.ReadInt16();
 			var peaks = new List<Bin>();
 			for (var i = 0; i < peaksCount; i++)
 			{
+				var divisor = (float)short.MaxValue;
+
 				var peak = new Bin
 				{
-					Magnitude = reader.ReadSingle(),
-					Frequency = reader.ReadSingle(),
-					Phase = reader.ReadSingle(),
+					Magnitude = reader.ReadInt16() / divisor,
+					Frequency = reader.ReadSingle() / divisor,
+					Phase = reader.ReadInt16() / divisor,
 				};
 
 				peaks.Add(peak);
@@ -74,9 +76,13 @@ namespace Solfeggio.Processors
 			};
 
 			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
-			if (overlap.Is())
-				signal = signal.Raise(0.00, 0.25).Add(overlap.Fade(0.00, 0.25));
-			overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false); ;
+
+			if (Console.CapsLock)
+			{
+				if (overlap.Is() && Console.CapsLock)
+					signal = signal.Raise(0.00, 0.5).Add(overlap.Fade(0.00, 0.5));
+				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			}
 
 			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
 			return bins.Scale(Boost);

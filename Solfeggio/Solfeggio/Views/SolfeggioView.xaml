@@ -2,29 +2,79 @@
 	x:Class="Solfeggio.Views.SolfeggioView"
 	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
-	xmlns:views="clr-namespace:Solfeggio.Views"
 	xmlns:s="clr-namespace:System.Windows.Shapes"
 	xmlns:controls="clr-namespace:System.Windows.Controls"
-	BindingContext="{Store Key=viewModels:ProcessingManager}">
+	xmlns:viewModels="clr-namespace:Solfeggio.ViewModels"
+	BindingContext="{Store Key=viewModels:ProcessingManager}"
+	Background="{StaticResource RainbowBrush.H}"
+	>
 
-	<RackView
-		Rows="2* *"
-		Columns="^ *">
+	<Grid
+		Rack.Rows="* 3.236* * 1.618*"
+		Rack.Columns="^ *">
+
+		<Grid
+			Rack.Cell="R0 C0 CS2"
+			Rack.Columns="^ * ^"
+			>
+			<controls:Canvas
+				Rack.Cell="C0"
+				x:Name="FlowerStrokeCanvas"
+				EnableTouchEvents="True"
+				Touch="OnTouchEffectAction"
+				Background="{StaticResource GeometryBackgroundBrush}"
+				>
+				<s:Polyline
+					x:Name="FlowerStrokePolyline"
+					Stroke="{StaticResource Stroke.Geometry}"
+					StrokeThickness=".3"
+					/>
+			</controls:Canvas>
+			
+			<controls:Canvas
+				Rack.Cell="C1"
+				x:Name="MagnitudeRawFrameCanvas"
+				EnableTouchEvents="True"
+				Touch="OnTouchEffectAction"
+				Background="{DynamicResource FrameBackgroundBrush}"
+				>
+				<s:Polyline
+					x:Name="MagnitudeRawFramePolyline"
+					Fill="{StaticResource Fill.MagnitudeRawFrame}"
+					Stroke="{StaticResource Stroke.MagnitudeRawFrame}"
+					StrokeThickness="{StaticResource StrokeThickness.MagnitudeRawFrame}"
+					/>
+			</controls:Canvas>
+
+			<controls:Canvas
+				Rack.Cell="C2"
+				x:Name="FlowerFillCanvas"
+				EnableTouchEvents="True"
+				Touch="OnTouchEffectAction"
+				Background="{StaticResource GeometryBackgroundBrush}"
+				>
+				<s:Polyline
+					x:Name="FlowerFillPolyline"
+					Stroke="{StaticResource Stroke.Geometry}"
+					StrokeThickness=".3"
+					/>
+			</controls:Canvas>
+		</Grid>
 
 		<controls:Canvas
-			Rack.Cell="R0 C0 CS2"
-			x:Name="SpectrumCanvas"
+			Rack.Cell="R1 C0 CS2"
+			x:Name="MagnitudeCanvas"
 			EnableTouchEvents="True"
 			Touch="OnTouchEffectAction"
-			PaintSurface="OnCanvasViewPaintSurface"
-			Background="{DynamicResource SpectrumBackgroundBrush}">
+			Background="{DynamicResource SpectrumBackgroundBrush}"
+			>
 			<s:Polyline
 				x:Name="MagnitudePolyline"
-				Fill="{StaticResource MagnitudeSpectrumFillBrush}"
-				Stroke="{StaticResource MagnitudeSpectrumStrokeBrush}"
-				StrokeThickness="{StaticResource MagnitideSpectrumStrokeThickness}" />
-			<s:Polyline
+				Fill="{StaticResource Fill.MagnitudePMI}"
+				Stroke="{StaticResource Stroke.MagnitudePMI}"
+				StrokeThickness="{StaticResource StrokeThickness.MagnitudePMI}"
+				/>
+			<!--<s:Polyline
 				x:Name="PhasePolyline"
 				Stroke="{DynamicResource WaveOutStrokeBrush}"
 				StrokeThickness="{StaticResource WaveInStrokeThickness}" />
@@ -35,17 +85,29 @@
 			<s:Polyline
 				x:Name="WaveOutPolyline"
 				Stroke="{DynamicResource WaveOutStrokeBrush}"
-				StrokeThickness="{StaticResource WaveOutStrokeThickness}" />
+				StrokeThickness="{StaticResource WaveOutStrokeThickness}" />-->
 		</controls:Canvas>
 
 		<controls:Canvas
-			Rack.Cell="R1 C0 CS2"
+			Rack.Cell="R2 C0 CS2"
 			x:Name="PianoCanvas"
 			EnableTouchEvents="True"
-			PaintSurface="OnCanvasViewPaintSurfaceP"
-			Background="{DynamicResource PianoCanvasBackgroundBrush}" />
+			Touch="OnTouchEffectAction"
+			Background="{DynamicResource PianoBackgroundBrush}"
+			>
+		</controls:Canvas>
+		
+		<controls:Canvas
+			Rack.Cell="R3 C0 CS2"
+			x:Name="SkiaSpectrogramCanvas"
+			Background="{DynamicResource SpectrogramBackgroundBrush}"
+			>
+			<controls:Stack
+				x:Name="SpectrogramCanvas"
+				/>
+		</controls:Canvas>
 
-		<Switch
+		<!--<Switch
 			Rack.Cell="R1 C0"
 			VerticalOptions="End"
 			HorizontalOptions="Start"
@@ -55,9 +117,9 @@
 			Rack.Cell="R1 C0"
 			VerticalOptions="Start"
 			HorizontalOptions="Start"
-			IsToggled="{Binding ShowSettings}" />
+			IsToggled="{Binding ShowSettings}" />-->
 
-		<Grid
+		<!--<Grid
 			Rack.Cell="R0 C0 CS2"
 			Rack.Rows="^ ^"
 			IsVisible="{Binding ShowSettings}">
@@ -66,18 +128,18 @@
 				BackgroundColor="DimGray"
 				Opacity=".5" />
 
-		</Grid>
+		</Grid>-->
 
 
-		<Pivot>
+		<!--<Pivot>
 			<PivotItem Header="Abc" >
 				<Button Text="123" />
 			</PivotItem>
 			<PivotItem Header="Xyz" >
 				<Button Text="321" />
 			</PivotItem>
-		</Pivot>
+		</Pivot>-->
 
-	</RackView>
+	</Grid>
 
 </ContentPage>

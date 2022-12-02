@@ -14,8 +14,7 @@ namespace Solfeggio.Api
 
 			for (var i = 0; i < data.Length; i++)
 			{
-				var normalizedValue = (double)data[i] / short.MaxValue;
-				data[i] = (short)(short.MaxValue * Math.Pow(normalizedValue, 1d / boost));
+				data[i] = (short)(data[i] * boost);
 			}
 
 			return data;

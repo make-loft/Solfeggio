@@ -106,6 +106,13 @@ namespace Solfeggio.Headers
 			return stream;
 		}
 
+		public WaveContainer(BinaryReader reader)
+		{
+			var headerBytes = reader.ReadBytes(44);
+			Header = headerBytes.To<WaveHeader>();
+			var hBytes = Header.ToBytes();
+		}
+		
 		public WaveContainer(string path)
 		{
 			Path = path;

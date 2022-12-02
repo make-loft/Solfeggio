@@ -73,7 +73,7 @@
 			Style="{StaticResource HorizontalGridSplitterStyle}"
 			Background="{DynamicResource SplitterBackgroundBrush}"
 			/>
-		
+
 		<Canvas
 			Rack.Cell="R2"
 			Name="MagnitudeCanvas"
@@ -86,7 +86,7 @@
 					<Setter Property="Visibility" Value="{DynamicResource Visibility.Tops}" />
 				</Style>
 			</Canvas.Resources>
-			
+
 			<Canvas
 				Name="FFTHistogramCanvas"
 				Visibility="{DynamicResource Visibility.MagnitudeFFT_Histogram}"
@@ -102,7 +102,7 @@
 					</Style>
 				</Canvas.Resources>
 			</Canvas>
-			
+
 			<Canvas
 				Name="PMIHistogramCanvas"
 				Visibility="{DynamicResource Visibility.MagnitudePMI_Histogram}"
@@ -118,7 +118,7 @@
 					</Style>
 				</Canvas.Resources>
 			</Canvas>
-			
+
 			<Polyline
 				Name="Polyline_Magnitude_FFT"
 				Fill="{DynamicResource Fill.MagnitudeFFT}"
@@ -135,12 +135,6 @@
 				Visibility="{DynamicResource Visibility.MagnitudePMI}"
 				Panel.ZIndex="{DynamicResource ZIndex.MagnitudePMI}"
 				/>
-		</Canvas>
-
-		<Canvas
-			Rack.Cell="R2"
-			x:Name="GeometryCanvas">
-
 		</Canvas>
 
 		<GridSplitter

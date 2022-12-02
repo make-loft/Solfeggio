@@ -1,62 +1,52 @@
-<ResourceDictionary
+<f:ResourceDictionary
     x:Class="Solfeggio.Palettes.Values"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+	xmlns:f="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns="clr-namespace:System;assembly=mscorlib"
+	>
+	
+	<Double x:Key="PlusSinglePi">+3.1415926535897932384626433832795</Double>
+	<Double x:Key="MinusSinglePi">-3.1415926535897932384626433832795</Double>
 
-	<LinearGradientBrush
-		x:Key="SpectrumBackgroundBrush"
-		StartPoint="0,0"
-		EndPoint="0,1">
-		<GradientStop
-			Color="#FF616187"
-			Offset="0" />
-		<GradientStop
-			Color="IndianRed"
-			Offset="1" />
-	</LinearGradientBrush>
+	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
+	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
 
-	<SolidColorBrush
-		x:Key="MagnitudeSpectrumFillBrush"
-		Color="Yellow" />
+	<Double x:Key="MinHarmonicOpacityLevel">0.3</Double>
+	<Double x:Key="InfoTextOpacityLevel">0.4</Double>
+	<Double x:Key="MinWidth">0</Double>
+	<x:String x:Key="DefaultStringFormat">F2</x:String>
+	<Double x:Key="MonospaceFontSize">14</Double>
+	<!--<p:FontFamily x:Key="MonospaceFontFamily">Consolas</p:FontFamily>-->
 
-	<SolidColorBrush
-		x:Key="MagnitudeSpectrumStrokeBrush"
-		Color="Gold"/>
+	<Double x:Key="StrokeThickness.MagnitudeFFT">1</Double>
+	<Double x:Key="StrokeThickness.MagnitudePMI">1</Double>
 
-	<SolidColorBrush
-		x:Key="WaveInStrokeBrush"
-		Color="Crimson" />
+	<Double x:Key="StrokeThickness.MagnitudeFFT_Histogram">1</Double>
+	<Double x:Key="StrokeThickness.MagnitudePMI_Histogram">1</Double>
 
-	<SolidColorBrush
-		x:Key="WaveOutStrokeBrush"
-		Color="YellowGreen" />
+	<Double x:Key="StrokeThickness.PhaseFFT">1</Double>
+	<Double x:Key="StrokeThickness.PhasePMI">1</Double>
 
-	<SolidColorBrush
-		x:Key="PianoCanvasBackgroundBrush"
-		Color="#FF616187" />
+	<Double x:Key="StrokeThickness.MagnitudeRawFrame">1</Double>
+	<Double x:Key="StrokeThickness.MagnitudeWindowFrame">1</Double>
 
-	<SolidColorBrush
-		x:Key="FullToneKeyBrush"
-		Color="WhiteSmoke" />
+	<Double x:Key="StrokeThickness.FrequencyNotesGrid">1</Double>
+	<Double x:Key="StrokeThickness.FrequencyDiscreteGrid">1</Double>
 
-	<SolidColorBrush
-		x:Key="HalfToneKeyBrush"
-		Color="#202124" />
+	<Int32 x:Key="ZIndex.MagnitudeFFT">3</Int32>
+	<Int32 x:Key="ZIndex.MagnitudePMI">2</Int32>
 
-	<SolidColorBrush
-		x:Key="MarkerBrush"
-		Color="Green" />
+	<Int32 x:Key="ZIndex.MagnitudeFFT_Histogram">4</Int32>
+	<Int32 x:Key="ZIndex.MagnitudePMI_Histogram">5</Int32>
 
-	<SolidColorBrush
-		x:Key="ButterflyGridBrush"
-		Color="Violet" />
+	<Int32 x:Key="ZIndex.PhaseFFT">3</Int32>
+	<Int32 x:Key="ZIndex.PhasePMI">2</Int32>
 
-	<SolidColorBrush
-		x:Key="NoteGridBrush"
-		Color="Purple" />
+	<Int32 x:Key="ZIndex.MagnitudeRawFrame">0</Int32>
+	<Int32 x:Key="ZIndex.MagnitudeWindowFrame">1</Int32>
 
-	<SolidColorBrush
-		x:Key="HzBrush"
-		Color="Blue" />
+	<Int32 x:Key="ZIndex.FrequencyNotesGrid">0</Int32>
+	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">1</Int32>
 
-</ResourceDictionary>
+	<f:Thickness x:Key="RegularMargin">4</f:Thickness>
+</f:ResourceDictionary>

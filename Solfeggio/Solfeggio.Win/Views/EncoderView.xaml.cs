@@ -88,7 +88,7 @@ namespace Solfeggio.Views
 			//meta.Seek(0, SeekOrigin.End);
 			var metadata = $"Sample Rate: {Container.Header.SampleRate}\nFrame Size: {FrameSize}";
 			metaWriter.WriteLine(metadata);
-
+				
 			using var frames = (zip.GetEntry("frames.txt") ?? zip.CreateEntry("frames.txt")).Open();
 			using var framesWriter = new StreamWriter(frames);
 			//frames.Seek(0, SeekOrigin.End);
@@ -122,7 +122,7 @@ namespace Solfeggio.Views
 
 				var peaks = line.SplitByChars("|").Select(l => l.SplitByChars("\t ")).Select(l => new Bin
 				{
-					Magnitude = double.Parse(l[0]),
+					Magnitude = double.Parse(l[0]) / 1000d,
 					Frequency = double.Parse(l[1]),
 					Phase = l.Length is 3 ? double.Parse(l[2]) : 0d,
 				}).ToList();
@@ -207,10 +207,11 @@ namespace Solfeggio.Views
 			var spectrum = Filtering.GetSpectrum(spectralFrame, Container.Header.SampleRate).ToArray();
 			var silenceThreshold = 2d / frame.Length;
 			Filtering.Interpolate(spectrum, out var peaks).ToList();
-			var sample = peaks.OrderByDescending(b => b.Magnitude)
+			var valuePeaks = peaks.Where(p => p.Magnitude >= 0.001).OrderByDescending(b => b.Magnitude).ToList();
+			var sample = valuePeaks
 				.ToString(b => KeepPhase
 					? $"{b.Magnitude:.000}\t{b.Frequency:F2}\t{(b.Phase < 0 ? b.Phase + Pi.Double : b.Phase):F3}"
-					: $"{b.Magnitude:.000}\t{b.Frequency:F2}\t",
+					: $"{b.Magnitude * 1000d:###}\t{b.Frequency:F0}\t",
 				"|");
 
 			try
@@ -219,13 +220,13 @@ namespace Solfeggio.Views
 
 				using var writer = new BinaryWriter(File.Open(binFramesPath, FileMode.Append));
 				{
-					writer.Write(peaks.Count);
-					foreach (var peak in peaks)
+					writer.Write((short)valuePeaks.Count);
+					foreach (var peak in valuePeaks)
 					{
-						writer.Write((float)peak.Magnitude);
-						writer.Write((float)peak.Frequency);
+						writer.Write((short)(peak.Magnitude * short.MaxValue));
+						writer.Write((float)(peak.Frequency));
 						if (KeepPhase)
-							writer.Write((float)peak.Phase);
+							writer.Write((short)(peak.Phase * short.MaxValue));
 					}
 				}
 			}

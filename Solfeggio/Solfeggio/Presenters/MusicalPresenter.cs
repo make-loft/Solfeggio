@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Shapes;
+
 using Ace;
+
 using Rainbow;
+
 using Solfeggio.Models;
+using Solfeggio.Presenters.Options;
 
 #if NETSTANDARD
 using Xamarin.Forms;
-using Colors = Xamarin.Forms.Color;
-using Thickness = Xamarin.Forms.Thickness;
+
+using Grid = System.Windows.Controls.Grid;
+using StackPanel = System.Windows.Controls.Stack;
 #else
-using Color = System.Windows.Media.Color;
-using Point = System.Windows.Point;
+using System.Windows;
+using System.Windows.Media;
 #endif
 
 namespace Solfeggio.Presenters
@@ -46,7 +49,9 @@ namespace Solfeggio.Presenters
 
 		public void Expose()
 		{
+#if !NETSTANDARD
 			this[() => MonitorNumericFormat].Changed += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+#endif
 			this[() => ScreenNumericFormat].Changed += (o, e) =>
 			{
 				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
@@ -98,8 +103,8 @@ namespace Solfeggio.Presenters
 				});
 
 				items.Add(panel);
-				panel.UpdateLayout();
-				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
+				panel.Measure();
+				panel.Margin = new(hVisualOffset - panel.WidthRequest / 2d, height * vLabelOffset, 0d, 0d);
 			}
 		}
 
@@ -345,21 +350,23 @@ namespace Solfeggio.Presenters
 				FontFamily = p.Value.FontFamilyName,
 #else
 				FontFamily = new FontFamily(p.Value.FontFamilyName),
-#endif
 				FontWeight = p.Key.Is("NoteName") ? FontWeights.SemiBold : fontWeight,
+#endif
 				Foreground = p.Value.Brush ?? VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 				FontSize = p.Value.FontSize * expressionLevel * (height > 0.1 ? height : 0.1) / 256,
 				HorizontalAlignment = HorizontalAlignment.Center,
 			});
 		}
 
-		public static IEnumerable<Point> DrawGeometry(IList<Bin> peaks, int sampleSize, double sampleRate, double approximation = 1d)
+		public static IEnumerable<Point> DrawGeometry(IList<Bin> peaks, int sampleSize, double sampleRate,
+			double approximation = 1d, double delta = 0d, double phaseAngle = 0d)
 		{
 			if (peaks.Count.Is(0))
 				yield break;
 
+			var spiral = 1d;
 			var pointsCount = (int)(sampleSize / approximation);
-			for (var i = 0; i < pointsCount; i++)
+			for (var i = 0; i < pointsCount; i++, spiral -= delta)
 			{
 				var a = 0d;
 				var b = 0d;
@@ -368,9 +375,9 @@ namespace Solfeggio.Presenters
 				{
 					var peak = peaks[j];
 					var w = Pi.Double * peak.Frequency;
-					var t = 2 * i / sampleRate * approximation;
-					var phase = peak.Phase + w * t;
-					var magnitude = peak.Magnitude;
+					var t = 2d * i / sampleRate * approximation;
+					var phase = peak.Phase + w * t + phaseAngle;
+					var magnitude = peak.Magnitude * spiral;
 					a += magnitude * Math.Cos(phase);
 					b += magnitude * Math.Sin(phase);
 				}
@@ -394,17 +401,14 @@ namespace Solfeggio.Presenters
 
 			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
-			var m = 0;
-			var averageMagnitude = 0d;
 			var keys = Music.EnumeratePianoKeys().ToList();
+			var averageMagnitude = peaks.Aggregate(0d, (s, p) => s += p.Magnitude) / peaks.Count;
+			var thresholdMagnitude = Math.Sqrt(averageMagnitude) / 2d;
 
 			foreach (var bin in peaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency || activeFrequency > upperFrequency) continue;
-
-				m++;
-				averageMagnitude += activeMagnitude;
 
 				var key =
 					keys.FirstOrDefault(k => k.LowerFrequency < activeFrequency && activeFrequency <= k.UpperFrequency);
@@ -416,7 +420,9 @@ namespace Solfeggio.Presenters
 					activeMagnitude = (float)(activeMagnitude * Windowing.Gausse(half, range));
 				}
 
-				key.Hits++;
+				if (bin.Magnitude < thresholdMagnitude)
+					continue;
+
 				key.Peaks.Add(bin);
 
 				if (activeMagnitude > key.Magnitude)
@@ -426,7 +432,6 @@ namespace Solfeggio.Presenters
 				}
 			}
 
-			averageMagnitude /= m;
 			var minMagnitude = upperMagnitude * 0.01;
 			var harmonics = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
 				.Where(k => k.Magnitude > minMagnitude).ToList();
@@ -444,15 +449,21 @@ namespace Solfeggio.Presenters
 				var actualHeight = isTone ? height : height * 0.618d;
 				var strokeThickness = upperOffset - lowerOffset;
 
-				CreateBorder(lowerOffset, upperOffset, actualHeight, default, basicBrush).Use(items.Add);
+				CreateBorder(lowerOffset, upperOffset, actualHeight, default, basicBrush).Call(items.Add);
 
-				if (key.Peaks.Count.Is(0)) continue;
+				if (key.Peaks.Count.Is(0))
+					continue;
+
 				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
 				var gradientBrush = (LinearGradientBrush)brush.Clone();
 				var value = Math.Sqrt(key.Magnitude);
+#if NETSTANDARD
+				gradientBrush.GradientStops[0].Offset = 1.0f - (float)value;
+#else
 				gradientBrush.GradientStops[0].Offset = 1.0 - value;
+#endif
 
-				CreateBorder(lowerOffset, upperOffset, actualHeight, default, gradientBrush).Use(items.Add);
+				CreateBorder(lowerOffset, upperOffset, actualHeight, default, gradientBrush).Call(items.Add);
 			}
 
 			return harmonics;

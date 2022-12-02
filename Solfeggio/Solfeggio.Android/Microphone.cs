@@ -19,10 +19,10 @@ namespace Solfeggio.Droid
 	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
 		public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
 
-		public float Level { get; set; }
+		public double Level { get; set; }
 		public double Boost { get; set; } = 8;
 
-		private ByteBuffer _bytes;
+		private short[] _shorts;
         private AudioRecord _recorder;
 
         public static double[] GetValidSampleRates() =>
@@ -54,9 +54,9 @@ namespace Solfeggio.Droid
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
             var bytesCount = desiredBufferSize < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSize;
 
-            _bytes = ByteBuffer.AllocateDirect(bytesCount).Order(ByteOrder.NativeOrder());
-            _recorder = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, _bytes.Capacity());
-            if (_recorder.State.Is(State.Uninitialized)) throw new Exception();
+            _shorts = new short[bytesCount / sizeof(short)];
+            _recorder = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, bytesCount);
+            if (_recorder.State.Is(State.Uninitialized)) throw new Exception("Can not access to a device microphone");
 
             SampleSize = bytesCount / 2;
 
@@ -69,18 +69,10 @@ namespace Solfeggio.Droid
             while (IsRecodingState)
             {
                 var currentRecorder = _recorder;
-                var readLengthInBytes = await currentRecorder.ReadAsync(_bytes, _bytes.Capacity());
+                var readLengthInShorts = await currentRecorder.ReadAsync(_shorts, 0, _shorts.Length);
                 if (currentRecorder.IsNot(_recorder)) return;
 
-                var frameSize = readLengthInBytes / sizeof(short);
-                var frame = new short[frameSize];
-                var shorts = _bytes.AsShortBuffer();
-                for (var i = 0; i < frameSize; i++)
-                {
-                    frame[i] = shorts.Get();
-                }
-
-				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, frame.Scale(2), frameSize));
+				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _shorts.Scale(4d), _shorts.Length));
 			}
 		}
 

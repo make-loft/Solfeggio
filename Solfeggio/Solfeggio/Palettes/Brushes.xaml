@@ -3,60 +3,418 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-	<LinearGradientBrush
-		x:Key="SpectrumBackgroundBrush"
-		EndPoint="0,1"
-		StartPoint="0,0">
+	<Color x:Key="ColorA">#3F9FFF</Color>
+	<Color x:Key="ColorB">#FFFF5F</Color>
+	<Color x:Key="ColorC">#D87FBF</Color>
+	<Color x:Key="ColorD">#F5F5F5</Color>
+	<Color x:Key="ColorE">#3F3E3E</Color>
+	<Color x:Key="PressedFullToneKeyColor">Red</Color>
+	<Color x:Key="PressedHalfToneKeyColor">Red</Color>
+
+
+	<SolidColorBrush
+		x:Key="LabelBrush"
+		Color="#88FFFFFF"/>
+
+	<GradientStopCollection
+		x:Key="RainbowGradient">
 		<GradientStop
-			Color="#FF616187"
+			Color="#FF00FF"
+			Offset=".0" />
+		<GradientStop
+			Color="#FF0000"
+			Offset=".17" />
+		<GradientStop
+			Color="#FFFF00"
+			Offset=".33" />
+		<GradientStop
+			Color="#00FF00"
+			Offset=".5" />
+		<GradientStop
+			Color="#00FFFF"
+			Offset=".66" />
+		<GradientStop
+			Color="#0000FF"
+			Offset=".73" />
+		<GradientStop
+			Color="#FF00FF"
+			Offset="1.0" />
+	</GradientStopCollection>
+
+	<GradientStopCollection
+		x:Key="BrightnessGradient">
+
+		<GradientStop
+			Color="#FF888888"
+			Offset="0.00" />
+		<GradientStop
+			Color="#FF888888"
+			Offset="0.01" />
+
+		<GradientStop
+			Color="#00888888"
+			Offset="0.16" />
+		<GradientStop
+			Color="#00888888"
+			Offset="0.18" />
+
+		<GradientStop
+			Color="#FFFFFFFF"
+			Offset="0.32" />
+		<GradientStop
+			Color="#FFFFFFFF"
+			Offset="0.34" />
+
+		<GradientStop
+			Color="#FF888888"
+			Offset="0.49" />
+		<GradientStop
+			Color="#FF888888"
+			Offset="0.51" />
+
+		<GradientStop
+			Color="#FF000000"
+			Offset="0.65" />
+		<GradientStop
+			Color="#FF000000"
+			Offset="0.67" />
+
+		<GradientStop
+			Color="#00888888"
+			Offset="0.82" />
+		<GradientStop
+			Color="#00888888"
+			Offset="0.84" />
+
+		<GradientStop
+			Color="#FF888888"
+			Offset="0.99" />
+		<GradientStop
+			Color="#FF888888"
+			Offset="1.0" />
+
+	</GradientStopCollection>
+
+	<!--<DrawingBrush
+		x:Key="ChessBrush"
+		TileMode="Tile"
+		Viewport="0,0,12,12"
+		ViewportUnits="Absolute">
+		<DrawingBrush.Drawing>
+			<GeometryDrawing
+				Brush="White"
+				Geometry="M6,6 L0,6 0,12 6,12 6,6 12,6 12,0 6,0 Z" />
+		</DrawingBrush.Drawing>
+	</DrawingBrush>-->
+
+	<LinearGradientBrush
+		x:Key="RainbowBrush.H"
+		StartPoint="0,0"
+		EndPoint="1,0"
+		GradientStops="{StaticResource RainbowGradient}" />
+
+	<LinearGradientBrush
+		x:Key="RainbowBrush.V"
+		StartPoint="0,0"
+		EndPoint="0,1"
+		GradientStops="{StaticResource RainbowGradient}" />
+
+	<LinearGradientBrush
+		x:Key="BrightnessBrush.H"
+		StartPoint="1,0"
+		EndPoint="0,0"
+		GradientStops="{StaticResource BrightnessGradient}" />
+
+	<LinearGradientBrush
+		x:Key="BrightnessBrush.V"
+		StartPoint="0,1"
+		EndPoint="0,0"
+		GradientStops="{StaticResource BrightnessGradient}" />
+
+	<LinearGradientBrush
+		x:Key="FrameBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="{StaticResource ColorA}"
 			Offset="0" />
 		<GradientStop
-			Color="IndianRed"
+			Color="{StaticResource ColorB}"
+			Offset="0.5" />
+		<GradientStop
+			Color="{StaticResource ColorA}"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="SpectrumBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="{StaticResource ColorA}"
+			Offset="0" />
+		<GradientStop
+			Color="{StaticResource ColorB}"
+			Offset="1" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="SplitterBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Color="{StaticResource ColorB}"
+			Offset="0" />
+		<GradientStop
+			Color="{StaticResource ColorA}"
 			Offset="1" />
 	</LinearGradientBrush>
 
 	<SolidColorBrush
-		x:Key="MagnitudeSpectrumFillBrush"
-		Color="Yellow" />
+		x:Key="Fill.MagnitudeFFT"
+		Color="#44FF0000" />
 
 	<SolidColorBrush
-		x:Key="MagnitudeSpectrumStrokeBrush"
-		Color="Gold"/>
+		x:Key="Stroke.MagnitudeFFT"
+		Color="Red" />
 
 	<SolidColorBrush
-		x:Key="WaveInStrokeBrush"
-		Color="Crimson" />
+		x:Key="Fill.MagnitudePMI_Histogram"
+		Color="#44FF0000" />
 
 	<SolidColorBrush
-		x:Key="WaveOutStrokeBrush"
-		Color="YellowGreen" />
+		x:Key="Stroke.MagnitudePMI_Histogram"
+		Color="Red" />
 
 	<SolidColorBrush
-		x:Key="PianoCanvasBackgroundBrush"
-		Color="#FF616187" />
+		x:Key="Fill.MagnitudeFFT_Histogram"
+		Color="#44FF0000" />
+
+	<SolidColorBrush
+		x:Key="Stroke.MagnitudeFFT_Histogram"
+		Color="Red" />
+
+	<SolidColorBrush
+		x:Key="Fill.PhaseFFT"
+		Color="Transparent" />
+
+	<SolidColorBrush
+		x:Key="Stroke.PhaseFFT"
+		Color="Red" />
+
+	<SolidColorBrush
+		x:Key="Stroke.PhasePMI"
+		Color="{StaticResource ColorC}" />
+
+	<LinearGradientBrush
+		x:Key="Fill.PhasePMI"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{StaticResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorC}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="Stroke.MagnitudePMI"
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="{StaticResource ColorB}"
+			Offset="0.00" />
+		<GradientStop
+			Color="{StaticResource ColorC}"
+			Offset="1.00" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="Fill.MagnitudePMI"
+		EndPoint="0,1"
+		StartPoint="0,0">
+		<GradientStop
+			Color="{StaticResource ColorC}"
+			Offset="0.39" />
+		<GradientStop
+			Color="{StaticResource ColorB}"
+			Offset="1.00" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="Fill.MagnitudeRawFrame"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{StaticResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorC}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="Stroke.MagnitudeRawFrame"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorC}" />
+	</LinearGradientBrush>
+
+	<SolidColorBrush
+		x:Key="Fill.MagnitudeWindowFrame"
+		Color="AntiqueWhite" />
+
+	<SolidColorBrush
+		x:Key="Stroke.MagnitudeWindowFrame"
+		Color="Bisque" />
+
+	<LinearGradientBrush
+		x:Key="PianoBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.618"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="1.236"
+			Color="{StaticResource ColorD}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="SpectrogramBackgroundBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorC}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="PressToneKeyBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="#00FFFFFF" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource PressedFullToneKeyColor}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="PressHalfToneKeyBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="#00000000" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource PressedHalfToneKeyColor}" />
+	</LinearGradientBrush>
 
 	<SolidColorBrush
 		x:Key="FullToneKeyBrush"
-		Color="WhiteSmoke" />
+		Color="{StaticResource ColorD}" />
 
-	<SolidColorBrush
+	<LinearGradientBrush
 		x:Key="HalfToneKeyBrush"
-		Color="#202124" />
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="#00FFBE22" />
+		<GradientStop
+			Offset="0.1"
+			Color="{StaticResource ColorE}" />
+		<GradientStop
+			Offset="0.95"
+			Color="{StaticResource ColorE}" />
+		<GradientStop
+			Offset="1.0"
+			Color="#FF0C0C0C" />
+	</LinearGradientBrush>
 
 	<SolidColorBrush
 		x:Key="MarkerBrush"
 		Color="Green" />
 
 	<SolidColorBrush
-		x:Key="ButterflyGridBrush"
+		x:Key="Stroke.FrequencyDiscreteGrid"
 		Color="Violet" />
 
 	<SolidColorBrush
-		x:Key="NoteGridBrush"
+		x:Key="Stroke.FrequencyNotesGrid"
 		Color="Purple" />
 
 	<SolidColorBrush
 		x:Key="HzBrush"
 		Color="Blue" />
+
+	<LinearGradientBrush
+		x:Key="MagnitudePeakBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{StaticResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorA}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="PhasePeakBrush"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorC}" />
+		<GradientStop
+			Offset="0.5"
+			Color="{StaticResource ColorA}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorC}" />
+	</LinearGradientBrush>
+
+	<RadialGradientBrush
+		x:Key="Stroke.Geometry"
+		Center="0.5,0.5"
+		GradientStops="{StaticResource RainbowGradient}"
+		/>
+
+	<RadialGradientBrush
+		x:Key="GeometryBackgroundBrush"
+		Center="0.5,0.5">
+		<GradientStop
+			Offset="0.0"
+			Color="{StaticResource ColorB}" />
+		<GradientStop
+			Offset="1.0"
+			Color="{StaticResource ColorA}" />
+	</RadialGradientBrush>
+
 
 </ResourceDictionary>

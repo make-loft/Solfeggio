@@ -15,43 +15,13 @@ using Microsoft.Win32;
 using Rainbow;
 
 using Solfeggio.Presenters;
+using Solfeggio.Presenters.Options;
 using Solfeggio.ViewModels;
 
 namespace Solfeggio.Views
 {
 	public partial class SolfeggioView
 	{
-		static void Transform(Bandwidth bandwidth, double width, double offset, bool shift)
-		{
-			var center = width / 2d;
-			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
-			var from = basicScaler.GetLogicalOffset(center);
-			var till = basicScaler.GetLogicalOffset(center + offset);
-			bandwidth.TransformThreshold(from, till, shift);
-		}
-
-		static void TransformRelative(Bandwidth bandwidth, double width, double height, Point from, Point till)
-		{
-			var center = width / 2d;
-
-			var alignScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
-			var alignFromOffset = alignScaler.GetLogicalOffset(from.X);
-			var alignTillOffset = alignScaler.GetLogicalOffset(center);
-			bandwidth.ShiftThreshold(alignFromOffset, alignTillOffset);
-
-			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, height);
-			var centerY = height / 2d;
-			var offsetY = from.Y - till.Y;
-			var basicFromOffset = basicScaler.GetLogicalOffset(centerY);
-			var basicTillOffset = basicScaler.GetLogicalOffset(centerY + offsetY);
-			bandwidth.ScaleThreshold(basicFromOffset, basicTillOffset);
-
-			var finalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
-			var finalFromOffset = finalScaler.GetLogicalOffset(center);
-			var finalTillOffset = finalScaler.GetLogicalOffset(from.X);
-			bandwidth.ShiftThreshold(finalFromOffset, finalTillOffset);
-		}
-
 		AppViewModel appViewModel = Store.Get<AppViewModel>();
 		MusicalPresenter musicalPresenter = Store.Get<MusicalPresenter>();
 		ProcessingManager processingManager = Store.Get<ProcessingManager>();
@@ -109,7 +79,7 @@ namespace Solfeggio.Views
 				}
 				else
 				{
-					TransformRelative(bandwidth, control.ActualWidth, control.ActualHeight, from, till);
+					bandwidth.TransformRelative(control.ActualWidth, control.ActualHeight, from, till);
 				}
 
 				from = till;
@@ -133,7 +103,7 @@ namespace Solfeggio.Views
 				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 				{
 					var offset = e.Delta * ActualWidth / 32d;
-					Transform(musicalPresenter.Spectrum.Frequency, ActualWidth, offset, true);
+					musicalPresenter.Spectrum.Frequency.Transform(ActualWidth, offset, true);
 					return;
 				}
 
@@ -150,7 +120,7 @@ namespace Solfeggio.Views
 				var till = new Point { X = from.X, Y = from.Y + e.Delta / 8d };
 
 				if (control.Is())
-					TransformRelative(bandwidth, control.ActualWidth, control.ActualHeight, from, till);
+					bandwidth.TransformRelative(control.ActualWidth, control.ActualHeight, from, till);
 			};
 
 			var navigationKeys = new[] { Key.Left, Key.Up, Key.Right, Key.Down };
@@ -193,7 +163,7 @@ namespace Solfeggio.Views
 				var stepsCount = 16;
 				for (var step = 0; step < stepsCount; step++)
 				{
-					Transform(bandwidth, ActualWidth, offset / stepsCount, shift);
+					bandwidth.Transform(ActualWidth, offset / stepsCount, shift);
 					await Task.Delay(8);
 				}
 			};
@@ -236,11 +206,11 @@ namespace Solfeggio.Views
 				{
 					if (IsVisible(Polyline_Frame_Direct))
 						musicalPresenter.DrawFrame(processingManager.OuterFrame, width, height).
-						Use(Polyline_Frame_Direct.Points.AppendRange);
+						Use(Polyline_Frame_Direct.Points.AddRange);
 
 					if (IsVisible(Polyline_Frame_Window))
 						musicalPresenter.DrawFrame(processingManager.InnerFrame, width, height).
-						Use(Polyline_Frame_Window.Points.AppendRange);
+						Use(Polyline_Frame_Window.Points.AddRange);
 				}
 
 				width = PhaseCanvas.ActualWidth;
@@ -249,11 +219,11 @@ namespace Solfeggio.Views
 				{
 					if (IsVisible(Polyline_Phase_FFT))
 						musicalPresenter.DrawPhase(spectrum, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
-						Use(Polyline_Phase_FFT.Points.AppendRange);
+						Use(Polyline_Phase_FFT.Points.AddRange);
 
 					if (IsVisible(Polyline_Phase_PMI))
 						musicalPresenter.DrawPhase(spectrumInterpolated, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight).
-						Use(Polyline_Phase_PMI.Points.AppendRange);
+						Use(Polyline_Phase_PMI.Points.AddRange);
 				}
 
 				width = MagnitudeCanvas.ActualWidth;
@@ -262,11 +232,11 @@ namespace Solfeggio.Views
 				{
 					if (IsVisible(Polyline_Magnitude_FFT))
 						musicalPresenter.DrawMagnitude(spectrum, width, height).
-						Use(Polyline_Magnitude_FFT.Points.AppendRange);
+						Use(Polyline_Magnitude_FFT.Points.AddRange);
 
 					if (IsVisible(Polyline_Magnitude_PMI))
 						musicalPresenter.DrawMagnitude(spectrumInterpolated, width, height).
-						Use(Polyline_Magnitude_PMI.Points.AppendRange);
+						Use(Polyline_Magnitude_PMI.Points.AddRange);
 
 					FFTHistogramCanvas.Children.Clear();
 					PMIHistogramCanvas.Children.Clear();
@@ -544,7 +514,7 @@ namespace Solfeggio.Views
 			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
 				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), transformer.GetVisualOffset(p.Frequency) / width));
-			return new(new(stops), 0d);
+			return new(new(stops));
 		}
 
 		static Color SetAlpha(Color color, double alpha) => Color.FromArgb((byte)(alpha * 255), color.R, color.G, color.B);

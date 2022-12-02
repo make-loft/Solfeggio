@@ -2,7 +2,11 @@
 
 using Microsoft.Win32;
 
+using Rainbow;
+
 using Solfeggio.Api;
+using Solfeggio.Extensions;
+using Solfeggio.Headers;
 
 using System;
 using System.Collections.Generic;
@@ -82,8 +86,6 @@ namespace Solfeggio.Processors
 				return;
 			}
 		}
-
-		short[] nextFrame = { };
 	}
 
 	class PcmReader : AStreamProcessor<BinaryReader>
@@ -101,17 +103,57 @@ namespace Solfeggio.Processors
 		}
 
 		public PcmReader(int sampleRate, int sampleSize, int buffersCount)
-			: base(sampleRate, sampleSize, buffersCount) { }
+			: base(sampleRate, sampleSize, buffersCount)
+		{
+			if (reader.Is())
+				Container = new(reader);
+		}
 
 		protected override string Filter { get; } = FileDialogFilters.Pcm;
 
+		public WaveContainer Container { get; set; }
+
 		public override short[] ReadFrame()
 		{
-			var sample = new short[_sampleSize];
-			for (var i = 0; i < sample.Length; i++)
-				sample[i] = reader.ReadInt16();
+			var frame = new short[_sampleSize];
+			for (var i = 0; i < frame.Length; i++)
+				frame[i] = reader.ReadInt16();
 
-			return sample.Scale(Boost);
+			var timeFrame = frame.Select(b => new Complex((double)b / short.MaxValue)).ToList();
+			var spectralFrame = Butterfly.Transform(timeFrame, true);
+			var spectrum = Filtering.GetSpectrum(spectralFrame, Container.Header.SampleRate).ToArray();
+			var x = Filtering.Interpolate(spectrum, out var peaks).ToList();
+			var valuePeaks = peaks.Where(p => p.Magnitude >= 0.001).ToList();
+
+			var signal = Next(valuePeaks);
+
+			return signal.Scale(Boost);
+		}
+
+		double[] overlap;
+		public short[] Next(IList<Bin> peaks)
+		{
+			var profile = new Models.Harmonic.Profile
+			{
+				Harmonics = new(peaks.Select(b => new Models.Harmonic
+				{
+					Magnitude = b.Magnitude,
+					Frequency = b.Frequency,
+					Phase = b.Phase,
+				}))
+			};
+
+			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+
+			if (Console.CapsLock)
+			{
+				if (overlap.Is() && Console.CapsLock)
+					signal = signal.Raise(0.00, 0.5).Add(overlap.Fade(0.00, 0.5));
+				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			}
+
+			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
+			return bins.Scale(Boost);
 		}
 
 		public override BinaryReader CreateReader(Stream stream) => new(stream);

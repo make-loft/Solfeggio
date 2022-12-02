@@ -15,8 +15,6 @@ namespace Solfeggio.Models
 		public double EthalonFrequency { get; set; }
 		public double DeltaFrequency => Harmonic.Frequency - EthalonFrequency;
 		public Bin Harmonic { get; set; }
-		public int Hits { get; set; }
-
 		public List<Bin> Peaks { get; set; } = new();
 
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)

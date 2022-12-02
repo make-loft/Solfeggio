@@ -19,26 +19,26 @@
     <x:Boolean x:Key="Visible">True</x:Boolean>
     <x:Boolean x:Key="Collapsed">False</x:Boolean>
 
-    <c:KeyToValueConverter x:Key="NullToTrueConverter" Key="{x:Null}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
-    <c:KeyToValueConverter x:Key="NullToFalseConverter" Key="{x:Null}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+    <KeyToValueConverter x:Key="NullToTrueConverter" Key="{x:Null}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+    <KeyToValueConverter x:Key="NullToFalseConverter" Key="{x:Null}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
 
-    <c:KeyToValueConverter x:Key="NullToHiddenConverter" Key="{x:Null}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <c:KeyToValueConverter x:Key="NullToVisibleConverter" Key="{x:Null}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <c:KeyToValueConverter x:Key="NullToCollapsedConverter" Key="{x:Null}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="NullToHiddenConverter" Key="{x:Null}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="NullToVisibleConverter" Key="{x:Null}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <KeyToValueConverter x:Key="NullToCollapsedConverter" Key="{x:Null}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
 
-    <c:KeyToValueConverter x:Key="TrueToFalseConverter" Key="{StaticResource True}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
-    <c:KeyToValueConverter x:Key="FalseToTrueConverter" Key="{StaticResource False}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+    <KeyToValueConverter x:Key="TrueToFalseConverter" Key="{StaticResource True}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+    <KeyToValueConverter x:Key="FalseToTrueConverter" Key="{StaticResource False}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
 
-    <c:KeyToValueConverter x:Key="TrueToHiddenConverter" Key="{StaticResource True}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <c:KeyToValueConverter x:Key="TrueToVisibleConverter" Key="{StaticResource True}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <c:KeyToValueConverter x:Key="TrueToCollapsedConverter" Key="{StaticResource True}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="TrueToHiddenConverter" Key="{StaticResource True}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="TrueToVisibleConverter" Key="{StaticResource True}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <KeyToValueConverter x:Key="TrueToCollapsedConverter" Key="{StaticResource True}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
 
-    <c:KeyToValueConverter x:Key="FalseToHiddenConverter" Key="{StaticResource False}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <c:KeyToValueConverter x:Key="FalseToVisibleConverter" Key="{StaticResource False}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <c:KeyToValueConverter x:Key="FalseToCollapsedConverter" Key="{StaticResource False}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="FalseToHiddenConverter" Key="{StaticResource False}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
+    <KeyToValueConverter x:Key="FalseToVisibleConverter" Key="{StaticResource False}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
+    <KeyToValueConverter x:Key="FalseToCollapsedConverter" Key="{StaticResource False}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
 
-    <c:KeyToValueConverter x:Key="EqualsToFalseConverter" KeySource="ConverterParameter" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
-    <c:KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
+    <KeyToValueConverter x:Key="EqualsToFalseConverter" KeySource="ConverterParameter" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
+    <KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
 
 
 	<ControlTemplate x:Key="SizeTemplate">

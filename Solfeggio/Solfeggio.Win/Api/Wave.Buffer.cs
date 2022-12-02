@@ -1,6 +1,8 @@
 ﻿using Ace;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
+
 using static Solfeggio.Api.Wave.Header.Flags;
 
 namespace Solfeggio.Api
@@ -74,7 +76,11 @@ namespace Solfeggio.Api
 				_header = default;
 			}
 
-			public MmResult MarkForProcessing() => _session.MarkForProcessing(_header).Verify();
+			public MmResult MarkForProcessing()
+			{
+				while (IsInQueue && IsDone is false) Thread.Sleep(20);
+				return _session.MarkForProcessing(_header).Verify();
+			}
 		}
 	}
 }

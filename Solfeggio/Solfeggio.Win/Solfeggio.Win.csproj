@@ -75,6 +75,9 @@
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Extensions\SignalExtensions.cs">
+      <Link>Extensions\SignalExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Headers\WavePcmFormat.cs">
       <Link>Headers\WavePcmFormat.cs</Link>
     </Compile>
@@ -99,11 +102,17 @@
     <Compile Include="..\Solfeggio\Models\VisualProfile.cs">
       <Link>Models\VisualProfile.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Presenters\Calibrations.cs">
-      <Link>Presenters\Calibrations.cs</Link>
+    <Compile Include="..\Solfeggio\Presenters\Bandwidth.cs">
+      <Link>Presenters\Bandwidth.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\MusicalPresenter.cs">
       <Link>Presenters\MusicalPresenter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\BandwidthOptions.cs">
+      <Link>Presenters\Options\BandwidthOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\MusicalOptions.cs">
+      <Link>Presenters\Options\MusicalOptions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
       <Link>Presenters\PianoKey.cs</Link>
@@ -111,8 +120,26 @@
     <Compile Include="..\Solfeggio\Presenters\ScaleTransformer.cs">
       <Link>Presenters\ScaleTransformer.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Presenters\SmartRange.cs">
+      <Link>Presenters\SmartRange.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\ASoftwareSignalProcessor.cs">
+      <Link>Processors\ASoftwareSignalProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\EncodeProcessor.cs">
+      <Link>Processors\EncodeProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\FileStreamProcessor.cs">
+      <Link>Processors\FileStreamProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Processors\IdealSignalProcessor.cs">
       <Link>Processors\IdealSignalProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\PcmReader.cs">
+      <Link>Processors\PcmReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Processors\SoftwareSignalGenerator.cs">
+      <Link>Processors\SoftwareSignalGenerator.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\AManager.cs">
       <Link>ViewModels\AManager.cs</Link>
@@ -154,11 +181,6 @@
     <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Editions.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
-    <Compile Include="Extensions\SignalExtensions.cs" />
-    <Compile Include="Processors\EncodeProcessor.cs" />
-    <Compile Include="Processors\PcmReader.cs" />
-    <Compile Include="Processors\ASoftwareSignalProcessor.cs" />
-    <Compile Include="Processors\SoftwareSignalGenerator.cs" />
     <Compile Include="ViewModels\FlowerViewModel.cs" />
     <Compile Include="ViewModels\TapeViewModel.cs" />
     <Compile Include="Views\EncoderView.xaml.cs">

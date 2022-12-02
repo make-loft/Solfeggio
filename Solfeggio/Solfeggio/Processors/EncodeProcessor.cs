@@ -68,7 +68,7 @@ namespace Solfeggio.Processors
 			var spectrum = Filtering.GetSpectrum(spectralFrame, _sampleRate).ToArray();
 			var silenceThreshold = 2d / frame.Length;
 			Filtering.Interpolate(spectrum, out var peaks).ToList();
-			var sample = peaks.OrderByDescending(b => b.Magnitude)
+			var sample = peaks.Where(p => p.Magnitude >= 0.001).OrderByDescending(b => b.Magnitude)
 				.ToString(b => $"{b.Magnitude:.000}\t{b.Frequency:F2}\t{(b.Phase < 0 ? b.Phase + Pi.Double : b.Phase):F3}", "|");
 
 			try

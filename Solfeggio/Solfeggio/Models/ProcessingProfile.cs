@@ -96,11 +96,13 @@ namespace Solfeggio.Models
 			OutputDevices = Wave.Out.EnumerateDevices().ToSet();
 
 			InputDevices.Add(new SoftwareSignalGenerator.DeviceInfo());
+#if !NETSTANDARD
 			InputDevices.Add(new PcmBinDecoder.DeviceInfo());
 			InputDevices.Add(new StreamPcmTxtDecoder.DeviceInfo());
 			InputDevices.Add(new PcmReader.DeviceInfo());
 
 			OutputDevices.Add(new EncodeProcessor.DeviceInfo());
+#endif
 
 			this[() => ActiveInputDevice].Changed += (o, e) =>
 				ActiveInputDeviceIndex = InputDevices.IndexOf(ActiveInputDevice);

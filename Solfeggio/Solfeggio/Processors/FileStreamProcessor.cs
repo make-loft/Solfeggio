@@ -74,7 +74,7 @@ namespace Solfeggio.Processors
 			var timeFrame = bins.Select(b => new Complex((double)b / ushort.MaxValue)).ToList();
 			var spectralFrame = Butterfly.Transform(timeFrame, true);
 			var spectrum = Filtering.GetSpectrum(spectralFrame, _sampleRate).ToArray();
-			var peaks = Filtering.Interpolate(spectrum).ToList().EnumeratePeaks().ToList();
+			Filtering.Interpolate(spectrum, out var peaks);
 
 			var profile = new Models.Harmonic.Profile
 			{

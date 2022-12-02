@@ -1,5 +1,5 @@
 [Files]
-"package\App.png"   "App.png"
+"../../../logo.png"   "App.png"
 "package\ReadMe.html"        "ReadMe.html"
 "package\AppxManifest.Scientific.xml"       "AppxManifest.xml"
 "..\Solfeggio.Win.Launcher\bin\Solfeggio.Launcher.exe"     "Solfeggio.exe"

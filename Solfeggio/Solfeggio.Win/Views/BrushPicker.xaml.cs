@@ -1,5 +1,5 @@
 ﻿using Ace;
-using Ace.Markup.Converters;
+using Ace.Markup.Patterns;
 
 using System;
 using System.Linq;
@@ -13,12 +13,14 @@ namespace Solfeggio.Views
 	public partial class BrushPicker
 	{
 		SolidColorBrush solidColorBrush;
+
 		LinearGradientBrush linearGradientBrush = new()
 		{
 			StartPoint = new(0, 0),
 			EndPoint = new(0, 1),
 			GradientStops = default
 		};
+
 		RadialGradientBrush radialGradientBrush = new()
 		{
 			Center = new(0.5, 0.0),
@@ -61,7 +63,7 @@ namespace Solfeggio.Views
 				linearGradientBrush.GradientStops ??= radialGradientBrush.GradientStops;
 				radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
 
-				solidColorBrush ??= new SolidColorBrush(linearGradientBrush.GradientStops.LastOrDefault()?.Color ?? Colors.Gray);
+				solidColorBrush ??= new(linearGradientBrush.GradientStops.LastOrDefault()?.Color ?? Colors.Gray);
 
 				Value = SelectedIndex switch
 				{
