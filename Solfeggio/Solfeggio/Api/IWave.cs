@@ -18,6 +18,7 @@ namespace Solfeggio.Api
 
 	public interface IProcessor : IDataSource
 	{
+		IProcessor Source { get; set; }
 		double Level { get; set; }
 		double Boost { get; set; }
 		void Wake();

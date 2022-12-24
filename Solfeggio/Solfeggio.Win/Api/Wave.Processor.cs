@@ -32,15 +32,15 @@ namespace Solfeggio.Api
 			return data;
 		}
 
-		public abstract class Processor<TDeviceInfo> :IProcessor, IExposable, IDisposable
+		public abstract class Processor<TDeviceInfo> : IProcessor, IExposable, IDisposable
 		{
-			private readonly IProcessor _source;
+			public IProcessor Source { get; set; }
 			private readonly Callback _callback;
 
 			public Processor(ASession session, int bufferSize, int buffersCount = 4, IProcessor source = default)
 			{
 				NumberOfBuffers = buffersCount;
-				_source = source;
+				Source = source;
 				_session = session;
 				BufferSize = bufferSize;
 				_callback = ProcessingCallback;
@@ -129,7 +129,7 @@ namespace Solfeggio.Api
 
 						if (message.Is(Message.WaveOutDone))
 						{
-							_source?.Tick();
+							Source?.Tick();
 						}
 					}
 				}

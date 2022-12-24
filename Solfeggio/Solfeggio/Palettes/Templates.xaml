@@ -1,4 +1,4 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     x:Class="Solfeggio.Palettes.Templates"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -7,7 +7,7 @@
     xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
     xmlns:converters="clr-namespace:Solfeggio.Converters"
-    xmlns:c="clr-namespace:Ace.Converters;assembly=Ace">
+	>
     
     <converters:PowConverter x:Key="PowConverter" Base="2"/>
    
@@ -41,109 +41,643 @@
     <KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
 
 
-	<ControlTemplate x:Key="SizeTemplate">
-        <Grid BindingContext="{m:Store Key=vm:ProcessingManager}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+	<Style
+		x:Key="TitlePanelStyle"
+		TargetType="Stack">
+		<Setter
+			Property="Margin"
+			Value="8" />
+		<Setter
+			Property="Orientation"
+			Value="Horizontal" />
+	</Style>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+	<DataTemplate
+		x:Key="NoteNameToFrequencyTemplate">
+		<Grid
+			Rack.Columns="* *"
+			>
+			<Frame
+				Rack.Cell="C0 CS2"
+				Opacity="0.61"
+				CornerRadius="4"
+				Background="{Binding Converter={StaticResource PianoKeyToBrushConverter}}"
+				/>
+			<Label
+				Rack.Cell="C0"
+				FontFamily="Consolas"
+				Text="{Binding NoteName}"
+				/>
+			<Label
+				Rack.Cell="C1"
+				FontFamily="Consolas"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+		</Grid>
+	</DataTemplate>
 
-            <Label Grid.Row="0" Grid.Column="0" Text="Duration"/>
-            <Label Grid.Row="1" Grid.Column="0" Text="Sample"/>
-            <Label Grid.Row="2" Grid.Column="0" Text="Frame"/>
-            <Label Grid.Row="0" Grid.Column="2" Text="bins"/>
-            <Label Grid.Row="0" Grid.Column="1" Text="ms"/>
+	<Double x:Key="PlusSinglePi">+3.1415926535897932384626433832795</Double>
+	<Double x:Key="MinusSinglePi">-3.1415926535897932384626433832795</Double>
 
-            <Label Grid.Row="1" Grid.Column="2" Text="{Binding ActiveProfile.SampleSize}"/>
-            <Label Grid.Row="2" Grid.Column="2" Text="{Binding FrameSize}"/>
-            <Label Grid.Row="1" Grid.Column="1" Text="{Binding ActiveProfile.SampleDuration.TotalMilliseconds}"/>
-            <Label Grid.Row="2" Grid.Column="1" Text="{Binding FrameDuration.TotalMilliseconds}"/>
-        </Grid>
-    </ControlTemplate>
+	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
+	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
 
-    <ControlTemplate x:Key="ProcessingOptionsTemplate">
-        <a:StackPanel DataContext="{m:Store Key=vm:ProcessingManager}">           
-            <Label 
-                Grid.Row="0" 
-                Text="{Binding Device.SampleRate, StringFormat='Sample Rate {0} Hz'}"/>
+	<DataTemplate
+		x:Key="HarmonicTemplate">
+		<Rack
+			Rows="* *"
+			Columns="2* 3* 2* * * * *"
+			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
+			>
+			<Rack.Resources>
+				<Color x:Key="RegularColor">White</Color>
 
-            
-            <StackLayout Grid.Row="1" Grid.Column="0">
-                <Picker
-                    ItemsSource="{Binding Windows}" 
-                    SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"/>
-            </StackLayout>
-           
-            
-            <Label Text="{Binding MaxAmplitude, StringFormat='Sensetive {0:0.0}'}"/>
-            <Slider 
-                Grid.Row="1" 
-                Grid.Column="0" 
-                Margin="0 20 0 20"
-                Minimum="0"
-                Maximum="12"
-                Value="{Binding MaxAmplitude, Mode=TwoWay, Converter={StaticResource PowConverter}}"/>
-            <Switch Grid.Row="1" Grid.Column="1" x:Name="AutosensetiveToggleButton" IsToggled="{Binding AutoSensetive, Mode=TwoWay}"/>
+				<LinearGradientBrush
+					x:Key="ActiveHarmonicBrush"
+					StartPoint="0,0"
+					EndPoint="0,1"
+					>
+					<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
+					<GradientStop Offset="0.5" Color="Pink" />
+					<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
+				</LinearGradientBrush>
 
-            <Label Grid.Row="1" Grid.Column="0" Text="Whisper" FontSize="14"/>
-            <Label Grid.Row="1" Grid.Column="0" Text="Cry" FontSize="14"/>
+				<LinearGradientBrush
+					x:Key="HarmonicBrush"
+					StartPoint="0,0"
+					EndPoint="0,1"
+					>
+					<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
+					<GradientStop Offset="0.5" Color="{StaticResource RegularColor}" />
+					<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
+				</LinearGradientBrush>
 
-            <Grid 
-                Grid.Row="0" 
-                Grid.RowSpan="2"
-                Grid.Column="0" 
-                Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+				<KeyToValueConverter
+					x:Key="IsActiveToBrushConverter"
+					Key="{True}"
+					Value="{StaticResource ActiveHarmonicBrush}"
+					ByDefault="{StaticResource HarmonicBrush}"
+					/>
+			</Rack.Resources>
+			
+			<Frame
+				Rack.Cell="R0 C0 RS2 CS7"
+				Background="{Binding IsEnabled, Converter={StaticResource IsActiveToBrushConverter}}"
+				CornerRadius="5"
+				Opacity="0.617"
+				/>
 
-                <Label Grid.Column="1" Text="Delay"/>
-                <Entry Grid.Column="2" Margin="-4 -8" FontSize="14" Text="{Binding Delay, Mode=TwoWay}"/>
-                <Label Grid.Column="3" Text="s"/>
-            </Grid>
-            
-        </a:StackPanel>
-    </ControlTemplate>
-    
-    <ControlTemplate x:Key="PresentationOptionsTemplate">
-        <Grid m:Rack.Columns="* ^" m:Rack.Rows="^ ^ ^ ^ ^ ^ ^" BindingContext="{m:Store Key=p:MusicalPresenter}">
-            
-            <Label m:Rack.Cell="R0 C0"  Text="{m:Localizing Key=ShowHz}"/>
-            <Switch m:Rack.Cell="R0 C1" IsToggled="{Binding ShowHz, Mode=TwoWay}"/>
+			<Entry
+				Rack.Cell="C0"
+				Text="{Binding Magnitude, Mode=TwoWay}"
+				/>
+			<Entry
+				Rack.Cell="C1"
+				Text="{Binding Frequency, Mode=TwoWay}"
+				/>
+			<Entry
+				Rack.Cell="C2"
+				Text="{Binding Phase, Mode=TwoWay}"
+				/>
 
-            <Label m:Rack.Cell="R1 C0" Text="{m:Localizing Key=ShowNotes}"/>
-            <Switch m:Rack.Cell="R1 C1" IsToggled="{Binding ShowHz, Mode=TwoWay}"/>
+			<Slider
+				Rack.Cell="C0 R1"
+				Maximum="+1.0"
+				Minimum="+0.0"
+				Value="{Binding Magnitude, Mode=TwoWay}"
+				/>
+			<Slider
+				Rack.Cell="C1 R1"
+				Maximum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
+				Minimum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
+				Value="{Binding Frequency, Mode=TwoWay}"
+				/>
+			<Slider
+				Rack.Cell="C2 R1"
+				Maximum="{StaticResource PlusSinglePi}"
+				Minimum="{StaticResource MinusSinglePi}"
+				Value="{Binding Phase, Mode=TwoWay}"
+				/>
 
-            <Label m:Rack.Cell="R2 C0" Text="{m:Localizing Key=UseVerticalLogScale}"/>
-            <Switch m:Rack.Cell="R2 C1" IsToggled="{Binding UseVerticalLogScale, Mode=TwoWay}"/>
+			<Picker
+				Rack.Cell="C3 R0"
+				ItemsSource="{Binding BasisFuncs}"
+				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
+				/>
+			<Picker
+				Rack.Cell="C4 R0"
+				ItemsSource="{Enum m:PhaseMode}"
+				SelectedItem="{Binding PhaseMode, Mode=TwoWay}"
+				/>
+			<Switch
+				Rack.Cell="C5 R0"
+				IsToggled="{Binding IsEnabled, Mode=TwoWay}"
+				/>
+		</Rack>
+	</DataTemplate>
 
-            <Label m:Rack.Cell="R3 C0" Text="{m:Localizing Key=UseHorizontalLogScale}"/>
-            <Switch m:Rack.Cell="R3 C1" IsToggled="{Binding UseHorizontalLogScale, Mode=TwoWay}"/>
+	<DataTemplate
+		x:Key="HarmonicProfileTemplate">
+		<StackLayout>
+			<!--<ContextView
+				Template="{StaticResource TitleProfileTemplate}"
+				/>-->
+			<!--<Expander
+				Margin="0 -32 0 0"
+				x:Name="Expander"
+				HorizontalOptions="End"
+				>
+				<Expander.Header>
+					<Label
+						Text="{Localizing Each}"
+						/>
+				</Expander.Header>
+				--><!--<v:PopupView
+					IsOpen="{Binding ElementName=Expander, Path=IsExpanded}">
+					<StackLayout
+						Orientation="Horizontal"
+						>
+						<GroupBox
+							BorderThickness="0"
+							Background="{StaticResource LabelBrush}"
+							Header="{Localizing Mode}"
+							>
+							<StackLayout
+								Orientation="Vertical"
+								>
+								<Button
+									Command="{Context Loop, TrackedPath=DataContext}"
+									Content="{Localizing Loop}"
+									/>
+								<Button
+									Command="{Context Flow, TrackedPath=DataContext}"
+									Content="{Localizing Flow}"
+									/>
+							</StackLayout>
+						</GroupBox>
+						<GroupBox
+							BorderThickness="0"
+							Background="{StaticResource LabelBrush}"
+							Header="{Localizing Sound}"
+							>
+							<StackLayout
+								Orientation="Vertical"
+								>
+								<Button
+									Command="{Context Mute, TrackedPath=DataContext}"
+									Text="{Localizing Mute}"
+									/>
+								<Button
+									Command="{Context Loud, TrackedPath=DataContext}"
+									Text="{Localizing Loud}"
+									/>
+							</StackLayout>
+						</GroupBox>
+					</StackLayout>
+				</v:PopupView>--><!--
+			</Expander>-->
+			<Grid
+				Rack.Columns="2* 3* 2* * * * *"
+				>
+				<Label
+					Rack.Cell="C0"
+					Text="{Localizing Magnitude}"
+					/>
+				<Label
+					Rack.Cell="C1"
+					Text="{Localizing Frequency}"
+					/>
+				<Label
+					Rack.Cell="C1"
+					Opacity="0.35"
+					HorizontalOptions="End"
+					Text="{Localizing Hz}"
+					/>
+				<Label
+					Rack.Cell="C2"
+					Text="{Localizing Phase}"
+					/>
+				<Label
+					Rack.Cell="C2"
+					Opacity="0.35"
+					HorizontalOptions="End"
+					Text="{Localizing Rad}"
+					/>
+				<Label
+					Rack.Cell="C3"
+					Text="{Localizing Basis}"
+					/>
+				<Label
+					Rack.Cell="C4"
+					Text="{Localizing Mode}"
+					/>
+				<Label
+					Rack.Cell="C5"
+					Text="{Localizing Sound}"
+					/>
+				<Label
+					Rack.Cell="C6"
+					Text="{Localizing Action}"
+					/>
+			</Grid>
 
-            <Label m:Rack.Cell="R4 C0" Text="{m:Localizing Key=WaveIn}" TextColor="Crimson"/>
-            <Switch m:Rack.Cell="R4 C1" IsToggled="{m:Smart Key=ShowWaveIn}"/>
+			<StackLayout
+				BindableLayout.ItemsSource="{Binding Harmonics}"
+				BindableLayout.ItemTemplate="{StaticResource HarmonicTemplate}"
+				/>
+			<Button
+				Alignment.X="Center"
+				Text="{Localizing Create, StringFormat='{}{0} ➕'}"
+				Command="{Context Key=Set.Create, TrackedPath=DataContext}"
+				/>
+		</StackLayout>
+	</DataTemplate>
 
-            <Label m:Rack.Cell="R5 C0" Text="{m:Localizing Key=WaveOut}" TextColor="YellowGreen"/>
-            <Switch m:Rack.Cell="R5 C1" IsToggled="{m:Smart Key=ShowWaveOut}"/>
+	<ControlTemplate
+		x:Key="HarmonicHeaderTemplate"
+		>
+		<Rack
+			Rack.Columns="48 96 96 96 *"
+			>
+			<Label
+				Rack.Cell="C0"
+				Text="{Localizing Note}"
+				/>
+			<Label
+				Rack.Cell="C1"
+				Text="{Localizing Ethalon}"
+				/>
+			<Label
+				Rack.Cell="C2"
+				Text="{Localizing Offset}"
+				/>
+			<Label
+				Rack.Cell="C3"
+				Text="{Localizing Frequency}"
+				/>
+			<Label
+				Rack.Cell="C4"
+				Text="{Localizing Magnitude}"
+				/>
+		</Rack>
+	</ControlTemplate>
 
-            <Label m:Rack.Cell="R6 C0" Text="{m:Localizing Key=UseAliasing}"/>
-            <Switch m:Rack.Cell="R6 C1" IsToggled="{m:Smart Key=UseAliasing}"/>
+	<DataTemplate
+		x:Key="HarmonicOutTemplate"
+		>
+		<Rack
+			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
+			Rack.Columns="48 96 96 96 *"
+			>
+			<Label
+				Rack.Cell="C0"
+				Text="{Binding NoteName}"
+				/>
+			<Label
+				Rack.Cell="C1"
+				Ext.ToolTip="{Binding EthalonFrequency}"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Label
+				Rack.Cell="C2"
+				Ext.ToolTip="{Binding OffsetFrequency}"
+				Text="{Binding OffsetFrequency, StringFormat='({0:+0.00;-0.00;0.00})'}"
+				BackgroundColor="{Binding Converter={StaticResource HarmonicOffsetToColorConverter}}"
+				/>
+			<Label
+				Rack.Cell="C3"
+				Ext.ToolTip="{Binding Harmonic.Frequency}"
+				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				BackgroundColor="{Binding Converter={StaticResource HarmonicOffsetToColorConverter}}"
+				/>
+			<Label
+				Rack.Cell="C4"
+				Ext.ToolTip="{Binding Harmonic.Magnitude}"
+				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+		</Rack>
+	</DataTemplate>
 
-            <!--<TextBox Text="{m:StoreBinding StoreKey=Aides:Presenter, Path=LimitFrequency, Mode=TwoWay}"/>-->
+	<DataTemplate
+		x:Key="ProfileHeaderTemplate"
+		>
+		<Stack
+			Orientation="Horizontal"
+			>
+			<Label
+				Text="{Binding Title}"
+				/>
+			<!--<Button
+				Content="✗"
+				Command="{Context Key=Set.Delete, StoreKey=local:Generator}"
+				CommandParameter="{Binding}"
+				/>-->
+		</Stack>
+	</DataTemplate>
 
-        </Grid>
-    </ControlTemplate>
-    
+	<DataTemplate
+		x:Key="TitleTemplate"
+		>
+		<Stack
+			Style="{StaticResource TitlePanelStyle}"
+			>
+			<Label
+				Text="{Localizing Profile}"
+				/>
+			<!--<Picker
+				ItemDisplayBinding="{Binding Title}"
+				ItemsSource="{Binding Path=Profiles, Converter={StaticResource DebugConverter}}"
+				SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}"
+				/>-->
+			<Entry
+				Text="{Binding ActiveProfile.Title, Mode=TwoWay}"
+				/>
+			<Button
+				Text="➕"
+				Command="{Context Key=Set.Create}"
+				/>
+			<Button
+				Text="➖"
+				CommandParameter="{Binding Path=ActiveProfile}"
+				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
+				/>
+		</Stack>
+	</DataTemplate>
+
+
+	<DataTemplate
+		x:Key="MusicOptionsTemplate">
+		<Rack
+			Rows="^ ^"
+			Columns="^ ^ ^ ^">
+			<Label
+				Rack.Cell="R0 C0"
+				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
+				/>
+			<Pick
+				Rack.Cell="R0 C1"
+				ItemsSource="{Binding PitchStandards}"
+				ActiveItem="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>
+			<Entry
+				Rack.Cell="R0 C2"
+				Text="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>
+			<Label
+				Rack.Cell="R0 C3"
+				Text="{Localizing Hz}"
+				/>
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Notation}"
+				/>
+			<Pick
+				Rack.Cell="R1 C1"
+				ItemsSource="{Binding Notations}"
+				ActiveItem="{Binding ActiveNotation, Mode=TwoWay}"
+				/>
+			<!--<Label
+				Rack.Cell="C7"
+				Text="{Localizing Peak}"
+				/>-->
+			<!--<Item
+				Rack.Cell="C8"
+				Data.Context="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
+				Template="{StaticResource VisibilityTemplate}"
+				/>-->
+		</Rack>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="GeometryTemplate">
+		<Grid
+			Rack.Rows="^ ^"
+			Rack.Columns="^ ^ ^"
+			>
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Approximation}" />
+			<Label
+				Rack.Cell="R0 C1"
+				Text="{Localizing Flower}" />
+			<Pick
+				Rack.Cell="R1 C1"
+				Alignment.X="Center"
+				ItemsSource="{Binding NumericFormats}"
+				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
+			<Label
+				Rack.Cell="R0 C2"
+				Text="{Localizing Spiral}" />
+			<Pick
+				Rack.Cell="R1 C2"
+				Alignment.X="Center"
+				ItemsSource="{Binding NumericFormats}"
+				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="FormattingTemplate">
+		<Grid
+			Rack.Rows="^ ^"
+			Rack.Columns="^ ^ ^"
+			>
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Numeric}" />
+			<Label
+				Rack.Cell="R0 C1"
+				Text="{Localizing Monitor}" />
+			<Pick
+				Rack.Cell="R1 C1"
+				Alignment.X="Center"
+				ItemsSource="{Binding NumericFormats}"
+				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
+			<Label
+				Rack.Cell="R0 C2"
+				Text="{Localizing Screen}" />
+			<Pick
+				Rack.Cell="R1 C2"
+				Alignment.X="Center"
+				ItemsSource="{Binding NumericFormats}"
+				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
+		</Grid>
+	</DataTemplate>
+	
+	<DataTemplate
+		x:Key="ProcessingProfileTemplate"
+		>
+		<Grid
+			Rack.Rows="^ *"
+			Rack.Columns="* *"
+			>
+			
+			<Grid
+				Rack.Cell="R1 C0"
+				Rack.Rows="^ ^ ^"
+				Rack.Columns="^ ^ ^ ^ ^ ^"
+				Alignment.X="Center"
+				Alignment.Y="Center"
+				>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Input}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Output}"
+					/>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Device}"
+					/>
+				<Label
+					Rack.Cell="R0 C2"
+					Text="{Localizing Level}"
+					/>
+				<Label
+					Rack.Cell="R0 C3"
+					Text="{Localizing Buffers}"
+					/>
+				<Label
+					Rack.Cell="R1 C4"
+					Text="{Localizing Pcs}"
+					/>
+
+				<Picker
+					Rack.Cell="R1 C1"
+					ItemsSource="{Binding InputDevices}"
+					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding ProductName}"
+					/>
+				<Picker
+					Rack.Cell="R2 C1"
+					ItemsSource="{Binding OutputDevices}"
+					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding ProductName}"
+					/>
+				<!--<ContentView
+					Rack.Cell="R1 C2"
+					Data.Context="{Binding InputLevel, Mode=TwoWay}"
+					Template="{StaticResource ValuePickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R2 C2"
+					Data.Context="{Binding OutputLevel, Mode=TwoWay}"
+					Template="{StaticResource ValuePickerTemplate}"
+					/>-->
+				<!--<Picker
+					Rack.Cell="R1 C3"
+					ItemsSource="{StaticResource AllowedBuffersCount}"
+					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
+					/>-->
+			</Grid>
+
+			<Grid
+				Rack.Cell="R1 C1"
+				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
+				Rack.Columns="^ ^ ^"
+				Alignment.X="Center"
+				Alignment.Y="Center"
+				>
+				<Label
+					Rack.Cell="R0 C1"
+					Text="{Localizing Sample}"
+					/>
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Window}"
+					/>
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Rate}"
+					/>
+				<Label
+					Rack.Cell="R3 C1 CS2"
+					Text="{Localizing Frame}"
+					/>
+				<Label
+					Rack.Cell="R4 C0"
+					Text="{Localizing Length}"
+					/>
+
+				<Label
+					Rack.Cell="R2 C2"
+					Text="{Localizing Hz}"
+					/>
+				<Label
+					Rack.Cell="R4 C2"
+					Text="{Localizing Pcs}"
+					/>
+				<Label
+					Rack.Cell="R5 C2"
+					Text="{Localizing ms}"
+					/>
+				<Label
+					Rack.Cell="R6 C2"
+					Text="{Localizing Hz}"
+					/>
+				<Label
+					Rack.Cell="R7 C2"
+					Text="{Localizing Hz}"
+					/>
+
+				<Picker
+					Rack.Cell="R1 C1"
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+				<Picker
+					Rack.Cell="R2 C1"
+					ItemsSource="{Binding SampleRates}"
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+
+				<StackLayout
+					Rack.Cell="R4 C1"
+					Orientation="Horizontal"
+					>
+					<Label
+						Text="2 ^"
+						/>
+					<Picker
+						ItemsSource="{StaticResource AllowedPowsOf2}"
+						SelectedItem="{Binding FramePow, Mode=TwoWay}"
+						/>
+					<Label
+						Text="{Binding FrameSize, StringFormat='= {0}'}"
+						/>
+				</StackLayout>
+				<Label
+					Rack.Cell="R5 C0"
+					Text="{Localizing Duration}"
+					/>
+				<Label
+					Rack.Cell="R5 C1"
+					Alignment.X="Till"
+					Text="{Binding FrameDuration.TotalMilliseconds}"
+					/>
+				<Label
+					Rack.Cell="R6 C0"
+					Text="{Localizing Step}"
+					/>
+				<Label
+					Rack.Cell="R6 C1"
+					Alignment.X="Till"
+					Ext.ToolTip="{Binding FrameStep}"
+					Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Label
+					Rack.Cell="R7 C0"
+					Text="{Localizing Accuracy}"
+					/>
+				<Label
+					Rack.Cell="R7 C1"
+					Alignment.X="Till"
+					Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
+					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+			</Grid>
+		</Grid>
+	</DataTemplate>
+
 </ResourceDictionary>

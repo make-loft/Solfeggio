@@ -337,7 +337,7 @@ namespace Solfeggio.Presenters
 			double GetValueByKey(string key) =>
 				key.Is("ActualMagnitude") ? activeMagnitude :
 				key.Is("ActualFrequancy") ? activeFrequency :
-				key.Is("DeltaFrequancy") ? pianoKey.DeltaFrequency :
+				key.Is("DeltaFrequancy") ? pianoKey.OffsetFrequency :
 				key.Is("EthalonFrequncy") ? pianoKey.EthalonFrequency :
 				default;
 
@@ -392,9 +392,9 @@ namespace Solfeggio.Presenters
 
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
 			var useNoteFilter = UseNoteFilter;
-			var noteNames = Music.Notations.TryGetValue(Music.ActiveNotation ?? "", out var names)
+			var noteNames = Music.NotationToNotes.TryGetValue(Music.ActiveNotation ?? "", out var names)
 				? names
-				: Music.Notations[Music.ActiveNotation = Music.Notations.First().Key];
+				: Music.NotationToNotes[Music.ActiveNotation = Music.NotationToNotes.First().Key];
 
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
@@ -402,39 +402,35 @@ namespace Solfeggio.Presenters
 			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var keys = Music.EnumeratePianoKeys().ToList();
-			var averageMagnitude = peaks.Aggregate(0d, (s, p) => s += p.Magnitude) / peaks.Count;
-			var thresholdMagnitude = Math.Sqrt(averageMagnitude) / 2d;
+			//var averagePeaksMagnitude = peaks.Aggregate(0d, (s, p) => s += p.Magnitude) / peaks.Count;
+			var averageSignalMagnitude = data.Aggregate(0d, (s, p) => s += p.Magnitude) / data.Count;
+			var thresholdMagnitude = averageSignalMagnitude * Pi.Double;
+			thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
+			var valuePeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
 
-			foreach (var bin in peaks)
+			foreach (var bin in valuePeaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency || activeFrequency > upperFrequency) continue;
 
-				var key =
-					keys.FirstOrDefault(k => k.LowerFrequency < activeFrequency && activeFrequency <= k.UpperFrequency);
-				if (key.Is(default)) continue;
-				if (useNoteFilter)
-				{
-					var range = key.UpperFrequency - key.LowerFrequency;
-					var half = key.EthalonFrequency - key.LowerFrequency;
-					activeMagnitude = (float)(activeMagnitude * Windowing.Gausse(half, range));
-				}
-
-				if (bin.Magnitude < thresholdMagnitude)
+				var key = keys.FirstOrDefault(k => k.LowerFrequency < activeFrequency && activeFrequency <= k.UpperFrequency);
+				if (key.Is(default))
 					continue;
 
 				key.Peaks.Add(bin);
 
-				if (activeMagnitude > key.Magnitude)
+				var topPeak = key.Peaks.OrderBy(p => p.Magnitude).FirstOrDefault();
+				if (topPeak.Is())
 				{
-					key.Magnitude = activeMagnitude;
-					key.Harmonic = bin;
+					key.Magnitude = topPeak.Magnitude;
+					key.Harmonic = topPeak;
 				}
 			}
 
-			var minMagnitude = upperMagnitude * 0.01;
-			var harmonics = keys.OrderByDescending(k => k.Magnitude).Take(MaxHarmonicsCount)
-				.Where(k => k.Magnitude > minMagnitude).ToList();
+			var harmonics = keys
+				.OrderByDescending(k => k.Magnitude)
+				.Take(MaxHarmonicsCount)
+				.ToList();
 
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{

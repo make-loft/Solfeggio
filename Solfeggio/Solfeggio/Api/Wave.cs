@@ -40,11 +40,15 @@ namespace Solfeggio.Api
 
 			public class MicrophoneDeviceInfo : DeviceInfo
 			{
+				public delegate IProcessor CreateProcessorDelegate(WaveFormat waveFormat, int sampleSize, int buffersCount);
+
+				public static CreateProcessorDelegate ProvideDevice { get; set; }
+
 				public MicrophoneDeviceInfo() : base(0) { }
 				public override string ProductName => "Microphone";
 
 				public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-					Store.Get<IProcessor>();
+					ProvideDevice(waveFormat, sampleSize, buffersCount);
 			}
 
 			public abstract class DeviceInfo
@@ -62,7 +66,19 @@ namespace Solfeggio.Api
 		{
 			public static IEnumerable<DeviceInfo> EnumerateDevices()
 			{
-				yield break;
+				yield return new SpeakerDeviceInfo();
+			}
+
+
+			public class SpeakerDeviceInfo : DeviceInfo
+			{
+				public static IProcessor Device { get; set; }
+
+				public SpeakerDeviceInfo() : base(0) { }
+				public override string ProductName => "Speaker";
+
+				public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor inputProcessor) =>
+					Device.With(Device.Source = inputProcessor);
 			}
 
 			public class DeviceInfo

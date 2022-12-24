@@ -40,8 +40,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Palettes\Styles.xaml.cs">
+      <DependentUpon>Styles.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Palettes\Sets.xaml.cs">
       <DependentUpon>Sets.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Palettes\Converters.xaml.cs">
+      <DependentUpon>Converters.xaml</DependentUpon>
     </Compile>
     <Compile Update="Palettes\Values.xaml.cs">
       <DependentUpon>Values.xaml</DependentUpon>
@@ -55,16 +61,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Palettes\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Sets.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Values.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Brushes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Templates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\OptionsView.xaml">

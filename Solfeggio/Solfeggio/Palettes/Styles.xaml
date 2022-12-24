@@ -1,0 +1,69 @@
+<ResourceDictionary
+    x:Class="Solfeggio.Palettes.Styles"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	>
+
+	<Style
+		TargetType="Stack"
+		>
+		<Setter Property="Spacing" Value="0" />
+	</Style>
+	
+	<Style
+		TargetType="Rack"
+		>
+		<Setter Property="RowSpacing" Value="0" />
+		<Setter Property="ColumnSpacing" Value="0" />
+	</Style>
+
+	<Style
+		TargetType="Grid"
+		>
+		<Setter Property="RowSpacing" Value="0" />
+		<Setter Property="ColumnSpacing" Value="0" />
+	</Style>
+
+	<Style
+		TargetType="Picker"
+		>
+		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="MinimumWidthRequest" Value="64" />
+	</Style>
+
+	<Style
+		TargetType="Entry"
+		>
+		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="MinimumWidthRequest" Value="64" />
+	</Style>
+
+	<Style
+		TargetType="Label"
+		>
+		<Setter Property="VerticalOptions" Value="Center" />
+		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="BackgroundColor" Value="#66CCCCCC" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="VerticalTextAlignment" Value="Center" />
+		<Setter Property="Alignment.X" Value="Center" />
+		<Setter Property="Alignment.Y" Value="Center" />
+	</Style>
+
+	<Style
+		TargetType="Switch"
+		>
+		<Setter Property="Margin" Value="5" />
+	</Style>
+
+	<Style
+		TargetType="Button"
+		>
+		<Setter Property="Padding" Value="-15 0" />
+		<Setter Property="Margin" Value="2" />
+		<Setter Property="MinimumWidthRequest" Value="32" />
+		<Setter Property="Alignment.X" Value="Center" />
+		<Setter Property="Alignment.Y" Value="Center" />
+	</Style>
+</ResourceDictionary>

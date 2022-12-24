@@ -34,13 +34,14 @@ namespace Solfeggio.Presenters.Options
 			}
 		}
 
-		public Dictionary<string, string[]> Notations { get; set; } = new()
+		public Dictionary<string, string[]> NotationToNotes { get; set; } = new()
 		{
 			{ "Dies", Notes.Select(n => n.Split('|')[0]).ToArray() },
 			{ "Bemole", Notes.Select(n => n.Split('|')[1]).ToArray() },
 			{ "Combined", Notes }
 		};
 
+		public string[] Notations => NotationToNotes.Keys.ToArray();
 		[DataMember] public string ActiveNotation { get; set; }
 
 		protected static readonly string[] Notes =
@@ -66,9 +67,9 @@ namespace Solfeggio.Presenters.Options
 
 		public IEnumerable<PianoKey> EnumeratePianoKeys()
 		{
-			var noteNames = Notations.TryGetValue(ActiveNotation ?? "", out var names)
+			var noteNames = NotationToNotes.TryGetValue(ActiveNotation ?? "", out var names)
 				? names
-				: Notations[ActiveNotation = Notations.First().Key];
+				: NotationToNotes[ActiveNotation = NotationToNotes.First().Key];
 
 			var oktavesCount = HalfTonesCount + 1;
 

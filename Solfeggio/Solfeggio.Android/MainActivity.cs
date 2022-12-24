@@ -40,7 +40,13 @@ namespace Solfeggio.Droid
 				    ActivityCompat.RequestPermissions(this, RequriedPermissions, RequestPermissionCode);
 			    }
 
-				Store.Set<IProcessor>(Microphone.Default);
+				Wave.In.MicrophoneDeviceInfo.ProvideDevice += (waveFormat, sampleSize, buffersCount) =>
+				{
+					Microphone.Default.SampleRate = waveFormat.SampleRate;
+					Microphone.Default.StartWith(sampleSize);
+					return Microphone.Default;
+				};
+				Wave.Out.SpeakerDeviceInfo.Device = Speaker.Default;
 			}
 		    catch (Exception e)
 		    {

@@ -13,7 +13,7 @@ namespace Solfeggio.Models
 		public double LowerFrequency { get; set; }
 		public double UpperFrequency { get; set; }
 		public double EthalonFrequency { get; set; }
-		public double DeltaFrequency => Harmonic.Frequency - EthalonFrequency;
+		public double OffsetFrequency => Harmonic.Frequency - EthalonFrequency;
 		public Bin Harmonic { get; set; }
 		public List<Bin> Peaks { get; set; } = new();
 

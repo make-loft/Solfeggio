@@ -7,10 +7,7 @@ using static Rainbow.HarmonicFuncs;
 
 namespace Solfeggio.Models
 {
-	public enum PhaseMode
-	{
-		Flow, Loop
-	}
+	public enum PhaseMode { Flow, Loop }
 
 	[DataContract]
 	public partial class Harmonic : ContextObject, IExposable

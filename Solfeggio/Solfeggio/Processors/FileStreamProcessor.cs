@@ -25,6 +25,8 @@ namespace Solfeggio.Processors
 
 	class FileStreamProcessor : IProcessor
 	{
+		public IProcessor Source { get; set; }
+
 		public int BufferMilliseconds
 		{
 			get => (int)_timer.Interval.TotalMilliseconds;

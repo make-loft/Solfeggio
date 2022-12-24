@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+#if NETSTANDARD
+using Xamarin.Forms;
+#else
 using System.Windows;
 using System.Windows.Media;
+#endif
 
 namespace Solfeggio.Models
 {

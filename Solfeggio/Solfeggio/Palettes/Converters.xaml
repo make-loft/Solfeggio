@@ -1,0 +1,109 @@
+﻿<ResourceDictionary
+	x:Class="Solfeggio.Palettes.Converters"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:Solfeggio.Converters"
+	>
+
+	<Double x:Key="PlusSinglePi">+3.1415926535897932384626433832795</Double>
+	<Double x:Key="MinusSinglePi">-3.1415926535897932384626433832795</Double>
+
+	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
+	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
+
+	<Double x:Key="MinHarmonicOpacityLevel">0.3</Double>
+
+	<c:DoubleToStringTwoWayConverter
+		x:Key="DoubleToStringTwoWayConverter"
+		/>
+
+	<c:MathConverter
+		x:Key="HarmonicOpacityConverter"
+		Operation="Increment"
+		Parameter="{StaticResource MinHarmonicOpacityLevel}"
+		/>
+	<c:MathConverter
+		x:Key="RadianDegreeConverter"
+		Operation="Stretch"
+		Parameter="{Double Value=57.295779513082320876798154814105}"
+		/>
+	<c:MathConverter
+		x:Key="RadianPiConverter"
+		Operation="Squeeze"
+		Parameter="{StaticResource PlusSinglePi}"
+		/>
+
+	<!--<AggregateConverter
+		x:Key="RadianDegreeFormattedConverter"
+		>
+		<RemoteConverter
+			Source="{StaticResource RadianDegreeConverter}"
+			/>
+		<c:DoubleToStringTwoWayConverter
+			Tail="°"
+			/>
+	</AggregateConverter>
+	<AggregateConverter
+		x:Key="RadianPiFormattedConverter"
+		>
+		<RemoteConverter
+			Source="{StaticResource RadianPiConverter}"
+			/>
+		<c:DoubleToStringTwoWayConverter
+			Tail="π"
+			/>
+	</AggregateConverter>-->
+
+	<SwitchConverter
+		x:Key="ModeToTitleConverter"
+		>
+		<Case
+			Key="Flow"
+			Value="{Localizing Key=Flow}"
+			/>
+		<Case
+			Key="Loop"
+			Value="{Localizing Key=Loop}"
+			/>
+	</SwitchConverter>
+
+	<SwitchConverter
+		x:Key="SoundToTitleConverter"
+		>
+		<Case
+			Key="{True}"
+			Value="{Localizing Key=Loud, StringFormat='🔊 {0}', ForceStringFormat=True}"
+			/>
+		<Case
+			Key="{False}"
+			Value="{Localizing Key=Mute, StringFormat='🔇 {0}', ForceStringFormat=True}"
+			/>
+	</SwitchConverter>
+
+	<KeyToValueConverter
+		x:Key="VisibleToTrueConverter"
+		Key="Visible"
+		Value="True"
+		/>
+
+	<!--<TwoWayConverter
+		x:Key="IsVisibleConverter"
+		GetConverter="{StaticResource VisibleToTrueConverter}"
+		SetConverter="{StaticResource TrueToVisibleConverter}"
+		/>-->
+
+	<Converter
+		x:Key="HarmonicOffsetToColorConverter"
+		Convert="HarmonicOffsetToColor_Convert"
+		/>
+
+	<Converter
+		x:Key="DebugConverter"
+		Convert="Converter_Convert"
+		/>
+
+	<c:DelegateToNameConverter
+		x:Key="DelegateToNameConverter"
+		/>
+
+</ResourceDictionary>

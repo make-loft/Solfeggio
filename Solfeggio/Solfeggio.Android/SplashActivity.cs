@@ -10,7 +10,7 @@ using System;
 namespace Solfeggio.Droid
 {
 	[Activity(
-		Label = "Solfeggio",
+		Label = "Solfeggio 🎶 ♪ 🎵 ♫ 📋 ♬ ",
 		Icon = "@drawable/logo",
 		Theme = "@style/SplashTheme",
 		MainLauncher = true,

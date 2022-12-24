@@ -40,6 +40,31 @@
 			Color="#FF00FF"
 			Offset="1.0" />
 	</GradientStopCollection>
+	
+	<GradientStopCollection
+		x:Key="RainbowGradient_">
+		<GradientStop
+			Color="#00FF00"
+			Offset=".0" />
+		<GradientStop
+			Color="#00FFFF"
+			Offset=".17" />
+		<GradientStop
+			Color="#FFFF00"
+			Offset=".33" />
+		<GradientStop
+			Color="#FF00FF"
+			Offset=".5" />
+		<GradientStop
+			Color="#FF0000"
+			Offset=".66" />
+		<GradientStop
+			Color="#FFFF00"
+			Offset=".73" />
+		<GradientStop
+			Color="#00FF00"
+			Offset="1.0" />
+	</GradientStopCollection>
 
 	<GradientStopCollection
 		x:Key="BrightnessGradient">
@@ -406,6 +431,12 @@
 		/>
 
 	<RadialGradientBrush
+		x:Key="Stroke.Geometry_"
+		Center="0.5,0.5"
+		GradientStops="{StaticResource RainbowGradient_}"
+		/>
+
+	<RadialGradientBrush
 		x:Key="GeometryBackgroundBrush"
 		Center="0.5,0.5">
 		<GradientStop
@@ -416,5 +447,15 @@
 			Color="{StaticResource ColorA}" />
 	</RadialGradientBrush>
 
+	<RadialGradientBrush
+		x:Key="GeometryBackgroundBrush_"
+		Center="0.5,0.5">
+		<GradientStop
+			Offset="0.0"
+			Color="#07575B" />
+		<GradientStop
+			Offset="1.0"
+			Color="#003B46" />
+	</RadialGradientBrush>
 
 </ResourceDictionary>

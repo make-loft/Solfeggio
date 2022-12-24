@@ -9,37 +9,10 @@
 			<ResourceDictionary.MergedDictionaries>
 				<p:Values />
 				<p:Brushes />
+				<p:Converters />
 				<p:Templates />
+				<p:Styles />
 			</ResourceDictionary.MergedDictionaries>
-
-			<Style
-				TargetType="Grid">
-				<Setter
-					Property="RowSpacing"
-					Value="0" />
-				<Setter
-					Property="ColumnSpacing"
-					Value="0" />
-			</Style>
-
-			<Style TargetType="Picker">
-				<Setter
-					Property="FontSize"
-					Value="Small" />
-			</Style>
-
-			<Style
-				TargetType="Label">
-				<Setter
-					Property="VerticalOptions"
-					Value="Center" />
-				<Setter
-					Property="FontSize"
-					Value="Small" />
-				<Setter
-					Property="Margin"
-					Value="2" />
-			</Style>
 
 			<m:Set
 				x:Key="AllowedPowsOf2">

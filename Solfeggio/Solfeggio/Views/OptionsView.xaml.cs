@@ -1,4 +1,8 @@
-﻿using Xamarin.Forms;
+﻿using Ace;
+using Ace.Controls;
+using Ace.Markup.Patterns;
+
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Solfeggio.Views
@@ -7,5 +11,8 @@ namespace Solfeggio.Views
 	public partial class OptionsView : ContentView
 	{
 		public OptionsView() => InitializeComponent();
+
+		object SkipTelemetry_Convert(ConvertArgs args) =>
+			Content.Is(out Pivot pivot) && pivot.ActiveItemOffset.Is(3) ? args.Value : default;
 	}
 }

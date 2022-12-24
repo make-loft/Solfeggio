@@ -41,7 +41,6 @@ namespace Solfeggio.Views
 
 		void OnTouchEffectAction(object sender, SKTouchEventArgs args)
         {
-
             args.Handled = true;
 
 			var control = (Canvas)sender;
@@ -68,7 +67,7 @@ namespace Solfeggio.Views
 					if (fromOrigin.Is(tillOrigin))
 						return;
 
-					var bandwidth = musicalPresenter.Spectrum.Frequency;
+					var bandwidth = MusicalPresenter.Spectrum.Frequency;
 					var from = new Point(fromOrigin.X / density, fromOrigin.Y / density);
 					var till = new Point(tillOrigin.X / density, tillOrigin.Y / density);
 
@@ -128,23 +127,38 @@ namespace Solfeggio.Views
 			}
         }
 
-		MusicalPresenter musicalPresenter = Store.Get<MusicalPresenter>();
-		ProcessingManager processingManager = Store.Get<ProcessingManager>();
+		static readonly AppViewModel AppViewModel = Store.Get<AppViewModel>();
+		static readonly MusicalPresenter MusicalPresenter = Store.Get<MusicalPresenter>();
+		static readonly ProcessingManager ProcessingManager = Store.Get<ProcessingManager>();
 
 		public SolfeggioView()
         {
             InitializeComponent();
+
+			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
+
             Loop(100, () =>
             {
 				Render();
 
 				PianoCanvas.InvalidateSurface();
 				MagnitudeCanvas.InvalidateSurface();
-				SkiaSpectrogramCanvas.InvalidateSurface();
+				SpectrogramCanvas.InvalidateSurface();
 				MagnitudeRawFrameCanvas.InvalidateSurface();
 				FlowerStrokeCanvas.InvalidateSurface();
 				FlowerFillCanvas.InvalidateSurface();
-            });
+				FlowerCanvas.InvalidateSurface();
+
+				//foreach (var path in _completedPaths)
+				//{
+				//    canvas.DrawPath(path, paint);
+				//}
+
+				//foreach (var path in _inProgressPaths.Values)
+				//{
+				//    canvas.DrawPath(path, paint);
+				//}
+			});
         }
 
         private async void Loop(int milliseconds, Action actionToExecute)
@@ -174,19 +188,20 @@ namespace Solfeggio.Views
 			FlowerStrokeCanvas.WidthRequest = MagnitudeRawFrameCanvas.Height;
 			FlowerFillCanvas.WidthRequest = MagnitudeRawFrameCanvas.Height;
 
-			var spectrum = processingManager.SpectrumBetter;
-
-			if (spectrum.IsNot()) return;
+			var spectrum = ProcessingManager.SpectrumBetter;
+			if (spectrum.IsNot())
+				return;
 
 			var pianoCanvas = PianoCanvas;
 			pianoCanvas.Children.Clear();
 
-			var pianoKeys = musicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, processingManager.Peaks);
+			var pianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, ProcessingManager.Peaks);
+			AppViewModel.Harmonics = pianoKeys;
 
-			var activeProfile = processingManager.ActiveProfile;
-			var geometryFill = MusicalPresenter.DrawGeometry(processingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+			var activeProfile = ProcessingManager.ActiveProfile;
+			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
 				1d, 1d / activeProfile.FrameSize, Pi.Half);
-			var geometryStroke = MusicalPresenter.DrawGeometry(processingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+			var geometryStroke = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
 				1d, 0d, Pi.Half);
 
 			var centerX = MagnitudeRawFrameCanvas.Width / 2d;
@@ -198,27 +213,39 @@ namespace Solfeggio.Views
 			geometryFill.ForEach(p => FlowerFillPolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
 			geometryStroke.ForEach(p => FlowerStrokePolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
 
-			var waveInData = processingManager.OuterFrame;
-			var waveOutData = processingManager.InnerFrame;
+			if (FlowerCanvas.Width > 0)
+			{
+				centerX = FlowerCanvas.Width / 2d;
+				centerY = FlowerCanvas.Height / 2d;
+				radius = Math.Max(Math.Min(centerX, centerY), 1d);
+
+				FlowerFillPolyline_.Points.Clear();
+				FlowerStrokePolyline_.Points.Clear();
+				if (SpiralSwitch.IsToggled)
+					geometryFill.ForEach(p => FlowerFillPolyline_.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
+				if (FlowerSwitch.IsToggled)
+					geometryStroke.ForEach(p => FlowerStrokePolyline_.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
+			}
+
+			var waveInData = ProcessingManager.OuterFrame;
+			var waveOutData = ProcessingManager.InnerFrame;
 
 			MagnitudeRawFramePolyline.Points.Clear();
-			musicalPresenter
+			MusicalPresenter
 				.DrawFrame(waveInData, MagnitudeRawFrameCanvas.Width, MagnitudeRawFrameCanvas.Height)
 				.Use(MagnitudeRawFramePolyline.Points.AddRange);
 
 			MagnitudePolyline.Points.Clear();
-			musicalPresenter
+			MusicalPresenter
 				.DrawMagnitude(spectrum, MagnitudeCanvas.Width, MagnitudeCanvas.Height)
 				.Use(MagnitudePolyline.Points.AddRange);
 
 			MagnitudeCanvas.Children.Clear();
 			MagnitudeCanvas.Children.Add(MagnitudePolyline);
-			//MagnitudeCanvas.Children.Add(FlowerFillPolyline);
-			//MagnitudeCanvas.Children.Add(FlowerStrokePolyline);
 
 			if (pianoKeys.Is())
 			{
-				var labels = musicalPresenter.DrawPeakLabels(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
+				var labels = MusicalPresenter.DrawPeakLabels(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
 
 				labels.ForEach(p =>
 				{
@@ -230,27 +257,30 @@ namespace Solfeggio.Views
 				});
 			}
 
-			var w = SkiaSpectrogramCanvas.Width;
-			var h = SkiaSpectrogramCanvas.Height;
+			var w = SpectrogramCanvas.Width;
+			var h = SpectrogramCanvas.Height;
 
-			var actualBand = musicalPresenter.Spectrum.Frequency;
+			var actualBand = MusicalPresenter.Spectrum.Frequency;
 			var transformer = MusicalPresenter.GetScaleTransformer(actualBand, w);
 
 			var count = 32;
-			if (SpectrogramCanvas.Children.Count > count)
-				SpectrogramCanvas.Children.RemoveAt(count);
+			if (SpectrogramStack.Children.Count > count)
+				SpectrogramStack.Children.RemoveAt(count);
 
-			var hh = SkiaSpectrogramCanvas.Height / count;
-			var ww = SkiaSpectrogramCanvas.Width;
+			var magnitudeProjection = MusicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
+			var hh = SpectrogramCanvas.Height / count;
+			var ww = SpectrogramCanvas.Width;
 
-			var magnitudeProjection = musicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
-			SpectrogramCanvas.Children.Insert(0, DrawKeys(new Grid
+			if (ProcessingManager.IsPaused.Not())
 			{
-				BindingContext = new SpectrogramFrame(spectrum, pianoKeys),
-				Background = GetSpectrogramLineBrush(spectrum, transformer, w, magnitudeProjection),
-				WidthRequest = ww,
-				HeightRequest = hh,
-			}));
+				SpectrogramStack.Children.Insert(0, DrawKeys(new Grid
+				{
+					BindingContext = new SpectrogramFrame(spectrum, pianoKeys),
+					Background = GetSpectrogramLineBrush(spectrum, transformer, w, magnitudeProjection),
+					WidthRequest = ww,
+					HeightRequest = hh,
+				}));
+			}
 
 			Grid DrawKeys(Grid grid)
 			{
@@ -264,7 +294,7 @@ namespace Solfeggio.Views
 					Fill = new SolidColorBrush(SetAlpha(color, magnitudeProjection(k.Magnitude))),
 					Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, ww - transformer.GetVisualOffset(k.UpperFrequency), 0),
 					Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
-					Height = hh,
+					//Height = hh,
 				})
 				.ForEach(grid.Children.Add);
 
@@ -273,16 +303,14 @@ namespace Solfeggio.Views
 					Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
 					Fill = new SolidColorBrush(FromArgb
 					(
-						//1d,
-						//System.Math.Sqrt(magnitudeProjection(k.Magnitude)),
-						0.8 + 0.2 * magnitudeProjection(k.Magnitude),
+						0.368 + 0.632 * magnitudeProjection(k.Magnitude),
 						0.0,
-						1.0 - 2.0 * Math.Abs(k.DeltaFrequency) / (k.UpperFrequency - k.LowerFrequency).To(out var d),
-						0.5 + 1.0 * d
+						1.0 - (2.0 * Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)).To(out var colorOffset),
+						1.0
 					)),
-					Height = hh,
 					Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
 					Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency).To(out var x) - w / 2d, 0, ww - (x + w / 2d), 0),
+					//Height = hh,
 				})
 				.ForEach(grid.Children.Add);
 
@@ -292,25 +320,11 @@ namespace Solfeggio.Views
 			if (_fullSpectrogramRefresh)
 			{
 				_fullSpectrogramRefresh = false;
-				SpectrogramCanvas.Children
+				SpectrogramStack.Children
 					.OfType<Grid>()
 					.ForEach(g => DrawKeys(g).Background = GetSpectrogramLineBrush(
 						g.BindingContext.To<SpectrogramFrame>().SpectrumInterpolated, transformer, w, magnitudeProjection));
 			}
-#if false
-
-#endif
-			//SpectrogramCanvas.Children.OfType<Canvas>().Last().InvalidateSurface();
-
-			//foreach (var path in _completedPaths)
-			//{
-			//    canvas.DrawPath(path, paint);
-			//}
-
-			//foreach (var path in _inProgressPaths.Values)
-			//{
-			//    canvas.DrawPath(path, paint);
-			//}
 		}
 
 		bool _fullSpectrogramRefresh;
@@ -327,7 +341,6 @@ namespace Solfeggio.Views
 			_fullSpectrogramRefresh = true;
 		}
 
-
 		static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, ScaleTransformer transformer, double width, Projection magnitudeProjection)
 		{
 			var from = transformer.GetLogicalOffset(0);
@@ -341,5 +354,13 @@ namespace Solfeggio.Views
 
 		static Color SetAlpha(Color color, double alpha) => Color.FromRgba(color.R, color.G, color.B , alpha);
 		static Color FromArgb(double a, double r, double g, double b) => Color.FromRgba(r, g, b, a);
+
+		private void Switch_Toggled(object sender, ToggledEventArgs e) =>
+			FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d;
+
+		private void Button_Clicked(object sender, EventArgs e)
+		{
+			SettingsSwitch.IsToggled = false;
+		}
 	}
 }

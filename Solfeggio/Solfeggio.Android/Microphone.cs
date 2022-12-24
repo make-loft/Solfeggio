@@ -2,7 +2,6 @@
 using System.Linq;
 using Ace;
 using Android.Media;
-using Java.Nio;
 using Rainbow;
 using Solfeggio.Api;
 using Encoding = Android.Media.Encoding;
@@ -11,16 +10,19 @@ namespace Solfeggio.Droid
 {
     public class Microphone : IProcessor
     {
+        public IProcessor Source { get; set; }
+
         public static readonly Microphone Default = new Microphone();
 
 	    public int SampleSize { get; private set; }
 	    public int MinFrameSize { get; private set; }
 	    public double[] SampleRates { get; } = GetValidSampleRates();
-	    public double SampleRate => _recorder.Is() ? _recorder.SampleRate : double.NaN;
-		public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
+        public double SampleRate { get; set; } = 22050;
+
+        public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
 
 		public double Level { get; set; }
-		public double Boost { get; set; } = 8;
+		public double Boost { get; set; } = 1d;
 
 		private short[] _shorts;
         private AudioRecord _recorder;
@@ -48,7 +50,7 @@ namespace Solfeggio.Droid
         {
             if (_recorder.Is()) _recorder.Release();
 
-            var sRate = sampleRate.Is(default) ? 22050 : (int) Math.Round(sampleRate);
+            var sRate = (int) Math.Round(SampleRate);
             var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Encoding.Pcm16bit);
             MinFrameSize = minBufferSizeInBytes / sizeof(short);
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
@@ -72,7 +74,7 @@ namespace Solfeggio.Droid
                 var readLengthInShorts = await currentRecorder.ReadAsync(_shorts, 0, _shorts.Length);
                 if (currentRecorder.IsNot(_recorder)) return;
 
-				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _shorts.Scale(4d), _shorts.Length));
+				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _shorts.Scale(Boost), _shorts.Length));
 			}
 		}
 
@@ -89,19 +91,10 @@ namespace Solfeggio.Droid
 
 		public override string ToString() => "Microphone";
 
-		public void Free()
-		{
-			throw new NotImplementedException();
-		}
+        public void Free() => _recorder.Release();
 
-		public void Tick()
-		{
-			throw new NotImplementedException();
-		}
+		public void Tick() => throw new NotImplementedException();
 
-		public short[] Next()
-		{
-			throw new NotImplementedException();
-		}
+		public short[] Next() => throw new NotImplementedException();
 	}
 }

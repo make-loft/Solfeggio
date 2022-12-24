@@ -145,6 +145,8 @@ namespace Solfeggio
 		public static o Thin = _("Thin", "Утончение");
 		public static o Angle = _("Angle", "Угол");
 		public static o Tape = _("Tape", "Лента");
+		public static o Note = _("Note", "Нота");
+		public static o Ethalon = _("Ethalon", "Эталон");
 
 		public static o Pcs = _("Pcs", "шт.");
 		public static o Rad = _("rad", "рад");
@@ -193,21 +195,23 @@ namespace Solfeggio
 		public static class Agreement
 		{
 			public const string English =
-				@"Solfeggio application is free for educational and non-commercial purposes.
+				@"This application is free for educational and non-commercial purposes.
 
-If you use this program on regular commertial fit or just really like it and want to support developing,
-please, buy a paid version or make voluntary donation of any amount.
+If you use the program on regular commertial fit or just really like it,
+please, buy a paid version or make voluntary donation of any amount 
+to support developing.
 
-Your help is needed and priceless!";
+Your help is priceless!";
 
 			public const string Russian =
-				@"Приложение Solfeggio бесплатно для образовательных и некоммерческих целей.
+				@"Это приложение бесплатно для образовательных и некоммерческих целей.
 
-Если вы используете эту программу на регулярной коммерческой основе
-или просто она вам действительно нравится и есть желание поддержать разработку,
-пожалуйста, купите платную версию или сделайте добровольное пожертвование на любую сумму.
+Если вы используете данную программу на регулярной коммерческой 
+основе или просто она вам действительно нравится,
+пожалуйста, купите платную версию или сделайте добровольное 
+пожертвование на любую сумму, чтобы поддержать разработку.
 
-Ваша помощь необходима и бесценна!";
+Ваша помощь бесценна!";
 		}
 
 		public static class MadeBy

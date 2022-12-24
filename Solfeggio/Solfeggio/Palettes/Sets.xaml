@@ -3,7 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Solfeggio.Controls">
 	
-	<Set
+	<!--<Set
         x:Shared="False"
         x:Key="ShowStateSet">
 
@@ -11,7 +11,7 @@
             Attach.Tag="{Localizing Key=Harmonics}"
 			IsToggled="{Binding VisualProfile.Harmonics, Mode=TwoWay}" />
 
-		<!--<Switch
+		--><!--<Switch
             Attach.Tag="{Localizing Key=ActualFrequncy}"
             IsToggled="{Binding Show.ActualFrequncy, Mode=TwoWay}" />
 
@@ -21,7 +21,7 @@
 
         <Switch
             Attach.Tag="{Localizing Key=Notes}"
-            IsToggled="{Binding Show.Notes, Mode=TwoWay}" />-->
+            IsToggled="{Binding Show.Notes, Mode=TwoWay}" />--><!--
 
 		<Switch
             Attach.Tag="{Localizing Key=NotesGrid}"
@@ -168,11 +168,11 @@
 			ContentTemplate="{StaticResource ShowStateTemplate}"
 			Content="{Store Key=presenters:MusicalPresenter}" />
 
-		<!--<controls:Expander
+		--><!--<controls:Expander
 			Header="{Localizing Key=Theme}"
 			ContentTemplate="{StaticResource VisualProfileTemplate}"
-			Content="{Store Key=models:VisualProfile}" />-->
+			Content="{Store Key=models:VisualProfile}" />--><!--
 
-	</Set>
+	</Set>-->
 
 </ResourceDictionary>
