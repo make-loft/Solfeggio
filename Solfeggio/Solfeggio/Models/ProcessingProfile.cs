@@ -5,6 +5,8 @@ using Solfeggio.Processors;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+
 using static Rainbow.Windowing;
 
 namespace Solfeggio.Models
@@ -18,14 +20,14 @@ namespace Solfeggio.Models
 		public double SampleRate
 		{
 			get => Get(() => SampleRate, AudioInputDevice.DefaultSampleRate);
-			set => Set(() => SampleRate, value);
+			set => Set(() => SampleRate, value, true);
 		}
 
 		[DataMember]
 		public int SampleSize
 		{
 			get => Get(() => SampleSize, 4096);
-			set => Set(() => SampleSize, value);
+			set => Set(() => SampleSize, value, true);
 		}
 
 		protected IProcessor inputProcessor;
@@ -37,27 +39,27 @@ namespace Solfeggio.Models
 		public Wave.In.DeviceInfo ActiveInputDevice
 		{
 			get => Get(() => ActiveInputDevice);
-			set => Set(() => ActiveInputDevice, value);
+			set => Set(() => ActiveInputDevice, value, true);
 		}
 
 		public Wave.Out.DeviceInfo ActiveOutputDevice
 		{
 			get => Get(() => ActiveOutputDevice);
-			set => Set(() => ActiveOutputDevice, value);
+			set => Set(() => ActiveOutputDevice, value, true);
 		}
 
 		[DataMember]
 		public int BuffersCount
 		{
 			get => Get(() => BuffersCount, 16);
-			set => Set(() => BuffersCount, value);
+			set => Set(() => BuffersCount, value, true);
 		}
 
 		[DataMember]
 		public ApodizationFunc ActiveWindow
 		{
 			get => Get(() => ActiveWindow, Rectangle);
-			set => Set(() => ActiveWindow, value);
+			set => Set(() => ActiveWindow, value, true);
 		}
 
 		public ApodizationFunc[] Windows { get; set; } =
@@ -74,7 +76,7 @@ namespace Solfeggio.Models
 		public int FramePow
 		{
 			get => Get(() => FramePow, 11);
-			set => Set(() => FramePow, value);
+			set => Set(() => FramePow, value, true);
 		}
 
 		[DataMember] public int ActiveInputDeviceIndex { get; set; }
@@ -182,9 +184,22 @@ namespace Solfeggio.Models
 			nameof(ActiveOutputDevice),
 		};
 
-		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		bool _resetRequested;
+
+		private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (LifecyclePropertyNames.Contains(e.PropertyName).Not()) return;
+			if (LifecyclePropertyNames.Contains(e.PropertyName).Not())
+				return;
+
+			if (_resetRequested.Is(false))
+			{
+				_resetRequested = true;
+				await Task.Delay(32);
+			}
+			else return;
+
+			_resetRequested = false;
+
 			EvokeFramePropertiesChanged();
 			Dispose();
 			Expose();

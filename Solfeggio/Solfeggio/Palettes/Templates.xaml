@@ -503,20 +503,34 @@
 				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
 		</Grid>
 	</DataTemplate>
+
+	<ControlTemplate
+		x:Key="ValuePickerTemplate"
+		>
+		<Rack
+			Columns="32 *"
+			>
+			<Entry
+				Rack.Cell="C0"
+				Text="{TemplateBinding Content, Mode=TwoWay}"
+				/>
+			<Slider
+				Rack.Cell="C1"
+				Maximum="1.0"
+				Minimum="0.0"
+				Value="{TemplateBinding Content, Mode=TwoWay}"
+				/>
+		</Rack>
+	</ControlTemplate>
 	
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
-		<Grid
-			Rack.Rows="^ *"
-			Rack.Columns="* *"
-			>
-			
+		<Stack>
 			<Grid
-				Rack.Cell="R1 C0"
 				Rack.Rows="^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^"
-				Alignment.X="Center"
+				Rack.Columns="^ ^ * ^ ^ ^"
+				Alignment.X="Stretch"
 				Alignment.Y="Center"
 				>
 				<Label
@@ -535,14 +549,14 @@
 					Rack.Cell="R0 C2"
 					Text="{Localizing Level}"
 					/>
-				<Label
+				<!--<Label
 					Rack.Cell="R0 C3"
 					Text="{Localizing Buffers}"
-					/>
-				<Label
+					/>-->
+				<!--<Label
 					Rack.Cell="R1 C4"
 					Text="{Localizing Pcs}"
-					/>
+					/>-->
 
 				<Picker
 					Rack.Cell="R1 C1"
@@ -556,16 +570,16 @@
 					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
 					ItemDisplayBinding="{Binding ProductName}"
 					/>
-				<!--<ContentView
+				<Item
 					Rack.Cell="R1 C2"
-					Data.Context="{Binding InputLevel, Mode=TwoWay}"
-					Template="{StaticResource ValuePickerTemplate}"
+					Content="{Binding InputLevel, Mode=TwoWay}"
+					ControlTemplate="{StaticResource ValuePickerTemplate}"
 					/>
-				<ContentView
+				<Item
 					Rack.Cell="R2 C2"
-					Data.Context="{Binding OutputLevel, Mode=TwoWay}"
-					Template="{StaticResource ValuePickerTemplate}"
-					/>-->
+					Content="{Binding OutputLevel, Mode=TwoWay}"
+					ControlTemplate="{StaticResource ValuePickerTemplate}"
+					/>
 				<!--<Picker
 					Rack.Cell="R1 C3"
 					ItemsSource="{StaticResource AllowedBuffersCount}"
@@ -574,7 +588,6 @@
 			</Grid>
 
 			<Grid
-				Rack.Cell="R1 C1"
 				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
 				Rack.Columns="^ ^ ^"
 				Alignment.X="Center"
@@ -584,10 +597,10 @@
 					Rack.Cell="R0 C1"
 					Text="{Localizing Sample}"
 					/>
-				<Label
+				<!--<Label
 					Rack.Cell="R1 C0"
 					Text="{Localizing Window}"
-					/>
+					/>-->
 				<Label
 					Rack.Cell="R2 C0"
 					Text="{Localizing Rate}"
@@ -622,15 +635,17 @@
 					Text="{Localizing Hz}"
 					/>
 
-				<Picker
+				<!--<Picker
 					Rack.Cell="R1 C1"
 					ItemsSource="{Binding Windows}"
 					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+					/>-->
 				<Picker
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding SampleRates}"
-					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}"
+					/>
 
 				<StackLayout
 					Rack.Cell="R4 C1"
@@ -677,7 +692,7 @@
 					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
 			</Grid>
-		</Grid>
+		</Stack>
 	</DataTemplate>
 
 </ResourceDictionary>

@@ -20,7 +20,7 @@ using Grid = System.Windows.Controls.Grid;
 
 namespace Solfeggio.Views
 {
-    [XamlCompilation (XamlCompilationOptions.Skip)]
+    [XamlCompilation(XamlCompilationOptions.Skip)]
     public partial class SolfeggioView
 	{
         readonly Dictionary<long, SKPath> _inProgressPaths = new();
@@ -294,7 +294,7 @@ namespace Solfeggio.Views
 					Fill = new SolidColorBrush(SetAlpha(color, magnitudeProjection(k.Magnitude))),
 					Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, ww - transformer.GetVisualOffset(k.UpperFrequency), 0),
 					Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
-					//Height = hh,
+					Height = hh,
 				})
 				.ForEach(grid.Children.Add);
 
@@ -310,7 +310,7 @@ namespace Solfeggio.Views
 					)),
 					Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
 					Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency).To(out var x) - w / 2d, 0, ww - (x + w / 2d), 0),
-					//Height = hh,
+					Height = hh,
 				})
 				.ForEach(grid.Children.Add);
 
@@ -322,8 +322,13 @@ namespace Solfeggio.Views
 				_fullSpectrogramRefresh = false;
 				SpectrogramStack.Children
 					.OfType<Grid>()
-					.ForEach(g => DrawKeys(g).Background = GetSpectrogramLineBrush(
-						g.BindingContext.To<SpectrogramFrame>().SpectrumInterpolated, transformer, w, magnitudeProjection));
+					.ForEach(g =>
+					{
+						g.Width = w;
+						g.BindingContext.To<SpectrogramFrame>().SpectrumInterpolated.To(out var spectrum);
+						g.Background = GetSpectrogramLineBrush(spectrum, transformer, w, magnitudeProjection);
+						DrawKeys(g);
+					});
 			}
 		}
 
@@ -341,26 +346,24 @@ namespace Solfeggio.Views
 			_fullSpectrogramRefresh = true;
 		}
 
-		static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, ScaleTransformer transformer, double width, Projection magnitudeProjection)
+		static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, ScaleTransformer transformer, double length, Projection magnitudeProjection)
 		{
 			var from = transformer.GetLogicalOffset(0);
-			var till = transformer.GetLogicalOffset(width);
+			var till = transformer.GetLogicalOffset(length);
 
 			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
-				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), (float)(transformer.GetVisualOffset(p.Frequency) / width)));
+				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), (float)(transformer.GetVisualOffset(p.Frequency) / length)));
 			return new(new GradientStopCollection().AppendRange(stops));
 		}
 
 		static Color SetAlpha(Color color, double alpha) => Color.FromRgba(color.R, color.G, color.B , alpha);
 		static Color FromArgb(double a, double r, double g, double b) => Color.FromRgba(r, g, b, a);
 
-		private void Switch_Toggled(object sender, ToggledEventArgs e) =>
-			FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d;
 
-		private void Button_Clicked(object sender, EventArgs e)
-		{
-			SettingsSwitch.IsToggled = false;
-		}
+		private void HideOptionsButton_Clicked(object sender, EventArgs e) => OptionsSwitch.IsToggled = false;
+
+		private void GeometrySwitch_Toggled(object sender, ToggledEventArgs e) =>
+			FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d;
 	}
 }

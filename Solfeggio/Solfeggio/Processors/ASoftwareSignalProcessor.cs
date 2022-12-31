@@ -37,7 +37,7 @@ namespace Solfeggio.Processors
 
 		public void Tick()
 		{
-			DataAvailable?.Invoke(this, new(this, _bins, _bins.Length));
+			DataAvailable?.Invoke(this, new(this, _bins));
 			_bins = Next() ?? new short[0];
 
 			_timestamp = DateTime.Now;
@@ -50,7 +50,7 @@ namespace Solfeggio.Processors
 		public bool IsAutoTickEnabledOnce { get; set; }
 		public bool IsAutoTickEnabled { get; set; }
 #if NETSTANDARD
-		= true;
+		= false;
 #endif
 
 		private void OnTimerTick(object sender, EventArgs e)

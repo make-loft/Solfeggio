@@ -99,11 +99,17 @@
 
 	<Converter
 		x:Key="DebugConverter"
-		Convert="Converter_Convert"
+		Convert="Debug_Convert"
 		/>
 
 	<c:DelegateToNameConverter
 		x:Key="DelegateToNameConverter"
+		/>
+
+	<Converter
+		x:Key="ScaleValueConverter"
+		Convert="LogBase2"
+		ConvertBack="PowBase2"
 		/>
 
 </ResourceDictionary>

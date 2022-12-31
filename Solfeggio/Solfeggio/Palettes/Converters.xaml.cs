@@ -1,4 +1,5 @@
 ﻿using Ace;
+using Ace.Markup.Patterns;
 
 using Solfeggio.Models;
 
@@ -12,12 +13,9 @@ namespace Solfeggio.Palettes
 	[XamlCompilation(XamlCompilationOptions.Skip)]
 	public partial class Converters
 	{
-		public Converters()
-		{
-			InitializeComponent();
-		}
+		public Converters() => InitializeComponent();
 
-		private object HarmonicOffsetToColor_Convert(Ace.Markup.Patterns.ConvertArgs args)
+		private object HarmonicOffsetToColor_Convert(ConvertArgs args)
 		{
 			var k = (PianoKey)args.Value;
 			if (k.IsNot())
@@ -34,9 +32,10 @@ namespace Solfeggio.Palettes
 			return color;
 		}
 
-		private object Converter_Convert(Ace.Markup.Patterns.ConvertArgs args)
-		{
-			return args.Value;
-		}
+		object LogBase2(ConvertArgs args) => args.Value.To(out double d) > 0d ? Math.Log(d, 2d) : -16d;
+		object PowBase2(ConvertArgs args) => Math.Pow(2d, (double)args.Value);
+
+		object Debug_Convert(Ace.Markup.Patterns.ConvertArgs args) =>
+			args.Value;
 	}
 }

@@ -84,6 +84,9 @@
     <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
       <Link>IAudioInputDevice.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Localizator.cs">
+      <Link>Localizator.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Models\AProfile.cs">
       <Link>Models\AProfile.cs</Link>
     </Compile>
@@ -153,10 +156,6 @@
     <Compile Include="..\Solfeggio\ViewModels\VisualizationManager.cs">
       <Link>ViewModels\VisualizationManager.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Views\OptionsView.xaml.cs">
-      <Link>Views\OptionsView.xaml.cs</Link>
-      <DependentUpon>OptionsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Api\MmResult.cs" />
     <Compile Include="Api\MmTime.cs" />
     <Compile Include="Api\Wave.In.Imports.cs" />
@@ -186,6 +185,7 @@
     <Compile Include="Views\EncoderView.xaml.cs">
       <DependentUpon>EncoderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OptionsView.xaml.cs" />
     <Compile Include="Views\TapeView.xaml.cs">
       <DependentUpon>TapeView.xaml</DependentUpon>
     </Compile>
@@ -205,7 +205,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Assemblies.resx</DependentUpon>
     </Compile>
-    <Compile Include="Localizator.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\BrushPicker.xaml.cs">
       <DependentUpon>BrushPicker.xaml</DependentUpon>
@@ -222,10 +221,6 @@
     <Compile Include="Views\ValuePicker.xaml.cs">
       <DependentUpon>ValuePicker.xaml</DependentUpon>
     </Compile>
-    <Page Include="..\Solfeggio\Views\OptionsView.xaml">
-      <Link>Views\OptionsView.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="AppView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -244,6 +239,9 @@
     </Page>
     <Page Include="Views\EncoderView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TapeView.xaml">

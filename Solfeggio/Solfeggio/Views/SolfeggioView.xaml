@@ -129,6 +129,7 @@
 			>
 			<Label
 				Rack.Cell="R0 C1"
+				Padding="5"
 				Text="📸"
 				/>
 			<Switch
@@ -137,7 +138,8 @@
 				/>
 			<Label
 				Rack.Cell="R1 C1"
-				Text="⚙️"
+				Padding="5"
+				Text="🎛️"
 				/>
 			<Switch
 				Rack.Cell="R1 C0"
@@ -156,21 +158,23 @@
 			>
 			<Label
 				Rack.Cell="R0 C0"
+				Padding="5"
 				Text="🌸"
 				/>
 			<Switch
 				Rack.Cell="R0 C1"
 				x:Name="FlowerSwitch"
-				Toggled="Switch_Toggled"
+				Toggled="GeometrySwitch_Toggled"
 				/>
 			<Label
 				Rack.Cell="R1 C0"
+				Padding="5"
 				Text="🌀"
 				/>
 			<Switch
 				Rack.Cell="R1 C1"
 				x:Name="SpiralSwitch"
-				Toggled="Switch_Toggled"
+				Toggled="GeometrySwitch_Toggled"
 				/>
 		</Rack>
 

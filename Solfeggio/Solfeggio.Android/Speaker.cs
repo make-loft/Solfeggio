@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
 using Ace;
 using Android.Media;
 using Rainbow;
@@ -21,7 +25,6 @@ namespace Solfeggio.Droid
 		public double Level { get; set; }
         public double Boost { get; set; } = 0.20;
 
-		private short[] _shorts;
         private AudioTrack _track;
 
         public static double[] GetValidSampleRates() =>
@@ -43,7 +46,7 @@ namespace Solfeggio.Droid
             }
         }
 
-        public void StartWith(double sampleRate = default, int desiredFrameSize = 2048)
+        public async void StartWith(double sampleRate = default, int desiredFrameSize = 2048)
         {
             if (_track.Is()) _track.Release();
 
@@ -53,38 +56,52 @@ namespace Solfeggio.Droid
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
             var bytesCount = desiredBufferSize < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSize;
 
-            _shorts = new short[bytesCount / sizeof(short)];
+            //_shorts = new short[bytesCount / sizeof(short)];
             _track = new AudioTrack(Stream.Music, sRate, ChannelOut.Mono, Encoding.Pcm16bit, bytesCount, AudioTrackMode.Stream);
             if (_track.State.Is(AudioTrackState.Uninitialized)) throw new Exception("Can not access to a device microphone");
 
             SampleSize = bytesCount / 2;
 
-            //_track.Play();
-            //RunReadLooper();
-            Source.DataAvailable += async (o, e) =>
-            {
-                _shorts = e.Bins;
-                var currentWriter = _track;
-                var readLengthInShorts = await currentWriter.WriteAsync(_shorts, 0, _shorts.Length);
-                if (currentWriter.IsNot(_track)) return;
-                
-                DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _shorts.Scale(Boost), _shorts.Length));
-            };
+			Source.DataAvailable += Source_DataAvailable;
+
+            ThreadPool.QueueUserWorkItem(o => StartWriteLoop());
         }
+
+		private void Source_DataAvailable(object sender, ProcessingEventArgs e)
+		{
+            _sample = e.Bins.Scale(0.1);
+        }
+
+		short[] _sample;
 
         public IProcessor Source { get; set; }
 
-        private async void RunReadLooper()
+        private async void StartWriteLoop()
         {
-            while (IsPlayingState)
-            {
-                var currentWriter = _track;
-                var readLengthInShorts = await currentWriter.WriteAsync(_shorts, 0, _shorts.Length);
-                if (currentWriter.IsNot(_track)) return;
+            var track = _track;
 
-				DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _shorts.Scale(0.2), _shorts.Length));
-			}
-		}
+            Loop:
+
+            if (IsPlayingState.Not())
+            {
+                await Task.Delay(8);
+                goto Loop;
+            }
+
+            if (_track.IsNot(track))
+                return;
+
+            var sample = _sample;
+            if (sample.Is())
+            {
+                _sample = default;
+                var length = track.Write(sample, 0, sample.Length);
+                Source.Tick();
+            }
+
+            DataAvailable?.Invoke(this, new ProcessingEventArgs(this, sample));
+            goto Loop;
+        }
 
         public void Wake()
         {
@@ -94,8 +111,10 @@ namespace Solfeggio.Droid
             if (_track.State.Is(AudioTrackState.Uninitialized))
                 StartWith();
 
-            //if (_track.State.Is(AudioTrackState.Initialized))
-            //    _track.Play();
+            if (_track.State.Is(AudioTrackState.Initialized))
+                _track.Play();
+
+            Source.Tick();
         }
 
         public void Lull() => _track.Stop();
@@ -104,7 +123,22 @@ namespace Solfeggio.Droid
 
 		public override string ToString() => "Speaker";
 
-        public void Free() => _track.Release();
+        public void Free()
+        {
+            try
+            {
+                Source.DataAvailable -= Source_DataAvailable;
+                _track.Stop();
+            }
+            catch (Exception e)
+            {
+            }
+            finally
+			{
+                _track.Release();
+                _track = default;
+            }
+        }
 
 		public void Tick() => throw new NotImplementedException();
 

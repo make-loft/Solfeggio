@@ -54,7 +54,7 @@ namespace Solfeggio.Processors
 
 		public void Tick()
 		{
-			DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _bins, _bins.Length));
+			DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _bins));
 			_bins = Next();
 		}
 

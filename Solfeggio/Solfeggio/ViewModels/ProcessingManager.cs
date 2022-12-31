@@ -23,25 +23,25 @@ namespace Solfeggio.ViewModels
 
 		public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
 		{
-			yield return Create().To(out var b).With
-			(
-				b.Title = "Camerton & Research of Ideal Signals",
-				b.ActiveInputDevice = b.InputDevices.FirstOrDefault(),
-				b.OutputLevel = 0.1f,
-				b.FramePow = 10
-			);
-
 			yield return new()
 			{
-				Title = "Musical Tuning & Vocal Trainings",
+				Title = "🎸 Tuning",
 				FramePow = 11
 			};
 
 			yield return new()
 			{
-				Title = "Low Latency Realtime Analize",
+				Title = "🎙 Vocal",
 				FramePow = 10
 			};
+
+			yield return Create().To(out var b).With
+			(
+				b.Title = "♪ Camerton",
+				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+				b.OutputLevel = 0.1f,
+				b.FramePow = 10
+			);
 		}
 
 		public override void Expose()

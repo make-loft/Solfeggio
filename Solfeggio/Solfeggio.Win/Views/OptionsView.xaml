@@ -1,0 +1,143 @@
+﻿<ContentView
+	x:Class="Solfeggio.Views.OptionsView"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:local="clr-namespace:Solfeggio"
+	>
+	<Pivot
+		SelectedIndex="{Smart ActiveIndex, DefaultValue=0}"
+		>
+		<PivotItem
+			Header="{Localizing Signal}"
+			>
+			<ScrollView>
+				<StackView
+					DataContext="{Store Key=vm:ProcessingManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
+					<Pivot
+						ItemsSource="{Binding Profiles}"
+						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+						ContentTemplate="{StaticResource ProcessingProfileTemplate}"
+						/>
+				</StackView>
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
+			Header="{Localizing Key=Generator}"
+			>
+			<ScrollView>
+				<StackView
+					DataContext="{Store Key=vm:HarmonicManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
+					<Pivot
+						ItemsSource="{Binding Profiles}"
+						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+						ContentTemplate="{StaticResource HarmonicProfileTemplate}"
+						/>
+				</StackView>
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
+			Header="{Localizing Key=Visualization}"
+			>
+			<ScrollView>
+				<StackView
+					DataContext="{Store Key=vm:VisualizationManager}"
+					>
+					<ContentView
+						Template="{StaticResource TitleTemplate}"
+						/>
+					<Pivot
+						ItemsSource="{Binding Profiles}"
+						SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+						ContentTemplate="{StaticResource VisualizationProfileTemplate}"
+						/>
+				</StackView>
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
+			Header="{Localizing Key=Telemetry}"
+			>
+			<ScrollView>
+				<StackView>
+					<Expander
+						IsExpanded="True"
+						Background="Transparent"
+						Header="{Localizing Key=Harmonics}"
+						>
+						<ListView
+							Background="Transparent"
+							x:Name="DominantsItemsControl"
+							ItemsSource="{StoreBinding Path=Harmonics, StoreKey=vm:AppViewModel}"
+							ItemTemplate="{StaticResource HarmonicOutTemplate}" />
+					</Expander>
+				</StackView>
+			</ScrollView>
+		</PivotItem>
+
+		<PivotItem
+			Header="{Localizing Key=Agreement}"
+			>
+			<ScrollView>
+				<Grid
+					Rack.Rows="^ ^ ^ * ^ ^">
+					<StackView
+						Rack.Cell="R0"
+						Style="{StaticResource TitlePanelStyle}"
+						>
+						<Label
+							Text="{Localizing Key=Language}"
+							/>
+						<Picker
+							ItemsSource="{StoreBinding Path=Languages, StoreKey=vm:AppViewModel}"
+							SelectedItem="{StoreBinding Path=ActiveLanguage, Mode=TwoWay, StoreKey=vm:AppViewModel}"
+							/>
+					</StackView>
+					<Label
+						Rack.Cell="R1"
+						FontSize="10"
+						FontFamily="Consolas"
+						Text="{Binding Source={x:Static local:App.Edition}, StringFormat='{}{0} Edition'}"
+						/>
+					<Label
+						Rack.Cell="R2"
+						FontSize="14"
+						Padding="16"
+						Text="{Localizing Key=AgreementMessage}"
+						/>
+					<Button
+						Rack.Cell="R3"
+						FontSize="14"
+						Padding="6"
+						FontFamily="Consolas"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						CommandParameter="{Localizing Key=ReadyToHelpLink}"
+						Command="{Context Key=Navigate, StoreKey=vm:AppViewModel}"
+						Content="{Localizing Key=ReadyToHelpMessage, Modifiers=ToUpper}"
+						/>
+					<Label
+						Rack.Cell="R4"
+						FontSize="10"
+						FontFamily="Consolas"
+						Text="{Localizing Key=MadeByMessage}"
+						/>
+				</Grid>
+			</ScrollView>
+		</PivotItem>
+
+	</Pivot>
+</ContentView>
