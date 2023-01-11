@@ -101,21 +101,21 @@
 
 		<!--Geometry-->
 		<controls:Canvas
-				Rack.Cell="C2 R0 RS4"
-				x:Name="FlowerCanvas"
-				Background="{StaticResource GeometryBackgroundBrush_}"
-				WidthRequest="0"
-				>
+			Rack.Cell="C2 R0 RS4"
+			x:Name="FlowerCanvas"
+			Background="{StaticResource GeometryBackgroundBrush_}"
+			WidthRequest="0"
+			>
 			<shapes:Polyline
-					x:Name="FlowerFillPolyline_"
-					Stroke="{StaticResource Stroke.Geometry_}"
-					StrokeThickness=".5"
-					/>
+				x:Name="FlowerFillPolyline_"
+				Stroke="{StaticResource Stroke.Geometry_}"
+				StrokeThickness=".5"
+				/>
 			<shapes:Polyline
-					x:Name="FlowerStrokePolyline_"
-					Stroke="{StaticResource Stroke.Geometry}"
-					StrokeThickness=".5"
-					/>
+				x:Name="FlowerStrokePolyline_"
+				Stroke="{StaticResource Stroke.Geometry}"
+				StrokeThickness=".5"
+				/>
 		</controls:Canvas>
 
 		<!--Switches-L-->
@@ -130,20 +130,20 @@
 			<Label
 				Rack.Cell="R0 C1"
 				Padding="5"
-				Text="📸"
+				Text="🎛️"
 				/>
 			<Switch
 				Rack.Cell="R0 C0"
-				IsToggled="{Binding IsPaused, Mode=TwoWay}"
+				x:Name="OptionsSwitch"
 				/>
 			<Label
 				Rack.Cell="R1 C1"
 				Padding="5"
-				Text="🎛️"
+				Text="📸"
 				/>
 			<Switch
 				Rack.Cell="R1 C0"
-				x:Name="OptionsSwitch"
+				IsToggled="{Binding IsPaused, Mode=TwoWay}"
 				/>
 		</Rack>
 
@@ -194,6 +194,8 @@
 				Clicked="HideOptionsButton_Clicked"
 				Alignment.X="Till"
 				Alignment.Y="From"
+				Margin="+2,-3"
+				Size.X="48"
 				/>
 		</Rack>
 	</Rack>

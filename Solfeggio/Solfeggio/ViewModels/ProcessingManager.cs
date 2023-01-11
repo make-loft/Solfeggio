@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Ace;
+
 using Rainbow;
+
 using Solfeggio.Models;
+
 using static Rainbow.Windowing;
 
 namespace Solfeggio.ViewModels
@@ -25,21 +29,24 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
-				Title = "🎸 Tuning",
-				FramePow = 11
+				Title = "🎙 Vocal",
+				SampleRate = 16000d,
+				InputLevel = 4f,
+				FramePow = 10
 			};
 
 			yield return new()
 			{
-				Title = "🎙 Vocal",
-				FramePow = 10
+				Title = "🎸 Tuning",
+				InputLevel = 4f,
+				FramePow = 11
 			};
 
 			yield return Create().To(out var b).With
 			(
-				b.Title = "♪ Camerton",
+				b.Title = "∿ Generator",
 				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
-				b.OutputLevel = 0.1f,
+				b.OutputLevel = .5f,
 				b.FramePow = 10
 			);
 		}
@@ -50,16 +57,20 @@ namespace Solfeggio.ViewModels
 
 			this[() => ActiveProfile].Changing += (sender, args) =>
 			{
-				if (ActiveProfile.IsNot()) return;
-				ActiveProfile.SampleReady -= OnActiveProfileOnDataReady;
-				ActiveProfile.Dispose();
+				if (ActiveProfile.Is(out var activeProfile).Not())
+					return;
+
+				activeProfile.SampleReady -= OnActiveProfileOnDataReady;
+				activeProfile.Dispose();
 			};
 
 			this[() => ActiveProfile].Changed += (sender, args) =>
 			{
-				if (ActiveProfile.IsNot()) return;
-				ActiveProfile.SampleReady += OnActiveProfileOnDataReady;
-				ActiveProfile.Expose();
+				if (ActiveProfile.Is(out var activeProfile).Not())
+					return;
+
+				activeProfile.SampleReady += OnActiveProfileOnDataReady;
+				activeProfile.Expose();
 			};
 
 			EvokePropertyChanged(nameof(ActiveProfile));
@@ -67,10 +78,14 @@ namespace Solfeggio.ViewModels
 
 		private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
 		{
+			var sample = args.Sample;
 			var frameSize = args.Source.FrameSize;
-			if (IsPaused || args.Sample.Length < frameSize + args.Source.ShiftSize) return;
+			if (IsPaused || sample.Length < frameSize + args.Source.ShiftSize) return;
 
-			var timeFrame = args.Sample.Skip(0).Take(frameSize).ToArray();
+			var timeFrame = sample.Length.Is(frameSize)
+				? sample
+				: args.Sample.Skip(0).Take(frameSize).ToArray();
+
 			var spectralFrame = GetSpectrum(timeFrame, args.Source.ActiveWindow);
 			var shiftsPerFrame = (int)args.Source.ShiftsPerFrame;
 			if (shiftsPerFrame > 0)

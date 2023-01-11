@@ -57,7 +57,7 @@ namespace Solfeggio.Presenters
 				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
 				var zeros = new string('0', digitsCount);
-				VisualProfile.PeakProfiles[nameof(VisualProfile.DeltaFrequancy)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
+				VisualProfile.PeakProfiles[nameof(VisualProfile.OffsetFrequency)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
 			};
 		}
 
@@ -336,9 +336,9 @@ namespace Solfeggio.Presenters
 
 			double GetValueByKey(string key) =>
 				key.Is("ActualMagnitude") ? activeMagnitude :
-				key.Is("ActualFrequancy") ? activeFrequency :
-				key.Is("DeltaFrequancy") ? pianoKey.OffsetFrequency :
-				key.Is("EthalonFrequncy") ? pianoKey.EthalonFrequency :
+				key.Is("ActualFrequency") ? activeFrequency :
+				key.Is("OffsetFrequency") ? pianoKey.OffsetFrequency :
+				key.Is("EthalonFrequency") ? pianoKey.EthalonFrequency :
 				default;
 
 			return VisualProfile.PeakProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
@@ -428,6 +428,7 @@ namespace Solfeggio.Presenters
 			}
 
 			var harmonics = keys
+				.Where(k => k.Magnitude > thresholdMagnitude)
 				.OrderByDescending(k => k.Magnitude)
 				.Take(MaxHarmonicsCount)
 				.ToList();

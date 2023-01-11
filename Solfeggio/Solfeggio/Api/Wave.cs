@@ -8,24 +8,12 @@ namespace Solfeggio.Api
 	{ }
 	public static class Wave
 	{
-		public static short[] Scale(this short[] data, double boost)
+		public static float[] StretchArray(this float[] data, float value)
 		{
-			if (boost.Is(1d)) return data;
+			if (value.Is(1f)) return data;
 
 			for (var i = 0; i < data.Length; i++)
-			{
-				data[i] = (short)(data[i] * boost);
-			}
-
-			return data;
-		}
-
-		public static double[] Stretch(this double[] data, double volume)
-		{
-			if (volume.Is(1d)) return data;
-
-			for (var i = 0; i < data.Length; i++)
-				data[i] *= volume;
+				data[i] *= value;
 
 			return data;
 		}
@@ -72,13 +60,15 @@ namespace Solfeggio.Api
 
 			public class SpeakerDeviceInfo : DeviceInfo
 			{
-				public static IProcessor Device { get; set; }
+				public delegate IProcessor CreateProcessorDelegate(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor inputProcessor);
+
+				public static CreateProcessorDelegate ProvideDevice { get; set; }
 
 				public SpeakerDeviceInfo() : base(0) { }
 				public override string ProductName => "Speaker";
 
 				public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor inputProcessor) =>
-					Device.With(Device.Source = inputProcessor);
+					ProvideDevice(waveFormat, sampleSize, buffersCount, inputProcessor);
 			}
 
 			public class DeviceInfo

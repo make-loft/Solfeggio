@@ -11,12 +11,31 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
+				Title = "Camerton",
+				Harmonics =
+				{
+					new() { IsEnabled = true, Frequency = 440d },
+				}
+			};
+
+			yield return new()
+			{
+				Title = "Resonance",
+				Harmonics =
+				{
+					new() { IsEnabled = true, Frequency = 442d },
+					new() { IsEnabled = true, Frequency = 440d },
+					new() { IsEnabled = false, Frequency = 438d },
+				}
+			};
+
+			yield return new()
+			{
 				Title = "Harmony",
 				Harmonics =
 				{
-					[0] = { Magnitude = 0.43d, Frequency = 258d },
-					[1] = { Magnitude = 0.30d, Frequency = 645d },
-					[2] = { IsEnabled = false },
+					new() { Magnitude = 0.43d, Frequency = 258d },
+					new() { Magnitude = 0.30d, Frequency = 645d },
 				}
 			};
 
@@ -25,34 +44,10 @@ namespace Solfeggio.ViewModels
 				Title = "Fantasy",
 				Harmonics =
 				{
-					[0] = { Magnitude = 0.43d, Frequency = 150d },
-					[1] = { Magnitude = 0.30d, Frequency = 600.5d },
-					[2] = { Magnitude = 0.10d, Frequency = 900d },
+					new() { Magnitude = 0.43d, Frequency = 150d },
+					new() { Magnitude = 0.30d, Frequency = 600.5d },
+					new() { Magnitude = 0.10d, Frequency = 900d },
 				}
-			};
-
-			yield return new()
-			{
-				Title = "Cos Wave",
-				Harmonics =
-				{
-					[1] = { IsEnabled = false },
-					[2] = { IsEnabled = false },
-				}
-			};
-
-			yield return new()
-			{
-				Title = "Two Waves Resonance",
-				Harmonics =
-				{
-					[2] = { IsEnabled = false }
-				}
-			};
-
-			yield return new()
-			{
-				Title = "Three Waves Resonance",
 			};
 		}
 	}

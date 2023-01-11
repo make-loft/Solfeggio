@@ -33,8 +33,8 @@ namespace Solfeggio.Processors
 			set => _timer.Interval = TimeSpan.FromMilliseconds(value);
 		}
 
-		public double Level { get; set; } = 1d;
-		public double Boost { get; set; } = 1d;
+		public float Level { get; set; } = 1f;
+		public float Boost { get; set; } = 1f;
 
 		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
@@ -60,7 +60,7 @@ namespace Solfeggio.Processors
 
 		long _offset;
 
-		public short[] Next()
+		public float[] Next()
 		{
 			using var stream = File.OpenRead("D:\\data.rec");
 			stream.Seek(_offset += _sampleSize, SeekOrigin.Begin);
@@ -89,11 +89,11 @@ namespace Solfeggio.Processors
 			};
 
 			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
-			var _bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
-			return _bins.Scale(Boost);
+			var _bins = signal.StretchArray((float)(Level * Boost)).ToArray();
+			return _bins;
 		}
 
-		short[] _bins;
+		float[] _bins;
 
 		public bool IsTimerEnabled { get; set; }
 #if NETSTANDARD

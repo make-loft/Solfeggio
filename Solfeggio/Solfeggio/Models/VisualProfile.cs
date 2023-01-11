@@ -63,9 +63,9 @@ namespace Solfeggio.Models
 			};
 
 		public PeakProfile ActualMagnitude => GetProfile();
-		public PeakProfile ActualFrequancy => GetProfile();
-		public PeakProfile DeltaFrequancy => GetProfile();
-		public PeakProfile EthalonFrequncy => GetProfile();
+		public PeakProfile ActualFrequency => GetProfile();
+		public PeakProfile OffsetFrequency => GetProfile();
+		public PeakProfile EthalonFrequency => GetProfile();
 		public PeakProfile NoteName => GetProfile();
 
 		public static Color FromHsva(double h, double s, double v, double a = 1d)
@@ -109,9 +109,9 @@ namespace Solfeggio.Models
 		public Dictionary<string, PeakProfile> PeakProfiles { get; set; } = new()
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
-			{ nameof(ActualFrequancy), CreateProfile(White, 14d) },
-			{ nameof(DeltaFrequancy), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "+0.0;-0.0; 0.0") },
-			{ nameof(EthalonFrequncy), CreateProfile(White, 14d) },
+			{ nameof(ActualFrequency), CreateProfile(White, 14d) },
+			{ nameof(OffsetFrequency), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "+0.0;-0.0; 0.0") },
+			{ nameof(EthalonFrequency), CreateProfile(White, 14d) },
 			{ nameof(NoteName), CreateProfile(White, 16d, default) },
 		};
 	}

@@ -2,6 +2,8 @@
 
 using Rainbow;
 
+using System;
+
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
@@ -18,10 +20,14 @@ namespace Solfeggio.Presenters
 		public static readonly Projection[] ScaleFuncs =
 			{ Lineal, Log2, Log, Exp, Sqrt };
 
+		public static readonly Projection[] BackScaleFuncs =
+			{ Lineal, _2Pow, Exp, Log, Pow2 };
+
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = ScaleFuncs;
 		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
+		public Projection LogicalScaleFunc => BackScaleFuncs[Array.IndexOf(ScaleFuncs, VisualScaleFunc)];
 
 		public void LimitThreshold()
 		{

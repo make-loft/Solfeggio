@@ -1,111 +1,76 @@
 ﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Ace;
+
 using Android.Media;
-using Rainbow;
+
 using Solfeggio.Api;
-using Encoding = Android.Media.Encoding;
 
 namespace Solfeggio.Droid
 {
-    public class Microphone : IProcessor
-    {
-        public IProcessor Source { get; set; }
+	public class Microphone : AudioDevice<AudioRecord>
+	{
+		public static readonly Microphone Default = new Microphone();
 
-        public static readonly Microphone Default = new Microphone();
+		public bool IsReady => Device.Is() && Device.RecordingState.Is(RecordState.Recording);
 
-        public int SampleSize { get; private set; }
-        public int MinFrameSize { get; private set; }
-        public double[] SampleRates { get; } = GetValidSampleRates();
-        public double SampleRate { get; set; } = 22050;
+		protected float[] _sample;
 
-        public bool IsRecodingState => _recorder.Is() && _recorder.RecordingState.Is(RecordState.Recording);
+		public void Setup()
+		{
+			if (Device.Is()) Free();
 
-        public double Level { get; set; }
-        public double Boost { get; set; } = 1d;
+			var sRate = (int)Math.Round(SampleRate);
+			var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Format);
+			var desiredBufferSizeInBytes = sizeof(float) * DesiredFrameSize;
+			var bytesCount = desiredBufferSizeInBytes < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSizeInBytes;
 
-        private short[] _sample;
-        private AudioRecord _recorder;
+			_sample = new float[bytesCount / sizeof(float)];
+			Device = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Format, bytesCount);
+			if (Device.State.Is(State.Uninitialized)) throw new Exception("Can not access to a device microphone");
+		}
 
-        public static double[] GetValidSampleRates() =>
-            AudioInputDevice.StandardSampleRates.Where(IsValidSampleRate).ToArray();
+		public override void Wake()
+		{
+			if (Device.IsNot())
+				Setup();
 
-        public static bool IsValidSampleRate(double frequency)
-        {
-            try
-            {
-                var sRate = (int)Math.Round(frequency);
-                var minBufferSize = AudioRecord.GetMinBufferSize((int)frequency, ChannelIn.Mono, Encoding.Pcm16bit);
-                using (var r = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, minBufferSize))
-                    r.Release();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+			Device?.StartRecording();
+			Source?.Tick();
+		}
 
-        public void StartWith(double sampleRate = default, int desiredFrameSize = 2048)
-        {
-            if (_recorder.Is()) _recorder.Release();
+		public override void Lull() => Device.Stop();
 
-            var sRate = (int)Math.Round(SampleRate);
-            var minBufferSizeInBytes = AudioRecord.GetMinBufferSize(sRate, ChannelIn.Mono, Encoding.Pcm16bit);
-            MinFrameSize = minBufferSizeInBytes / sizeof(short);
-            var desiredBufferSize = sizeof(short) * desiredFrameSize;
-            var bytesCount = desiredBufferSize < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSize;
+		public override void Free()
+		{
+			try
+			{
+				Device?.Stop();
+			}
+			catch (Exception e)
+			{
+			}
+			finally
+			{
+				Device?.Release();
+				Device = default;
+			}
+		}
 
-            _sample = new short[bytesCount / sizeof(short)];
-            _recorder = new AudioRecord(AudioSource.Mic, sRate, ChannelIn.Mono, Encoding.Pcm16bit, bytesCount);
-            if (_recorder.State.Is(State.Uninitialized)) throw new Exception("Can not access to a device microphone");
+		public override float[] Next()
+		{
+			if (IsReady.Not())
+				return default;
 
-            SampleSize = bytesCount / 2;
+			var length = Device.Read(_sample, 0, _sample.Length, 0);
+			var sample = _sample?.StretchArray(Level * Boost);
 
-            ThreadPool.QueueUserWorkItem(o => StartReadLoop());
-        }
+			EvokeDataAvailable(sample);
 
-        private async void StartReadLoop()
-        {
-            var recorder = _recorder;
+			return sample;
+		}
 
-            Loop:
-            
-            if (IsRecodingState.Not())
-            {
-                await Task.Delay(8);
-                goto Loop;
-            }
 
-            if (_recorder.IsNot(recorder))
-                return;
-
-            var length = _recorder.Read(_sample, 0, _sample.Length);
-
-            DataAvailable?.Invoke(this, new ProcessingEventArgs(this, _sample));
-            goto Loop;
-        }
-
-        public void Wake()
-        {
-            if (_recorder.IsNot()) StartWith();
-            if (IsRecodingState) return;
-            _recorder.StartRecording();
-        }
-
-        public void Lull() => _recorder.Stop();
-
-        public event EventHandler<ProcessingEventArgs> DataAvailable;
-
-        public override string ToString() => "Microphone";
-
-        public void Free() => _recorder.Release();
-
-        public void Tick() { }
-
-		public short[] Next() => throw new NotImplementedException();
+		public override string ToString() => "🎙 Microphone";
 	}
 }

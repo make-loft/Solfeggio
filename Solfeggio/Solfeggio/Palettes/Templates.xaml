@@ -3,54 +3,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
-    xmlns:a="clr-namespace:Ace.Adapters;assembly=Ace"
-    xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
-    xmlns:converters="clr-namespace:Solfeggio.Converters"
 	>
-    
-    <converters:PowConverter x:Key="PowConverter" Base="2"/>
-   
-	<!--Use this values to reduce boxing/unboxing and string conversions-->
-    <x:Boolean x:Key="True">True</x:Boolean>
-    <x:Boolean x:Key="False">False</x:Boolean>
-
-    <x:Boolean x:Key="Hidden">False</x:Boolean>
-    <x:Boolean x:Key="Visible">True</x:Boolean>
-    <x:Boolean x:Key="Collapsed">False</x:Boolean>
-
-    <KeyToValueConverter x:Key="NullToTrueConverter" Key="{x:Null}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
-    <KeyToValueConverter x:Key="NullToFalseConverter" Key="{x:Null}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
-
-    <KeyToValueConverter x:Key="NullToHiddenConverter" Key="{x:Null}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <KeyToValueConverter x:Key="NullToVisibleConverter" Key="{x:Null}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <KeyToValueConverter x:Key="NullToCollapsedConverter" Key="{x:Null}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
-
-    <KeyToValueConverter x:Key="TrueToFalseConverter" Key="{StaticResource True}" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
-    <KeyToValueConverter x:Key="FalseToTrueConverter" Key="{StaticResource False}" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
-
-    <KeyToValueConverter x:Key="TrueToHiddenConverter" Key="{StaticResource True}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <KeyToValueConverter x:Key="TrueToVisibleConverter" Key="{StaticResource True}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <KeyToValueConverter x:Key="TrueToCollapsedConverter" Key="{StaticResource True}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
-
-    <KeyToValueConverter x:Key="FalseToHiddenConverter" Key="{StaticResource False}" Value="{StaticResource Hidden}" ByDefault="{StaticResource Visible}" />
-    <KeyToValueConverter x:Key="FalseToVisibleConverter" Key="{StaticResource False}" Value="{StaticResource Visible}" ByDefault="{StaticResource Collapsed}" />
-    <KeyToValueConverter x:Key="FalseToCollapsedConverter" Key="{StaticResource False}" Value="{StaticResource Collapsed}" ByDefault="{StaticResource Visible}" />
-
-    <KeyToValueConverter x:Key="EqualsToFalseConverter" KeySource="ConverterParameter" Value="{StaticResource False}" ByDefault="{StaticResource True}" />
-    <KeyToValueConverter x:Key="EqualsToTrueConverter" KeySource="ConverterParameter" Value="{StaticResource True}" ByDefault="{StaticResource False}" />
-
-
-	<Style
-		x:Key="TitlePanelStyle"
-		TargetType="Stack">
-		<Setter
-			Property="Margin"
-			Value="8" />
-		<Setter
-			Property="Orientation"
-			Value="Horizontal" />
-	</Style>
 
 	<DataTemplate
 		x:Key="NoteNameToFrequencyTemplate">
@@ -129,28 +83,50 @@
 
 			<Entry
 				Rack.Cell="C0"
-				Text="{Binding Magnitude, Mode=TwoWay}"
+				Keyboard="Numeric"
+				Text="{Binding Magnitude, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Entry
 				Rack.Cell="C1"
-				Text="{Binding Frequency, Mode=TwoWay}"
+				Keyboard="Numeric"
+				Text="{Binding Frequency, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Entry
+			<Rack
 				Rack.Cell="C2"
-				Text="{Binding Phase, Mode=TwoWay}"
-				/>
+				Columns="* *"
+				>
+				<Label
+					Rack.Cell="C0"
+					Margin="2"
+					FontSize="12"
+					Alignment.Y="From"
+					Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}}"
+					/>
+				<Label
+					Rack.Cell="C0"
+					Margin="2"
+					FontSize="12"
+					Alignment.Y="Till"
+					Text="{Binding Phase, Mode=TwoWay, Converter={StaticResource RadianPiFormattedConverter}}"
+					/>
+				<Entry
+					Rack.Cell="C1"
+					Keyboard="Numeric"
+					Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+			</Rack>
 
 			<Slider
 				Rack.Cell="C0 R1"
-				Maximum="+1.0"
-				Minimum="+0.0"
+				Minimum="{Binding Spectrum.Magnitude.Limit.Lower, Source={Store p:MusicalPresenter}}"
+				Maximum="{Binding Spectrum.Magnitude.Limit.Upper, Source={Store p:MusicalPresenter}}"
 				Value="{Binding Magnitude, Mode=TwoWay}"
 				/>
 			<Slider
 				Rack.Cell="C1 R1"
-				Maximum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Upper}"
-				Minimum="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency.Threshold.Lower}"
-				Value="{Binding Frequency, Mode=TwoWay}"
+				Maximum="{Binding Spectrum.Frequency.Limit.Upper, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
+				Minimum="{Binding Spectrum.Frequency.Limit.Lower, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
+				Value="{Binding Frequency, Mode=TwoWay, Converter={StaticResource ScaleConverter}}"
 				/>
 			<Slider
 				Rack.Cell="C2 R1"
@@ -160,18 +136,27 @@
 				/>
 
 			<Picker
-				Rack.Cell="C3 R0"
+				Rack.Cell="C3 R0 RS2"
+				Alignment.Y="Center"
 				ItemsSource="{Binding BasisFuncs}"
 				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
 				/>
 			<Picker
-				Rack.Cell="C4 R0"
+				Rack.Cell="C4 R0 RS2"
+				Alignment.Y="Center"
 				ItemsSource="{Enum m:PhaseMode}"
 				SelectedItem="{Binding PhaseMode, Mode=TwoWay}"
 				/>
 			<Switch
-				Rack.Cell="C5 R0"
+				Rack.Cell="C5 R0 RS2"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}"
+				/>
+			<Button
+				Rack.Cell="C6 R0 RS2"
+				Text="➖"
+				CommandParameter="{Binding}"
+				Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
 				/>
 		</Rack>
 	</DataTemplate>
@@ -250,7 +235,9 @@
 				<Label
 					Rack.Cell="C1"
 					Opacity="0.35"
-					HorizontalOptions="End"
+					FontSize="12"
+					Alignment.X="Till"
+					Alignment.Y="Till"
 					Text="{Localizing Hz}"
 					/>
 				<Label
@@ -260,7 +247,9 @@
 				<Label
 					Rack.Cell="C2"
 					Opacity="0.35"
-					HorizontalOptions="End"
+					FontSize="12"
+					Alignment.X="Till"
+					Alignment.Y="Till"
 					Text="{Localizing Rad}"
 					/>
 				<Label
@@ -390,13 +379,16 @@
 				SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}"
 				/>-->
 			<Entry
+				Size.X="128"
 				Text="{Binding ActiveProfile.Title, Mode=TwoWay}"
 				/>
 			<Button
+				Size.X="48"
 				Text="➕"
 				Command="{Context Key=Set.Create}"
 				/>
 			<Button
+				Size.X="48"
 				Text="➖"
 				CommandParameter="{Binding Path=ActiveProfile}"
 				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
@@ -414,17 +406,18 @@
 				Rack.Cell="R0 C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
 				/>
-			<Pick
-				Rack.Cell="R0 C1"
-				ItemsSource="{Binding PitchStandards}"
-				ActiveItem="{Binding ActivePitchStandard, Mode=TwoWay}"
-				/>
 			<Entry
-				Rack.Cell="R0 C2"
+				Rack.Cell="R0 C1"
+				Keyboard="Numeric"
 				Text="{Binding ActivePitchStandard, Mode=TwoWay}"
 				/>
+			<!--<Pick
+				Rack.Cell="R0 C2"
+				ItemsSource="{Binding PitchStandards}"
+				ActiveItem="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>-->
 			<Label
-				Rack.Cell="R0 C3"
+				Rack.Cell="R0 C2"
 				Text="{Localizing Hz}"
 				/>
 			<Label
@@ -484,23 +477,28 @@
 			>
 			<Label
 				Rack.Cell="R1 C0"
-				Text="{Localizing Numeric}" />
+				Text="{Localizing Numeric}"
+				/>
 			<Label
 				Rack.Cell="R0 C1"
-				Text="{Localizing Monitor}" />
+				Text="{Localizing Monitor}"
+				/>
 			<Pick
 				Rack.Cell="R1 C1"
 				Alignment.X="Center"
 				ItemsSource="{Binding NumericFormats}"
-				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
+				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}"
+				/>
 			<Label
 				Rack.Cell="R0 C2"
-				Text="{Localizing Screen}" />
+				Text="{Localizing Screen}"
+				/>
 			<Pick
 				Rack.Cell="R1 C2"
 				Alignment.X="Center"
 				ItemsSource="{Binding NumericFormats}"
-				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
+				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}"
+				/>
 		</Grid>
 	</DataTemplate>
 
@@ -508,17 +506,19 @@
 		x:Key="ValuePickerTemplate"
 		>
 		<Rack
-			Columns="32 *"
+			Rows="^ *"
 			>
 			<Entry
-				Rack.Cell="C0"
-				Text="{TemplateBinding Content, Mode=TwoWay}"
+				Rack.Cell="R0"
+				Keyboard="Numeric"
+				Text="{TemplateBinding Item, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Slider
-				Rack.Cell="C1"
+				x:Name="Slider"
+				Rack.Cell="R1"
 				Maximum="1.0"
 				Minimum="0.0"
-				Value="{TemplateBinding Content, Mode=TwoWay}"
+				Value="{TemplateBinding Item, Mode=TwoWay}"
 				/>
 		</Rack>
 	</ControlTemplate>
@@ -528,8 +528,8 @@
 		>
 		<Stack>
 			<Grid
-				Rack.Rows="^ ^ ^"
-				Rack.Columns="^ ^ * ^ ^ ^"
+				Rack.Rows="^ ^ ^ *"
+				Rack.Columns="^ 2* 3* ^"
 				Alignment.X="Stretch"
 				Alignment.Y="Center"
 				>
@@ -551,6 +551,10 @@
 					/>
 				<!--<Label
 					Rack.Cell="R0 C3"
+					Text="{Localizing Boost}"
+					/>-->
+				<!--<Label
+					Rack.Cell="R0 C3"
 					Text="{Localizing Buffers}"
 					/>-->
 				<!--<Label
@@ -570,128 +574,166 @@
 					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
 					ItemDisplayBinding="{Binding ProductName}"
 					/>
-				<Item
+				<Rack
 					Rack.Cell="R1 C2"
-					Content="{Binding InputLevel, Mode=TwoWay}"
-					ControlTemplate="{StaticResource ValuePickerTemplate}"
-					/>
-				<Item
+					Rows="^ *"
+					>
+					<Entry
+						Rack.Cell="R0"
+						Keyboard="Numeric"
+						Alignment.X="Center"
+						HorizontalTextAlignment="Center"
+						Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+					<Slider
+						Rack.Cell="R1"
+						Maximum="+8.0"
+						Minimum="-8.0"
+						Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+						/>
+				</Rack>
+				<Rack
 					Rack.Cell="R2 C2"
-					Content="{Binding OutputLevel, Mode=TwoWay}"
+					Rows="^ *"
+					>
+					<Entry
+						Rack.Cell="R0"
+						Keyboard="Numeric"
+						Alignment.X="Center"
+						HorizontalTextAlignment="Center"
+						Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+					<Slider
+						Rack.Cell="R1"
+						Maximum="+8.0"
+						Minimum="-8.0"
+						Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+						/>
+				</Rack>
+				<!--<Slot
+					Rack.Cell="R1 C2"
+					Item="{Binding InputLevel, Mode=TwoWay}"
 					ControlTemplate="{StaticResource ValuePickerTemplate}"
 					/>
+				<Slot
+					Rack.Cell="R2 C2"
+					Item="{Binding OutputLevel, Mode=TwoWay}"
+					ControlTemplate="{StaticResource ValuePickerTemplate}"
+					/>-->
 				<!--<Picker
 					Rack.Cell="R1 C3"
 					ItemsSource="{StaticResource AllowedBuffersCount}"
 					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
 					/>-->
-			</Grid>
-
-			<Grid
-				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^"
-				Alignment.X="Center"
-				Alignment.Y="Center"
-				>
-				<Label
-					Rack.Cell="R0 C1"
-					Text="{Localizing Sample}"
-					/>
-				<!--<Label
-					Rack.Cell="R1 C0"
-					Text="{Localizing Window}"
-					/>-->
-				<Label
-					Rack.Cell="R2 C0"
-					Text="{Localizing Rate}"
-					/>
-				<Label
-					Rack.Cell="R3 C1 CS2"
-					Text="{Localizing Frame}"
-					/>
-				<Label
-					Rack.Cell="R4 C0"
-					Text="{Localizing Length}"
-					/>
-
-				<Label
-					Rack.Cell="R2 C2"
-					Text="{Localizing Hz}"
-					/>
-				<Label
-					Rack.Cell="R4 C2"
-					Text="{Localizing Pcs}"
-					/>
-				<Label
-					Rack.Cell="R5 C2"
-					Text="{Localizing ms}"
-					/>
-				<Label
-					Rack.Cell="R6 C2"
-					Text="{Localizing Hz}"
-					/>
-				<Label
-					Rack.Cell="R7 C2"
-					Text="{Localizing Hz}"
-					/>
-
-				<!--<Picker
-					Rack.Cell="R1 C1"
-					ItemsSource="{Binding Windows}"
-					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
-					/>-->
-				<Picker
-					Rack.Cell="R2 C1"
-					ItemsSource="{Binding SampleRates}"
-					SelectedItem="{Binding SampleRate, Mode=TwoWay}"
-					/>
-
-				<StackLayout
-					Rack.Cell="R4 C1"
-					Orientation="Horizontal"
+				
+				<Grid
+					Rack.Cell="R0 C3 RS4"
+					Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
+					Rack.Columns="^ ^ ^"
+					Alignment.X="Center"
+					Alignment.Y="Center"
 					>
 					<Label
-						Text="2 ^"
+						Rack.Cell="R0 C1"
+						Text="{Localizing Sample}"
 						/>
-					<Picker
-						ItemsSource="{StaticResource AllowedPowsOf2}"
-						SelectedItem="{Binding FramePow, Mode=TwoWay}"
+					<!--<Label
+						Rack.Cell="R1 C0"
+						Text="{Localizing Window}"
+						/>-->
+					<Label
+						Rack.Cell="R2 C0"
+						Text="{Localizing Rate}"
 						/>
 					<Label
-						Text="{Binding FrameSize, StringFormat='= {0}'}"
+						Rack.Cell="R3 C1 CS2"
+						Text="{Localizing Frame}"
 						/>
-				</StackLayout>
-				<Label
-					Rack.Cell="R5 C0"
-					Text="{Localizing Duration}"
-					/>
-				<Label
-					Rack.Cell="R5 C1"
-					Alignment.X="Till"
-					Text="{Binding FrameDuration.TotalMilliseconds}"
-					/>
-				<Label
-					Rack.Cell="R6 C0"
-					Text="{Localizing Step}"
-					/>
-				<Label
-					Rack.Cell="R6 C1"
-					Alignment.X="Till"
-					Ext.ToolTip="{Binding FrameStep}"
-					Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-					/>
-				<Label
-					Rack.Cell="R7 C0"
-					Text="{Localizing Accuracy}"
-					/>
-				<Label
-					Rack.Cell="R7 C1"
-					Alignment.X="Till"
-					Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
-					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
-					/>
+					<Label
+						Rack.Cell="R4 C0"
+						Text="{Localizing Length}"
+						/>
+
+					<Label
+						Rack.Cell="R2 C2"
+						Text="{Localizing Hz}"
+						/>
+					<Label
+						Rack.Cell="R4 C2"
+						Text="{Localizing Pcs}"
+						/>
+					<Label
+						Rack.Cell="R5 C2"
+						Text="{Localizing ms}"
+						/>
+					<!--<Label
+						Rack.Cell="R6 C2"
+						Text="{Localizing Hz}"
+						/>-->
+					<!--<Label
+						Rack.Cell="R7 C2"
+						Text="{Localizing Hz}"
+						/>-->
+
+					<!--<Picker
+						Rack.Cell="R1 C1"
+						ItemsSource="{Binding Windows}"
+						SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+						ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+						/>-->
+					<Picker
+						Rack.Cell="R2 C1"
+						ItemsSource="{Binding SampleRates}"
+						SelectedItem="{Binding SampleRate, Mode=TwoWay}"
+						/>
+
+					<Stack
+						Rack.Cell="R4 C1"
+						Orientation="Horizontal"
+						>
+						<Label
+							Text="2 ^"
+							/>
+						<Picker
+							ItemsSource="{StaticResource AllowedPowsOf2}"
+							SelectedItem="{Binding FramePow, Mode=TwoWay}"
+							/>
+						<Label
+							Text="{Binding FrameSize, StringFormat='= {0}'}"
+							/>
+					</Stack>
+					<Label
+						Rack.Cell="R5 C0"
+						Text="{Localizing Duration}"
+						/>
+					<Label
+						Rack.Cell="R5 C1"
+						Alignment.X="Till"
+						Text="{Binding FrameDuration.TotalMilliseconds}"
+						/>
+					<!--<Label
+						Rack.Cell="R6 C0"
+						Text="{Localizing Step}"
+						/>
+					<Label
+						Rack.Cell="R6 C1"
+						Alignment.X="Till"
+						Ext.ToolTip="{Binding FrameStep}"
+						Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+					<Label
+						Rack.Cell="R7 C0"
+						Text="{Localizing Accuracy}"
+						/>
+					<Label
+						Rack.Cell="R7 C1"
+						Alignment.X="Till"
+						Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
+						Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>-->
+				</Grid>
 			</Grid>
+
 		</Stack>
 	</DataTemplate>
 

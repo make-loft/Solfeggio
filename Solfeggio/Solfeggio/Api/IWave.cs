@@ -11,7 +11,7 @@ namespace Solfeggio.Api
 
 	public interface IDataSource
 	{
-		short[] Next();
+		float[] Next();
 
 		event EventHandler<ProcessingEventArgs> DataAvailable;
 	}
@@ -19,8 +19,8 @@ namespace Solfeggio.Api
 	public interface IProcessor : IDataSource
 	{
 		IProcessor Source { get; set; }
-		double Level { get; set; }
-		double Boost { get; set; }
+		float Level { get; set; }
+		float Boost { get; set; }
 		void Wake();
 		void Lull();
 		void Free();
@@ -29,13 +29,13 @@ namespace Solfeggio.Api
 
 	public class ProcessingEventArgs : EventArgs
 	{
-		public ProcessingEventArgs(IProcessor source, short[] buffer)
+		public ProcessingEventArgs(IProcessor source, float[] sample)
 		{
 			Source = source;
-			Bins = buffer;
+			Sample = sample;
 		}
 
 		public IProcessor Source { get; }
-		public short[] Bins { get; }
+		public float[] Sample { get; }
 	}
 }

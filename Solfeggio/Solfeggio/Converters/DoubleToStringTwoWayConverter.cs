@@ -2,6 +2,8 @@
 
 using Solfeggio.Presenters;
 
+using System.Globalization;
+
 namespace Solfeggio.Converters
 {
 	public class DoubleToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
@@ -16,17 +18,18 @@ namespace Solfeggio.Converters
 			value is float f ? f :
 			0d;
 
-		public override object Convert(object value) =>
-			$"{Head}{ToDouble(value).ToString(MusicalPresenter.MonitorNumericFormat)}{Tail}";
+		public override object Convert(object value) => value is string s
+			? s
+			: $"{Head}{ToDouble(value).ToString(MusicalPresenter.MonitorNumericFormat)}{Tail}";
 
 		public override object ConvertBack(object value) => value is double d
 			? d 
-			: Clip(value).TryParse(out d) ? d : default;
+			: Clip(value).TryParse(out d, NumberFormatInfo.CurrentInfo) ? d : default;
 
 		string Clip(object value) => value.Is(out string str)
 			? Clip(str,
 				Head.Is() && str.StartsWith(Head) ? Head.Length : 0,
-				Tail.Is() && str.EndsWith(Tail) ? str.Length - Tail.Length - 1 : str.Length - 1)
+				Tail.Is() && str.EndsWith(Tail) ? str.Length - Tail.Length : str.Length)
 			: value?.ToString();
 
 		string Clip(string str, int from, int till) => (till - from).To(out var length) < 0

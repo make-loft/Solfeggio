@@ -28,14 +28,18 @@
 		TargetType="Picker"
 		>
 		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="VerticalOptions" Value="Center" />
 		<Setter Property="MinimumWidthRequest" Value="64" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
 	</Style>
 
 	<Style
 		TargetType="Entry"
 		>
 		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="VerticalOptions" Value="Center" />
 		<Setter Property="MinimumWidthRequest" Value="64" />
+		<Setter Property="HorizontalTextAlignment" Value="End" />
 	</Style>
 
 	<Style
@@ -60,10 +64,22 @@
 	<Style
 		TargetType="Button"
 		>
-		<Setter Property="Padding" Value="-15 0" />
+		<!--<Setter Property="Padding" Value="-10 0" />-->
 		<Setter Property="Margin" Value="2" />
 		<Setter Property="MinimumWidthRequest" Value="32" />
 		<Setter Property="Alignment.X" Value="Center" />
 		<Setter Property="Alignment.Y" Value="Center" />
 	</Style>
+
+	<Style
+		x:Key="TitlePanelStyle"
+		TargetType="Stack">
+		<Setter
+			Property="Margin"
+			Value="8" />
+		<Setter
+			Property="Orientation"
+			Value="Horizontal" />
+	</Style>
+	
 </ResourceDictionary>

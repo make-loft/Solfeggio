@@ -2,6 +2,7 @@
 using Ace.Markup.Patterns;
 
 using Solfeggio.Models;
+using Solfeggio.Presenters;
 
 using System;
 
@@ -32,8 +33,9 @@ namespace Solfeggio.Palettes
 			return color;
 		}
 
-		object LogBase2(ConvertArgs args) => args.Value.To(out double d) > 0d ? Math.Log(d, 2d) : -16d;
-		object PowBase2(ConvertArgs args) => Math.Pow(2d, (double)args.Value);
+		Bandwidth FrequencyBandwidth = Store.Get<MusicalPresenter>().Spectrum.Frequency;
+		object ToVisualValue(ConvertArgs args) => FrequencyBandwidth.VisualScaleFunc((double)args.Value);
+		object ToLogicalValue(ConvertArgs args) => FrequencyBandwidth.LogicalScaleFunc((double)args.Value);
 
 		object Debug_Convert(Ace.Markup.Patterns.ConvertArgs args) =>
 			args.Value;

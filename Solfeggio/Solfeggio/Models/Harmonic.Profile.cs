@@ -13,12 +13,7 @@ namespace Solfeggio.Models
 			private static readonly MusicalPresenter presenter = Store.Get<MusicalPresenter>();
 
 			[DataMember]
-			public SmartSet<Harmonic> Harmonics { get; set; } = new()
-			{
-				new() {Frequency = presenter.Music.ActivePitchStandard + 0},
-				new() {Frequency = presenter.Music.ActivePitchStandard + 2},
-				new() {Frequency = presenter.Music.ActivePitchStandard + 5},
-			};
+			public SmartSet<Harmonic> Harmonics { get; set; } = new();
 
 			public Profile() => Expose();
 
@@ -47,15 +42,15 @@ namespace Solfeggio.Models
 					: presenter.Music.ActivePitchStandard
 			};
 
-			public double[] GenerateSignalSample(int length, double rate, bool isStatic) =>
+			public float[] GenerateSignalSample(int length, double rate, bool isStatic) =>
 				GenerateSignalSample(Harmonics.ToArray(), length, rate, isStatic); /* Harmonics may be modified during enumeration */
 
-			private static double[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool gobalLoop)
+			private static float[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool gobalLoop)
 			{
-				var signalSample = new double[length];
+				var signalSample = new float[length];
 				var harmonicSamples = harmonics.
 					Where(h => h.IsEnabled && h.Frequency > 0d).
-					Select(h => h.EnumerateBins(rate, gobalLoop).Take(length).ToArray()).
+					Select(h => h.EnumerateBins(rate, gobalLoop).Select(d => (float)d).Take(length).ToArray()).
 					ToArray();
 
 				foreach (var harmonicSample in harmonicSamples)

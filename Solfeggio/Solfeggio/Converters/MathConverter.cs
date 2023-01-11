@@ -4,6 +4,7 @@ using Ace.Markup.Patterns;
 using System;
 
 using Rainbow;
+using System.Globalization;
 
 namespace Solfeggio.Converters
 {
@@ -21,14 +22,15 @@ namespace Solfeggio.Converters
 		public double Parameter { get; set; }
 		public Operations Operation { get; set; }
 
-		private double GetBase(object parameter) =>
-			parameter.Is(out double value) || double.TryParse(parameter.ToStr(), out value) ? value : Parameter;
-
 		public override object Convert(object value, object parameter) =>
-			Apply(Operation, (double)value, GetBase(parameter));
+			TryCast(value, out var v) && TryCast(parameter ?? Parameter, out var b)
+				? Apply(Operation, v, b)
+				: value;
 
 		public override object ConvertBack(object value, object parameter) =>
-			Apply(Back(Operation), GetBase(parameter), (double)value);
+			TryCast(value, out var v) && TryCast(parameter ?? Parameter, out var b)
+				? Apply(Back(Operation), b, v)
+				: value;
 
 		private double Apply(Operations code, double value, double parameter) =>
 			code.Is(Identity) ? value.Identity() :
@@ -41,7 +43,7 @@ namespace Solfeggio.Converters
 			code.Is(Log) ? Math.Log(value, parameter) :
 			throw new ArgumentException();
 
-		private Operations Back(Operations code) =>
+		Operations Back(Operations code) =>
 			code.Is(Identity) ? Identity :
 			code.Is(Negation) ? Negation :
 			code.Is(Increment) ? Decrement :
@@ -51,5 +53,22 @@ namespace Solfeggio.Converters
 			code.Is(Pow) ? Log :
 			code.Is(Log) ? Pow :
 			throw new ArgumentException();
+
+		bool TryCast(object value, out double v) =>
+			Cast(value).To(out v).IsNot(double.NaN) ||
+			value.ToStr().TryParse(out v, NumberFormatInfo.CurrentInfo);
+
+		double Cast(object value) => value switch
+		{
+			double v => v,
+			float v => v,
+			ulong v => v,
+			long v => v,
+			ushort v => v,
+			short v => v,
+			uint v => v,
+			int v => v,
+			_ => double.NaN
+		};
 	}
 }

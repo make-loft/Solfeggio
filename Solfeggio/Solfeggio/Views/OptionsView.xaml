@@ -61,19 +61,28 @@
 					<Item
 						x:Name="MusicItem"
 						Header="{Localizing Music}"
-						Content="{StoreBinding Music, StoreKey=p:MusicalPresenter}"
-						ContentTemplate="{StaticResource MusicOptionsTemplate}"
-						/>
+						>
+						<Slot
+							Item="{StoreBinding Music, StoreKey=p:MusicalPresenter}"
+							ItemTemplate="{StaticResource MusicOptionsTemplate}"
+							/>
+					</Item>
 					<Item
 						Header="{Localizing Geometry}"
-						Content="{Store p:MusicalPresenter}"
-						ContentTemplate="{StaticResource GeometryTemplate}"
-						/>
+						>
+						<Slot
+							Item="{Store p:MusicalPresenter}"
+							ItemTemplate="{StaticResource GeometryTemplate}"
+							/>
+					</Item>
 					<Item
 						Header="{Localizing Format}"
-						Content="{Store p:MusicalPresenter}"
-						ContentTemplate="{StaticResource FormattingTemplate}"
-						/>
+						>
+						<Slot
+							Item="{Store p:MusicalPresenter}"
+							ItemTemplate="{StaticResource FormattingTemplate}"
+							/>
+					</Item>
 				</Pivot>
 			</Scroll>
 		</Item>
@@ -115,6 +124,7 @@
 						Text="{Localizing Language}"
 						/>
 					<Picker
+						Size.X="128"
 						Data.Context="{Store vm:AppViewModel}"
 						ItemsSource="{Binding Languages}"
 						SelectedItem="{Binding ActiveLanguage, Mode=TwoWay}"
@@ -139,7 +149,6 @@
 				<Button
 					Rack.Cell="R3"
 					FontSize="14"
-					Padding="6"
 					FontFamily="Consolas"
 					CommandParameter="{Localizing ReadyToHelpLink}"
 					Command="{Context Navigate, StoreKey=vm:AppViewModel}"

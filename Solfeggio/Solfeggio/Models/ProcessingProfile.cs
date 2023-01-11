@@ -1,7 +1,10 @@
 ﻿using Ace;
+
 using Rainbow;
+
 using Solfeggio.Api;
 using Solfeggio.Processors;
+
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -224,43 +227,43 @@ namespace Solfeggio.Models
 		}
 
 		[DataMember]
-		public double InputBoost
+		public float InputBoost
 		{
-			get => Get(() => InputBoost, 1.0d);
+			get => Get(() => InputBoost, 1.0f);
 			set => Set(() => InputBoost, value);
 		}
 
 		[DataMember]
-		public double OutputBoost
+		public float OutputBoost
 		{
-			get => Get(() => OutputBoost, 1.0d);
+			get => Get(() => OutputBoost, 1.0f);
 			set => Set(() => OutputBoost, value);
 		}
 
 		[DataMember]
-		public double InputLevel
+		public float InputLevel
 		{
-			get => Get(() => InputLevel, 1.0d);
+			get => Get(() => InputLevel, 1.0f);
 			set => Set(() => InputLevel, value);
 		}
 
 		[DataMember]
-		public double OutputLevel
+		public float OutputLevel
 		{
-			get => Get(() => OutputLevel, 0.05d);
+			get => Get(() => OutputLevel, 0.01f);
 			set => Set(() => OutputLevel, value);
 		}
 
 		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)
 		{
-			var sampleSize = args.Bins.Length;
-			var frame = new Complex[sampleSize];
+			var sampleSize = args.Sample.Length;
+			var sample = new Complex[sampleSize];
 			for (var i = 0; i < sampleSize; i++)
 			{
-				frame[i] = (args.Bins[i] + 0.5d) / short.MaxValue;
+				sample[i] = args.Sample[i];
 			}
 
-			SampleReady?.Invoke(this, new AudioInputEventArgs(this, frame, SampleRate));
+			SampleReady?.Invoke(this, new(this, sample, SampleRate));
 		}
 
 		public event EventHandler<AudioInputEventArgs> SampleReady;

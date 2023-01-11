@@ -148,7 +148,7 @@ namespace Solfeggio
 		public static o Note = _("Note", "Нота");
 		public static o Ethalon = _("Ethalon", "Эталон");
 
-		public static o Pcs = _("Pcs", "шт.");
+		public static o Pcs = _("Pcs", "шт");
 		public static o Rad = _("rad", "рад");
 		public static o Hz = _("Hz", "Гц");
 		public static o ms = _("ms", "мс");

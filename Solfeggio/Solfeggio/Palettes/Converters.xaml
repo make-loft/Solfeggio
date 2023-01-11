@@ -25,7 +25,7 @@
 	<c:MathConverter
 		x:Key="RadianDegreeConverter"
 		Operation="Stretch"
-		Parameter="{Double Value=57.295779513082320876798154814105}"
+		Parameter="{Double 57.295779513082320876798154814105}"
 		/>
 	<c:MathConverter
 		x:Key="RadianPiConverter"
@@ -33,11 +33,12 @@
 		Parameter="{StaticResource PlusSinglePi}"
 		/>
 
-	<!--<AggregateConverter
+	<AggregateConverter
 		x:Key="RadianDegreeFormattedConverter"
 		>
-		<RemoteConverter
-			Source="{StaticResource RadianDegreeConverter}"
+		<c:MathConverter
+			Operation="Stretch"
+			Parameter="{Double 57.295779513082320876798154814105}"
 			/>
 		<c:DoubleToStringTwoWayConverter
 			Tail="°"
@@ -46,13 +47,14 @@
 	<AggregateConverter
 		x:Key="RadianPiFormattedConverter"
 		>
-		<RemoteConverter
-			Source="{StaticResource RadianPiConverter}"
+		<c:MathConverter
+			Operation="Squeeze"
+			Parameter="{StaticResource PlusSinglePi}"
 			/>
 		<c:DoubleToStringTwoWayConverter
 			Tail="π"
 			/>
-	</AggregateConverter>-->
+	</AggregateConverter>
 
 	<SwitchConverter
 		x:Key="ModeToTitleConverter"
@@ -106,10 +108,16 @@
 		x:Key="DelegateToNameConverter"
 		/>
 
-	<Converter
+	<c:MathConverter
 		x:Key="ScaleValueConverter"
-		Convert="LogBase2"
-		ConvertBack="PowBase2"
+		Operation="Log"
+		Parameter="{Double 2.0}"
+		/>
+
+	<Converter
+		x:Key="ScaleConverter"
+		Convert="ToVisualValue"
+		ConvertBack="ToLogicalValue"
 		/>
 
 </ResourceDictionary>

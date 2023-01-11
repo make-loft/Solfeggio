@@ -10,13 +10,14 @@ using System;
 namespace Solfeggio.Droid
 {
 	[Activity(
-		Label = "Solfeggio 🎶🎵♫♬ ",
+		Label = "Solfeggio 🎶",
 		Icon = "@drawable/logo",
 		Theme = "@style/SplashTheme",
-		MainLauncher = true,
-		NoHistory = true,
 		ScreenOrientation = ScreenOrientation.Landscape,
-		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+		MainLauncher = true,
+		NoHistory = true
+		)]
 	public class SplashActivity : Activity
 	{
 		static SplashActivity()

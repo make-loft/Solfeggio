@@ -80,11 +80,11 @@ namespace Solfeggio.Models
 				_offset += step;
 				var value = _offset + _phase;
 				if (_gap.Is(0d))
-					yield return 2d * _magnitude * _basisFunc(value);
+					yield return _magnitude * _basisFunc(value);
 				else
 				{
 					var hit = (int)(Abs(value / Pi.Double) % Gap) == 0d;
-					yield return hit ^ _gap > 0d ? 0d : 2d * Magnitude * BasisFunc(value);
+					yield return hit ^ _gap > 0d ? 0d : Magnitude * BasisFunc(value);
 				}
 			}
 		}
