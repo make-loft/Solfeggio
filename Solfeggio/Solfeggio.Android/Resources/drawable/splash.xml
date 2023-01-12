@@ -1,13 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-  <item
-    android:bottom="8dp"
-    android:left="8dp"
-    android:right="8dp"
-    android:top="8dp">
+  <item>
+    <!--<color android:color="#2196F3"/>-->
+    <shape android:shape="rectangle">
+      <gradient
+        android:startColor="#2196F3"
+        android:endColor="#1976D2"
+        android:angle="-90"
+        />
+    </shape>
+  </item>
+  <item>
     <bitmap
       android:src="@drawable/logo"
-      android:tileMode="disabled"
-      android:gravity="center"/>
+      android:gravity="center"
+      />
   </item>
 </layer-list>

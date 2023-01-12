@@ -57,7 +57,7 @@ namespace Solfeggio.Presenters
 				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
 				var zeros = new string('0', digitsCount);
-				VisualProfile.PeakProfiles[nameof(VisualProfile.OffsetFrequency)].StringFormat = $"+0.{zeros};-0.{zeros}; 0.{zeros}";
+				VisualProfile.PeakProfiles[nameof(VisualProfile.OffsetFrequency)].StringFormat = $"+0.{zeros};−0.{zeros};•0.{zeros}";
 			};
 		}
 

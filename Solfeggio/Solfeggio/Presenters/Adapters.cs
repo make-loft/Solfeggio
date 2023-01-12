@@ -299,14 +299,13 @@ namespace System.Windows.Controls
 
 					using (SKPath roundRectPath = new())
 					{
-						using var fill = new SolidColorBrush(l.TextColor).ToSkPaint(view.WidthRequest, view.HeightRequest);
-						var rect = new SKRect((float)l.Margin.Left, (float)l.Margin.Top, (float)l.WidthRequest, (float)l.HeightRequest);
-						fill.TextSize = (float)l.FontSize;
-
+						using var stroke = GetStroke(l);
+						var rect = new SKRect();
 						var text = l.Text.Replace('♯', '#').Replace('♭', 'b');
-						fill.MeasureText(text, ref rect);
-						l.WidthRequest = rect.Width;
-						l.HeightRequest = rect.Height;
+						stroke.MeasureText(text, ref rect);
+						var correction = 1.0 + l.FontSize * density / 200d;
+						l.WidthRequest = correction * rect.Size.Width / density;
+						l.HeightRequest = rect.Size.Height / density;
 					}
 					break;
 				case Border g:
@@ -316,7 +315,6 @@ namespace System.Windows.Controls
 
 						if (g.HeightRequest < 0d)
 							g.HeightRequest = h - (g.Margin.Top + g.Margin.Bottom);
-
 					}
 					break;
 				case Grid g:
@@ -382,6 +380,17 @@ namespace System.Windows.Controls
 			}
 		}
 
+		static string GetCorrectFontFamilyName(string name) => name.Is("Consolas") ? "monospace" : name;
+
+		static SKPaint GetStroke(Label label) => new()
+		{
+			Color = label.TextColor.ToSKColor(),
+			TextSize = (float)(label.FontSize * density),
+			Typeface = SKTypeface.FromFamilyName(GetCorrectFontFamilyName(label.FontFamily)),
+			TextEncoding = SKTextEncoding.Utf16,
+			TextAlign = SKTextAlign.Left,
+		};
+
 		public void Draw(SKCanvas canvas, View view, double x, double y, double w, double h)
 		{
 			if (view.IsNot())
@@ -403,14 +412,9 @@ namespace System.Windows.Controls
 					{
 						using var fill = l.Background.ToSkPaint(view.WidthRequest, view.HeightRequest);
 
-						using var stroke = new SKPaint
-						{
-							Color = l.TextColor.ToSKColor(),
-							TextSize = (float)l.FontSize * 3
-						};
+						using var stroke = GetStroke(l);
 
 						stroke.MeasureText(l.Text, ref rect);
-
 
 						//roundRectPath.AddRect(rect);
 						//canvas.DrawPath(roundRectPath, fill);

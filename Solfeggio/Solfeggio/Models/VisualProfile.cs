@@ -110,7 +110,7 @@ namespace Solfeggio.Models
 		{
 			{ nameof(ActualMagnitude), CreateProfile(White, 12d) },
 			{ nameof(ActualFrequency), CreateProfile(White, 14d) },
-			{ nameof(OffsetFrequency), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "+0.0;-0.0; 0.0") },
+			{ nameof(OffsetFrequency), CreateProfile(Color.FromRgb(32, 33, 36), 16d, "+0.0;−0.0;•0.0") },
 			{ nameof(EthalonFrequency), CreateProfile(White, 14d) },
 			{ nameof(NoteName), CreateProfile(White, 16d, default) },
 		};

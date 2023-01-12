@@ -135,6 +135,7 @@
 			<Switch
 				Rack.Cell="R0 C0"
 				x:Name="OptionsSwitch"
+				IsToggled="True"
 				/>
 			<Label
 				Rack.Cell="R1 C1"

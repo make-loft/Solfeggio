@@ -10,7 +10,7 @@ namespace Solfeggio
 	using static LanguageCodes;
 	using o = Dictionary<LanguageCodes, string>;
 
-	public enum LanguageCodes { English, Russian, Belorussian };
+	public enum LanguageCodes { Default, English, Russian, Belorussian };
 
 	public static class Localizator
 	{
@@ -40,8 +40,9 @@ namespace Solfeggio
 		public static o Whisper = _("Whisper", "Шёпот");
 		public static o Singing = _("Singing", "Пение");
 		public static o Frame = _("Frame", "Кадр");
-		public static o Framing = _("Framing", "Кадрирование");
+		public static o Size = _("Size", "Размер");
 		public static o Duration = _("Duration", "Длительность");
+		public static o Resolution = _("Resolution", "Разрешение");
 		public static o Accuracy = _("Accuracy", "Точность");
 		public static o Step = _("Step", "Шаг");
 		public static o Wave = _("Wave", "Волна");
@@ -85,6 +86,7 @@ namespace Solfeggio
 		public static o Title = _("Title", "Заголовок");
 		public static o Command = _("Command", "Команда");
 		public static o Action = _("Action", "Действие");
+		public static o Menu = _("Menu", "Меню");
 		public static o Each = _("Each", "Каждый");
 		public static o Mute = _("Mute", "Немой");
 		public static o Loud = _("Loud", "Громкий");
