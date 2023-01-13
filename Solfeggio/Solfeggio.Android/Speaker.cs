@@ -84,7 +84,5 @@ namespace Solfeggio.Droid
 		}
 
 		public override float[] Next() => Source?.Next();
-
-		public override string ToString() => "🔊 Speaker";
 	}
 }

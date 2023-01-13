@@ -5,9 +5,6 @@ namespace Solfeggio.Palettes
     [XamlCompilation(XamlCompilationOptions.Skip)]
     public partial class Styles
     {
-        public Styles()
-        {
-            InitializeComponent();
-        }
-    }
+		public Styles() => InitializeComponent();
+	}
 }

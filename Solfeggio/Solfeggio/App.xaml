@@ -2,8 +2,9 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:p="clr-namespace:Solfeggio.Palettes"
-	xmlns:m="clr-namespace:Ace.Markup;assembly=Ace" xmlns:d="clr-namespace:Ace.Zest.Dictionaries;assembly=Ace"
-	x:Class="Solfeggio.App">
+	xmlns:d="clr-namespace:Ace.Zest.Dictionaries;assembly=Ace"
+	x:Class="Solfeggio.App"
+	>
     <Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -11,18 +12,10 @@
 				<p:Brushes />
 				<d:AppConverters />
 				<p:Converters />
+				<p:Sets />
 				<p:Templates />
 				<p:Styles />
 			</ResourceDictionary.MergedDictionaries>
-
-			<m:Set
-				x:Key="AllowedPowsOf2">
-				<x:Int32>8</x:Int32>
-				<x:Int32>9</x:Int32>
-				<x:Int32>10</x:Int32>
-				<x:Int32>11</x:Int32>
-				<x:Int32>12</x:Int32>
-			</m:Set>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

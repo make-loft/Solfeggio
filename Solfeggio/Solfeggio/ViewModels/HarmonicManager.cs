@@ -11,7 +11,7 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
-				Title = "Camerton",
+				Title = "Camertone".Localize(),
 				Harmonics =
 				{
 					new() { IsEnabled = true, Frequency = 440d },
@@ -20,7 +20,7 @@ namespace Solfeggio.ViewModels
 
 			yield return new()
 			{
-				Title = "Resonance",
+				Title = "Resonance".Localize(),
 				Harmonics =
 				{
 					new() { IsEnabled = true, Frequency = 442d },
@@ -31,7 +31,7 @@ namespace Solfeggio.ViewModels
 
 			yield return new()
 			{
-				Title = "Harmony",
+				Title = "Harmony".Localize(),
 				Harmonics =
 				{
 					new() { Magnitude = 0.43d, Frequency = 258d },
@@ -41,12 +41,23 @@ namespace Solfeggio.ViewModels
 
 			yield return new()
 			{
-				Title = "Fantasy",
+				Title = "Fantasy".Localize(),
 				Harmonics =
 				{
 					new() { Magnitude = 0.43d, Frequency = 150d },
 					new() { Magnitude = 0.30d, Frequency = 600.5d },
 					new() { Magnitude = 0.10d, Frequency = 900d },
+				}
+			};
+
+			yield return new()
+			{
+				Title = "Relax".Localize(),
+				Harmonics =
+				{
+					new() { Magnitude = 0.43d, Frequency = 170 },
+					new() { Magnitude = 0.30d, Frequency = 210d },
+					new() { Magnitude = 0.10d, Frequency = 220d },
 				}
 			};
 		}

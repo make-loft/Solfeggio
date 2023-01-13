@@ -268,7 +268,7 @@
 			<Button
 				Alignment.X="Center"
 				Text="{Localizing Create, StringFormat='{}{0} ➕'}"
-				Command="{Context Key=Set.Create, TrackedPath=DataContext}"
+				Command="{Context Key=Set.Create, TrackedPath=BindingContext}"
 				/>
 		</StackLayout>
 	</DataTemplate>
@@ -364,14 +364,11 @@
 			<Label
 				Text="{Localizing Profile}"
 				/>
-			<!--<Picker
-				ItemDisplayBinding="{Binding Title}"
-				ItemsSource="{Binding Path=Profiles, Converter={StaticResource DebugConverter}}"
-				SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}"
-				/>-->
 			<Field
 				Size.X="128"
-				Text="{Binding ActiveProfile.Title, Mode=TwoWay}"
+				BindingContext="{Binding ActiveProfile}"
+				Text="{Binding Title, Mode=TwoWay}"
+				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				/>
 			<Button
 				Size.X="48"
@@ -426,7 +423,7 @@
 				/>-->
 			<!--<Item
 				Rack.Cell="C8"
-				Data.Context="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
+				BindingContext="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
 				Template="{StaticResource VisibilityTemplate}"
 				/>-->
 		</Rack>
@@ -525,14 +522,6 @@
 				Alignment.Y="Center"
 				>
 				<Label
-					Rack.Cell="R1 C0"
-					Text="{Localizing Input}"
-					/>
-				<Label
-					Rack.Cell="R2 C0"
-					Text="{Localizing Output}"
-					/>
-				<Label
 					Rack.Cell="R0 C1"
 					Text="{Localizing Device}"
 					/>
@@ -553,18 +542,30 @@
 					Text="{Localizing Pcs}"
 					/>-->
 
+				<Label
+					Rack.Cell="R1 C0"
+					Text="{Localizing Input}"
+					/>
 				<Picker
 					Rack.Cell="R1 C1"
 					ItemsSource="{Binding InputDevices}"
 					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding ProductName}"
+					ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+					/>
+
+				<Label
+					Rack.Cell="R2 C0"
+					Text="{Localizing Output}"
 					/>
 				<Picker
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding OutputDevices}"
 					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding ProductName}"
+					ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 					/>
+				
 				<Rack
 					Rack.Cell="R1 C2"
 					Rows="^ *"
@@ -657,6 +658,7 @@
 						Rack.Cell="R2 C1"
 						ItemsSource="{Binding SampleRates}"
 						SelectedItem="{Binding SampleRate, Mode=TwoWay}"
+						IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 						/>
 					<Label
 						Rack.Cell="R2 C2"
@@ -682,6 +684,7 @@
 						<Picker
 							ItemsSource="{StaticResource AllowedPowsOf2}"
 							SelectedItem="{Binding FramePow, Mode=TwoWay}"
+							IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 							/>
 						<Label
 							Text="{Binding FrameSize, StringFormat='= {0}'}"

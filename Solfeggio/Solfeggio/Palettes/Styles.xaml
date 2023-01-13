@@ -1,8 +1,7 @@
 <ResourceDictionary
     x:Class="Solfeggio.Palettes.Styles"
 	xmlns="http://xamarin.com/schemas/2014/forms"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	>
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:c="clr-namespace:Solfeggio.Converters">
 
 	<Style
 		TargetType="Stack"
@@ -42,11 +41,15 @@
 		<Setter Property="HorizontalTextAlignment" Value="End" />
 	</Style>
 
+	<c:TextLengthToFontSizeConverter
+		x:Key="TextLengthToFontSizeConverter"
+		/>
+
 	<Style
 		TargetType="Label"
 		>
 		<Setter Property="VerticalOptions" Value="Center" />
-		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="FontSize" Value="{Binding Text, Source={RelativeSource Self}, Converter={StaticResource TextLengthToFontSizeConverter}}" />
 		<Setter Property="Margin" Value="5" />
 		<Setter Property="BackgroundColor" Value="#66CCCCCC" />
 		<Setter Property="HorizontalTextAlignment" Value="Center" />

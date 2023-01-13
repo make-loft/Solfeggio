@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+using Xamarin.Essentials;
+
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
@@ -32,7 +34,23 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveLanguage].Changed += (o, e) =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
-			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());
+			this[Context.Get("Navigate")].Executed += async (o, e) =>
+			{
+				try
+				{
+#if WPF
+					var uri = e.Parameter?.ToString();
+					await System.Diagnostics.Process.Start(uri).ToAsync();
+#else
+					var uri = e.Parameter?.ToString().Format(AppInfo.PackageName);
+					await Browser.OpenAsync(uri);
+#endif
+				}
+				catch (Exception exception)
+				{
+					//Yandex.Metrica.YandexMetrica.ReportError(exception.Message, exception);
+				}
+			};
 			//this[Context.Navigate].Executed += (o, e) => Yandex.Metrica.YandexMetrica.ReportEvent($"{e.Parameter}");
 
 			//this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();

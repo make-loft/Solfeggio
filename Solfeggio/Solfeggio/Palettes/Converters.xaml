@@ -99,9 +99,8 @@
 		Convert="HarmonicOffsetToColor_Convert"
 		/>
 
-	<Converter
-		x:Key="DebugConverter"
-		Convert="Debug_Convert"
+	<c:TextLengthToFontSizeConverter
+		x:Key="TextLengthToFontSizeConverter"
 		/>
 
 	<c:DelegateToNameConverter
@@ -118,6 +117,11 @@
 		x:Key="ScaleConverter"
 		Convert="ToVisualValue"
 		ConvertBack="ToLogicalValue"
+		/>
+
+	<Converter
+		x:Key="DebugConverter"
+		Convert="Debug_Convert"
 		/>
 
 </ResourceDictionary>

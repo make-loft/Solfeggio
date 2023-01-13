@@ -1,8 +1,18 @@
 <ResourceDictionary
     x:Class="Solfeggio.Palettes.Sets"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Solfeggio.Controls">
-	
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	>
+
+	<Set
+		x:Key="AllowedPowsOf2">
+		<Int32>8</Int32>
+		<Int32>9</Int32>
+		<Int32>10</Int32>
+		<Int32>11</Int32>
+		<Int32>12</Int32>
+	</Set>
+
 	<!--<Set
         x:Shared="False"
         x:Key="ShowStateSet">

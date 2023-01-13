@@ -12,7 +12,7 @@
 			>
 			<Scroll>
 				<Stack
-					Data.Context="{Store vm:ProcessingManager}"
+					BindingContext="{Store vm:ProcessingManager}"
 					>
 					<Slot
 						Item="{Binding}"
@@ -34,7 +34,7 @@
 			>
 			<Scroll>
 				<Stack
-					Data.Context="{Store vm:HarmonicManager}"
+					BindingContext="{Store vm:HarmonicManager}"
 					>
 					<Slot
 						Item="{Binding}"
@@ -125,7 +125,7 @@
 						/>
 					<Picker
 						Size.X="128"
-						Data.Context="{Store vm:AppViewModel}"
+						BindingContext="{Store vm:AppViewModel}"
 						ItemsSource="{Binding Languages}"
 						SelectedItem="{Binding ActiveLanguage, Mode=TwoWay}"
 						/>

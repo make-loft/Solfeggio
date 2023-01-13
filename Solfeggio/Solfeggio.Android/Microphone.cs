@@ -69,8 +69,5 @@ namespace Solfeggio.Droid
 
 			return sample;
 		}
-
-
-		public override string ToString() => "🎙 Microphone";
 	}
 }

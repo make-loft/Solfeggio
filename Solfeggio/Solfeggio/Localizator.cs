@@ -68,6 +68,7 @@ namespace Solfeggio
 		public static o Spectrogram = _("Spectrogram", "Спектрограмма");
 		public static o Histogram = _("Histogram", "Гистограмма");
 		public static o Geometry = _("Geometry", "Геометрия");
+		public static o Spiral = _("Spiral", "Спираль");
 		public static o Flower = _("Flower", "Цветок");
 		public static o Piano = _("Piano", "Пианино");
 		public static o Offset = _("Offset", "Смещение");
@@ -149,6 +150,15 @@ namespace Solfeggio
 		public static o Tape = _("Tape", "Лента");
 		public static o Note = _("Note", "Нота");
 		public static o Ethalon = _("Ethalon", "Эталон");
+		public static o Vocal = _("Vocal", "Вокал");
+		public static o Tuning = _("Tuning", "Тюнинг");
+		public static o Camertone = _("Camertone", "Камертон");
+		public static o Resonance = _("Resonance", "Резонанс");
+		public static o Harmony = _("Harmony", "Гармония");
+		public static o Fantasy = _("Fantasy", "Фантазия");
+		public static o Relax = _("Relax", "Релакс");
+		public static o Speaker = _("Speaker", "Динамик");
+		public static o Microphone = _("Microphone", "Микрофон");
 
 		public static o Pcs = _("Pcs", "шт");
 		public static o Rad = _("rad", "рад");
@@ -230,8 +240,8 @@ Your help is priceless!";
 
 		public static class ReadyToHelpLink
 		{
-			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
-			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";
+			public const string English = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Gratitude";
+			public const string Russian = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Gratitude";
 		}
 
 		public static class ExpirationMessage

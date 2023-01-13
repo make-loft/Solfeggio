@@ -17,7 +17,7 @@ using Solfeggio.Api;
 namespace Solfeggio.Droid
 {
 	[Activity(
-		Label = "Solfeggio 🎵",
+		Label = "Solfeggio", /* 🎶🎵 */
 		Icon = "@drawable/logo",
 		Theme = "@style/MainTheme",
 		ScreenOrientation = ScreenOrientation.Landscape,
