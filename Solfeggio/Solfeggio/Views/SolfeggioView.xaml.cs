@@ -200,9 +200,9 @@ namespace Solfeggio.Views
 
 			var activeProfile = ProcessingManager.ActiveProfile;
 			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
-				1d, 1d / activeProfile.FrameSize, Pi.Half);
+				MusicalPresenter.Geometry.SpiralApproximationLevel, 1d / activeProfile.FrameSize, Pi.Half);
 			var geometryStroke = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
-				1d, 0d, Pi.Half);
+				MusicalPresenter.Geometry.FlowerApproximationLevel, 0d, Pi.Half);
 
 			var centerX = MagnitudeRawFrameCanvas.Width / 2d;
 			var centerY = MagnitudeRawFrameCanvas.Height / 2d;

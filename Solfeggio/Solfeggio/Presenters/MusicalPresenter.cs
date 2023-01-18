@@ -29,35 +29,25 @@ namespace Solfeggio.Presenters
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
 		[DataMember] public FrameOptions Frame { get; set; } = new();
 		[DataMember] public MusicalOptions Music { get; set; } = new();
+		[DataMember] public FormatOptions Format { get; set; } = new();
+		[DataMember] public GeometryApproximationOptions Geometry { get; set; } = new();
 		public VisualProfile VisualProfile { get; set; } = new();
 
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
 		[DataMember] public int MaxHarmonicsCount { get; set; } = 10;
-		[DataMember] public string[] NumericFormats { get; set; } = { "F0", "F1", "F2", "F3", "F4", "F5" };
-		
-		[DataMember] public string MonitorNumericFormat
-		{
-			get => Get(() => MonitorNumericFormat, "F2");
-			set => Set(() => MonitorNumericFormat, value);
-		}
-
-		[DataMember] public string ScreenNumericFormat
-		{
-			get => Get(() => ScreenNumericFormat, "F1");
-			set => Set(() => ScreenNumericFormat, value);
-		}
 
 		public void Expose()
 		{
 #if !NETSTANDARD
-			this[() => MonitorNumericFormat].Changed += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
 #endif
-			this[() => ScreenNumericFormat].Changed += (o, e) =>
+			Format[() => Format.ScreenNumericFormat].Changed += (o, e) =>
 			{
-				var digitsCountPart = ScreenNumericFormat.Length > 1 ? ScreenNumericFormat.Substring(1) : "1";
+				var digitsCountPart = Format.ScreenNumericFormat.Length > 1 ? Format.ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;
 				var zeros = new string('0', digitsCount);
-				VisualProfile.PeakProfiles[nameof(VisualProfile.OffsetFrequency)].StringFormat = $"+0.{zeros};−0.{zeros};•0.{zeros}";
+				var profileName = nameof(VisualProfile.OffsetFrequency);
+				VisualProfile.PeakProfiles[profileName].StringFormat = $"+0.{zeros};−0.{zeros};•0.{zeros}";
 			};
 		}
 
@@ -99,7 +89,7 @@ namespace Solfeggio.Presenters
 				{
 					FontSize = fontSize,
 					Foreground = textBrush,
-					Text = activeFrequency.ToString(ScreenNumericFormat)
+					Text = activeFrequency.ToString(Format.ScreenNumericFormat)
 				});
 
 				items.Add(panel);
@@ -345,7 +335,7 @@ namespace Solfeggio.Presenters
 			{
 				Text = p.Key.Is("NoteName")
 					? pianoKey.NoteName
-					: GetValueByKey(p.Key).ToString(p.Value.StringFormat ?? ScreenNumericFormat),
+					: GetValueByKey(p.Key).ToString(p.Value.StringFormat ?? Format.ScreenNumericFormat),
 #if NETSTANDARD
 				FontFamily = p.Value.FontFamilyName,
 #else

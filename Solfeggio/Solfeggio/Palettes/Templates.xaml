@@ -7,7 +7,8 @@
 	>
 
 	<DataTemplate
-		x:Key="NoteNameToFrequencyTemplate">
+		x:Key="NoteNameToFrequencyTemplate"
+		>
 		<Grid
 			Rack.Columns="* *"
 			>
@@ -31,7 +32,8 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="HarmonicTemplate">
+		x:Key="HarmonicTemplate"
+		>
 		<Rack
 			Rows="* *"
 			Columns="2* 3* 2* * * *"
@@ -156,7 +158,8 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="HarmonicProfileTemplate">
+		x:Key="HarmonicProfileTemplate"
+		>
 		<StackLayout>
 			<!--<ContextView
 				Template="{StaticResource TitleProfileTemplate}"
@@ -228,10 +231,7 @@
 					/>
 				<Label
 					Rack.Cell="C1"
-					Opacity="0.35"
-					FontSize="12"
-					Alignment.X="Till"
-					Alignment.Y="Till"
+					Style="{StaticResource UnitLabelStyle}"
 					Text="{Localizing Hz}"
 					/>
 				<Label
@@ -240,10 +240,7 @@
 					/>
 				<Label
 					Rack.Cell="C2"
-					Opacity="0.35"
-					FontSize="12"
-					Alignment.X="Till"
-					Alignment.Y="Till"
+					Style="{StaticResource UnitLabelStyle}"
 					Text="{Localizing Rad}"
 					/>
 				<Label
@@ -386,7 +383,8 @@
 
 
 	<DataTemplate
-		x:Key="MusicOptionsTemplate">
+		x:Key="MusicOptionsTemplate"
+		>
 		<Rack
 			Rows="^ ^"
 			Columns="^ ^ ^ ^">
@@ -412,10 +410,15 @@
 				Rack.Cell="R1 C0"
 				Text="{Localizing Notation}"
 				/>
-			<Pick
+			<Picker
 				Rack.Cell="R1 C1"
 				ItemsSource="{Binding Notations}"
-				ActiveItem="{Binding ActiveNotation, Mode=TwoWay}"
+				SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
+				/>
+			<Label
+				Rack.Cell="R1 C2"
+				Text="{Binding ActiveNotation, Converter={StaticResource NotationConverter}}"
 				/>
 			<!--<Label
 				Rack.Cell="C7"
@@ -430,64 +433,134 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="GeometryTemplate">
-		<Grid
-			Rack.Rows="^ ^"
-			Rack.Columns="^ ^ ^"
+		x:Key="GeometryTemplate"
+		>
+		<Rack
+			Rows="^ ^ ^"
+			Columns="^ ^ * *"
 			>
 			<Label
-				Rack.Cell="R1 C0"
-				Text="{Localizing Approximation}" />
-			<Label
-				Rack.Cell="R0 C1"
-				Text="{Localizing Flower}" />
-			<Pick
-				Rack.Cell="R1 C1"
-				Alignment.X="Center"
-				ItemsSource="{Binding NumericFormats}"
-				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
+				Rack.Cell="R0 C2"
+				Text="{Localizing Approximation}"
+				/>
 			<Label
 				Rack.Cell="R0 C2"
-				Text="{Localizing Spiral}" />
-			<Pick
+				Style="{StaticResource UnitLabelStyle}"
+				Text="{Localizing Pcs}"
+				/>
+
+			<Label
+				Rack.Cell="R1 C0"
+				Text="🌸"
+				/>
+			<Label
+				Rack.Cell="R1 C1"
+				Text="{Localizing Flower}"
+				/>
+			<Rack
 				Rack.Cell="R1 C2"
-				Alignment.X="Center"
-				ItemsSource="{Binding NumericFormats}"
-				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
-		</Grid>
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Keyboard="Numeric"
+					Alignment.X="Center"
+					HorizontalTextAlignment="Center"
+					Text="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-2.0"
+					Value="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+			<Label
+				Rack.Cell="R1 C2"
+				Opacity="0.35"
+				Alignment.X="Till"
+				Alignment.Y="From"
+				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				/>
+
+			<Label
+				Rack.Cell="R2 C0"
+				Text="🌀"
+				/>
+			<Label
+				Rack.Cell="R2 C1"
+				Text="{Localizing Spiral}"
+				/>
+			<Rack
+				Rack.Cell="R2 C2"
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Keyboard="Numeric"
+					Alignment.X="Center"
+					HorizontalTextAlignment="Center"
+					Text="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-2.0"
+					Value="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+			<Label
+				Rack.Cell="R2 C2"
+				Opacity="0.35"
+				Alignment.X="Till"
+				Alignment.Y="From"
+				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				/>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="FormattingTemplate">
-		<Grid
-			Rack.Rows="^ ^"
-			Rack.Columns="^ ^ ^"
+		x:Key="FormattingTemplate"
+		>
+		<Rack
+			Rows="^ ^ ^"
+			Columns="^ ^ * *"
 			>
 			<Label
-				Rack.Cell="R1 C0"
+				Rack.Cell="R0 C2"
 				Text="{Localizing Numeric}"
 				/>
+
 			<Label
-				Rack.Cell="R0 C1"
+				Rack.Cell="R1 C0"
+				Text="🎛️"
+				/>
+			<Label
+				Rack.Cell="R1 C1"
 				Text="{Localizing Monitor}"
 				/>
 			<Pick
-				Rack.Cell="R1 C1"
+				Rack.Cell="R1 C2"
 				Alignment.X="Center"
 				ItemsSource="{Binding NumericFormats}"
 				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}"
 				/>
+
 			<Label
-				Rack.Cell="R0 C2"
+				Rack.Cell="R2 C0"
+				Text="🎹"
+				/>
+			<Label
+				Rack.Cell="R2 C1"
 				Text="{Localizing Screen}"
 				/>
 			<Pick
-				Rack.Cell="R1 C2"
+				Rack.Cell="R2 C2"
 				Alignment.X="Center"
 				ItemsSource="{Binding NumericFormats}"
 				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}"
 				/>
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 	<ControlTemplate
@@ -565,7 +638,7 @@
 					ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
 					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 					/>
-				
+
 				<Rack
 					Rack.Cell="R1 C2"
 					Rows="^ *"
@@ -584,6 +657,7 @@
 						Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
 				</Rack>
+				
 				<Rack
 					Rack.Cell="R2 C2"
 					Rows="^ *"
@@ -602,6 +676,7 @@
 						Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
 				</Rack>
+				
 				<!--<Slot
 					Rack.Cell="R1 C2"
 					Item="{Binding InputLevel, Mode=TwoWay}"
@@ -617,7 +692,7 @@
 					ItemsSource="{StaticResource AllowedBuffersCount}"
 					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
 					/>-->
-				
+
 				<Grid
 					Rack.Cell="R0 C3 RS4"
 					Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
@@ -732,7 +807,6 @@
 						/>-->
 				</Grid>
 			</Grid>
-
 		</Stack>
 	</DataTemplate>
 

@@ -5,7 +5,8 @@
 	>
 
 	<Set
-		x:Key="AllowedPowsOf2">
+		x:Key="AllowedPowsOf2"
+		>
 		<Int32>8</Int32>
 		<Int32>9</Int32>
 		<Int32>10</Int32>

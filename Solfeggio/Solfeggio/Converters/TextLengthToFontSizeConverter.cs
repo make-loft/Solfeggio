@@ -18,7 +18,7 @@ namespace Solfeggio.Converters
 		{
 			if (value.IsNot()) return default;
 			var text = value.ToString();
-			var parameters = (parameter.ToStr() ?? "").SplitByChars(" ,");
+			var parameters = (parameter.To<string>() ?? "").SplitByChars(" ,");
 			var basicFontSize = parameters.Length > 0 ? double.Parse(parameters[0], Culture) : BasicFontSize;
 			var lengthStretchFactor = parameters.Length > 1 ? double.Parse(parameters[1], Culture) : DefaultLengthStretchFactor;
 			var finalFontSize = BasicFontScale * basicFontSize / (1 + text.Length * lengthStretchFactor / LengthSqueezeFactor);

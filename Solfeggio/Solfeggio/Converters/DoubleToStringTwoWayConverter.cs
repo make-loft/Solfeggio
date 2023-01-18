@@ -20,7 +20,7 @@ namespace Solfeggio.Converters
 
 		public override object Convert(object value) => value is string s
 			? s
-			: $"{Head}{ToDouble(value).ToString(MusicalPresenter.MonitorNumericFormat)}{Tail}";
+			: $"{Head}{ToDouble(value).ToString(MusicalPresenter.Format.MonitorNumericFormat)}{Tail}";
 
 		public override object ConvertBack(object value) => value is double d
 			? d 

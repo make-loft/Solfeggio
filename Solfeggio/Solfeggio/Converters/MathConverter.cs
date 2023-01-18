@@ -56,7 +56,7 @@ namespace Solfeggio.Converters
 
 		bool TryCast(object value, out double v) =>
 			Cast(value).To(out v).IsNot(double.NaN) ||
-			value.ToStr().TryParse(out v, NumberFormatInfo.CurrentInfo);
+			value.To<string>().TryParse(out v, NumberFormatInfo.CurrentInfo);
 
 		double Cast(object value) => value switch
 		{

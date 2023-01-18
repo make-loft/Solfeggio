@@ -11,6 +11,12 @@ namespace Solfeggio.Models
 			set => Set(() => Title, value);
 		}
 
+		[DataMember] public string DefaultTitleFormat { get; set; }
+		[DataMember] public string DefaultTitle { get; set; }
 		[DataMember] public bool IsDefault { get; set; }
+
+		public void RefreshTitle() => Title = DefaultTitleFormat.Is(out var format)
+			? format.Format(DefaultTitle?.Localize())
+			: DefaultTitle?.Localize();
 	}
 }

@@ -4,8 +4,10 @@ namespace System.Windows.Threading
 {
 	class DispatcherTimer
 	{
+		public event EventHandler Tick;
 		public TimeSpan Interval { get; set; }
 		private bool IsEnabled { get; set; } = true;
+		public void Stop() => IsEnabled = false;
 		public async void Start()
 		{
 			while (true)
@@ -15,8 +17,5 @@ namespace System.Windows.Threading
 					Tick?.Invoke(this, EventArgs.Empty);
 			}
 		}
-		public void Stop() => IsEnabled = false;
-
-		public event EventHandler Tick;
 	}
 }

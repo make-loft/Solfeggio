@@ -71,7 +71,7 @@
 						Header="{Localizing Geometry}"
 						>
 						<Slot
-							Item="{Store p:MusicalPresenter}"
+							Item="{Binding Geometry, Source={Store p:MusicalPresenter}}"
 							ItemTemplate="{StaticResource GeometryTemplate}"
 							/>
 					</Item>
@@ -79,7 +79,7 @@
 						Header="{Localizing Format}"
 						>
 						<Slot
-							Item="{Store p:MusicalPresenter}"
+							Item="{Binding Format, Source={Store p:MusicalPresenter}}"
 							ItemTemplate="{StaticResource FormattingTemplate}"
 							/>
 					</Item>
@@ -128,6 +128,7 @@
 						BindingContext="{Store vm:AppViewModel}"
 						ItemsSource="{Binding Languages}"
 						SelectedItem="{Binding ActiveLanguage, Mode=TwoWay}"
+						ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
 						/>
 				</Stack>
 				<!--<Label

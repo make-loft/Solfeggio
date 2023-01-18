@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 
 namespace Solfeggio
 {
-	using static LanguageCodes;
 	using o = Dictionary<LanguageCodes, string>;
 
 	public enum LanguageCodes { Default, English, Russian, Belorussian };
@@ -20,9 +19,9 @@ namespace Solfeggio
 			string rus = default,
 			string bel = default) => new()
 		{
-			{ English, eng },
-			{ Russian, rus ?? eng },
-			{ Belorussian, bel ?? rus ?? eng },
+			{ LanguageCodes.English, eng },
+			{ LanguageCodes.Russian, rus ?? eng },
+			{ LanguageCodes.Belorussian, bel ?? rus ?? eng },
 		};
 
 		public static o Solfeggio = _("Solfeggio", "Сольфеджио");
@@ -159,6 +158,14 @@ namespace Solfeggio
 		public static o Relax = _("Relax", "Релакс");
 		public static o Speaker = _("Speaker", "Динамик");
 		public static o Microphone = _("Microphone", "Микрофон");
+		public static o Dies = _("Dies", "Диез");
+		public static o Bemole = _("Bemole", "Бемоль");
+		public static o Combined = _("Combined", "Комбинировано");
+		public static o Oops = _("Oops", "Упс");
+		public static o Ok = _("Ok", "Ок");
+
+		public static o English = _("English", "Английский");
+		public static o Russian = _("Russian", "Русский");
 
 		public static o Pcs = _("Pcs", "шт");
 		public static o Rad = _("rad", "рад");
@@ -184,6 +191,7 @@ namespace Solfeggio
 		public static o ReadyToHelpLink = _(Messages.ReadyToHelpLink.English, Messages.ReadyToHelpLink.Russian);
 		public static o ExpirationMessage = _(Messages.ExpirationMessage.English, Messages.ExpirationMessage.Russian);
 		public static o HomeLink = _(Messages.HomeLink.English, Messages.HomeLink.Russian);
+		public static o MicrophoneAccessErrorMessage = _(Messages.MicrophoneAccessErrorMessage.English, Messages.MicrophoneAccessErrorMessage.Russian);
 
 		public static Dictionary<string, o> GetBaseDictionary() =>
 			typeof(Localizator).GetFields(BindingFlags.Static | BindingFlags.Public).
@@ -207,20 +215,20 @@ namespace Solfeggio
 		public static class Agreement
 		{
 			public const string English =
-				@"This application is free for educational and non-commercial purposes.
+@"This application is free for educational and non-commercial purposes.
 
 If you use the program on regular commertial fit or just really like it,
-please, buy a paid version or make voluntary donation of any amount 
+please, write a review or make voluntary donation of any amount 
 to support developing.
 
 Your help is priceless!";
 
 			public const string Russian =
-				@"Это приложение бесплатно для образовательных и некоммерческих целей.
+@"Это приложение бесплатно для образовательных и некоммерческих целей.
 
-Если вы используете данную программу на регулярной коммерческой 
-основе или просто она вам действительно нравится,
-пожалуйста, купите платную версию или сделайте добровольное 
+Если вы используете данную программу на регулярной 
+коммерческой основе или просто она вам действительно нравится,
+пожалуйста, напишите отзыв или сделайте добровольное 
 пожертвование на любую сумму, чтобы поддержать разработку.
 
 Ваша помощь бесценна!";
@@ -257,5 +265,16 @@ Please, download the newest release.";
 			public const string English = @"http://makeloft.xyz/workroom/solfeggio";
 			public const string Russian = @"http://makeloft.xyz/ru/workroom/solfeggio";
 		}
+
+		public static class MicrophoneAccessErrorMessage
+		{
+			public const string English =
+				"Access to the microphone required for proper work of the app.\n\n" +
+				"Please, grant the permission at system settings or try to reinstall the program.";
+			public const string Russian =
+				"Доступ к микрофону необходим для надлежащей работы приложения.\n\n" +
+				"Пожалуйста, предоставьте разрешение в системных настройках или попробуйте переустановить программу.";
+		}
+
 	}
 }

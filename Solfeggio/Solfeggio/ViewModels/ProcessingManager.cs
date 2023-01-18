@@ -29,7 +29,8 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
-				Title = "🎙 " + "Vocal".Localize(),
+				DefaultTitleFormat = "🎙 {0}",
+				DefaultTitle = "Vocal",
 				SampleRate = 16000d,
 				InputLevel = 4f,
 				FramePow = 10
@@ -37,14 +38,16 @@ namespace Solfeggio.ViewModels
 
 			yield return new()
 			{
-				Title = "🎸 " + "Tuning".Localize(),
+				DefaultTitleFormat = "🎸 {0}",
+				DefaultTitle = "Tuning",
 				InputLevel = 4f,
 				FramePow = 11
 			};
 
 			yield return Create().To(out var b).With
 			(
-				b.Title = "∿ " + "Generator".Localize(),
+				b.DefaultTitleFormat = "∿ {0}",
+				b.DefaultTitle = "Generator",
 				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
 				b.OutputLevel = .5f,
 				b.FramePow = 10

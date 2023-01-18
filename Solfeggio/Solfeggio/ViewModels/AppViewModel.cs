@@ -34,6 +34,16 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveLanguage].Changed += (o, e) =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
+			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<ProcessingManager>()
+				.Profiles
+				.Where(p => p.IsDefault)
+				.ForEach(p => p.RefreshTitle());
+
+			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<HarmonicManager>()
+				.Profiles
+				.Where(p => p.IsDefault)
+				.ForEach(p => p.RefreshTitle());
+
 			this[Context.Get("Navigate")].Executed += async (o, e) =>
 			{
 				try

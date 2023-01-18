@@ -42,7 +42,11 @@ namespace Solfeggio.Presenters.Options
 		};
 
 		public string[] Notations => NotationToNotes.Keys.ToArray();
-		[DataMember] public string ActiveNotation { get; set; }
+		[DataMember] public string ActiveNotation
+		{
+			get => Get(() => ActiveNotation);
+			set => Set(() => ActiveNotation, value);
+		}
 
 		protected static readonly string[] Notes =
 			{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};

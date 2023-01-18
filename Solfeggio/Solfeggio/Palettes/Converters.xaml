@@ -107,6 +107,14 @@
 		x:Key="DelegateToNameConverter"
 		/>
 
+	<SwitchConverter
+		x:Key="NotationConverter"
+		>
+		<Case Key="Dies" Value="C♯" />
+		<Case Key="Bemole" Value="D♭" />
+		<Case Key="Combined" Value="C♯|D♭" />
+	</SwitchConverter>
+
 	<c:MathConverter
 		x:Key="ScaleValueConverter"
 		Operation="Log"

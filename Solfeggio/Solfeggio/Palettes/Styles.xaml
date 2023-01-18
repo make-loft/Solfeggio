@@ -59,6 +59,20 @@
 	</Style>
 
 	<Style
+		x:Key="UnitLabelStyle"
+		TargetType="Label"
+		>
+		<Setter Property="Opacity" Value="0.35" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="BackgroundColor" Value="#66CCCCCC" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="VerticalTextAlignment" Value="Center" />
+		<Setter Property="Alignment.X" Value="Till" />
+		<Setter Property="Alignment.Y" Value="Till" />		
+	</Style>
+
+	<Style
 		TargetType="Switch"
 		>
 		<Setter Property="Margin" Value="5" />
