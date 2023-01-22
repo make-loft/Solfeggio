@@ -15,6 +15,9 @@ namespace Solfeggio.Presenters
 {
 	public static class Ext
 	{
+		public static SKColor WithOpacity(this SKColor c, double opacity) =>
+			new(c.Red, c.Green, c.Blue, (byte)(c.Alpha * opacity));
+
 		public static Color FromArgb(byte a, byte r, byte g, byte b) => Color.FromRgba(r, g, b, a);
 
 		public static SKPoint ToSkPoint(this Point point) => new()
@@ -32,24 +35,24 @@ namespace Solfeggio.Presenters
 			brush.EndPoint
 		);
 
-		public static SKPaint ToSkPaint(this Brush brush, double w, double h) =>
-			brush.As<LinearGradientBrush>()?.ToSkPaint(w, h) ??
-			brush.As<RadialGradientBrush>()?.ToSkPaint(w, h) ??
-			brush.As<SolidColorBrush>()?.ToSkPaint();
+		public static SKPaint ToSkPaint(this Brush brush, double w, double h, double opacity) =>
+			brush.As<LinearGradientBrush>()?.ToSkPaint(w, h, opacity) ??
+			brush.As<RadialGradientBrush>()?.ToSkPaint(w, h, opacity) ??
+			brush.As<SolidColorBrush>()?.ToSkPaint(opacity);
 
-		public static SKPaint ToSkPaint(this SolidColorBrush brush) => new()
+		public static SKPaint ToSkPaint(this SolidColorBrush brush, double opacity) => new()
 		{
 			Style = SKPaintStyle.Fill,
-			Color = brush.Color.ToSKColor(),
+			Color = brush.Color.ToSKColor().WithOpacity(opacity),
 		};
 
-		static double density = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
+		public static double density = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
 
-		public static SKPaint ToSkPaint(this LinearGradientBrush brush, double w, double h)
+		public static SKPaint ToSkPaint(this LinearGradientBrush brush, double w, double h, double opacity)
 		{
 			var startPoint = new SKPoint { X = (float)(brush.StartPoint.X * w * density), Y = (float)(brush.StartPoint.Y * h * density) };
 			var endPoint = new SKPoint { X = (float)(brush.EndPoint.X * w * density), Y = (float)(brush.EndPoint.Y * h * density) };
-			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor()).ToArray();
+			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor().WithOpacity(opacity)).ToArray();
 			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
 			return new SKPaint
@@ -59,12 +62,12 @@ namespace Solfeggio.Presenters
 			};
 		}
 
-		public static SKPaint ToSkPaint(this RadialGradientBrush brush, double w, double h)
+		public static SKPaint ToSkPaint(this RadialGradientBrush brush, double w, double h, double opacity)
 		{
 			var c = System.Math.Min(w, h) * density;
 			var center = new SKPoint { X = (float)(brush.Center.X * c), Y = (float)(brush.Center.Y * c) };
 			var radius = (float)(brush.Radius * c);
-			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor()).ToArray();
+			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor().WithOpacity(opacity)).ToArray();
 			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateRadialGradient(center, radius, colors, offsets, SKShaderTileMode.Clamp);
 			return new SKPaint
@@ -158,21 +161,19 @@ namespace System.Windows.Controls
 		public object BindingContext { get; set; }
 		public object Tag { get; set; }
 
-		public new Thickness Margin { get; set; }
-		public new Thickness CornerRadius { get; set; }
+		public Thickness Margin { get; set; }
+		public Thickness CornerRadius { get; set; }
 
-		public double Opacity { get; set; } = 1d;
-
-		public new double Width
+		public double Width
 		{
-			get => this.WidthRequest;
-			set => this.WidthRequest = value;
+			get => WidthRequest;
+			set => WidthRequest = value;
 		}
 
-		public new double Height
+		public double Height
 		{
-			get => this.HeightRequest;
-			set => this.HeightRequest = value;
+			get => HeightRequest;
+			set => HeightRequest = value;
 		}
 
 		public Thickness BorderThickness { get; set; }
@@ -242,14 +243,14 @@ namespace System.Windows.Controls
 			ActualHeight = _args.Info.Height;
 			if (Background.Is())
 			{
-				using var paint = Background.ToSkPaint(ActualWidth / density, ActualHeight / density);
+				using var paint = Background.ToSkPaint(ActualWidth / density, ActualHeight / density, 1.0d);
 				canvas.DrawRect(0f, 0f, ActualWidth, ActualHeight, paint);
 			}
 
 			foreach (var child in Children)
 			{
 				if (child.Is(out View view))
-					Draw(canvas, view, 0, 0, ActualWidth / density, ActualHeight / density);
+					Draw(canvas, view, 0, 0, ActualWidth / density, ActualHeight / density, child.Opacity);
 				else
 				{
 					using var path = child.ToSkPath();
@@ -260,13 +261,13 @@ namespace System.Windows.Controls
 
 					if (child.Fill.Is())
 					{
-						using var paint = child.Fill.ToSkPaint(w, h);
+						using var paint = child.Fill.ToSkPaint(w, h, child.Opacity);
 						canvas.DrawPath(path, paint);
 					}
 
 					if (child.Stroke.Is())
 					{
-						using var paint = child.GetStrokeSkPaint(w, h);
+						using var paint = child.GetStrokeSkPaint(w, h, child.Opacity);
 						canvas.DrawPath(path, paint);
 					}
 				}
@@ -299,7 +300,7 @@ namespace System.Windows.Controls
 
 					using (SKPath roundRectPath = new())
 					{
-						using var stroke = GetStroke(l);
+						using var stroke = GetStroke(l, 1.0d);
 						var rect = new SKRect();
 						var text = l.Text.Replace('♯', '#').Replace('♭', 'b');
 						stroke.MeasureText(text, ref rect);
@@ -382,16 +383,16 @@ namespace System.Windows.Controls
 
 		static string GetCorrectFontFamilyName(string name) => name.Is("Consolas") ? "monospace" : name;
 
-		static SKPaint GetStroke(Label label) => new()
+		static SKPaint GetStroke(Label label, double opacity) => new()
 		{
-			Color = label.TextColor.ToSKColor(),
+			Color = label.TextColor.ToSKColor().WithOpacity(label.Opacity * opacity),
 			TextSize = (float)(label.FontSize * density),
 			Typeface = SKTypeface.FromFamilyName(GetCorrectFontFamilyName(label.FontFamily)),
 			TextEncoding = SKTextEncoding.Utf16,
 			TextAlign = SKTextAlign.Left,
 		};
 
-		public void Draw(SKCanvas canvas, View view, double x, double y, double w, double h)
+		public void Draw(SKCanvas canvas, View view, double x, double y, double w, double h, double baseOpacity)
 		{
 			if (view.IsNot())
 				return;
@@ -405,14 +406,15 @@ namespace System.Windows.Controls
 				(float)((y + view.Margin.Top + view.HeightRequest) * density)
 				);
 
+			var opacity = view.Opacity * baseOpacity;
 			switch (view)
 			{
 				case Label l:
 					using (SKPath roundRectPath = new())
 					{
-						using var fill = l.Background.ToSkPaint(view.WidthRequest, view.HeightRequest);
+						using var fill = l.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
 
-						using var stroke = GetStroke(l);
+						using var stroke = GetStroke(l, opacity);
 
 						stroke.MeasureText(l.Text, ref rect);
 
@@ -459,49 +461,37 @@ namespace System.Windows.Controls
 
 						if (b.Fill.Is())
 						{
-							using var fill = b.Fill.ToSkPaint(view.WidthRequest, view.HeightRequest);
+							using var fill = b.Fill.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
 							{
-								if (b.Fill.Is<SolidColorBrush>())
-								{
-									var c = fill.Color;
-									fill.Color = new SKColor(c.Red, c.Green, c.Blue, (byte)(c.Alpha * b.Opacity));
-								}
-
 								DrawBorder(fill);
 							}
 						}
 
 						if (b.Stroke.Is())
 						{
-							using var stroke = b.GetStrokeSkPaint(view.WidthRequest, view.HeightRequest);
+							using var stroke = b.GetStrokeSkPaint(view.WidthRequest, view.HeightRequest, opacity);
 							{
-								if (b.Stroke.Is<SolidColorBrush>())
-								{
-									var c = stroke.Color;
-									stroke.Color = new SKColor(c.Red, c.Green, c.Blue, (byte)(c.Alpha * b.Opacity));
-								}
-
 								DrawBorder(stroke);
 							}
 						}
 
-						Draw(canvas, b.Content, x + b.Margin.Left, y + b.Margin.Top, w - b.Margin.Right, h - b.Margin.Bottom);
+						Draw(canvas, b.Content, x + b.Margin.Left, y + b.Margin.Top, w - b.Margin.Right, h - b.Margin.Bottom, opacity);
 					}
 					break;
 				case Grid g:
 					{
-						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest);
+						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
 						if (fill.Is()) canvas.DrawRect(rect, fill);
 
 						foreach (var child in g.Children)
 						{
-							Draw(canvas, child, x + g.Margin.Left, y + g.Margin.Top, w - g.Margin.Right, h - g.Margin.Bottom);
+							Draw(canvas, child, x + g.Margin.Left, y + g.Margin.Top, w - g.Margin.Right, h - g.Margin.Bottom, opacity);
 						}
 					}
 					break;
 				case Stack g:
 					{
-						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest);
+						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
 						if (fill.Is()) canvas.DrawRect(rect, fill);
 
 						var offsetX = 0d;
@@ -510,14 +500,14 @@ namespace System.Windows.Controls
 						{
 							if (g.Orientation.Is(StackOrientation.Horizontal))
 							{
-								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, child.WidthRequest, view.HeightRequest);
+								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, child.WidthRequest, view.HeightRequest, opacity);
 
 								offsetX += child.WidthRequest + child.Margin.Left + child.Margin.Right;
 							}
 
 							if (g.Orientation.Is(StackOrientation.Vertical))
 							{
-								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, view.WidthRequest, child.HeightRequest);
+								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, view.WidthRequest, child.HeightRequest, opacity);
 
 								offsetY += child.HeightRequest + child.Margin.Top + child.Margin.Bottom;
 							}
@@ -595,18 +585,19 @@ namespace System.Windows.Shapes
 		public virtual Brush Stroke { get; set; }
 
 		public double StrokeThickness { get; set; }
+		public double Opacity { get; set; } = 1.0d;
 
 		public abstract SKPath ToSkPath();
-		public SKPaint GetStrokeSkPaint(double w, double h)
+		public SKPaint GetStrokeSkPaint(double w, double h, double opacity)
 		{
-			var skBrush = Stroke.ToSkPaint(w, h);
+			var skBrush = Stroke.ToSkPaint(w, h, opacity);
 			skBrush.StrokeWidth = (float)(StrokeThickness * Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density);
 			skBrush.Style = SKPaintStyle.Stroke;
 			return skBrush;
 		}
 	}
 
-	public class Polyline : Shapes.Primitive
+	public class Polyline : Primitive
 	{
 		public List<Point> Points { get; } = new();
 
@@ -635,8 +626,8 @@ namespace System.Windows.Shapes
 		public override SKPath ToSkPath()
 		{
 			var path = new SKPath();
-			path.MoveTo((float) X1, (float) Y1);
-			path.LineTo((float) X2, (float) Y2);
+			path.MoveTo((float)(X1 * Ext.density), (float)(Y1 * Ext.density));
+			path.LineTo((float)(X2 * Ext.density), (float)(Y2 * Ext.density));
 			path.Close();
 			return path;
 		}

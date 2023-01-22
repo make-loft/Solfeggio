@@ -402,11 +402,11 @@
 			Offset="0.0"
 			Color="{StaticResource ColorC}" />
 		<GradientStop
-			Offset="0.5"
-			Color="{StaticResource ColorB}" />
+			Offset="0.367"
+			Color="{StaticResource ColorA}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{StaticResource ColorA}" />
+			Color="{StaticResource ColorB}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush

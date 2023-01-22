@@ -307,7 +307,7 @@ namespace Solfeggio.Presenters
 				{
 					Children = { fillBorder, strokeBorder, infoPanel },
 					Margin = new(l, t / 2d, 0d, 0d),
-					Opacity = 0.5d + activeMagnitude
+					Opacity = pianoKey.RelativeOpacity
 				};
 
 				Panel.SetZIndex(grid, (int)(expressionLevel * 1024));

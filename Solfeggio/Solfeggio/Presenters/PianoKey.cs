@@ -17,6 +17,8 @@ namespace Solfeggio.Models
 		public Bin Harmonic { get; set; }
 		public List<Bin> Peaks { get; set; } = new();
 
+		public double RelativeOpacity { get; set; }
+
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
 		{
 			var lowNoteNumber = 0;

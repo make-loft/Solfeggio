@@ -16,9 +16,8 @@ namespace Solfeggio.Converters
 
 		public override object Convert(object value, object parameter)
 		{
-			if (value.IsNot()) return default;
-			var text = value.ToString();
-			var parameters = (parameter.To<string>() ?? "").SplitByChars(" ,");
+			var text = value.As("");
+			var parameters = parameter.As("").SplitByChars(" ,");
 			var basicFontSize = parameters.Length > 0 ? double.Parse(parameters[0], Culture) : BasicFontSize;
 			var lengthStretchFactor = parameters.Length > 1 ? double.Parse(parameters[1], Culture) : DefaultLengthStretchFactor;
 			var finalFontSize = BasicFontScale * basicFontSize / (1 + text.Length * lengthStretchFactor / LengthSqueezeFactor);

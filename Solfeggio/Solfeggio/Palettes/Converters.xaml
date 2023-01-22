@@ -11,7 +11,7 @@
 	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
 	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
 
-	<Double x:Key="MinHarmonicOpacityLevel">0.3</Double>
+	<Double x:Key="MinHarmonicOpacityLevel">0.368</Double>
 
 	<c:DoubleToStringTwoWayConverter
 		x:Key="DoubleToStringTwoWayConverter"

@@ -196,7 +196,6 @@ namespace Solfeggio.Views
 			pianoCanvas.Children.Clear();
 
 			var pianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, ProcessingManager.Peaks);
-			AppViewModel.Harmonics = pianoKeys;
 
 			var activeProfile = ProcessingManager.ActiveProfile;
 			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
@@ -241,12 +240,21 @@ namespace Solfeggio.Views
 				.Use(MagnitudePolyline.Points.AddRange);
 
 			MagnitudeCanvas.Children.Clear();
+
+			var peaks = pianoKeys.SelectMany(h => h.Peaks);
+			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, MagnitudeCanvas.Width, MagnitudeCanvas.Height,
+				AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency));
+
 			MagnitudeCanvas.Children.Add(MagnitudePolyline);
 
-			if (pianoKeys.Is())
+			if (pianoKeys.Is() && pianoKeys.Any())
 			{
-				var labels = MusicalPresenter.DrawPeakLabels(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
+				var maxMagnitude = pianoKeys.Max(k => k.Magnitude);
+				var minOpacity = 0.632d;
+				var topOpacity = 1 - minOpacity;
+				pianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
 
+				var labels = MusicalPresenter.DrawPeakLabels(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
 				labels.ForEach(p =>
 				{
 					p.HorizontalOptions = LayoutOptions.Start;
@@ -256,6 +264,8 @@ namespace Solfeggio.Views
 					p.Margin = new(p.Margin.Left - p.WidthRequest / 2d, p.Margin.Top - p.Height / 8d, 0d, 0d);
 				});
 			}
+
+			AppViewModel.Harmonics = pianoKeys;
 
 			var w = SpectrogramCanvas.Width;
 			var h = SpectrogramCanvas.Height;
