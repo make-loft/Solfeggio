@@ -23,6 +23,7 @@ namespace Solfeggio.Presenters
 		public static readonly Projection[] BackScaleFuncs =
 			{ Lineal, _2Pow, Exp, Log, Pow2 };
 
+		[DataMember] public string Units { get; set; }
 		[DataMember] public SmartRange Limit { get; set; }
 		[DataMember] public SmartRange Threshold { get; set; }
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = ScaleFuncs;

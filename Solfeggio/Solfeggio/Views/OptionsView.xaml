@@ -7,6 +7,8 @@
 	<Pivot
 		ActiveItem="{Reference AgreementItem}"
 		>
+
+		<!--Signal-->
 		<Item
 			Header="{Localizing Signal}"
 			>
@@ -29,6 +31,7 @@
 			</Scroll>
 		</Item>
 
+		<!--Generator-->
 		<Item
 			Header="{Localizing Generator}"
 			>
@@ -51,6 +54,7 @@
 			</Scroll>
 		</Item>
 
+		<!--Visualization-->
 		<Item
 			Header="{Localizing Visualization}"
 			>
@@ -83,10 +87,38 @@
 							ItemTemplate="{StaticResource FormattingTemplate}"
 							/>
 					</Item>
+					<Item
+						Header="{Localizing Range}"
+						>
+						<Pivot
+							ActiveItem="{Reference FrequencyItem}"
+							>
+							<Item
+								x:Name="FrequencyItem"
+								Header="{Localizing Frequency}"
+								>
+								<Slot
+									Rack.Cell="R1 C0"
+									Item="{Binding Spectrum.Frequency, Source={Store p:MusicalPresenter}}"
+									ItemTemplate="{StaticResource RangeTemplate}"
+									/>
+							</Item>
+							<Item
+								Header="{Localizing Magnitude}"
+								>
+								<Slot
+									Rack.Cell="R1 C0"
+									Item="{Binding Spectrum.Magnitude, Source={Store p:MusicalPresenter}}"
+									ItemTemplate="{StaticResource RangeTemplate}"
+									/>
+							</Item>
+						</Pivot>
+					</Item>
 				</Pivot>
 			</Scroll>
 		</Item>
 
+		<!--Telemetry-->
 		<Item
 			Header="{Localizing Telemetry}"
 			>
@@ -108,6 +140,7 @@
 			</Rack>
 		</Item>
 
+		<!--Agreement-->
 		<Item
 			x:Name="AgreementItem"
 			Header="{Localizing Agreement}"
@@ -131,12 +164,6 @@
 						ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
 						/>
 				</Stack>
-				<!--<Label
-						Rack.Cell="R1"
-						FontSize="10"
-						FontFamily="Consolas"
-						Text="{Binding Source={x:Static local:App.Edition}, StringFormat='{}{0} Edition'}"
-						/>-->
 				<Scroll
 					Rack.Cell="R2"
 					>

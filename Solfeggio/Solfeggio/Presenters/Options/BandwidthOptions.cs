@@ -15,6 +15,7 @@ namespace Solfeggio.Presenters.Options
 			Limit = SmartRange.Create(10d, AudioInputDevice.DefaultSampleRate / 2),
 			Threshold = SmartRange.Create(20d, 2870d),
 			VisualScaleFunc = Log2,
+			Units = "Hz",
 		};
 
 		[DataMember]
@@ -30,6 +31,7 @@ namespace Solfeggio.Presenters.Options
 		{
 			Limit = SmartRange.Create(-Pi.Single, +Pi.Single),
 			Threshold = SmartRange.Create(-Pi.Single, +Pi.Single),
+			Units = "Rad",
 		};
 	}
 

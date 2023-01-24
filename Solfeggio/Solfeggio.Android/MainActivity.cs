@@ -2,9 +2,6 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using Android.Runtime;
-
-using System;
 
 using Solfeggio.Api;
 
@@ -23,9 +20,6 @@ namespace Solfeggio.Droid
 	{
 		protected override void OnCreate(Bundle bundle)
 		{
-			AndroidEnvironment.UnhandledExceptionRaiser += (o, args) => ProcessUnhandledException(args.Exception);
-			AppDomain.CurrentDomain.UnhandledException += (o, args) => ProcessUnhandledException(args.ExceptionObject as Exception);
-
 			RequestedOrientation = ScreenOrientation.Landscape;
 			Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
@@ -48,16 +42,7 @@ namespace Solfeggio.Droid
 				return device;
 			};
 
-			Xamarin.Forms.Forms.Init(this, bundle);
 			LoadApplication(new App());
-		}
-
-		async void ProcessUnhandledException(Exception exception)
-		{
-			//for (var e = exception; e.Is(); e = e.InnerException)
-			//	YandexMetrica.ReportUnhandledException(e);
-
-			await this.ShowAlertDialogAsync("Exception", exception.Message, neutral: "Ok");
 		}
 	}
 }

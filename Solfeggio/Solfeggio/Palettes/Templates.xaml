@@ -308,6 +308,7 @@
 			>
 			<Label
 				Rack.Cell="C0"
+				FontAttributes="Bold"
 				Text="{Binding NoteName}"
 				/>
 			<Label
@@ -317,6 +318,7 @@
 				/>
 			<Frame
 				Rack.Cell="C2"
+				CornerRadius="10"
 				BackgroundColor="{Binding Converter={StaticResource HarmonicOffsetToColorConverter}}"
 				/>
 			<Label
@@ -382,7 +384,6 @@
 				/>
 		</Stack>
 	</DataTemplate>
-
 
 	<DataTemplate
 		x:Key="MusicOptionsTemplate"
@@ -516,7 +517,7 @@
 				Opacity="0.35"
 				Alignment.X="Till"
 				Alignment.Y="From"
-				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				Text="{Binding SpiralApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
 				/>
 		</Rack>
 	</DataTemplate>
@@ -563,6 +564,106 @@
 				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}"
 				/>
 		</Rack>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="RangeGridTemplate"
+		>
+		<Rack
+			Rows="^ ^ ^"
+			Columns="^ ^ ^ ^"
+			>
+
+			<Label
+				Rack.Cell="R0 C0"
+				Style="{StaticResource UnitLabelStyle}"
+				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
+				/>
+			<Label
+				Rack.Cell="R0 C1"
+				Text="{Localizing Upper}"
+				/>
+			<Label
+				Rack.Cell="R0 C2"
+				Text="{Localizing Lower}"
+				/>
+			<Label
+				Rack.Cell="R0 C3"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Localizing Length}"
+				/>
+
+			<Label
+				Rack.Cell="R2 C0"
+				Text="{Localizing Threshold}"
+				/>
+			<Label
+				Rack.Cell="R1 C0"
+				Text="{Localizing Limit}"
+				/>
+
+			<Field
+				Rack.Cell="R2 C1"
+				Ext.ToolTip="{Binding Threshold.Upper}"
+				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R2 C2"
+				Ext.ToolTip="{Binding Threshold.Lower}"
+				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C1"
+				Ext.ToolTip="{Binding Limit.Upper}"
+				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C2"
+				Ext.ToolTip="{Binding Limit.Lower}"
+				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+
+			<Field
+				Rack.Cell="R2 C3"
+				IsReadOnly="True"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Ext.ToolTip="{Binding Threshold.Length}"
+				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C3"
+				IsReadOnly="True"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Ext.ToolTip="{Binding Limit.Length}"
+				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+		</Rack>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="RangeTemplate"
+		>
+		<Stack
+			Alignment.X="From"
+			>
+			<Slot
+				Item="{Binding}"
+				ItemTemplate="{StaticResource RangeGridTemplate}"
+				/>
+			<Stack
+				Orientation="Horizontal"
+				Alignment.X="Till"
+				>
+				<Label
+					Text="{Localizing Scale}"
+					/>
+				<Picker
+					ItemsSource="{Binding VisualScaleFuncs}"
+					SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+					/>
+			</Stack>
+		</Stack>
 	</DataTemplate>
 
 	<ControlTemplate
