@@ -210,17 +210,17 @@ namespace Solfeggio.Models
 
 		public void Dispose()
 		{
+			if (outputProcessor.Is())
+			{
+				outputProcessor.Free();
+				outputProcessor = default;
+			}
+
 			if (inputProcessor.Is())
 			{
 				inputProcessor?.Free();
 				inputProcessor.DataAvailable -= OnInputDataAvailable;
 				inputProcessor = default;
-			}
-
-			if (outputProcessor.Is())
-			{
-				outputProcessor.Free();
-				outputProcessor = default;
 			}
 
 			PropertyChanged -= OnPropertyChanged;

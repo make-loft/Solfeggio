@@ -23,11 +23,7 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveLanguage, value);
 		}
 
-		public IList<PianoKey> Harmonics
-		{
-			get => Get<IList<PianoKey>>(nameof(Harmonics));
-			set => Set(nameof(Harmonics), value);
-		}
+		public Segregator<IList<PianoKey>> Harmonics { get; } = new();
 
 		public void Expose()
 		{
@@ -53,6 +49,13 @@ namespace Solfeggio.ViewModels
 					await System.Diagnostics.Process.Start(uri).ToAsync();
 #else
 					var uri = e.Parameter?.ToString().Format(AppInfo.PackageName);
+
+					if (uri.Contains("gitlab"))
+					{
+						this["OptionsIsVisible"] = false;
+						this["CarePageVisit"] = true;
+					}
+
 					await Browser.OpenAsync(uri);
 #endif
 				}
@@ -65,6 +68,9 @@ namespace Solfeggio.ViewModels
 
 			//this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();
 			//this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
+
+			if (this["CarePageVisit"].IsNot(true))
+				this["OptionsIsVisible"] = true;
 
 			ActiveLanguage = ActiveLanguage.Is(LanguageCodes.Default)
 				? new[] { "ru", "be" }.Contains(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)

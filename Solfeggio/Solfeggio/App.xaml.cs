@@ -34,7 +34,16 @@ namespace Solfeggio
 		}
 
 		protected override void OnStart() { }
-		protected override void OnSleep() => Store.Snapshot();
-		protected override void OnResume() { }
+		protected override void OnSleep()
+		{
+			Store.Get<ProcessingManager>().ActiveProfile?.Dispose();
+
+			Store.Snapshot();
+		}
+
+		protected override void OnResume()
+		{
+			Store.Get<ProcessingManager>().ActiveProfile?.Expose();
+		}
 	}
 }

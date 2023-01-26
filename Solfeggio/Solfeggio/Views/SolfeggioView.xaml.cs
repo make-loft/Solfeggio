@@ -20,48 +20,48 @@ using Grid = System.Windows.Controls.Grid;
 
 namespace Solfeggio.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Skip)]
-    public partial class SolfeggioView
+	[XamlCompilation(XamlCompilationOptions.Skip)]
+	public partial class SolfeggioView
 	{
-        readonly Dictionary<long, SKPath> _inProgressPaths = new();
-        readonly List<SKPath> _completedPaths = new();
+		readonly Dictionary<long, SKPath> _inProgressPaths = new();
+		readonly List<SKPath> _completedPaths = new();
 
-        SKPaint paint = new()
+		SKPaint paint = new()
 		{
-            Style = SKPaintStyle.Stroke,
-            Color = SKColors.Blue,
-            StrokeWidth = 10,
-            StrokeCap = SKStrokeCap.Round,
-            StrokeJoin = SKStrokeJoin.Round
-        };
+			Style = SKPaintStyle.Stroke,
+			Color = SKColors.Blue,
+			StrokeWidth = 10,
+			StrokeCap = SKStrokeCap.Round,
+			StrokeJoin = SKStrokeJoin.Round
+		};
 
 		SKPoint fromOrigin = new();
 		SKPoint tillOrigin = new();
 		double density = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
 
 		void OnTouchEffectAction(object sender, SKTouchEventArgs args)
-        {
-            args.Handled = true;
+		{
+			args.Handled = true;
 
 			var control = (Canvas)sender;
 			var height = Height;
 			var width = Width;
 
-            switch (args.ActionType)
-            {
-                case SKTouchAction.Pressed:
+			switch (args.ActionType)
+			{
+				case SKTouchAction.Pressed:
 					fromOrigin = args.Location;
 
-                    if (!_inProgressPaths.ContainsKey(args.Id))
-                    {
-                        SKPath path = new();
-                        path.MoveTo(args.Location);
-                        _inProgressPaths.Add(args.Id, path);
-                        MagnitudeCanvas.InvalidateSurface();
-                    }
-                    break;
+					if (!_inProgressPaths.ContainsKey(args.Id))
+					{
+						SKPath path = new();
+						path.MoveTo(args.Location);
+						_inProgressPaths.Add(args.Id, path);
+						MagnitudeCanvas.InvalidateSurface();
+					}
+					break;
 
-                case SKTouchAction.Moved:
+				case SKTouchAction.Moved:
 
 					tillOrigin = args.Location;
 					if (fromOrigin.Is(tillOrigin))
@@ -93,29 +93,29 @@ namespace Solfeggio.Views
 					RequestFullSpectrogramRefresh(256);
 
 					if (_inProgressPaths.ContainsKey(args.Id))
-                    {
-                        SKPath path = _inProgressPaths[args.Id];
-                        path.LineTo(args.Location);
-                        MagnitudeCanvas.InvalidateSurface();
-                    }
-                    break;
+					{
+						SKPath path = _inProgressPaths[args.Id];
+						path.LineTo(args.Location);
+						MagnitudeCanvas.InvalidateSurface();
+					}
+					break;
 
-                case SKTouchAction.Released:
-                    if (_inProgressPaths.ContainsKey(args.Id))
-                    {
-                        _completedPaths.Add(_inProgressPaths[args.Id]);
-                        _inProgressPaths.Remove(args.Id);
-                        MagnitudeCanvas.InvalidateSurface();
-                    }
-                    break;
+				case SKTouchAction.Released:
+					if (_inProgressPaths.ContainsKey(args.Id))
+					{
+						_completedPaths.Add(_inProgressPaths[args.Id]);
+						_inProgressPaths.Remove(args.Id);
+						MagnitudeCanvas.InvalidateSurface();
+					}
+					break;
 
-                case SKTouchAction.Cancelled:
-                    if (_inProgressPaths.ContainsKey(args.Id))
-                    {
-                        _inProgressPaths.Remove(args.Id);
-                        MagnitudeCanvas.InvalidateSurface();
-                    }
-                    break;
+				case SKTouchAction.Cancelled:
+					if (_inProgressPaths.ContainsKey(args.Id))
+					{
+						_inProgressPaths.Remove(args.Id);
+						MagnitudeCanvas.InvalidateSurface();
+					}
+					break;
 
 				case SKTouchAction.WheelChanged:
 					if (_inProgressPaths.ContainsKey(args.Id))
@@ -125,20 +125,20 @@ namespace Solfeggio.Views
 					}
 					break;
 			}
-        }
+		}
 
 		static readonly AppViewModel AppViewModel = Store.Get<AppViewModel>();
 		static readonly MusicalPresenter MusicalPresenter = Store.Get<MusicalPresenter>();
 		static readonly ProcessingManager ProcessingManager = Store.Get<ProcessingManager>();
 
 		public SolfeggioView()
-        {
-            InitializeComponent();
+		{
+			InitializeComponent();
 
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
 
-            Loop(100, () =>
-            {
+			Loop(100, () =>
+			{
 				Render();
 
 				PianoCanvas.InvalidateSurface();
@@ -159,16 +159,16 @@ namespace Solfeggio.Views
 				//    canvas.DrawPath(path, paint);
 				//}
 			});
-        }
+		}
 
-        private async void Loop(int milliseconds, Action actionToExecute)
-        {
-            while (true)
-            {
-                await Task.Delay(milliseconds);
-                actionToExecute();
-            }
-        }
+		private async void Loop(int milliseconds, Action actionToExecute)
+		{
+			while (true)
+			{
+				await Task.Delay(milliseconds);
+				actionToExecute();
+			}
+		}
 
 		struct SpectrogramFrame
 		{
@@ -265,7 +265,7 @@ namespace Solfeggio.Views
 				});
 			}
 
-			AppViewModel.Harmonics = pianoKeys;
+			AppViewModel.Harmonics.Value = pianoKeys;
 
 			var w = SpectrogramCanvas.Width;
 			var h = SpectrogramCanvas.Height;
@@ -367,13 +367,15 @@ namespace Solfeggio.Views
 			return new(new GradientStopCollection().AppendRange(stops));
 		}
 
-		static Color SetAlpha(Color color, double alpha) => Color.FromRgba(color.R, color.G, color.B , alpha);
+		static Color SetAlpha(Color color, double alpha) => Color.FromRgba(color.R, color.G, color.B, alpha);
 		static Color FromArgb(double a, double r, double g, double b) => Color.FromRgba(r, g, b, a);
 
+		private void SwitchGeometry() => FlowerCanvas?
+			.With(FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d);
+
+		private void ContentPage_LayoutChanged(object sender, EventArgs e) => SwitchGeometry();
+		private void GeometrySwitch_Toggled(object sender, ToggledEventArgs e) => SwitchGeometry();
 
 		private void HideOptionsButton_Clicked(object sender, EventArgs e) => OptionsSwitch.IsToggled = false;
-
-		private void GeometrySwitch_Toggled(object sender, ToggledEventArgs e) =>
-			FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d;
 	}
 }

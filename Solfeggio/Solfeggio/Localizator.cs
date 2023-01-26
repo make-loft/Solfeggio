@@ -249,8 +249,8 @@ Your help is priceless!";
 
 		public static class ReadyToHelpLink
 		{
-			public const string English = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Gratitude";
-			public const string Russian = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Gratitude";
+			public const string English = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Thank-for-Care!";
+			public const string Russian = @"https://gitlab.com/Makeloft-Studio/Solfeggio/-/wikis/Спасибо-за-заботу!";
 		}
 
 		public static class ExpirationMessage

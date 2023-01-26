@@ -133,7 +133,7 @@
 					Rack.Cell="R1"
 					>
 					<Stack
-						BindableLayout.ItemsSource="{Binding Harmonics, Source={Store vm:AppViewModel}, Converter={Converter Convert=SkipTelemetry_Convert}}"
+						BindableLayout.ItemsSource="{Binding Harmonics.Value, Source={Store vm:AppViewModel}, Converter={Converter Convert=SkipTelemetry_Convert}}"
 						BindableLayout.ItemTemplate="{StaticResource HarmonicOutTemplate}"
 						/>
 				</Scroll>
@@ -177,7 +177,6 @@
 				<Button
 					Rack.Cell="R3"
 					FontSize="14"
-					FontFamily="Consolas"
 					CommandParameter="{Localizing ReadyToHelpLink}"
 					Command="{Context Navigate, StoreKey=vm:AppViewModel}"
 					Text="{Localizing ReadyToHelpMessage, Modifiers=ToUpper}"
