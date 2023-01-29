@@ -4,3 +4,6 @@
 [submodule "Ace"]
 	path = Ace
 	url = ../Ace
+[submodule "yandex.metric"]
+	path = yandex.metric
+	url = https://bitbucket.org/Makeloft/yandex.metric

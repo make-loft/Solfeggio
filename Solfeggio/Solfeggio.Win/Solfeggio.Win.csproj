@@ -75,6 +75,9 @@
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Editions.cs">
+      <Link>Editions.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Extensions\SignalExtensions.cs">
       <Link>Extensions\SignalExtensions.cs</Link>
     </Compile>
@@ -178,7 +181,6 @@
     <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
-    <Compile Include="Editions.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
     <Compile Include="ViewModels\FlowerViewModel.cs" />
     <Compile Include="ViewModels\TapeViewModel.cs" />

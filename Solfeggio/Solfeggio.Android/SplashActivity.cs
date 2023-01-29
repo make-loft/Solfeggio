@@ -5,11 +5,16 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 
 using System;
+using System.IO;
+using System.Threading;
 
 using Xamarin.Essentials;
+
+using Yandex.Metrica;
 
 namespace Solfeggio.Droid
 {
@@ -36,8 +41,8 @@ namespace Solfeggio.Droid
 			AppDomain.CurrentDomain.UnhandledException += (o, args) => ProcessUnhandledException(args.ExceptionObject as Exception);
 			async void ProcessUnhandledException(Exception exception)
 			{
-				//for (var e = exception; e.Is(); e = e.InnerException)
-				//	YandexMetrica.ReportUnhandledException(e);
+				for (var e = exception; e.Is(); e = e.InnerException)
+					YandexMetrica.ReportUnhandledException(e);
 
 				await this.ShowAlertDialogAsync
 				(
@@ -51,6 +56,8 @@ namespace Solfeggio.Droid
 			Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
 			base.OnCreate(bundle);
+
+			ThreadPool.QueueUserWorkItem(RunAnalitics);
 
 			Platform.Init(this, bundle);
 			Xamarin.Forms.Forms.Init(this, bundle);
@@ -80,6 +87,28 @@ namespace Solfeggio.Droid
 			);
 
 			FinishAffinity();
+		}
+
+		private void RunAnalitics(object o)
+		{
+			var (androidId, advertisingId) = default(string);
+
+			try { androidId = Android.Provider.Settings.Secure.GetString(ContentResolver, Android.Provider.Settings.Secure.AndroidId); }
+			catch { }
+			//try { advertisingId = AdvertisingIdClient.GetAdvertisingIdInfo(ApplicationContext).Id; }
+			//catch { }
+			try
+			{
+				var appDataFolderPath = System.Environment.SpecialFolder.ApplicationData.GetPath();
+				var metricaFolderPath = Path.Combine(appDataFolderPath, "Yandex.Metrica");
+
+				YandexMetricaFolder.SetCurrent(metricaFolderPath);
+				YandexMetrica.Activate(App.YandexMetricaKeys[App.Edition], androidId, advertisingId);
+			}
+			catch (Exception exception)
+			{
+				Log.Error("Yandex.Metrica", exception.ToString());
+			}
 		}
 	}
 }

@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EC64A689-1014-44FD-9AC5-6FFA02EC9F44}</ProjectGuid>
@@ -16,8 +20,11 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
-    <LangVersion>latest</LangVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
+    <AndroidAapt2LinkExtraArgs>--no-version-vectors</AndroidAapt2LinkExtraArgs>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -33,7 +40,6 @@
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
-    <LangVersion>7.2</LangVersion>
     <MandroidI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -45,7 +51,15 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-    <LangVersion>latest</LangVersion>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidLinkTool>r8</AndroidLinkTool>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -57,7 +71,7 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Build.Download" Version="*" />
     <PackageReference Include="Xamarin.Essentials" Version="*" />
-    <PackageReference Include="Xamarin.Forms" Version="*" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio.cs" />
@@ -86,6 +100,10 @@
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
       <Name>Rainbow.Standard1.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\yandex.metric\Yandex.Metrica\Yandex.Metrica.Xamarin.csproj">
+      <Project>{816352B8-1D94-4424-AEDB-B99B3F7B9B75}</Project>
+      <Name>Yandex.Metrica.Xamarin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Solfeggio\Solfeggio.csproj">
       <Project>{52EC9F1E-788A-47B3-B89A-DD9B215218B7}</Project>
