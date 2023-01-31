@@ -19,7 +19,7 @@ namespace Solfeggio.Processors
 	abstract class AStreamProcessor<TReader> : ASoftwareSignalProcessor, IExposable, IDisposable
 	{
 		public AStreamProcessor(int sampleRate, int sampleSize, int buffersCount)
-			: base(sampleRate, sampleSize, buffersCount) => Expose();
+			: base(sampleRate, sampleSize) => Expose();
 
 		protected TReader reader;
 		protected FileStream stream;
@@ -49,12 +49,12 @@ namespace Solfeggio.Processors
 			ThreadPool.QueueUserWorkItem(BackgroundReadLoop);
 		}
 
-		public List<short[]> Frames = new(64);
+		public List<float[]> Frames = new(64);
 
-		public override short[] Next()
+		public override float[] Next()
 		{
 			if (stream.IsNot())
-				return new short[0];
+				return new float[0];
 
 			var frame = Frames.FirstOrDefault();
 			Frames.Remove(frame);
@@ -65,7 +65,7 @@ namespace Solfeggio.Processors
 		}
 
 		public abstract TReader CreateReader(Stream stream);
-		public abstract short[] ReadFrame();
+		public abstract float[] ReadFrame();
 
 		void BackgroundReadLoop(object state)
 		{
@@ -113,13 +113,13 @@ namespace Solfeggio.Processors
 
 		public WaveContainer Container { get; set; }
 
-		public override short[] ReadFrame()
+		public override float[] ReadFrame()
 		{
-			var frame = new short[_sampleSize];
+			var frame = new float[SampleSize];
 			for (var i = 0; i < frame.Length; i++)
 				frame[i] = reader.ReadInt16();
 
-			var timeFrame = frame.Select(b => new Complex((double)b / short.MaxValue)).ToList();
+			var timeFrame = frame.Select(b => new Complex(b)).ToList();
 			var spectralFrame = Butterfly.Transform(timeFrame, true);
 			var spectrum = Filtering.GetSpectrum(spectralFrame, Container.Header.SampleRate).ToArray();
 			var x = Filtering.Interpolate(spectrum, out var peaks).ToList();
@@ -127,11 +127,11 @@ namespace Solfeggio.Processors
 
 			var signal = Next(valuePeaks);
 
-			return signal.Scale(Boost);
+			return signal.StretchArray(Level * Boost);
 		}
 
-		double[] overlap;
-		public short[] Next(IList<Bin> peaks)
+		float[] overlap;
+		public float[] Next(IList<Bin> peaks)
 		{
 			var profile = new Models.Harmonic.Profile
 			{
@@ -143,17 +143,16 @@ namespace Solfeggio.Processors
 				}))
 			};
 
-			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			var signal = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 
 			if (Console.CapsLock)
 			{
 				if (overlap.Is() && Console.CapsLock)
-					signal = signal.Raise(0.00, 0.5).Add(overlap.Fade(0.00, 0.5));
-				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+					signal = signal.Raise(0.00f, 0.5f).Add(overlap.Fade(0.00f, 0.5f));
+				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
-			return bins.Scale(Boost);
+			return signal.StretchArray(Level * Boost);
 		}
 
 		public override BinaryReader CreateReader(Stream stream) => new(stream);

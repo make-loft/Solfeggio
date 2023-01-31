@@ -133,7 +133,7 @@ namespace Solfeggio.Views
 			}
 		}
 
-		double[] overlap;
+		float[] overlap;
 		public short[] Next(IList<Bin> peaks, bool useOverlap)
 		{
 			var profile = new Models.Harmonic.Profile
@@ -151,7 +151,7 @@ namespace Solfeggio.Views
 			if (useOverlap)
 			{
 				if (overlap.Is() && Console.CapsLock)
-					signal = signal.Raise(0.00, 0.25).Add(overlap.Fade(0.00, 0.25));
+					signal = signal.Raise(0.00f, 0.25f).Add(overlap.Fade(0.00f, 0.25f));
 				overlap = profile.GenerateSignalSample(FrameSize, SampleRate, false);
 			}
 

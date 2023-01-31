@@ -1,4 +1,5 @@
 ﻿using Solfeggio.Api;
+using Solfeggio.Extensions;
 
 namespace Solfeggio.Processors
 {

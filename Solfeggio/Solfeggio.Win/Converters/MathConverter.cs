@@ -21,7 +21,7 @@ namespace Solfeggio.Converters
 		public Operations Operation { get; set; }
 
 		private double GetBase(object parameter) =>
-			parameter.Is(out double value) || double.TryParse(parameter.ToStr(), out value) ? value : Parameter;
+			parameter.Is(out double value) || double.TryParse(parameter.To<string>(), out value) ? value : Parameter;
 
 		public override object Convert(object value, object parameter) =>
 			Apply(Operation, (double)value, GetBase(parameter));

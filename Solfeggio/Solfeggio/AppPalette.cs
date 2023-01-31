@@ -15,12 +15,14 @@ namespace Solfeggio
 {
 	class AppPalette
 	{
-		public static ResourceDictionary Resources => Application.Current.Resources;
 #if !NETSTANDARD
+		public static Map Resources => (Map)Application.Current.Resources;
 		public static Map Values => (Map)Resources.MergedDictionaries.To<IList>()[1];
 		public static Map ColorPalettes => (Map)Resources.MergedDictionaries.To<IList>()[2];
 		public static Map Colors => (Map)Resources.MergedDictionaries.To<IList>()[3];
 		public static Map Brushes => (Map)Resources.MergedDictionaries.To<IList>()[4];
+#else
+		public static ResourceDictionary Resources => Application.Current.Resources;
 #endif
 
 		public static Brush GetBrush([CallerMemberName] string key = default) => (Brush)Resources[key];

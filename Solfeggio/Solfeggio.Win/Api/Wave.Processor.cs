@@ -1,4 +1,7 @@
 ﻿using Ace;
+
+using Solfeggio.Extensions;
+
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -9,29 +12,6 @@ namespace Solfeggio.Api
 {
 	public partial class Wave
 	{
-		public static short[] Scale(this short[] data, double boost)
-		{
-			if (boost.Is(1d)) return data;
-
-			for (var i = 0; i < data.Length; i++)
-			{
-				var normalizedValue = (double)data[i] / short.MaxValue;
-				data[i] = (short)(short.MaxValue * Math.Pow(normalizedValue, 1d/boost));
-			}
-
-			return data;
-		}
-
-		public static double[] Stretch(this double[] data, double volume)
-		{
-			if (volume.Is(1d)) return data;
-
-			for (var i = 0; i < data.Length; i++)
-				data[i] *= volume;
-
-			return data;
-		}
-
 		public abstract class Processor<TDeviceInfo> : IProcessor, IExposable, IDisposable
 		{
 			public IProcessor Source { get; set; }
@@ -55,7 +35,8 @@ namespace Solfeggio.Api
 					var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
 					if (buffer.Is())
 					{
-						Array.Copy(e.Bins.Scale(Boost), buffer.Data, e.BinsCount);
+						var sample = e.Sample.StretchArray(Level * Boost).Select(f => (short)(f * short.MaxValue)).ToArray();
+						Array.Copy(sample, buffer.Data, e.Sample.Length);
 						if (State.Is(Processing)) buffer.MarkForProcessing();
 					}
 				};
@@ -63,7 +44,7 @@ namespace Solfeggio.Api
 
 			~Processor() => Dispose();
 
-			public short[] Next() => default;
+			public float[] Next() => default;
 
 			public void Tick() { }
 
@@ -123,7 +104,8 @@ namespace Solfeggio.Api
 					{
 						if (message.Is(Message.WaveInData))
 						{
-							DataAvailable?.Invoke(this, new(this, buffer.Data.Scale(Boost), buffer.BinsCount));
+							var sample = buffer.Data.Select(b => (float)b).ToArray().StretchArray(Level * Boost / short.MaxValue);
+							DataAvailable?.Invoke(this, new(this, sample));
 							if (State.Is(Processing)) buffer.MarkForProcessing();
 						}
 
@@ -135,13 +117,9 @@ namespace Solfeggio.Api
 				}
 			}
 
-			public double Level
-			{
-				get => _session.GetVolume();
-				set => _session.SetVolume(value);
-			}
+			public float Level { get; set; } = 1f;
 
-			public double Boost { get; set; } = 1d;
+			public float Boost { get; set; } = 1f;
 
 			public void Wake()
 			{

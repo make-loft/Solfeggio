@@ -81,6 +81,14 @@ namespace Solfeggio.ViewModels
 
 		private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
 		{
+			var profile = ActiveProfile;
+			if (profile.InputLevel > 1f && args.Sample.Max(c => c.Real).To(out float maxLevel) > 1f)
+			{
+				profile.InputLevel /= maxLevel;
+				if (profile.InputLevel < 1f)
+					profile.InputLevel = 1f;
+			}
+
 			var sample = args.Sample;
 			var frameSize = args.Source.FrameSize;
 			if (IsPaused || sample.Length < frameSize + args.Source.ShiftSize) return;

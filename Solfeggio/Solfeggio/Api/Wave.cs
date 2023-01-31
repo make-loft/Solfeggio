@@ -1,23 +1,11 @@
-﻿using Ace;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Solfeggio.Api
 {
-	public class WaveInCapabilities
-	{ }
+	public class WaveInCapabilities { }
+
 	public static class Wave
 	{
-		public static float[] StretchArray(this float[] data, float value)
-		{
-			if (value.Is(1f)) return data;
-
-			for (var i = 0; i < data.Length; i++)
-				data[i] *= value;
-
-			return data;
-		}
-
 		public static class In
 		{
 			public static IEnumerable<DeviceInfo> EnumerateDevices()

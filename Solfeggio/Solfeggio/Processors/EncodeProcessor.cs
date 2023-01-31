@@ -26,8 +26,9 @@ namespace Solfeggio.Processors
 				new EncodeProcessor(waveFormat.SampleRate, sampleSize, source);
 		}
 
-		public double Level { get; set; } = 1d;
-		public double Boost { get; set; } = 1d;
+		public float Level { get; set; } = 1f;
+		public float Boost { get; set; } = 1f;
+		public IProcessor Source { get; set; }
 
 		public event EventHandler<ProcessingEventArgs> DataAvailable;
 
@@ -54,16 +55,16 @@ namespace Solfeggio.Processors
 			{
 				if (source is ASoftwareSignalProcessor sp)
 				{
-					sp.IsAutoTickEnabledOnce = true;
+					//sp.IsAutoTickEnabledOnce = true;
 				}
 
-				FlushFrame(e.Bins);
+				FlushFrame(e.Sample);
 			};
 		}
 
-		void FlushFrame(short[] frame)
+		void FlushFrame(float[] frame)
 		{
-			var timeFrame = frame.Select(b => new Complex((double)b / short.MaxValue)).ToList();
+			var timeFrame = frame.Select(b => new Complex(b)).ToList();
 			var spectralFrame = Butterfly.Transform(timeFrame, true);
 			var spectrum = Filtering.GetSpectrum(spectralFrame, _sampleRate).ToArray();
 			var silenceThreshold = 2d / frame.Length;
@@ -108,7 +109,7 @@ namespace Solfeggio.Processors
 
 		public void Lull() { }
 
-		public short[] Next() => default;
+		public float[] Next() => default;
 
 		public void Tick() { }
 

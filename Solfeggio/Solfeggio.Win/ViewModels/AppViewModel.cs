@@ -17,7 +17,7 @@ namespace Solfeggio.ViewModels
 		[DataMember]
 		public LanguageCodes ActiveLanguage
 		{
-			get => Get(() => ActiveLanguage);
+			get => Get(() => ActiveLanguage, LanguageCodes.English);
 			set => Set(() => ActiveLanguage, value);
 		}
 
@@ -35,7 +35,17 @@ namespace Solfeggio.ViewModels
 			this[() => ActiveLanguage].Changed += (o, e) =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
-			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.ToStr());
+			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<ProcessingManager>()
+				.Profiles
+				.Where(p => p.IsDefault)
+				.ForEach(p => p.RefreshTitle());
+
+			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<HarmonicManager>()
+				.Profiles
+				.Where(p => p.IsDefault)
+				.ForEach(p => p.RefreshTitle());
+
+			this[Context.Navigate].Executed += (o, e) => System.Diagnostics.Process.Start(e.Parameter.To<string>());
 			this[Context.Navigate].Executed += (o, e) => Yandex.Metrica.YandexMetrica.ReportEvent($"{e.Parameter}");
 
 			this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();

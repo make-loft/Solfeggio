@@ -117,6 +117,12 @@
     <Compile Include="..\Solfeggio\Presenters\Options\BandwidthOptions.cs">
       <Link>Presenters\Options\BandwidthOptions.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\FormatOptions.cs">
+      <Link>Presenters\Options\FormatOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\GeometryApproximationOptions.cs">
+      <Link>Presenters\Options\GeometryApproximationOptions.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Presenters\Options\MusicalOptions.cs">
       <Link>Presenters\Options\MusicalOptions.cs</Link>
     </Compile>

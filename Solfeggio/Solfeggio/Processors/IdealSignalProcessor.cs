@@ -40,7 +40,7 @@ namespace Solfeggio.Processors
 
 		protected override string Filter { get; } = FileDialogFilters.PcmBin;
 
-		public override short[] ReadFrame()
+		public override float[] ReadFrame()
 		{
 			var peaksCount = reader.ReadInt16();
 			var peaks = new List<Bin>();
@@ -62,8 +62,8 @@ namespace Solfeggio.Processors
 			return Next(peaks);
 		}
 
-		double[] overlap;
-		public short[] Next(IList<Bin> peaks)
+		float[] overlap;
+		public float[] Next(IList<Bin> peaks)
 		{
 			var profile = new Models.Harmonic.Profile
 			{
@@ -75,17 +75,16 @@ namespace Solfeggio.Processors
 				}))
 			};
 
-			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			var signal = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 
 			if (Console.CapsLock)
 			{
 				if (overlap.Is() && Console.CapsLock)
-					signal = signal.Raise(0.00, 0.5).Add(overlap.Fade(0.00, 0.5));
-				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+					signal = signal.Raise(0.00f, 0.5f).Add(overlap.Fade(0.00f, 0.5f));
+				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
-			return bins.Scale(Boost);
+			return signal.StretchArray(Level * Boost);
 		}
 
 		public override BinaryReader CreateReader(Stream stream) => new(stream);
@@ -113,7 +112,7 @@ namespace Solfeggio.Processors
 
 		public override StreamReader CreateReader(Stream stream) => new(stream);
 
-		public override short[] ReadFrame()
+		public override float[] ReadFrame()
 		{
 			var line = reader.ReadLine();
 
@@ -126,8 +125,9 @@ namespace Solfeggio.Processors
 
 			return Next(peaks);
 		}
-		double[] overlap;
-		public short[] Next(IList<Bin> peaks)
+
+		float[] overlap;
+		public float[] Next(IList<Bin> peaks)
 		{
 			var profile = new Models.Harmonic.Profile
 			{
@@ -139,17 +139,16 @@ namespace Solfeggio.Processors
 				}))
 			};
 
-			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+			var signal = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 
 			if (Console.CapsLock)
 			{
 				if (overlap.Is() && Console.CapsLock)
-					signal = signal.Raise(0.00, 0.25).Add(overlap.Fade(0.00, 0.25));
-				overlap = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
+					signal = signal.Raise(0.00f, 0.25f).Add(overlap.Fade(0.00f, 0.25f));
+				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			var bins = signal.Stretch(Level).Select(d => (short)(d * short.MaxValue)).ToArray();
-			return bins.Scale(Boost);
+			return signal.StretchArray(Level * Boost);
 		}
 	}
 }

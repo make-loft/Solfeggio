@@ -1,9 +1,8 @@
-﻿using Ace;
-
-using Rainbow;
+﻿using Rainbow;
 
 using Solfeggio.Api;
-using Solfeggio.ViewModels;
+using Solfeggio.Extensions;
+
 using System;
 using System.IO;
 using System.Linq;
@@ -89,8 +88,7 @@ namespace Solfeggio.Processors
 			};
 
 			var signal = profile.GenerateSignalSample(_sampleSize, _sampleRate, false);
-			var _bins = signal.StretchArray((float)(Level * Boost)).ToArray();
-			return _bins;
+			return signal.StretchArray(Level * Boost);
 		}
 
 		float[] _bins;

@@ -1,6 +1,7 @@
 ﻿using Ace;
 
 using Solfeggio.Api;
+using Solfeggio.Extensions;
 using Solfeggio.ViewModels;
 
 using System;
@@ -35,6 +36,6 @@ namespace Solfeggio.Processors
 
 		public float[] NextSample() => _manager.ActiveProfile
 			.GenerateSignalSample(SampleSize, SampleRate, false)
-			.StretchArray((float)(Level * Boost));
+			.StretchArray(Level * Boost);
 	}
 }

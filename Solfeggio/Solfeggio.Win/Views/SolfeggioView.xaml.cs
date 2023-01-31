@@ -284,10 +284,19 @@ namespace Solfeggio.Views
 				}
 
 				var peaks = processingManager.Peaks;
-				var peakKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, peaks);
+				var pianoKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, peaks);
+
+				if (pianoKeys.Is() && pianoKeys.Any())
+				{
+					var maxMagnitude = pianoKeys.Max(k => k.Magnitude);
+					var minOpacity = 0.632d;
+					var topOpacity = 1 - minOpacity;
+					pianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
+				}
+
 				var vC = resources["Visibility.Peak"];
 				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.PeakProfiles.Any(p => p.Value.IsVisible))
-					musicalPresenter.DrawPeakLabels(peakKeys, width, height)
+					musicalPresenter.DrawPeakLabels(pianoKeys, width, height)
 					.ForEach(p =>
 					{
 						MagnitudeCanvas.Children.Add(p);
@@ -308,7 +317,7 @@ namespace Solfeggio.Views
 				if (App.Current.MainWindow.IsNot())
 					return;
 
-				appViewModel.Harmonics = peakKeys;
+				appViewModel.Harmonics = pianoKeys;
 
 				if (processingManager.IsPaused)
 					return;
@@ -327,7 +336,7 @@ namespace Solfeggio.Views
 				SpectrogramCanvas.Children.Insert(0, DrawKeys(new Grid 
 				{
 					Tag = spectrumInterpolated,
-					DataContext = peakKeys,
+					DataContext = pianoKeys,
 					Background = GetSpectrogramLineBrush(spectrumInterpolated, transformer, w, magnitudeProjection),
 				}));
 
@@ -356,8 +365,8 @@ namespace Solfeggio.Views
 							//System.Math.Sqrt(magnitudeProjection(k.Magnitude)),
 							0.8 + 0.2 * magnitudeProjection(k.Magnitude),
 							0.0,
-							1.0 - 2.0 * System.Math.Abs(k.DeltaFrequency) / (k.UpperFrequency - k.LowerFrequency),
-							0.5 + 1.0 * System.Math.Abs(k.DeltaFrequency) / (k.UpperFrequency - k.LowerFrequency)
+							1.0 - 2.0 * System.Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency),
+							0.5 + 1.0 * System.Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)
 						)),
 						Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
 						Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency) - w / 2d, 0, 0, 0),

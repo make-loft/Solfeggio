@@ -10,7 +10,7 @@ namespace Solfeggio.Palettes
 	{
 		void ResetPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) =>
 			Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
-			.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.ToStr());
+			.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.To<string>());
 
 		void ResetButton_Click(object sender, System.Windows.RoutedEventArgs e) =>
 			Store.Get<ViewModels.VisualizationManager>().ActiveProfile?

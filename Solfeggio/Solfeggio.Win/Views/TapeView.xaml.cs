@@ -113,7 +113,7 @@ namespace Solfeggio.Views
 					if (b.IsNot())
 						goto Skip;
 
-					if (Enum.TryParse(b.Name.ToStr(), out Key k))
+					if (Enum.TryParse(b.Name, out Key k))
 					{
 						pattern.Add(k);
 					}
@@ -222,10 +222,10 @@ namespace Solfeggio.Views
 				var modifierButtons = new[] { Alt, Control, Shift };
 				var navigationButtons = new[] { W, A, S, D, Up, Down, Left, Right };
 
-				modifierButtons.ForEach(m => m.Opacity = Enum.TryParse(m.Name.ToStr(), out ModifierKeys k) && modifiers.HasFlag(k)
+				modifierButtons.ForEach(m => m.Opacity = Enum.TryParse(m.Name, out ModifierKeys k) && modifiers.HasFlag(k)
 					? 1.0
 					: 0.5);
-				navigationButtons.ForEach(b => b.Opacity = Enum.TryParse(b.Name.ToStr(), out Key k) && pattern.Contains(k)
+				navigationButtons.ForEach(b => b.Opacity = Enum.TryParse(b.Name, out Key k) && pattern.Contains(k)
 					? 1.0
 					: 0.5);
 			}

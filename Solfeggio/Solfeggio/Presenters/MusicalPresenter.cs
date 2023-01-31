@@ -93,8 +93,13 @@ namespace Solfeggio.Presenters
 				});
 
 				items.Add(panel);
+#if XAMARIN
 				panel.Measure();
 				panel.Margin = new(hVisualOffset - panel.WidthRequest / 2d, height * vLabelOffset, 0d, 0d);
+#else
+				panel.UpdateLayout();
+				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
+#endif
 			}
 		}
 
