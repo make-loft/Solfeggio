@@ -11,7 +11,7 @@
 	Width="{Smart Width, DefaultValue=256}"
 	Left="{Smart Left, DefaultValue=NaN}"
 	Top="{Smart Top, DefaultValue=NaN}"
-	Title="{Localizing Key=Flower, Modifiers=ToUpper}"
+	Title="{Localizing Flower, Modifiers=ToUpper}"
 	PreviewMouseDoubleClick="Window_PreviewMouseDoubleClick"
 	PreviewKeyDown="Window_PreviewKeyDown"
 	Background="DimGray"

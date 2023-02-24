@@ -1,5 +1,5 @@
 ﻿<ResourceDictionary
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Solfeggio.Models"
 	xmlns:c="clr-namespace:Solfeggio.Controls"
@@ -10,36 +10,53 @@
 	>
 
 	<DataTemplate
+		x:Key="DelegateToNameTemplate"
+		>
+		<Title
+			Text="{Binding Converter={StaticResource DelegateToNameConverter}}"
+			/>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="LocalizingTemplate"
+		>
+		<Title
+			Text="{Binding Converter={StaticResource LocalizingConverter}}"
+			/>
+	</DataTemplate>
+
+	<DataTemplate
 		x:Key="NoteNameToFrequencyTemplate">
-		<Grid
-			Rack.Columns="* *"
+		<Rack
+			Columns="* *"
 			>
-			<Frame
+
+			<Border
 				Rack.Cell="C0 CS2"
 				Opacity="0.61"
 				CornerRadius="4"
 				Background="{Binding Converter={StaticResource PianoKeyToBrushConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C0"
 				FontWeight="SemiBold"
 				FontFamily="Consolas"
 				Text="{Binding NoteName}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C1"
 				FontFamily="Consolas"
 				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-		</Grid>
+		</Rack>
 	</DataTemplate>
 	
 	<DataTemplate
 		x:Key="HarmonicTemplate">
-		<Grid
+		<Rack
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			Rack.Columns="2* 3* 3* * * * *"
-			Rack.Rows="* *"
+			Columns="2* 3* 3* * * * *"
+			Rows="* *"
 			>
 			<Slider
 				Rack.Cell="C0 R1"
@@ -86,9 +103,9 @@
 				Height="22"
 				Width="20"
 				/>
-			<Grid
+			<Rack
 				Rack.Cell="C2 R0"
-				Rack.Columns="* * *"
+				Columns="* * *"
 				>
 				<Entry
 					Rack.Cell="C0 CS0"
@@ -105,7 +122,7 @@
 					ToolTip="{Binding Phase, Converter={StaticResource RadianPiConverter}}"
 					Text="{Binding Phase, Converter={StaticResource RadianPiFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
 					/>
-			</Grid>
+			</Rack>
 			<Entry
 				Rack.Cell="C3 R2"
 				ToolTip="{Localizing Gap}"
@@ -115,7 +132,7 @@
 				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
 				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+				ItemTemplate="{StaticResource DelegateToNameTemplate}"
 				/>
 			<Picker
 				Rack.Cell="C4 R0"
@@ -141,78 +158,155 @@
 					>
 					<GroupBox
 						BorderThickness="0"
-						Background="{StaticResource LabelBrush}"
+						Background="{StaticResource TitleBrush}"
 						>
-						<StackLayout
+						<Stack
 							Orientation="Horizontal"
 							HorizontalAlignment="Right"
 							>
 							<Button
 								Content="📝"
-								ToolTip="{Localizing Key=Copy}"
+								ToolTip="{Localizing Copy}"
 								CommandParameter="{Binding}"
-								Command="{Context Key=Set.Create, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
+								Command="{Context Set.Create, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
 								/>
 							<Button
 								Content="✗"
-								ToolTip="{Localizing Key=Delete}"
+								ToolTip="{Localizing Delete}"
 								CommandParameter="{Binding}"
-								Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
+								Command="{Context Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
 								/>
-						</StackLayout>
+						</Stack>
 					</GroupBox>
 				</v:PopupView>
 			</Expander>
-		</Grid>
+		</Rack>
+	</DataTemplate>
+
+	<ControlTemplate
+		x:Key="HarmonicHeaderTemplate"
+		>
+		<Rack
+			Rack.Columns="48 96 96 96 *"
+			>
+			<Title
+				Rack.Cell="C0"
+				Text="{Localizing Note}"
+				/>
+			<Title
+				Rack.Cell="C1"
+				Text="{Localizing Ethalon}"
+				/>
+			<Title
+				Rack.Cell="C2"
+				Text="{Localizing Offset}"
+				/>
+			<Title
+				Rack.Cell="C3"
+				Text="{Localizing Frequency}"
+				/>
+			<Title
+				Rack.Cell="C4"
+				Text="{Localizing Magnitude}"
+				/>
+		</Rack>
+	</ControlTemplate>
+
+	<DataTemplate
+		x:Key="HarmonicOutTemplate"
+		>
+		<Rack
+			Opacity="{Binding RelativeOpacity}"
+			Rack.Columns="48 96 96 96 *"
+			>
+			<Title
+				Rack.Cell="C0"
+				FontWeight="Bold"
+				Text="{Binding NoteName}"
+				/>
+			<Title
+				Rack.Cell="C1"
+				Ext.ToolTip="{Binding EthalonFrequency}"
+				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Border
+				Rack.Cell="C2"
+				CornerRadius="10"
+				
+				/>
+			<Title
+				Rack.Cell="C2"
+				Ext.ToolTip="{Binding OffsetFrequency}"
+				Text="{Binding OffsetFrequency, StringFormat='({0:+0.00;-0.00;0.00})'}"
+				/>
+			<Title
+				Rack.Cell="C3"
+				Ext.ToolTip="{Binding Harmonic.Frequency}"
+				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Title
+				Rack.Cell="C4"
+				Ext.ToolTip="{Binding Harmonic.Magnitude}"
+				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="ProfileHeaderTemplate">
-		<StackLayout
-			Orientation="Horizontal">
-			<Label
-				Text="{Binding Title}" />
+		<Stack
+			Orientation="Horizontal"
+			>
+			<Title
+				Text="{Binding Title}"
+				/>
 			<!--<Button
 				Content="✗"
-				Command="{Context Key=Set.Delete, StoreKey=local:Generator}"
+				Command="{Context Set.Delete, StoreKey=local:Generator}"
 				CommandParameter="{Binding}" />-->
-		</StackLayout>
+		</Stack>
 	</DataTemplate>
 
-	<ControlTemplate
+	<DataTemplate
 		x:Key="TitleTemplate"
 		>
-		<StackView
+		<Stack
 			Style="{StaticResource TitlePanelStyle}"
 			>
-			<Label
-				Text="{Localizing Key=Profile}"
+			<Title
+				Text="{Localizing Profile}"
 				/>
-			<Picker
-				ItemDisplayBinding="{Binding Title}"
-				ItemsSource="{Binding Path=Profiles}"
-				SelectedItem="{Binding Path=ActiveProfile, Mode=TwoWay}"
-				/>
+			<Rack>
+				<Picker
+					ItemsSource="{Binding Profiles}"
+					ItemDisplayBinding="{Binding Title}"
+					SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+					/>
+				<Entry
+					Margin="4 4 22 4"
+					Text="{Binding ActiveProfile.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</Rack>
 			<Button
 				Content="➕"
-				Command="{Context Key=Set.Create}"
+				Command="{Context Set.Create}"
 				/>
 			<Button
 				Content="➖"
 				CommandParameter="{Binding Path=ActiveProfile}"
-				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
+				Command="{Context Set.Delete, TrackedPath=CommandParameter}"
 				/>
-		</StackView>
-	</ControlTemplate>
+		</Stack>
+	</DataTemplate>
 
 	<ControlTemplate
 		x:Key="TitleProfileTemplate"
 		>
-		<StackLayout
+		<Stack
 			Style="{StaticResource TitlePanelStyle}"
 			>
-			<Label
-				Text="{Localizing Key=Title}"
+			<Title
+				Text="{Localizing Title}"
 				/>
 			<Entry
 				Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -220,59 +314,82 @@
 			<Button
 				Content="✗"
 				CommandParameter="{Binding}"
-				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
+				Command="{Context Set.Delete, TrackedPath=CommandParameter}"
 				/>
-		</StackLayout>
+		</Stack>
 	</ControlTemplate>
-	
+
+	<ControlTemplate
+		x:Key="ValuePickerTemplate">
+		<Rack
+			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<Border
+				Margin="2"
+				CornerRadius="10"
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Entry
+						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+				</Expander.Header>
+				<v:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<v:ValuePicker
+						Minimum="0"
+						Maximum="1"
+						Value="{Binding DataContext, Mode=TwoWay}"
+						/>
+				</v:PopupView>
+			</Expander>
+		</Rack>
+	</ControlTemplate>
+
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
-		<Grid
-			Rack.Rows="^ *"
-			Rack.Columns="* *"
+		<Rack
+			Columns="* *"
 			>
-			<ContentView
-				Rack.Cell="R0 C0 CS2"
-				Template="{StaticResource TitleProfileTemplate}"
-				/>
 
-			<Grid
-				Rack.Cell="R1 C0"
-				Rack.Rows="^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^"
+			<Rack
+				Rack.Cell="C0"
+				Rows="^ ^ ^"
+				Columns="^ ^ ^ ^ ^ ^"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				>
-				<Label
+				<Title
 					Rack.Cell="R1 C0"
-					Text="{Localizing Key=Input}"
+					Text="{Localizing Input}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R2 C0"
-					Text="{Localizing Key=Output}"
+					Text="{Localizing Output}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Device}"
+					Text="{Localizing Device}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
-					Text="{Localizing Key=Level}"
+					Text="{Localizing Level}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C3"
-					Text="{Localizing Key=Buffers}"
+					Text="{Localizing Buffers}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R1 C4"
-					Text="{Localizing Key=Pcs}"
+					Text="{Localizing Pcs}"
 					/>
 
 				<Picker
 					Rack.Cell="R1 C1"
 					MinWidth="210"
-					Tag="{Localizing Key=Input}"
+					Tag="{Localizing Input}"
 					ItemsSource="{Binding InputDevices}"
 					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
 					DisplayMemberPath="ProductName"
@@ -299,219 +416,217 @@
 					ItemsSource="{StaticResource AllowedBuffersCount}"
 					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
 					/>
-			</Grid>
+			</Rack>
 
-			<Grid
+			<Rack
 				Rack.Cell="R1 C1"
-				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^"
+				Rows="^ ^ ^ ^ ^ ^ ^ ^"
+				Columns="^ ^ ^"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Sample}"
+					Text="{Localizing Sample}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R1 C0"
-					Text="{Localizing Key=Window}"
+					Text="{Localizing Window}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R2 C0"
-					Text="{Localizing Key=Rate}"
+					Text="{Localizing Rate}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R3 C1 CS2"
-					Text="{Localizing Key=Frame}"
+					Text="{Localizing Frame}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R4 C0"
-					Text="{Localizing Key=Length}"
+					Text="{Localizing Length}"
 					/>
 
-				<Label
+				<Title
 					Rack.Cell="R2 C2"
-					Text="{Localizing Key=Hz}"
+					Text="{Localizing Hz}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R4 C2"
-					Text="{Localizing Key=Pcs}"
+					Text="{Localizing Pcs}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R5 C2"
-					Text="{Localizing Key=ms}"
+					Text="{Localizing ms}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R6 C2"
-					Text="{Localizing Key=Hz}"
+					Text="{Localizing Hz}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R7 C2"
-					Text="{Localizing Key=Hz}"
+					Text="{Localizing Hz}"
 					/>
 
 				<Picker
 					Rack.Cell="R1 C1"
 					ItemsSource="{Binding Windows}"
 					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+					ItemTemplate="{StaticResource DelegateToNameTemplate}"
+					/>
 				<Picker
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding SampleRates}"
 					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
 
-				<StackLayout
+				<Stack
 					Rack.Cell="R4 C1"
 					Orientation="Horizontal"
 					>
-					<Label
+					<Title
 						Text="2 ^"
 						/>
 					<Picker
 						ItemsSource="{StaticResource AllowedPowsOf2}"
 						SelectedItem="{Binding FramePow, Mode=TwoWay}"
 						/>
-					<Label
+					<Title
 						Text="{Binding FrameSize, StringFormat='= {0}'}"
 						/>
-				</StackLayout>
-				<Label
+				</Stack>
+				<Title
 					Rack.Cell="R5 C0"
-					Text="{Localizing Key=Duration}"
+					Text="{Localizing Duration}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R5 C1"
 					HorizontalAlignment="Right"
 					Text="{Binding FrameDuration.TotalMilliseconds}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R6 C0"
-					Text="{Localizing Key=Step}"
+					Text="{Localizing Step}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R6 C1"
 					HorizontalAlignment="Right"
 					ToolTip="{Binding FrameStep}"
 					Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R7 C0"
-					Text="{Localizing Key=Accuracy}"
+					Text="{Localizing Accuracy}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R7 C1"
 					HorizontalAlignment="Right"
 					ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
 					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-			</Grid>
-		</Grid>
+			</Rack>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="HarmonicProfileTemplate">
-		<StackLayout>
-			<ContentView
-				Template="{StaticResource TitleProfileTemplate}"
-				/>
+		<Stack>
 			<Expander
 				Margin="0 -32 0 0"
 				x:Name="Expander"
 				HorizontalAlignment="Right"
 				>
 				<Expander.Header>
-					<Label
+					<Title
 						Text="{Localizing Each}"
 						/>
 				</Expander.Header>
 				<v:PopupView
 					IsOpen="{Binding ElementName=Expander, Path=IsExpanded}">
-					<StackLayout
+					<Stack
 						Orientation="Horizontal"
 						>
 						<GroupBox
 							BorderThickness="0"
-							Background="{StaticResource LabelBrush}"
-							Header="{Localizing Key=Mode}"
+							Background="{StaticResource TitleBrush}"
+							Header="{Localizing Mode}"
 							>
-							<StackLayout
+							<Stack
 								Orientation="Vertical"
 								>
 								<Button
 									Command="{Context Loop, TrackedPath=DataContext}"
-									Content="{Localizing Key=Loop}"
+									Content="{Localizing Loop}"
 									/>
 								<Button
 									Command="{Context Flow, TrackedPath=DataContext}"
-									Content="{Localizing Key=Flow}"
+									Content="{Localizing Flow}"
 									/>
-							</StackLayout>
+							</Stack>
 						</GroupBox>
 						<GroupBox
 							BorderThickness="0"
-							Background="{StaticResource LabelBrush}"
-							Header="{Localizing Key=Sound}"
+							Background="{StaticResource TitleBrush}"
+							Header="{Localizing Sound}"
 							>
-							<StackLayout
+							<Stack
 								Orientation="Vertical"
 								>
 								<Button
 									Command="{Context Mute, TrackedPath=DataContext}"
-									Content="{Localizing Key=Mute}"
+									Content="{Localizing Mute}"
 									/>
 								<Button
 									Command="{Context Loud, TrackedPath=DataContext}"
-									Content="{Localizing Key=Loud}"
+									Content="{Localizing Loud}"
 									/>
-							</StackLayout>
+							</Stack>
 						</GroupBox>
-					</StackLayout>
+					</Stack>
 				</v:PopupView>
 			</Expander>
-			<Grid
-				Rack.Columns="2* 3* 3* * * * *"
-				Rack.Rows="* *">
-				<Label
+			<Rack
+				Columns="2* 3* 3* * * * *"
+				Rows="* *">
+				<Title
 					Rack.Cell="C0"
-					Text="{Localizing Key=Magnitude}"
+					Text="{Localizing Magnitude}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C1"
-					Text="{Localizing Key=Frequency}"
+					Text="{Localizing Frequency}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C1"
 					Opacity="0.35"
 					HorizontalAlignment="Right"
-					Text="{Localizing Key=Hz}"
+					Text="{Localizing Hz}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C2"
-					Text="{Localizing Key=Phase}"
+					Text="{Localizing Phase}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C2"
 					Opacity="0.35"
 					HorizontalAlignment="Right"
-					Text="{Localizing Key=Rad}"
+					Text="{Localizing Rad}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C3"
-					Text="{Localizing Key=Basis}"
+					Text="{Localizing Basis}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C4"
-					Text="{Localizing Key=Mode}"
+					Text="{Localizing Mode}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C5"
-					Text="{Localizing Key=Sound}"
+					Text="{Localizing Sound}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C6"
-					Text="{Localizing Key=Action}"
+					Text="{Localizing Action}"
 					/>
-			</Grid>
+			</Rack>
 
 			<ItemsView
 				ItemsSource="{Binding Harmonics}"
@@ -519,81 +634,37 @@
 				/>
 			<Button
 				HorizontalAlignment="Center"
-				Content="{Localizing Key=Create, StringFormat='{}{0} ➕', ForceStringFormat=True}"
-				Command="{Context Key=Set.Create, TrackedPath=DataContext}"
+				Content="{Localizing Create, StringFormat='{}{0} ➕', ForceStringFormat=True}"
+				Command="{Context Set.Create, TrackedPath=DataContext}"
 				/>
-		</StackLayout>
-	</DataTemplate>
-
-	<DataTemplate
-		x:Key="HarmonicOutTemplate"
-		>
-		<Grid
-			Opacity="{Binding Harmonic.Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
-			Rack.Columns="32 64 64 64 *"
-			>
-			<Label
-				Rack.Cell="C0"
-				FontSize="{StaticResource MonospaceFontSize}"
-				FontFamily="{StaticResource MonospaceFontFamily}"
-				Text="{Binding NoteName}"
-				/>
-			<Label
-				Rack.Cell="C1"
-				FontSize="{StaticResource MonospaceFontSize}"
-				FontFamily="{StaticResource MonospaceFontFamily}"
-				ToolTip="{Binding EthalonFrequency}"
-				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
-			<Label
-				Rack.Cell="C2"
-				FontSize="{StaticResource MonospaceFontSize}"
-				FontFamily="{StaticResource MonospaceFontFamily}"
-				ToolTip="{Binding DeltaFrequency}"
-				Text="{Binding DeltaFrequency, StringFormat={}({0:+0.00;-0.00;0.00})}"
-				/>
-			<Label
-				Rack.Cell="C3"
-				FontSize="{StaticResource MonospaceFontSize}"
-				FontFamily="{StaticResource MonospaceFontFamily}"
-				ToolTip="{Binding Harmonic.Frequency}"
-				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
-			<Label
-				Rack.Cell="C4"
-				FontSize="{StaticResource MonospaceFontSize}"
-				FontFamily="{StaticResource MonospaceFontFamily}"
-				ToolTip="{Binding Harmonic.Magnitude}"
-				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
-		</Grid>
+		</Stack>
 	</DataTemplate>
 	
 	<DataTemplate
-		x:Key="RangeGridTemplate">
+		x:Key="RangeRackTemplate">
 
-		<Grid
-			Rack.Rows="^ ^ ^"
-			Rack.Columns="^ ^ ^ ^"
+		<Rack
+			Rows="^ ^ ^"
+			Columns="^ ^ ^ ^"
 			HorizontalAlignment="Center">
 
-			<Label
+			<Title
 				Rack.Cell="R0 C1"
-				Text="{Localizing Key=Upper}" />
-			<Label
+				Text="{Localizing Upper}" />
+			<Title
 				Rack.Cell="R0 C2"
-				Text="{Localizing Key=Lower}" />
-			<Label
+				Text="{Localizing Lower}" />
+			<Title
 				Rack.Cell="R0 C3"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Localizing Key=Length}" />
+				Text="{Localizing Length}" />
 
-			<Label
+			<Title
 				Rack.Cell="R2 C0"
-				Text="{Localizing Key=Threshold}" />
-			<Label
+				Text="{Localizing Threshold}" />
+			<Title
 				Rack.Cell="R1 C0"
-				Text="{Localizing Key=Limit}" />
+				Text="{Localizing Limit}" />
 
 			<Entry
 				Rack.Cell="R2 C1"
@@ -624,18 +695,18 @@
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				ToolTip="{Binding Limit.Length}"
 				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-		</Grid>
+		</Rack>
 
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="RangeTemplate">
-		<StackLayout
+		<Stack
 			HorizontalAlignment="Stretch">
 
 			<ContentPresenter
 				Content="{Binding}"
-				ContentTemplate="{StaticResource RangeGridTemplate}" />
+				ContentTemplate="{StaticResource RangeRackTemplate}" />
 
 			<c:RangeBar
 				Maximum="{Binding Limit.Upper, Mode=TwoWay}"
@@ -643,192 +714,254 @@
 				SelectionEnd="{Binding Threshold.Upper, Mode=TwoWay}"
 				SelectionStart="{Binding Threshold.Lower, Mode=TwoWay}" />
 
-			<StackLayout
+			<Stack
 				Orientation="Horizontal"
 				HorizontalAlignment="Center">
 
-				<Label
-					Text="{Localizing Key=Scale}" />
+				<Title
+					Text="{Localizing Scale}" />
 
 				<Picker
 					ItemsSource="{Binding VisualScaleFuncs}"
 					SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
+					ItemTemplate="{StaticResource DelegateToNameTemplate}"
+					/>
 
-			</StackLayout>
+			</Stack>
 
-		</StackLayout>
+		</Stack>
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="MusicOptionsTemplate">
-		<Grid
-			Rack.Columns="^ ^ ^ 24 ^ ^ 24 ^ ^">
-			<Label
-				Rack.Cell="C0"
+		x:Key="MusicOptionsTemplate"
+		>
+		<Rack
+			Rows="^ ^"
+			Columns="^ ^ ^ ^">
+			<Title
+				Rack.Cell="R0 C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
 				/>
-			<Picker
-				Rack.Cell="C1"
-				ItemsSource="{Binding PitchStandards}"
-				SelectedItem="{Binding ActivePitchStandard, Mode=TwoWay}"
-				/>
-			<Entry
-				Rack.Cell="C1"
-				Margin="4 4 22 4"
+			<Field
+				Rack.Cell="R0 C1"
 				Text="{Binding ActivePitchStandard, Mode=TwoWay}"
 				/>
-			<Label
-				Rack.Cell="C2"
+			<!--<Pick
+				Rack.Cell="R0 C2"
+				ItemsSource="{Binding PitchStandards}"
+				ActiveItem="{Binding ActivePitchStandard, Mode=TwoWay}"
+				/>-->
+			<Title
+				Rack.Cell="R0 C2"
 				Text="{Localizing Hz}"
 				/>
-			<Label
-				Rack.Cell="C4"
+			<Title
+				Rack.Cell="R1 C0"
 				Text="{Localizing Notation}"
 				/>
 			<Picker
-				Rack.Cell="C5"
+				Rack.Cell="R1 C1"
 				ItemsSource="{Binding Notations}"
-				SelectedValue="{Binding ActiveNotation, Mode=TwoWay}"
-				SelectedValuePath="Key"
-				DisplayMemberPath="Key"
+				SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
+				ItemTemplate="{StaticResource LocalizingTemplate}"
 				/>
-			<Label
+			<Title
+				Rack.Cell="R1 C2"
+				Text="{Binding ActiveNotation, Converter={StaticResource NotationConverter}}"
+				/>
+			<!--<Label
 				Rack.Cell="C7"
 				Text="{Localizing Peak}"
-				/>
-			<ContentView
+				/>-->
+			<!--<Item
 				Rack.Cell="C8"
-				DataContext="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
+				BindingContext="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
 				Template="{StaticResource VisibilityTemplate}"
+				/>-->
+		</Rack>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="GeometryTemplate"
+		>
+		<Rack
+			Rows="^ ^ ^"
+			Columns="^ ^ * *"
+			>
+			<Title
+				Rack.Cell="R0 C2"
+				Text="{Localizing Approximation}"
 				/>
-		</Grid>
+			<Title
+				Rack.Cell="R0 C2"
+
+				Text="{Localizing Pcs}"
+				/>
+
+			<Title
+				Rack.Cell="R1 C0"
+				Text="🌸"
+				/>
+			<Title
+				Rack.Cell="R1 C1"
+				Text="{Localizing Flower}"
+				/>
+			<Rack
+				Rack.Cell="R1 C2"
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Alignment.X="Center"
+					TextAlignment="Center"
+					Text="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-2.0"
+					Value="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+			<!--<Title
+				Rack.Cell="R1 C2"
+				Opacity="0.35"
+				Alignment.X="Till"
+				Alignment.Y="From"
+				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				/>-->
+
+			<Title
+				Rack.Cell="R2 C0"
+				Text="🌀"
+				/>
+			<Title
+				Rack.Cell="R2 C1"
+				Text="{Localizing Spiral}"
+				/>
+			<Rack
+				Rack.Cell="R2 C2"
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Alignment.X="Center"
+					TextAlignment="Center"
+					Text="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-2.0"
+					Value="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+			<!--<Title
+				Rack.Cell="R2 C2"
+				Opacity="0.35"
+				Alignment.X="Till"
+				Alignment.Y="From"
+				Text="{Binding SpiralApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				/>-->
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="FormattingTemplate">
-		<Grid
-			Rack.Rows="* *"
-			Rack.Columns="^ ^ ^"
+		<Rack
+			Rows="* *"
+			Columns="^ ^ ^"
 			>
-			<Label
+			<Title
 				Rack.Cell="R1 C0"
-				Text="{Localizing Key=Numeric}" />
-			<Label
+				Text="{Localizing Numeric}" />
+			<Title
 				Rack.Cell="R0 C1"
-				Text="{Localizing Key=Monitor}" />
+				Text="{Localizing Monitor}" />
 			<Picker
 				Rack.Cell="R1 C1"
 				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
 				SelectedItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
-				Text="{Localizing Key=Screen}" />
+				Text="{Localizing Screen}" />
 			<Picker
 				Rack.Cell="R1 C2"
 				HorizontalAlignment="Center"
 				ItemsSource="{Binding NumericFormats}"
 				SelectedItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="NamedColorTemplate">
-		<StackLayout
+		<Stack
 			Orientation="Horizontal">
-			<Frame
+			<Border
 				Style="{StaticResource FrameStyle}"
 				Background="{Binding Value}" />
-			<Label
+			<Title
 				Text="{Binding Value}" />
-			<Label
+			<Title
 				Text="{Binding Key}" />
-		</StackLayout>
+		</Stack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="BrushPreviewTemplate">
-		<Grid
+		<Rack
 			Width="26"
 			Height="26">
-			<Frame
+			<Border
 				Rack.Cell="C1"
 				CornerRadius="10"
 				Background="{StaticResource ChessBrush}" />
-			<Frame
+			<Border
 				Rack.Cell="C1"
 				CornerRadius="10"
 				Background="{Binding}" />
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 	<ControlTemplate
-		x:Key="ValuePickerTemplate">
-		<Grid
-			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
-			<Frame
-				Margin="2"
-				CornerRadius="10"
-				Background="{StaticResource LabelBrush}"
-				/>
-			<Expander
-				x:Name="TemplateRoot">
-				<Expander.Header>
-					<Entry
-						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
-				</Expander.Header>
-				<v:PopupView
-					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
-					<v:ValuePicker
-						Minimum="0"
-						Maximum="1"
-						Value="{Binding DataContext, Mode=TwoWay}"
-						/>
-				</v:PopupView>
-			</Expander>
-		</Grid>
-	</ControlTemplate>
-
-	<ControlTemplate
 		x:Key="ZIndexTemplate">
-		<Grid
+		<Rack
 			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
-			<Frame
+			<Border
 				Margin="2"
-				CornerRadius="10"
-				Background="{StaticResource LabelBrush}"
+
+				Background="{StaticResource TitleBrush}"
 				/>
 			<Entry
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToStringTwoWayConverter}}"
 				/>
-		</Grid>
+		</Rack>
 	</ControlTemplate>
 
 	<ControlTemplate
 		x:Key="RangePickerTemplate">
-		<Grid>
-			<Frame
+		<Rack>
+			<Border
 				Margin="2"
 				CornerRadius="10"
-				Background="{StaticResource LabelBrush}"
+				Background="{StaticResource TitleBrush}"
 				/>
 			<Expander
 				x:Name="TemplateRoot">
 				<Expander.Header>
-					<Grid
-						Rack.Rows="* *"
-						Rack.Columns="^ ^ ^"
+					<Rack
+						Rows="* *"
+						Columns="^ ^ ^"
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
 						<Entry
 							Rack.Cell="R0 C0"
 							ToolTip="{Binding Threshold.Upper}"
 							Text="{Binding Threshold.Upper, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
-						<Label
+						<Title
 							Rack.Cell="R0 C1"
 							Text="-"
 							/>
@@ -837,7 +970,7 @@
 							ToolTip="{Binding Threshold.Lower}"
 							Text="{Binding Threshold.Lower, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
-						<Label
+						<Title
 							Rack.Cell="R1 C1"
 							Text="="
 							/>
@@ -847,7 +980,7 @@
 							ToolTip="{Binding Threshold.Length}"
 							Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
-					</Grid>
+					</Rack>
 				</Expander.Header>
 				<v:PopupView
 					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
@@ -857,17 +990,17 @@
 						/>
 				</v:PopupView>
 			</Expander>
-		</Grid>
+		</Rack>
 	</ControlTemplate>
 
 	<ControlTemplate
 		x:Key="VisibilityTemplate">
-		<Grid>
-			<Frame
+		<Rack>
+			<Border
 				Rack.Cell="C0 CS2"
 				Margin="2"
 				CornerRadius="10"
-				Background="{StaticResource LabelBrush}"
+				Background="{StaticResource TitleBrush}"
 				/>
 			<Switch
 				Rack.Cell="R1 C1"
@@ -875,7 +1008,7 @@
 				HorizontalAlignment="Center"
 				IsToggled="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
 				/>
-		</Grid>
+		</Rack>
 	</ControlTemplate>
 
 	<ControlTemplate
@@ -883,20 +1016,20 @@
 		<Expander
 			x:Name="Root">
 			<Expander.Header>
-				<Grid>
-					<Frame
+				<Rack>
+					<Border
 						CornerRadius="10"
 						Background="LightGray" />
-					<Frame
+					<Border
 						CornerRadius="10"
 						Background="{StaticResource ChessBrush}" />
-					<Frame
+					<Border
 						CornerRadius="10"
 						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
 					<Entry
 						Margin="10 4"
 						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
-				</Grid>
+				</Rack>
 			</Expander.Header>
 			<v:PopupView
 				IsOpen="{Binding IsExpanded, ElementName=Root}">
@@ -908,13 +1041,13 @@
 
 	<ControlTemplate
 		x:Key="BrushPickerTemplate">
-		<Grid
-			Rack.Columns="^ *">
-			<Frame
+		<Rack
+			Columns="^ *">
+			<Border
 				Rack.Cell="C0 CS2"
 				Margin="2"
 				CornerRadius="10"
-				Background="{StaticResource LabelBrush}"
+				Background="{StaticResource TitleBrush}"
 				/>
 			<Expander
 				Rack.Cell="C0"
@@ -937,37 +1070,37 @@
 				SelectedValue="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
 				<Picker.ItemTemplate>
 					<DataTemplate>
-						<StackLayout
+						<Stack
 							Orientation="Horizontal">
-							<Frame
+							<Border
 								Background="{Binding ChessBrush}">
-								<Frame
+								<Border
 									Style="{StaticResource FrameStyle}"
 									Background="{Binding Value}" />
-							</Frame>
+							</Border>
 							<Entry
 								IsReadOnly="True"
 								Text="{Binding Key}" />
-						</StackLayout>
+						</Stack>
 					</DataTemplate>
 				</Picker.ItemTemplate>
 			</Picker>
-		</Grid>
+		</Rack>
 	</ControlTemplate>
 
 	<DataTemplate
 		x:Key="VisualizationProfileTemplate">
-		<Grid>
+		<Rack>
 			<ItemsView
 				Background="Transparent"
 				DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 				ItemsSource="{StaticResource VisualizationSet}"
 				/>
-			<Grid
+			<Rack
 				Background="#55FFFFFF"
 				Visibility="{StoreBinding StoreKey=vm:VisualizationManager, Path=ActiveProfile.IsBusy, Converter={StaticResource TrueToVisibleConverter}}"
 				>
-				<Label
+				<Title
 					Text="⏳"
 					Padding="16"
 					Margin="16 64"
@@ -976,38 +1109,38 @@
 					HorizontalAlignment="Center"
 					Foreground="{StaticResource SpectrogramBackgroundBrush}"
 					/>
-			</Grid>
-		</Grid>
+			</Rack>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="WindowMenuTemplate"
 		>
-		<Grid
-			Rack.Rows="^ ^ ^ ^ ^"
-			Rack.Columns="^ ^ ^"
-			DataContext="{Store Key=vm:AppViewModel}"
+		<Rack
+			Rows="^ ^ ^ ^ ^"
+			Columns="^ ^ ^"
+			DataContext="{Store vm:AppViewModel}"
 			>
-			<Label
+			<Title
 				Rack.Cell="R1 C1"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
-				ToolTip="{Localizing Key=Visible}"
+				ToolTip="{Localizing Visible}"
 				Text="🗔"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C2"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
-				ToolTip="{Localizing Key=Topmost}"
+				ToolTip="{Localizing Topmost}"
 				Text="📌"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R2 C0"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
-				ToolTip="{Localizing Key=Flower}"
+				ToolTip="{Localizing Flower}"
 				Text="🌸"
 				/>
 			<Switch
@@ -1020,11 +1153,11 @@
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R3 C0"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
-				ToolTip="{Localizing Key=Tape}"
+				ToolTip="{Localizing Tape}"
 				Text="📼"
 				/>
 			<Switch
@@ -1037,11 +1170,11 @@
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R4 C0"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
-				ToolTip="{Localizing Key=Monitor}"
+				ToolTip="{Localizing Monitor}"
 				Text="🎚️"
 				/>
 			<Switch
@@ -1053,64 +1186,64 @@
 				Opacity="0.5"
 				IsChecked="{Binding Topmost, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
 				/>
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 	<DataTemplate
 		x:Key="MenuTemplate"
 		>
-		<Grid
+		<Rack
 			Margin="-22 0 0 0"
-			Rack.Rows="^ ^ ^ ^ ^"
-			Rack.Columns="^ ^ ^"
-			DataContext="{Store Key=vm:AppViewModel}"
+			Rows="^ ^ ^ ^ ^"
+			Columns="^ ^ ^"
+			DataContext="{Store vm:AppViewModel}"
 			>
 			<GroupBox
 				Rack.Cell="R0 C0 CS0"
 				BorderThickness="0"
 				HorizontalAlignment="Right"
-				Background="{StaticResource LabelBrush}"
+				Background="{StaticResource TitleBrush}"
 				>
-				<Grid
+				<Rack
 					Margin="0 5 0 0"
-					Rack.Rows="* *"
-					Rack.Columns="* *"
+					Rows="* *"
+					Columns="* *"
 					>
 					<Button
 						Rack.Cell="R0 C0"
 						Opacity="0.5"
-						Command="{Context Key=LoadActiveFrame, StoreKey=vm:AppViewModel}"
-						ToolTip="{Localizing Key=Load}"
+						Command="{Context LoadActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Load}"
 						Content="📂"
 						/>
 					<Button
 						Rack.Cell="R0 C1"
 						Opacity="0.5"
-						Command="{Context Key=SaveActiveFrame, StoreKey=vm:AppViewModel}"
-						ToolTip="{Localizing Key=Save}"
+						Command="{Context SaveActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Save}"
 						Content="💾"
 						/>
 					<Switch
 						Rack.Cell="R1 C0"
 						IsChecked="{StoreBinding Path=IsPaused, StoreKey=vm:ProcessingManager, Mode=TwoWay}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
 						Foreground="{StaticResource SpectrogramBackgroundBrush}"
-						ToolTip="{Localizing Key=Frame}"
+						ToolTip="{Localizing Frame}"
 						FontSize="20"
 						Text="📷"
 						/>
-				</Grid>
+				</Rack>
 			</GroupBox>
 
 			<GroupBox
 				Rack.Cell="R1 C0 RS0 CS0"
 				BorderThickness="0"
-				Background="{StaticResource LabelBrush}"
+				Background="{StaticResource TitleBrush}"
 				ContentTemplate="{StaticResource WindowMenuTemplate}"
 				/>
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 </ResourceDictionary>

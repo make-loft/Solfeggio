@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿#if NETSTANDARD
+using Xamarin.Forms;
+#else
+using System.Windows;
+#endif
 
 namespace Solfeggio.Converters
 {

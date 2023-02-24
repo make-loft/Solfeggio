@@ -72,8 +72,35 @@
     <Compile Include="..\Solfeggio\AppPalette.cs">
       <Link>AppPalette.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\Converters\ByteToHexStringTwoWayConverter.cs">
+      <Link>Converters\ByteToHexStringTwoWayConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\ColorToSolidBrushConverter.cs">
+      <Link>Converters\ColorToSolidBrushConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\ColorToStringTwoWayConverter.cs">
+      <Link>Converters\ColorToStringTwoWayConverter.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Converters\DelegateToNameConverter.cs">
       <Link>Converters\DelegateToNameConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\DoubleToStringTwoWayConverter.cs">
+      <Link>Converters\DoubleToStringTwoWayConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\Int32ToStringTwoWayConverter.cs">
+      <Link>Converters\Int32ToStringTwoWayConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\MathConverter.cs">
+      <Link>Converters\MathConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\PianoKeyToBrushConverter.cs">
+      <Link>Converters\PianoKeyToBrushConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\TextLengthToFontSizeConverter.cs">
+      <Link>Converters\TextLengthToFontSizeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\ThicknessToDoubleTwoWayConverter.cs">
+      <Link>Converters\ThicknessToDoubleTwoWayConverter.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Editions.cs">
       <Link>Editions.cs</Link>
@@ -107,6 +134,10 @@
     </Compile>
     <Compile Include="..\Solfeggio\Models\VisualProfile.cs">
       <Link>Models\VisualProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Palettes\Converters.xaml.cs">
+      <Link>Palettes\Converters.xaml.cs</Link>
+      <DependentUpon>Converters.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\Bandwidth.cs">
       <Link>Presenters\Bandwidth.cs</Link>
@@ -156,14 +187,27 @@
     <Compile Include="..\Solfeggio\ViewModels\AManager.cs">
       <Link>ViewModels\AManager.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\ViewModels\AppViewModel.cs">
+      <Link>ViewModels\AppViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\ViewModels\FlowerViewModel.cs">
+      <Link>ViewModels\FlowerViewModel.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\ViewModels\HarmonicManager.cs">
       <Link>ViewModels\HarmonicManager.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\ViewModels\ProcessingManager.cs">
       <Link>ViewModels\ProcessingManager.cs</Link>
     </Compile>
+    <Compile Include="..\Solfeggio\ViewModels\TapeViewModel.cs">
+      <Link>ViewModels\TapeViewModel.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\ViewModels\VisualizationManager.cs">
       <Link>ViewModels\VisualizationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Views\OptionsView.xaml.cs">
+      <DependentUpon>OptionsView.xaml</DependentUpon>
+      <Link>Views\OptionsView.xaml.cs</Link>
     </Compile>
     <Compile Include="Api\MmResult.cs" />
     <Compile Include="Api\MmTime.cs" />
@@ -179,21 +223,13 @@
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\WindowView.cs" />
-    <Compile Include="Converters\ByteToHexStringTwoWayConverter.cs" />
-    <Compile Include="Converters\ColorToSolidBrushConverter.cs" />
-    <Compile Include="Converters\ColorToStringTwoWayConverter.cs" />
-    <Compile Include="Converters\ThicknessToDoubleTwoWayConverter.cs" />
-    <Compile Include="Converters\Int32ToStringTwoWayConverter.cs" />
-    <Compile Include="Converters\DoubleToStringTwoWayConverter.cs" />
-    <Compile Include="Converters\MathConverter.cs" />
-    <Compile Include="Converters\PianoKeyToBrushConverter.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
-    <Compile Include="ViewModels\FlowerViewModel.cs" />
-    <Compile Include="ViewModels\TapeViewModel.cs" />
+    <Compile Include="Palettes\Sets.xaml.cs">
+      <DependentUpon>Sets.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EncoderView.xaml.cs">
       <DependentUpon>EncoderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OptionsView.xaml.cs" />
     <Compile Include="Views\TapeView.xaml.cs">
       <DependentUpon>TapeView.xaml</DependentUpon>
     </Compile>
@@ -213,7 +249,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Assemblies.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="Views\BrushPicker.xaml.cs">
       <DependentUpon>BrushPicker.xaml</DependentUpon>
     </Compile>
@@ -229,6 +264,15 @@
     <Compile Include="Views\ValuePicker.xaml.cs">
       <DependentUpon>ValuePicker.xaml</DependentUpon>
     </Compile>
+    <Page Include="..\Solfeggio\Palettes\Converters.xaml">
+      <Link>Palettes\Converters.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="..\Solfeggio\Views\OptionsView.xaml">
+      <Link>Views\OptionsView.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AppView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -245,11 +289,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Palettes\Sets.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\EncoderView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\OptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TapeView.xaml">
@@ -272,17 +317,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Palettes\Converters.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Palettes\Sets.Visualization.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Palettes\Sets.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Palettes\Styles.xaml">
       <SubType>Designer</SubType>
@@ -352,10 +389,6 @@
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
       <Name>Rainbow.Standard1.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Xamarin.Synonyms\Xamarin.Synonyms.csproj">
-      <Project>{8faec57e-0ea0-4ab5-9ae6-b0e639aed5a4}</Project>
-      <Name>Xamarin.Synonyms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

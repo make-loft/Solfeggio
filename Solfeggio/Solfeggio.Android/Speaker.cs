@@ -6,13 +6,13 @@ using Ace;
 
 using Android.Media;
 
-using Solfeggio.Api;
+using Solfeggio.Extensions;
 
 namespace Solfeggio.Droid
 {
 	public class Speaker : AudioDevice<AudioTrack>
 	{
-		public static readonly Speaker Default = new Speaker();
+		public static readonly Speaker Default = new();
 
 		public bool IsReady => Device.Is() && Device.PlayState.Is(PlayState.Playing);
 

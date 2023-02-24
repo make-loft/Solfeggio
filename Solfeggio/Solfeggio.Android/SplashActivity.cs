@@ -41,6 +41,9 @@ namespace Solfeggio.Droid
 			AppDomain.CurrentDomain.UnhandledException += (o, args) => ProcessUnhandledException(args.ExceptionObject as Exception);
 			async void ProcessUnhandledException(Exception exception)
 			{
+				if (exception.IsNot())
+					return;
+
 				for (var e = exception; e.Is(); e = e.InnerException)
 					YandexMetrica.ReportUnhandledException(e);
 

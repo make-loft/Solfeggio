@@ -2,18 +2,24 @@
 using Ace.Markup.Patterns;
 
 using System.Globalization;
-using Xamarin.Essentials;
 
 namespace Solfeggio.Converters
 {
 	class TextLengthToFontSizeConverter : AValueConverter.Reflected
 	{
+#if NETSTANDARD
 		public double BasicFontSize => App.Current.Resources.GetValue("BasicFontSize", 14.2);
 		public double BasicFontScale => App.Current.Resources.GetValue("BasicFontScale", 1.0);
 		public double DefaultLengthStretchFactor { get; set; } = 0.016;
 		public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
-		private double LengthSqueezeFactor { get; } = DeviceDisplay.MainDisplayInfo.Density;
-
+		private double LengthSqueezeFactor { get; } = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
+#else
+		public double BasicFontSize => 14.2;
+		public double BasicFontScale => 1.0;
+		public double DefaultLengthStretchFactor { get; set; } = 0.016;
+		public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
+		private double LengthSqueezeFactor { get; } =1d;
+#endif
 		public override object Convert(object value, object parameter)
 		{
 			var text = value.As("");

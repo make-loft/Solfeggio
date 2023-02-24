@@ -121,12 +121,8 @@ namespace Solfeggio.Models
 				EvokeFramePropertiesChanged();
 			};
 
-			this[() => InputBoost].Changed += (o, e) =>
-				inputProcessor.To(out var p)?.With(p.Boost = InputBoost);
 			this[() => InputLevel].Changed += (o, e) =>
 				inputProcessor.To(out var p)?.With(p.Level = InputLevel);
-			this[() => OutputBoost].Changed += (o, e) =>
-				outputProcessor.To(out var p)?.With(p.Boost = OutputBoost);
 			this[() => OutputLevel].Changed += (o, e) =>
 				outputProcessor.To(out var p)?.With(p.Level = OutputLevel);
 		}
@@ -161,7 +157,6 @@ namespace Solfeggio.Models
 			{
 				inputProcessor = activeInputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount);
 				inputProcessor.DataAvailable += OnInputDataAvailable;
-				inputProcessor.Boost = InputBoost;
 				inputProcessor.Level = InputLevel;
 				inputProcessor.Wake();
 			}
@@ -170,7 +165,6 @@ namespace Solfeggio.Models
 			if (activeOutputDevice.Is())
 			{
 				outputProcessor = activeOutputDevice.CreateProcessor(waveFormat, SampleSize, BuffersCount, inputProcessor);
-				outputProcessor.Boost = OutputBoost;
 				outputProcessor.Level = OutputLevel;
 				outputProcessor.Wake();
 			}
@@ -224,20 +218,6 @@ namespace Solfeggio.Models
 			}
 
 			PropertyChanged -= OnPropertyChanged;
-		}
-
-		[DataMember]
-		public float InputBoost
-		{
-			get => Get(() => InputBoost, 1.0f);
-			set => Set(() => InputBoost, value);
-		}
-
-		[DataMember]
-		public float OutputBoost
-		{
-			get => Get(() => OutputBoost, 1.0f);
-			set => Set(() => OutputBoost, value);
 		}
 
 		[DataMember]

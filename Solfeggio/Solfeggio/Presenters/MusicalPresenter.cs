@@ -39,7 +39,7 @@ namespace Solfeggio.Presenters
 		public void Expose()
 		{
 #if !NETSTANDARD
-			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Xamarin.Forms.Entry.GlobalTextBindingRefresh();
+			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Ace.Controls.Entry.GlobalTextBindingRefresh();
 #endif
 			Format[() => Format.ScreenNumericFormat].Changed += (o, e) =>
 			{
@@ -52,7 +52,7 @@ namespace Solfeggio.Presenters
 		}
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
-			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, int zIndex = 0, double vLabelOffset = 0d)
+			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, int zIndex = 0, double vTitleOffset = 0d)
 		{
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
@@ -63,23 +63,23 @@ namespace Solfeggio.Presenters
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
-			var skipLabels = textBrush.IsNot();
+			var skipTitles = textBrush.IsNot();
 
 			foreach (var activeFrequency in markers)
 			{
-				var skipLabel = skip > 0 && i++ % skip > 0;
+				var skipTitle = skip > 0 && i++ % skip > 0;
 				if (activeFrequency < lowerFrequency) continue;
 				if (activeFrequency > upperFrequency) break;
 
 				var hVisualOffset = hScaleTransformer.GetVisualOffset(activeFrequency);
 				var offset = hVisualOffset.Is(double.NaN) ? 0d : hVisualOffset;
 
-				var line = CreateVerticalLine(offset, height, skipLabel ? opacityLineBrush : lineBrush);
+				var line = CreateVerticalLine(offset, height, skipTitle ? opacityLineBrush : lineBrush);
 				Panel.SetZIndex(line, zIndex);
 
 				items.Add(line);
 
-				if (skipLabels || skipLabel) continue;
+				if (skipTitles || skipTitle) continue;
 
 				var panel = new StackPanel();
 				Panel.SetZIndex(panel, zIndex);
@@ -93,12 +93,12 @@ namespace Solfeggio.Presenters
 				});
 
 				items.Add(panel);
-#if XAMARIN
+#if NETSTANDARD
 				panel.Measure();
-				panel.Margin = new(hVisualOffset - panel.WidthRequest / 2d, height * vLabelOffset, 0d, 0d);
+				panel.Margin = new(hVisualOffset - panel.WidthRequest / 2d, height * vTitleOffset, 0d, 0d);
 #else
 				panel.UpdateLayout();
-				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vLabelOffset, 0d, 0d);
+				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vTitleOffset, 0d, 0d);
 #endif
 			}
 		}
@@ -279,7 +279,7 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public IEnumerable<Grid> DrawPeakLabels(IList<PianoKey> keys, double width, double height) => Draw
+		public IEnumerable<Grid> DrawPeakTitles(IList<PianoKey> keys, double width, double height) => Draw
 		(
 			keys, default,
 			(in double x, in double y,

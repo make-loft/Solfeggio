@@ -1,5 +1,7 @@
 using Ace;
+using Ace.Zest.Dictionaries;
 
+using Solfeggio.Palettes;
 using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 
@@ -48,6 +50,17 @@ namespace Solfeggio
 			Store.Get<MusicalPresenter>();
 
 			InitializeComponent();
+
+			Resources.MergedDictionaries
+				.Use(r => r.Add(new AppConverters()))
+				.Use(r => r.Add(new Values()))
+				.Use(r => r.Add(new Brushes()))
+				.Use(r => r.Add(new Palettes.Converters()))
+				.Use(r => r.Add(new Sets()))
+				.Use(r => r.Add(new Templates()))
+				.Use(r => r.Add(new Styles()))
+				;
+
 			MainPage = new Views.SolfeggioView();
 		}
 

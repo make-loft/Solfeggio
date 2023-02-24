@@ -296,7 +296,7 @@ namespace Solfeggio.Views
 
 				var vC = resources["Visibility.Peak"];
 				if (vC.Is(Visibility.Visible) && musicalPresenter.VisualProfile.PeakProfiles.Any(p => p.Value.IsVisible))
-					musicalPresenter.DrawPeakLabels(pianoKeys, width, height)
+					musicalPresenter.DrawPeakTitles(pianoKeys, width, height)
 					.ForEach(p =>
 					{
 						MagnitudeCanvas.Children.Add(p);
@@ -317,7 +317,7 @@ namespace Solfeggio.Views
 				if (App.Current.MainWindow.IsNot())
 					return;
 
-				appViewModel.Harmonics = pianoKeys;
+				appViewModel.Harmonics.Value = pianoKeys;
 
 				if (processingManager.IsPaused)
 					return;

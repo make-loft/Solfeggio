@@ -1,12 +1,12 @@
-﻿<Pivot
+﻿<TabControl
 	x:Class="Solfeggio.Views.BrushPicker"
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:views="clr-namespace:Solfeggio.Views"
 	DataContext="{Binding Value, ElementName=This, Mode=TwoWay}"
 	x:Name="This">
 
-	<Pivot.Resources>
+	<TabControl.Resources>
 
 		<Converter
 			x:Key="SmartSetConverter"
@@ -30,9 +30,9 @@
 
 		<DataTemplate
 			x:Key="GradientOffsetTemplate">
-			<Grid
+			<Rack
 				Margin="4 0 0 0"
-				Rack.Columns="^ * ^">
+				Columns="^ * ^">
 				<Button
 					Rack.Cell="C0"
 					Style="{StaticResource LiteButton}"
@@ -46,92 +46,92 @@
 					Rack.Cell="C2"
 					DataContext="{Binding Offset, Mode=TwoWay}"
 					Template="{StaticResource ValueTemplate}" />
-			</Grid>
+			</Rack>
 		</DataTemplate>
 
 		<DataTemplate
 			x:Key="StopsContentTemplate">
-			<StackLayout>
-				<Grid
+			<Stack>
+				<Rack
 					Margin="8 0"
-					Rack.Columns="24 * ^">
-					<Label
+					Columns="24 * ^">
+					<Title
 						Rack.Cell="C1"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=Color}" />
-					<Label
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing Color}" />
+					<Title
 						Rack.Cell="C2"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=Offset}" />
-				</Grid>
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing Offset}" />
+				</Rack>
 				<ItemsView
 					ItemsSource="{Binding GradientStops, Converter={StaticResource SmartSetConverter}}"
 					ItemTemplate="{StaticResource GradientOffsetTemplate}" />
-			</StackLayout>
+			</Stack>
 		</DataTemplate>
 
 		<DataTemplate
 			x:Key="StopsHeaderTemplate">
-			<StackLayout
+			<Stack
 				Orientation="Horizontal">
 				<Button
 					Style="{StaticResource LiteButton}"
 					Click="AddGradientStop_Button_Click"
 					Content="➕" />
-				<Label
-					Text="{Localizing Key=Stops}" />
-			</StackLayout>
+				<Title
+					Text="{Localizing Stops}" />
+			</Stack>
 		</DataTemplate>
 		
-	</Pivot.Resources>
+	</TabControl.Resources>
 
-	<PivotItem
+	<TabItem
 		Header="{Localizing Solid}"
 		DataContext="{Binding UnfrozenValue, ElementName=This}">
 		<GroupBox
-			Header="{Localizing Key=Color}">
+			Header="{Localizing Color}">
 			<ContentView
 				Rack.Cell="R2 C2"
 				DataContext="{Binding Color, Mode=TwoWay}"
 				Template="{StaticResource ColorValueTemplate}" />
 		</GroupBox>
-	</PivotItem>
+	</TabItem>
 
-	<PivotItem
+	<TabItem
 		Header="{Localizing Linear}"
 		DataContext="{Binding UnfrozenValue, ElementName=This}">
-		<StackLayout>
+		<Stack>
 			<GroupBox
-				Header="{Localizing Key=Gradient}">
-				<Grid
-					Rack.Rows="^ ^ ^"
-					Rack.Columns="* ^ ^">
+				Header="{Localizing Gradient}">
+				<Rack
+					Rows="^ ^ ^"
+					Columns="* ^ ^">
 
 					<Frame
 						Rack.Cell="R1 C0 RS2"
-						CornerRadius="5"
+
 						Background="{StaticResource ChessBrush}" />
 					<Frame
 						Rack.Cell="R1 C0 RS2"
-						CornerRadius="5"
+
 						Background="{Binding}" />
 
-					<Label
+					<Title
 						Rack.Cell="R1 C0"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=From}" />
-					<Label
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing From}" />
+					<Title
 						Rack.Cell="R2 C0"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=Till}" />
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing Till}" />
 
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
-						Style="{StaticResource CenteredLabel}"
+						Style="{StaticResource CenteredTitle}"
 						Text="X" />
-					<Label
+					<Title
 						Rack.Cell="R0 C2"
-						Style="{StaticResource CenteredLabel}"
+						Style="{StaticResource CenteredTitle}"
 						Text="Y" />
 
 					<ContentView
@@ -151,50 +151,50 @@
 						Rack.Cell="R2 C2"
 						DataContext="{Binding EndPoint.Y, Mode=TwoWay}"
 						Template="{StaticResource ValueTemplate}" />
-				</Grid>
+				</Rack>
 			</GroupBox>
 			<GroupBox
 				HeaderTemplate="{StaticResource StopsHeaderTemplate}"
 				ContentTemplate="{StaticResource StopsContentTemplate}"
 				Content="{Binding}" />
-		</StackLayout>
-	</PivotItem>
+		</Stack>
+	</TabItem>
 
-	<PivotItem
+	<TabItem
 		Header="{Localizing Radial}"
 		DataContext="{Binding UnfrozenValue, ElementName=This}">
-		<StackLayout>
+		<Stack>
 			<GroupBox
-				Header="{Localizing Key=Gradient}">
-				<Grid
-					Rack.Rows="^ ^ ^"
-					Rack.Columns="* ^ ^">
+				Header="{Localizing Gradient}">
+				<Rack
+					Rows="^ ^ ^"
+					Columns="* ^ ^">
 
 					<Frame
 						Rack.Cell="R1 C0 RS2"
-						CornerRadius="5"
+
 						Background="{StaticResource ChessBrush}" />
 					<Frame
 						Rack.Cell="R1 C0 RS2"
-						CornerRadius="5"
+
 						Background="{Binding}" />
 
-					<Label
+					<Title
 						Rack.Cell="R1 C0"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=Center}" />
-					<Label
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing Center}" />
+					<Title
 						Rack.Cell="R2 C0"
-						Style="{StaticResource CenteredLabel}"
-						Text="{Localizing Key=Radius}" />
+						Style="{StaticResource CenteredTitle}"
+						Text="{Localizing Radius}" />
 
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
-						Style="{StaticResource CenteredLabel}"
+						Style="{StaticResource CenteredTitle}"
 						Text="X" />
-					<Label
+					<Title
 						Rack.Cell="R0 C2"
-						Style="{StaticResource CenteredLabel}"
+						Style="{StaticResource CenteredTitle}"
 						Text="Y" />
 
 					<ContentView
@@ -214,13 +214,13 @@
 						Rack.Cell="R2 C2"
 						DataContext="{Binding RadiusY, Mode=TwoWay}"
 						Template="{StaticResource ValueTemplate}" />
-				</Grid>
+				</Rack>
 			</GroupBox>
 			<GroupBox
 				HeaderTemplate="{StaticResource StopsHeaderTemplate}"
 				ContentTemplate="{StaticResource StopsContentTemplate}"
 				Content="{Binding}" />
-		</StackLayout>
-	</PivotItem>
+		</Stack>
+	</TabItem>
 
-</Pivot>
+</TabControl>

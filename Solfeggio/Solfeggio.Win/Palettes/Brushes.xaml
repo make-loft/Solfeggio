@@ -4,7 +4,7 @@
 	>
 
 	<SolidColorBrush
-		x:Key="LabelBrush"
+		x:Key="TitleBrush"
 		Color="#88FFFFFF"
 		/>
 

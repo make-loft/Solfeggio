@@ -1,35 +1,35 @@
 ﻿<ResourceDictionary
     x:Class="Solfeggio.Palettes.Templates"
-    xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
 	>
 
-	<DataTemplate
+	<!--<DataTemplate
 		x:Key="NoteNameToFrequencyTemplate"
 		>
-		<Grid
-			Rack.Columns="* *"
+		<Rack
+			Columns="* *"
 			>
-			<Frame
+			<Border
 				Rack.Cell="C0 CS2"
 				Opacity="0.61"
 				CornerRadius="4"
 				Background="{Binding Converter={StaticResource PianoKeyToBrushConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C0"
 				FontFamily="Consolas"
 				Text="{Binding NoteName}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C1"
 				FontFamily="Consolas"
 				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-		</Grid>
-	</DataTemplate>
+		</Rack>
+	</DataTemplate>-->
 
 	<DataTemplate
 		x:Key="HarmonicTemplate"
@@ -40,8 +40,6 @@
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
 			>
 			<Rack.Resources>
-				<Color x:Key="RegularColor">White</Color>
-
 				<LinearGradientBrush
 					x:Key="ActiveHarmonicBrush"
 					StartPoint="0,0"
@@ -69,8 +67,8 @@
 					ByDefault="{StaticResource HarmonicBrush}"
 					/>
 			</Rack.Resources>
-			
-			<Frame
+
+			<Border
 				Rack.Cell="R0 C0 RS2 CS6"
 				Background="{Binding IsEnabled, Converter={StaticResource IsActiveToBrushConverter}}"
 				CornerRadius="5"
@@ -91,14 +89,14 @@
 				Rack.Cell="C2"
 				Columns="* *"
 				>
-				<Label
+				<Title
 					Rack.Cell="C0"
 					Margin="2"
 					FontSize="12"
 					Alignment.Y="From"
 					Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C0"
 					Margin="2"
 					FontSize="12"
@@ -160,114 +158,57 @@
 	<DataTemplate
 		x:Key="HarmonicProfileTemplate"
 		>
-		<StackLayout>
-			<!--<ContextView
-				Template="{StaticResource TitleProfileTemplate}"
-				/>-->
-			<!--<Expander
-				Margin="0 -32 0 0"
-				x:Name="Expander"
-				HorizontalOptions="End"
+		<Stack>
+			<Rack
+				Columns="2* 3* 2* * * *"
 				>
-				<Expander.Header>
-					<Label
-						Text="{Localizing Each}"
-						/>
-				</Expander.Header>
-				--><!--<v:PopupView
-					IsOpen="{Binding ElementName=Expander, Path=IsExpanded}">
-					<StackLayout
-						Orientation="Horizontal"
-						>
-						<GroupBox
-							BorderThickness="0"
-							Background="{StaticResource LabelBrush}"
-							Header="{Localizing Mode}"
-							>
-							<StackLayout
-								Orientation="Vertical"
-								>
-								<Button
-									Command="{Context Loop, TrackedPath=DataContext}"
-									Content="{Localizing Loop}"
-									/>
-								<Button
-									Command="{Context Flow, TrackedPath=DataContext}"
-									Content="{Localizing Flow}"
-									/>
-							</StackLayout>
-						</GroupBox>
-						<GroupBox
-							BorderThickness="0"
-							Background="{StaticResource LabelBrush}"
-							Header="{Localizing Sound}"
-							>
-							<StackLayout
-								Orientation="Vertical"
-								>
-								<Button
-									Command="{Context Mute, TrackedPath=DataContext}"
-									Text="{Localizing Mute}"
-									/>
-								<Button
-									Command="{Context Loud, TrackedPath=DataContext}"
-									Text="{Localizing Loud}"
-									/>
-							</StackLayout>
-						</GroupBox>
-					</StackLayout>
-				</v:PopupView>--><!--
-			</Expander>-->
-			<Grid
-				Rack.Columns="2* 3* 2* * * *"
-				>
-				<Label
+				<Title
 					Rack.Cell="C0"
 					Text="{Localizing Magnitude}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C1"
 					Text="{Localizing Frequency}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C1"
-					Style="{StaticResource UnitLabelStyle}"
+					Style="{StaticResource UnitTitleStyle}"
 					Text="{Localizing Hz}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C2"
 					Text="{Localizing Phase}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C2"
-					Style="{StaticResource UnitLabelStyle}"
+					Style="{StaticResource UnitTitleStyle}"
 					Text="{Localizing Rad}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C3"
 					Text="{Localizing Basis}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C4"
 					Text="{Localizing Sound}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="C5"
 					Opacity="0.35"
 					Text="{Localizing Menu}"
 					/>
-			</Grid>
+			</Rack>
 
-			<StackLayout
-				BindableLayout.ItemsSource="{Binding Harmonics}"
-				BindableLayout.ItemTemplate="{StaticResource HarmonicTemplate}"
+			<Stack
+				Children.ItemsSource="{Binding Harmonics}"
+				Children.ItemTemplate="{StaticResource HarmonicTemplate}"
 				/>
 			<Button
 				Alignment.X="Center"
 				Text="{Localizing Create, StringFormat='{}{0} ➕'}"
 				Command="{Context Key=Set.Create, TrackedPath=BindingContext}"
 				/>
-		</StackLayout>
+		</Stack>
 	</DataTemplate>
 
 	<ControlTemplate
@@ -276,23 +217,23 @@
 		<Rack
 			Rack.Columns="48 96 96 96 *"
 			>
-			<Label
+			<Title
 				Rack.Cell="C0"
 				Text="{Localizing Note}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C1"
 				Text="{Localizing Ethalon}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C2"
 				Text="{Localizing Offset}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C3"
 				Text="{Localizing Frequency}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C4"
 				Text="{Localizing Magnitude}"
 				/>
@@ -306,32 +247,32 @@
 			Opacity="{Binding RelativeOpacity}"
 			Rack.Columns="48 96 96 96 *"
 			>
-			<Label
+			<Title
 				Rack.Cell="C0"
 				FontAttributes="Bold"
 				Text="{Binding NoteName}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C1"
 				Ext.ToolTip="{Binding EthalonFrequency}"
 				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Frame
+			<Border
 				Rack.Cell="C2"
 				CornerRadius="10"
 				BackgroundColor="{Binding Converter={StaticResource HarmonicOffsetToColorConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C2"
 				Ext.ToolTip="{Binding OffsetFrequency}"
 				Text="{Binding OffsetFrequency, StringFormat='({0:+0.00;-0.00;0.00})'}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C3"
 				Ext.ToolTip="{Binding Harmonic.Frequency}"
 				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="C4"
 				Ext.ToolTip="{Binding Harmonic.Magnitude}"
 				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
@@ -345,7 +286,7 @@
 		<Stack
 			Orientation="Horizontal"
 			>
-			<Label
+			<Title
 				Text="{Binding Title}"
 				/>
 			<!--<Button
@@ -362,24 +303,24 @@
 		<Stack
 			Style="{StaticResource TitlePanelStyle}"
 			>
-			<Label
+			<Title
 				Text="{Localizing Profile}"
 				/>
 			<Field
-				Size.X="128"
+				Length.X="128"
 				BindingContext="{Binding ActiveProfile}"
 				Text="{Binding Title, Mode=TwoWay}"
 				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				/>
 			<Button
-				Size.X="48"
+				Length.X="48"
 				Text="➕"
 				Command="{Context Key=Set.Create}"
 				/>
 			<Button
-				Size.X="48"
+				Length.X="48"
 				Text="➖"
-				CommandParameter="{Binding Path=ActiveProfile}"
+				CommandParameter="{Binding ActiveProfile}"
 				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
 				/>
 		</Stack>
@@ -391,7 +332,7 @@
 		<Rack
 			Rows="^ ^"
 			Columns="^ ^ ^ ^">
-			<Label
+			<Title
 				Rack.Cell="R0 C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
 				/>
@@ -405,11 +346,11 @@
 				ItemsSource="{Binding PitchStandards}"
 				ActiveItem="{Binding ActivePitchStandard, Mode=TwoWay}"
 				/>-->
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
 				Text="{Localizing Hz}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C0"
 				Text="{Localizing Notation}"
 				/>
@@ -419,11 +360,11 @@
 				SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
 				ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C2"
 				Text="{Binding ActiveNotation, Converter={StaticResource NotationConverter}}"
 				/>
-			<!--<Label
+			<!--<Title
 				Rack.Cell="C7"
 				Text="{Localizing Peak}"
 				/>-->
@@ -442,21 +383,21 @@
 			Rows="^ ^ ^"
 			Columns="^ ^ * *"
 			>
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
 				Text="{Localizing Approximation}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
-				Style="{StaticResource UnitLabelStyle}"
+				Style="{StaticResource UnitTitleStyle}"
 				Text="{Localizing Pcs}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R1 C0"
 				Text="🌸"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C1"
 				Text="{Localizing Flower}"
 				/>
@@ -478,7 +419,7 @@
 					Value="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
-			<Label
+			<Title
 				Rack.Cell="R1 C2"
 				Opacity="0.35"
 				Alignment.X="Till"
@@ -486,11 +427,11 @@
 				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R2 C0"
 				Text="🌀"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R2 C1"
 				Text="{Localizing Spiral}"
 				/>
@@ -512,7 +453,7 @@
 					Value="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
-			<Label
+			<Title
 				Rack.Cell="R2 C2"
 				Opacity="0.35"
 				Alignment.X="Till"
@@ -529,16 +470,16 @@
 			Rows="^ ^ ^"
 			Columns="^ ^ * *"
 			>
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
 				Text="{Localizing Numeric}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R1 C0"
 				Text="🎛️"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C1"
 				Text="{Localizing Monitor}"
 				/>
@@ -549,11 +490,11 @@
 				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R2 C0"
 				Text="🎹"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R2 C1"
 				Text="{Localizing Screen}"
 				/>
@@ -574,30 +515,30 @@
 			Columns="^ ^ ^ ^"
 			>
 
-			<Label
+			<Title
 				Rack.Cell="R0 C0"
-				Style="{StaticResource UnitLabelStyle}"
+				Style="{StaticResource UnitTitleStyle}"
 				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R0 C1"
 				Text="{Localizing Upper}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R0 C2"
 				Text="{Localizing Lower}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R0 C3"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Text="{Localizing Length}"
 				/>
 
-			<Label
+			<Title
 				Rack.Cell="R2 C0"
 				Text="{Localizing Threshold}"
 				/>
-			<Label
+			<Title
 				Rack.Cell="R1 C0"
 				Text="{Localizing Limit}"
 				/>
@@ -654,7 +595,7 @@
 				Orientation="Horizontal"
 				Alignment.X="Till"
 				>
-				<Label
+				<Title
 					Text="{Localizing Scale}"
 					/>
 				<Picker
@@ -666,7 +607,7 @@
 		</Stack>
 	</DataTemplate>
 
-	<ControlTemplate
+	<!--<ControlTemplate
 		x:Key="ValuePickerTemplate"
 		>
 		<Rack
@@ -685,8 +626,8 @@
 				Value="{TemplateBinding Item, Mode=TwoWay}"
 				/>
 		</Rack>
-	</ControlTemplate>
-	
+	</ControlTemplate>-->
+
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
@@ -697,28 +638,28 @@
 				Alignment.X="Stretch"
 				Alignment.Y="Center"
 				>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
 					Text="{Localizing Device}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
 					Text="{Localizing Level}"
 					/>
-				<!--<Label
+				<!--<Title
 					Rack.Cell="R0 C3"
 					Text="{Localizing Boost}"
 					/>-->
-				<!--<Label
+				<!--<Title
 					Rack.Cell="R0 C3"
 					Text="{Localizing Buffers}"
 					/>-->
-				<!--<Label
+				<!--<Title
 					Rack.Cell="R1 C4"
 					Text="{Localizing Pcs}"
 					/>-->
 
-				<Label
+				<Title
 					Rack.Cell="R1 C0"
 					Text="{Localizing Input}"
 					/>
@@ -730,7 +671,7 @@
 					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 					/>
 
-				<Label
+				<Title
 					Rack.Cell="R2 C0"
 					Text="{Localizing Output}"
 					/>
@@ -760,7 +701,7 @@
 						Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
 				</Rack>
-				
+
 				<Rack
 					Rack.Cell="R2 C2"
 					Rows="^ *"
@@ -779,7 +720,7 @@
 						Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
 				</Rack>
-				
+
 				<!--<Slot
 					Rack.Cell="R1 C2"
 					Item="{Binding InputLevel, Mode=TwoWay}"
@@ -803,20 +744,20 @@
 					Alignment.X="Center"
 					Alignment.Y="Center"
 					>
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
 						Text="{Localizing Sample}"
 						/>
-					<!--<Label
+					<!--<Title
 						Rack.Cell="R1 C0"
 						Text="{Localizing Window}"
 						/>-->
 
-					<!--<Label
+					<!--<Title
 						Rack.Cell="R6 C2"
 						Text="{Localizing Hz}"
 						/>-->
-					<!--<Label
+					<!--<Title
 						Rack.Cell="R7 C2"
 						Text="{Localizing Hz}"
 						/>-->
@@ -828,7 +769,7 @@
 						ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
 						/>-->
 
-					<Label
+					<Title
 						Rack.Cell="R2 C0"
 						Text="{Localizing Rate}"
 						/>
@@ -838,17 +779,17 @@
 						SelectedItem="{Binding SampleRate, Mode=TwoWay}"
 						IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R2 C2"
 						Text="{Localizing Hz}"
 						/>
 
-					<Label
+					<Title
 						Rack.Cell="R3 C1 CS2"
 						Text="{Localizing Frame}"
 						/>
 
-					<Label
+					<Title
 						Rack.Cell="R4 C0"
 						Text="{Localizing Size}"
 						/>
@@ -856,7 +797,7 @@
 						Rack.Cell="R4 C1"
 						Orientation="Horizontal"
 						>
-						<Label
+						<Title
 							Text="2 ^"
 							/>
 						<Picker
@@ -864,45 +805,45 @@
 							SelectedItem="{Binding FramePow, Mode=TwoWay}"
 							IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 							/>
-						<Label
+						<Title
 							Text="{Binding FrameSize, StringFormat='= {0}'}"
 							/>
 					</Stack>
-					<Label
+					<Title
 						Rack.Cell="R4 C2"
 						Text="{Localizing Pcs}"
 						/>
 
-					<Label
+					<Title
 						Rack.Cell="R5 C0 CS2"
 						Alignment.X="From"
 						Text="{Localizing Duration}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R5 C1"
 						Alignment.X="Till"
 						Text="{Binding FrameDuration.TotalMilliseconds}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R5 C2"
 						Text="{Localizing ms}"
 						/>
 
-					<!--<Label
+					<!--<Title
 						Rack.Cell="R6 C0"
 						Text="{Localizing Step}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R6 C1"
 						Alignment.X="Till"
-						Ext.ToolTip="{Binding FrameStep}"
-						Text="{Binding FrameStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						Ext.ToolTip="{Binding BorderStep}"
+						Text="{Binding BorderStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R7 C0"
 						Text="{Localizing Accuracy}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R7 C1"
 						Alignment.X="Till"
 						Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"

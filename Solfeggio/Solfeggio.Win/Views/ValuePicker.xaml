@@ -1,6 +1,6 @@
 ﻿<Slider
 	x:Class="Solfeggio.Views.ValuePicker"
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	BorderThickness="0"
 	Padding="4"
@@ -28,7 +28,7 @@
 				BorderThickness="0"
 				Background="LightGray"
 				>
-				<StackLayout
+				<Stack
 					DataContext="{Binding ElementName=This}"
 					Orientation="Horizontal"
 					>
@@ -46,7 +46,7 @@
 						Maximum="{Binding Maximum, Converter={StaticResource ScaleValueConverter}}"
 						Value="{Binding Value, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 						/>
-				</StackLayout>
+				</Stack>
 			</GroupBox>
 		</ControlTemplate>
 	</Slider.Template>

@@ -1,21 +1,5 @@
 ﻿<Application
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:p="clr-namespace:Solfeggio.Palettes"
-	xmlns:d="clr-namespace:Ace.Zest.Dictionaries;assembly=Ace"
 	x:Class="Solfeggio.App"
-	>
-    <Application.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<p:Values />
-				<p:Brushes />
-				<d:AppConverters />
-				<p:Converters />
-				<p:Sets />
-				<p:Templates />
-				<p:Styles />
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Application.Resources>
-</Application>
+	/>

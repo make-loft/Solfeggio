@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary
 	x:Class="Solfeggio.Palettes.Sets_Visualization"
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
@@ -11,28 +11,22 @@
 		x:Shared="False"
 		x:Key="VisualizationSet"
 		>
-
-		<ContentView
-			DataContext="{StoreBinding Path=ActiveProfile, Mode=TwoWay, StoreKey=vm:VisualizationManager}"
-			Template="{StaticResource TitleProfileTemplate}"
-			/>
-
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=Palette}"
+			Header="{Localizing Palette}"
 			>
-			<Grid
-				Rack.Rows="^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^"
+			<Rack
+				Rows="^ ^"
+				Columns="^ ^ ^ ^ ^ ^"
 				DataContext="{Binding MergedDictionaries[3]}"
 				>
-				<StackLayout
+				<Stack
 					Rack.Cell="R1 C0"
 					Orientation="Horizontal">
 					<Button
 						Margin="4 8 0 8"
 						Click="ResetButton_Click"
-						Content="{Localizing Key=Reset}"
+						Content="{Localizing Reset}"
 						/>
 					<Picker
 						Width="17"
@@ -43,24 +37,24 @@
 						SelectedValuePath="Value"
 						DisplayMemberPath="Key"
 						/>
-				</StackLayout>
-				<Label
+				</Stack>
+				<Title
 					Rack.Cell="R0 C1"
 					Text="A"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
 					Text="B"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C3"
 					Text="C"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C4"
 					Text="D"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C5"
 					Text="E"
 					/>
@@ -89,56 +83,56 @@
 					DataContext="{Binding [ColorE], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
-			</Grid>
+			</Rack>
 		</Expander>
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=Visualization}"
+			Header="{Localizing Visualization}"
 			>
 
-			<Grid
-				Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
+			<Rack
+				Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
+				Columns="^ ^ ^ ^ ^ ^ ^ ^"
 				DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 				>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Visibility}"
+					Text="{Localizing Visibility}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
-					Text="{Localizing Key=Fill}"
+					Text="{Localizing Fill}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C3"
-					Text="{Localizing Key=Stroke}"
+					Text="{Localizing Stroke}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C4"
-					Text="{Localizing Key=Thickness}"
+					Text="{Localizing Thickness}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C5"
-					Text="{Localizing Key=Index, StringFormat='Z-{0}'}"
+					Text="{Localizing Index, StringFormat='Z-{0}'}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C6"
-					Text="{Localizing Key=Offset, StringFormat='Y-{0}'}"
+					Text="{Localizing Offset, StringFormat='Y-{0}'}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C7"
-					Text="{Localizing Key=Offset, StringFormat='X-{0}'}"
+					Text="{Localizing Offset, StringFormat='X-{0}'}"
 					/>
 
-				<Grid
+				<Rack
 					Rack.Cell="R1 C0 RS2"
-					Rack.Rows="* *"
-					Rack.Columns="* ^"
+					Rows="* *"
+					Columns="* ^"
 					>
-					<Label
+					<Title
 						Rack.Cell="R0 C0 RS2"
-						Text="{Localizing Key=Frame}"
+						Text="{Localizing Frame}"
 						/>
 					<Picker
 						Rack.Cell="R1 C0"
@@ -147,100 +141,101 @@
 						DataContext="{StoreBinding StoreKey=vm:ProcessingManager, Path=ActiveProfile}"
 						ItemsSource="{Binding Windows}"
 						SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-						ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}" />
-					<Label
+						ItemTemplate="{StaticResource DelegateToNameTemplate}"
+						/>
+					<Title
 						Rack.Cell="R0 C1"
-						Text="{Localizing Key=Raw}"
+						Text="{Localizing Raw}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Key=Window, StringFormat='+{0}'}"
+						Text="{Localizing Window, StringFormat='+{0}'}"
 						/>
-				</Grid>
+				</Rack>
 
-				<Grid
+				<Rack
 					Rack.Cell="R3 C0 RS2"
-					Rack.Rows="* *"
-					Rack.Columns="* ^"
+					Rows="* *"
+					Columns="* ^"
 					>
-					<Label
+					<Title
 						Rack.Cell="R0 C0 RS2"
-						Text="{Localizing Key=Frequency}"
+						Text="{Localizing Frequency}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
-						Text="{Localizing Key=Notes}"
+						Text="{Localizing Notes}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Key=Grid}"
+						Text="{Localizing Rack}"
 						/>
-				</Grid>
+				</Rack>
 
-				<Grid
+				<Rack
 					Rack.Cell="R5 C0 RS2"
-					Rack.Rows="* *"
-					Rack.Columns="* ^"
+					Rows="* *"
+					Columns="* ^"
 					>
-					<Label
+					<Title
 						Rack.Cell="R0 C0 RS2"
-						Text="{Localizing Key=Phase}"
+						Text="{Localizing Phase}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
-						Text="{Localizing Key=PMI}"
+						Text="{Localizing PMI}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Key=FFT}"
+						Text="{Localizing FFT}"
 						/>
-				</Grid>
+				</Rack>
 
-				<Grid
+				<Rack
 					Rack.Cell="R7 C0 RS2"
-					Rack.Rows="* *"
-					Rack.Columns="* ^"
+					Rows="* *"
+					Columns="* ^"
 					>
-					<Label
+					<Title
 						Rack.Cell="R0 C0 RS2"
-						Text="{Localizing Key=Magnitude}"
+						Text="{Localizing Magnitude}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R0 C1"
-						Text="{Localizing Key=PMI}"
+						Text="{Localizing PMI}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Key=FFT}"
+						Text="{Localizing FFT}"
 						/>
-				</Grid>
+				</Rack>
 
-				<Grid
+				<Rack
 					Rack.Cell="R9 C0 RS2"
-					Rack.Rows="* *"
-					Rack.Columns="* ^"
+					Rows="* *"
+					Columns="* ^"
 					>
-					<StackLayout
+					<Stack
 						Rack.Cell="R0 C0 RS2"
 						VerticalAlignment="Center"
 						>
-						<Label
-							Text="{Localizing Key=Magnitude}"
+						<Title
+							Text="{Localizing Magnitude}"
 							/>
-						<Label
+						<Title
 							Margin="-4"
-							Text="{Localizing Key=Histogram, Modifiers=ToLower, StringFormat='({0})'}"
+							Text="{Localizing Histogram, Modifiers=ToLower, StringFormat='({0})'}"
 							/>
-					</StackLayout>
-					<Label
+					</Stack>
+					<Title
 						Rack.Cell="R0 C1"
-						Text="{Localizing Key=PMI}"
+						Text="{Localizing PMI}"
 						/>
-					<Label
+					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Key=FFT}"
+						Text="{Localizing FFT}"
 						/>
-				</Grid>
+				</Rack>
 
 				<ContentView
 					Rack.Cell="R7 C6 RS4"
@@ -323,43 +318,43 @@
 
 				<ContentView
 					Rack.Cell="R3 C1"
-					DataContext="{Binding [Visibility.FrequencyNotesGrid], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.FrequencyNotesRack], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C3"
-					DataContext="{Binding [Stroke.FrequencyNotesGrid], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.FrequencyNotesRack], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C4"
-					DataContext="{Binding [StrokeThickness.FrequencyNotesGrid], Mode=TwoWay}"
+					DataContext="{Binding [StrokeThickness.FrequencyNotesRack], Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C5"
-					DataContext="{Binding [ZIndex.FrequencyNotesGrid], Mode=TwoWay}"
+					DataContext="{Binding [ZIndex.FrequencyNotesRack], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
 
 				<ContentView
 					Rack.Cell="R4 C1"
-					DataContext="{Binding [Visibility.FrequencyDiscreteGrid], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.FrequencyDiscreteRack], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C3"
-					DataContext="{Binding [Stroke.FrequencyDiscreteGrid], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.FrequencyDiscreteRack], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C4"
-					DataContext="{Binding [StrokeThickness.FrequencyDiscreteGrid], Mode=TwoWay}"
+					DataContext="{Binding [StrokeThickness.FrequencyDiscreteRack], Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C5"
-					DataContext="{Binding [ZIndex.FrequencyDiscreteGrid], Mode=TwoWay}"
+					DataContext="{Binding [ZIndex.FrequencyDiscreteRack], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
 
@@ -375,7 +370,7 @@
 					/>
 				<ContentView
 					Rack.Cell="R5 C3"
-					Tag="{Localizing Key=Stroke}"
+					Tag="{Localizing Stroke}"
 					DataContext="{Binding [Stroke.PhasePMI], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
@@ -519,49 +514,49 @@
 					DataContext="{Binding [ZIndex.MagnitudeFFT_Histogram], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
-			</Grid>
+			</Rack>
 
 		</Expander>
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=Background}"
+			Header="{Localizing Background}"
 			>
-			<Grid
-				Rack.Rows="^ ^ ^ ^ ^"
-				Rack.Columns="^ ^ ^ ^ ^ ^ ^ ^"
+			<Rack
+				Rows="^ ^ ^ ^ ^"
+				Columns="^ ^ ^ ^ ^ ^ ^ ^"
 				>
-				<Label
+				<Title
 					Rack.Cell="R0 C0"
-					Text="{Localizing Key=Frame}"
+					Text="{Localizing Frame}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Phase}"
+					Text="{Localizing Phase}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
-					Text="{Localizing Key=Magnitude}"
+					Text="{Localizing Magnitude}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C3"
-					Text="{Localizing Key=Splitter}"
+					Text="{Localizing Splitter}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C4"
-					Text="{Localizing Key=Piano}"
+					Text="{Localizing Piano}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C5"
-					Text="{Localizing Key=Spectrogram}"
+					Text="{Localizing Spectrogram}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C6"
-					Text="{Localizing Key=Geometry}"
+					Text="{Localizing Geometry}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C7"
-					Text="{Localizing Key=Flower}"
+					Text="{Localizing Flower}"
 					/>
 
 				<ContentView
@@ -604,31 +599,31 @@
 					DataContext="{Binding [Stroke.Geometry], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
-			</Grid>
+			</Rack>
 		</Expander>
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=PianoKey}">
-			<Grid
-				Rack.Rows="^ ^ ^"
-				Rack.Columns="^ ^ ^"
+			Header="{Localizing PianoKey}">
+			<Rack
+				Rows="^ ^ ^"
+				Columns="^ ^ ^"
 				>
-				<Label
+				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Key=Soundless}"
+					Text="{Localizing Soundless}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R0 C2"
-					Text="{Localizing Key=Sounding}"
+					Text="{Localizing Sounding}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R1 C0"
-					Text="{Localizing Key=HalfTone}"
+					Text="{Localizing HalfTone}"
 					/>
-				<Label
+				<Title
 					Rack.Cell="R2 C0"
-					Text="{Localizing Key=FullTone}"
+					Text="{Localizing FullTone}"
 					/>
 				<ContentView
 					Rack.Cell="R1 C1"
@@ -650,20 +645,20 @@
 					DataContext="{Binding [PressedFullToneKeyColor], Mode=TwoWay}"
 					Template="{StaticResource ColorValueTemplate}"
 					/>
-			</Grid>
+			</Rack>
 		</Expander>
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing Key=Music}"
+			Header="{Localizing Music}"
 			ContentTemplate="{StaticResource MusicOptionsTemplate}"
 			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}"
 			/>
 
 		<Expander
-			Header="{Localizing Key=Format}"
+			Header="{Localizing Format}"
 			ContentTemplate="{StaticResource FormattingTemplate}"
-			Content="{Store Key=p:MusicalPresenter}"
+			Content="{Store p:MusicalPresenter}"
 			/>
 	</Set>
 

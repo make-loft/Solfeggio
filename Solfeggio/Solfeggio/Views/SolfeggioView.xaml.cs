@@ -254,7 +254,7 @@ namespace Solfeggio.Views
 				var topOpacity = 1 - minOpacity;
 				pianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
 
-				var labels = MusicalPresenter.DrawPeakLabels(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
+				var labels = MusicalPresenter.DrawPeakTitles(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
 				labels.ForEach(p =>
 				{
 					p.HorizontalOptions = LayoutOptions.Start;

@@ -8,7 +8,7 @@ using Xamarin.Forms.Xaml;
 namespace Solfeggio.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Skip)]
-	public partial class OptionsView : ContentView
+	public partial class OptionsView
 	{
 		public OptionsView() => InitializeComponent();
 

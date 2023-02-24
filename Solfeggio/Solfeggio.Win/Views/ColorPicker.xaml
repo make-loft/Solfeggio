@@ -1,14 +1,14 @@
 ﻿<GroupBox
 	x:Class="Solfeggio.Views.ColorPicker"
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Background="LightGray"
 	BorderThickness="0"
 	Padding="4"
 	x:Name="This">
-	<Grid
-		Rack.Rows="^ ^ ^ ^ ^ ^ *"
-		Rack.Columns="^ 128 ^ ^ ^"
+	<Rack
+		Rows="^ ^ ^ ^ ^ ^ *"
+		Columns="^ 128 ^ ^ ^"
 		DataContext="{Binding ElementName=This}">
 
 		<Frame
@@ -32,45 +32,45 @@
 			Background="#0000FF"
 			Style="{StaticResource FrameStyle}" />
 
-		<Label
+		<Title
 			Rack.Cell="R1 C0"
 			Foreground="#000000"
 			Text="A"
-			Style="{StaticResource LabelStyle}" />
-		<Label
+			Style="{StaticResource TitleStyle}" />
+		<Title
 			Rack.Cell="R2 C0"
 			Foreground="#00FFFF"
 			Text="R"
-			Style="{StaticResource LabelStyle}" />
-		<Label
+			Style="{StaticResource TitleStyle}" />
+		<Title
 			Rack.Cell="R3 C0"
 			Foreground="#FF00FF"
 			Text="G"
-			Style="{StaticResource LabelStyle}" />
-		<Label
+			Style="{StaticResource TitleStyle}" />
+		<Title
 			Rack.Cell="R4 C0"
 			Foreground="#FFFF00"
 			Text="B"
-			Style="{StaticResource LabelStyle}" />
+			Style="{StaticResource TitleStyle}" />
 
-		<Grid
+		<Rack
 			Rack.Cell="R0 C4"
 			Background="{StaticResource ChessBrush}">
 			<Frame
 				x:Name="ActiveColor" />
-		</Grid>
+		</Rack>
 		
-		<Grid
+		<Rack
 			Rack.Cell="R1 C4"
 			Background="{StaticResource ChessBrush}">
 			<Frame
 				x:Name="Opacity" />
-		</Grid>
+		</Rack>
 
 		<Frame
 			Rack.Cell="R2 C4 RS4"
 			Background="{StaticResource ChessBrush}" />
-		<Grid
+		<Rack
 			Rack.Cell="R2 C4 RS4"
 			Width="192"
 			x:Name="Spectrum">
@@ -78,7 +78,7 @@
 				Background="{StaticResource RainbowBrush.V}" />
 			<Frame
 				Background="{StaticResource BrightnessBrush.H}" />
-		</Grid>
+		</Rack>
 
 		<Slider
 			Rack.Cell="R1 C1"
@@ -110,7 +110,7 @@
 			SelectedItem="{Binding ActiveNamedColor, Mode=TwoWay}">
 			<Picker.ItemTemplate>
 				<DataTemplate>
-					<StackLayout
+					<Stack
 						Orientation="Horizontal">
 						<Frame
 							Background="{Binding ChessBrush}">
@@ -125,15 +125,15 @@
 						<Entry
 							IsReadOnly="True"
 							Text="{Binding Name}" />
-					</StackLayout>
+					</Stack>
 				</DataTemplate>
 			</Picker.ItemTemplate>
 		</Picker>
-		<Label
+		<Title
 			Rack.Cell="R0 C2"
 			HorizontalAlignment="Center"
 			Text="DEC" />
-		<Label
+		<Title
 			Rack.Cell="R0 C3"
 			HorizontalAlignment="Center"
 			Text="HEX" />
@@ -166,5 +166,5 @@
 			Rack.Cell="R4 C3"
 			Text="{Binding B, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 
-	</Grid>
+	</Rack>
 </GroupBox>

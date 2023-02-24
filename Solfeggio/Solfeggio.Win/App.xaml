@@ -15,12 +15,28 @@
 				<Map BasedOn="{StaticResource Nature}" />
 				<Map Source="Palettes/Brushes.xaml" />
 				<Map Source="Palettes/Converters.xaml" />
-				<Map Source="Palettes/Templates.Desktop.xaml" />
-				<Map Source="Palettes/Templates.xaml" />
 				<Map Source="Palettes/Styles.xaml" />
 				<Map Source="Palettes/Sets.xaml" />
+				<Map Source="Palettes/Templates.Desktop.xaml" />
 				<Map Source="Palettes/Sets.Visualization.xaml" />
+				<Map Source="Palettes/Templates.xaml" />
 			</ResourceDictionary.MergedDictionaries>
+
+			<Style
+		TargetType="Switch">
+				<Setter
+			Property="Width"
+			Value="32" />
+				<Setter
+			Property="Height"
+			Value="16" />
+				<Setter
+			Property="Margin"
+			Value="{StaticResource RegularMargin}" />
+				<Setter
+			Property="Template"
+			Value="{StaticResource SwitchControlTemplate}" />
+			</Style>
 		</Map>
 	</Application.Resources>
 </Application>

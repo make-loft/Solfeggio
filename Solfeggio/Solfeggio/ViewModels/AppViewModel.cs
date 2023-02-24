@@ -1,13 +1,16 @@
 ﻿using Ace;
 
 using Solfeggio.Models;
+using Solfeggio.Views;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+#if XAMARIN
 using Xamarin.Essentials;
+#endif
 
 namespace Solfeggio.ViewModels
 {
@@ -24,6 +27,9 @@ namespace Solfeggio.ViewModels
 		}
 
 		public Segregator<IList<PianoKey>> Harmonics { get; } = new();
+
+		[DataMember] public TapeViewModel Tape { get; set; }
+		[DataMember] public FlowerViewModel Flower { get; set; }
 
 		public void Expose()
 		{
@@ -44,7 +50,7 @@ namespace Solfeggio.ViewModels
 			{
 				try
 				{
-#if WPF
+#if !XAMARIN
 					var uri = e.Parameter?.ToString();
 					await System.Diagnostics.Process.Start(uri).ToAsync();
 #else
@@ -61,13 +67,9 @@ namespace Solfeggio.ViewModels
 				}
 				catch (Exception exception)
 				{
-					//Yandex.Metrica.YandexMetrica.ReportError(exception.Message, exception);
+					Yandex.Metrica.YandexMetrica.ReportError(exception.Message, exception);
 				}
 			};
-			//this[Context.Navigate].Executed += (o, e) => Yandex.Metrica.YandexMetrica.ReportEvent($"{e.Parameter}");
-
-			//this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();
-			//this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
 
 			if (this["CarePageVisit"].IsNot(true))
 				this["OptionsIsVisible"] = true;
@@ -77,6 +79,13 @@ namespace Solfeggio.ViewModels
 					? LanguageCodes.Russian
 					: LanguageCodes.English
 				: ActiveLanguage;
+#if !NETSTANDARD
+			this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();
+			this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
+
+			Tape ??= new();
+			Flower ??= new();
+#endif
 		}
 	}
 }

@@ -11,7 +11,7 @@
 	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
 	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
 
-	<Double x:Key="MinHarmonicOpacityLevel">0.3</Double>
+	<Double x:Key="MinHarmonicOpacityLevel">0.368</Double>
 	<Double x:Key="InfoTextOpacityLevel">0.4</Double>
 	<Double x:Key="MinWidth">0</Double>
 	<String x:Key="DefaultStringFormat">F2</String>
@@ -50,4 +50,6 @@
 	<Int32 x:Key="ZIndex.FrequencyDiscreteGrid">1</Int32>
 
 	<f:Thickness x:Key="RegularMargin">4</f:Thickness>
+
+	<f:Color x:Key="RegularColor">White</f:Color>
 </f:ResourceDictionary>

@@ -4,23 +4,23 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	DataContext="{Store Key=vm:ProcessingManager}"
+	DataContext="{Store vm:ProcessingManager}"
 	Height="{Smart Height, DefaultValue=510}"
 	Width="{Smart Width, DefaultValue=960}"
 	Left="{Smart Left, DefaultValue=NaN}"
 	Top="{Smart Top, DefaultValue=NaN}"
-	Title="{Localizing Key=Solfeggio, Modifiers=ToUpper}"
+	Title="{Localizing Solfeggio, Modifiers=ToUpper}"
 	>
-	<Grid>
+	<Rack>
 		<v:SolfeggioView
 			/>
 		
-		<Grid
+		<Rack
 			VerticalAlignment="Bottom"
 			HorizontalAlignment="Left"
 			>
 			<Border
-				Background="{DynamicResource LabelBrush}"
+				Background="{DynamicResource TitleBrush}"
 				CornerRadius="0 5 0 0"
 				/>
 			<Expander
@@ -29,6 +29,6 @@
 				IsExpanded="{Smart IsMenuExpanded, DefaultValue={False}}"
 				ContentTemplate="{StaticResource MenuTemplate}"
 				/>
-		</Grid>
-	</Grid>
+		</Rack>
+	</Rack>
 </Window>

@@ -1,17 +1,17 @@
 ﻿using Ace;
 
-using System.Windows.Media.Media3D;
-
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
 	public class TapeViewModel : ContextObject
 	{
-		public ProjectionCamera Camera
+#if !NETSTANDARD
+		public System.Windows.Media.Media3D.ProjectionCamera Camera
 		{
 			get => Get(() => Camera);
 			set => Set(() => Camera, value);
 		}
+#endif
 		[DataMember] public double Radius
 		{
 			get => Get(() => Radius, 1d);

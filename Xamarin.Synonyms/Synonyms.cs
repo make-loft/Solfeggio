@@ -35,12 +35,12 @@ namespace Xamarin.Forms
 		public HorizontalAlignment HorizontalOptions { get; set; }
 	}
 
-	public class PivotItem : TabItem
+	public class Item : TabItem
 	{
 		public HorizontalAlignment HorizontalOptions { get; set; }
 	}
 
-	public class StackView : StackPanel
+	public class Stack : StackPanel
 	{
 		public HorizontalAlignment HorizontalOptions
 		{
@@ -49,42 +49,6 @@ namespace Xamarin.Forms
 		}
 	}
 
-	public class StackLayout : StackPanel
-	{
-		public HorizontalAlignment HorizontalOptions { get; set; }
-	}
-
-	public class ScrollView : System.Windows.Controls.ScrollViewer
-	{
-	}
-
-	public class Expander : System.Windows.Controls.Expander
-	{
-	}
-
-	public class Popup : System.Windows.Controls.Primitives.Popup
-	{
-	}
-
-	public class Button : System.Windows.Controls.Button
-	{
-	}
-
-	public class DataTemplate : System.Windows.DataTemplate
-	{
-	}
-
-	public class ControlTemplate : System.Windows.Controls.ControlTemplate
-	{
-	}
-
-	public class ContentPresenter : System.Windows.Controls.ContentPresenter
-	{
-	}
-
-    public class GroupBox : System.Windows.Controls.GroupBox
-    {
-    }
 
     public class ItemsView : ItemsControl
 	{
@@ -118,13 +82,6 @@ namespace Xamarin.Forms
 		}
 	}
 
-	public class Style : System.Windows.Style
-	{
-	}
-
-	public class Setter : System.Windows.Setter
-	{
-	}
 
 	public class Entry : TextBox
 	{
@@ -167,12 +124,16 @@ namespace Xamarin.Forms
 		public StaticResource(object key) : base(key) { }
 	}
 
-    public class GridSplitter : System.Windows.Controls.GridSplitter
+    public class RackSplitter : System.Windows.Controls.GridSplitter
     {
     }
 
+	public class GridSplitter : System.Windows.Controls.GridSplitter
+	{
+	}
 
-    public class Grid : System.Windows.Controls.Grid
+
+	public class Grid : System.Windows.Controls.Grid
 	{
 		public static readonly DependencyProperty BindingContextProperty =
 			DependencyProperty.Register(nameof(BindingContext), typeof(object), typeof(Grid), new PropertyMetadata((o, e)=>

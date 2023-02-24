@@ -1,7 +1,9 @@
 <ResourceDictionary
     x:Class="Solfeggio.Palettes.Styles"
 	xmlns="http://xamarin.com/schemas/2014/forms"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:c="clr-namespace:Solfeggio.Converters">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:Solfeggio.Converters"
+	>
 
 	<Style
 		TargetType="Stack"
@@ -46,6 +48,19 @@
 		/>
 
 	<Style
+		TargetType="Title"
+		>
+		<Setter Property="VerticalOptions" Value="Center" />
+		<!--<Setter Property="FontSize" Value="{Binding Text, Source={RelativeSource Self}, Converter={StaticResource TextLengthToFontSizeConverter}}" />-->
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="BackgroundColor" Value="#66CCCCCC" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="VerticalTextAlignment" Value="Center" />
+		<Setter Property="Alignment.X" Value="Center" />
+		<Setter Property="Alignment.Y" Value="Center" />
+	</Style>
+
+	<Style
 		TargetType="Label"
 		>
 		<Setter Property="VerticalOptions" Value="Center" />
@@ -56,6 +71,20 @@
 		<Setter Property="VerticalTextAlignment" Value="Center" />
 		<Setter Property="Alignment.X" Value="Center" />
 		<Setter Property="Alignment.Y" Value="Center" />
+	</Style>
+
+	<Style
+		x:Key="UnitTitleStyle"
+		TargetType="Title"
+		>
+		<Setter Property="Opacity" Value="0.35" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="BackgroundColor" Value="#66CCCCCC" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="VerticalTextAlignment" Value="Center" />
+		<Setter Property="Alignment.X" Value="Till" />
+		<Setter Property="Alignment.Y" Value="Till" />
 	</Style>
 
 	<Style

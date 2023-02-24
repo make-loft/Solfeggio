@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:xamarin="clr-namespace:Xamarin.Forms;assembly=Xamarin.Synonyms">
+	>
 
 	<!--<Style
 		TargetType="Canvas">
@@ -31,14 +31,26 @@
 	</Style>
 
 	<Style
-		TargetType="xamarin:Pivot">
+		x:Key="UnitTitleStyle"
+		TargetType="Title"
+		>
+		<Setter Property="Opacity" Value="0.35" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="Background" Value="#66CCCCCC" />
+		<Setter Property="Alignment.X" Value="Till" />
+		<Setter Property="Alignment.Y" Value="Till" />
+	</Style>
+
+	<Style
+		TargetType="Pivot">
 		<Setter
 			Property="Background"
 			Value="Transparent" />
 	</Style>
 
 	<Style
-		TargetType="xamarin:Label">
+		TargetType="Title">
 		<Setter
 			Property="VerticalAlignment"
 			Value="Center" />
@@ -56,11 +68,11 @@
 			Value="4,0" />
 		<Setter
 			Property="Background"
-			Value="{DynamicResource LabelBrush}" />
+			Value="{DynamicResource TitleBrush}" />
 	</Style>
 
 	<Style
-		TargetType="xamarin:Entry">
+		TargetType="Entry">
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
@@ -97,7 +109,7 @@
 	</Style>
 
 	<Style
-		TargetType="GridSplitter">
+		TargetType="RackSplitter">
 		<Setter
 			Property="Background"
 			Value="{DynamicResource SplitterBackgroundBrush}" />
@@ -110,9 +122,9 @@
 	</Style>
 
 	<Style
-		x:Key="VerticalGridSplitterStyle"
-		BasedOn="{StaticResource {x:Type GridSplitter}}"
-		TargetType="GridSplitter">
+		x:Key="VerticalRackSplitterStyle"
+		BasedOn="{StaticResource {x:Type RackSplitter}}"
+		TargetType="RackSplitter">
 		<Setter
 			Property="HorizontalAlignment"
 			Value="Center" />
@@ -122,9 +134,9 @@
 	</Style>
 
 	<Style
-		x:Key="HorizontalGridSplitterStyle"
-		BasedOn="{StaticResource {x:Type GridSplitter}}"
-		TargetType="GridSplitter">
+		x:Key="HorizontalRackSplitterStyle"
+		BasedOn="{StaticResource {x:Type RackSplitter}}"
+		TargetType="RackSplitter">
 		<Setter
 			Property="HorizontalAlignment"
 			Value="Stretch" />
@@ -134,20 +146,20 @@
 	</Style>
 
 	<Style
-		TargetType="xamarin:GroupBox">
+		TargetType="GroupBox">
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
 		<Setter
 			Property="BorderBrush"
-			Value="{StaticResource LabelBrush}" />
+			Value="{StaticResource TitleBrush}" />
 		<Setter
 			Property="BorderThickness"
 			Value="1" />
 	</Style>
 
 	<Style
-		TargetType="xamarin:ScrollView">
+		TargetType="Scroll">
 		<Setter
 			Property="VerticalScrollBarVisibility"
 			Value="Auto" />
@@ -156,24 +168,9 @@
 			Value="Auto" />
 	</Style>
 
-	<Style
-		TargetType="xamarin:Switch">
-		<Setter
-			Property="Width"
-			Value="32" />
-		<Setter
-			Property="Height"
-			Value="16" />
-		<Setter
-			Property="Margin"
-			Value="{StaticResource RegularMargin}" />
-		<Setter
-			Property="Template"
-			Value="{StaticResource SwitchControlTemplate}" />
-	</Style>
 
 	<Style
-		TargetType="xamarin:Picker">
+		TargetType="Picker">
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
@@ -183,38 +180,41 @@
 	</Style>
 
 	<Style
-		TargetType="xamarin:Expander">
+		TargetType="Expander">
 		<Setter
 			Property="Margin"
 			Value="{StaticResource RegularMargin}" />
 	</Style>
 
 	<Style
-		TargetType="xamarin:Button">
-		<Setter
-			Property="Margin"
-			Value="{StaticResource RegularMargin}" />
+		TargetType="Button"
+		>
+		<!--<Setter Property="Padding" Value="-10 0" />-->
+		<Setter Property="Margin" Value="{StaticResource RegularMargin}" />
+		<Setter Property="MinWidth" Value="32" />
+		<Setter Property="Alignment.X" Value="Center" />
+		<Setter Property="Alignment.Y" Value="Center" />
 	</Style>
 
 	<DataTemplate
 		x:Key="OptionTemplate">
-		<Grid
-			Rack.Columns="^ ^ *">
+		<Rack
+			Columns="^ ^ *">
 			<ContentPresenter
 				Rack.Cell="C0"
 				Content="{Binding Tag}" />
 			<ContentPresenter
 				Rack.Cell="C1"
 				Content="{Binding}" />
-		</Grid>
+		</Rack>
 	</DataTemplate>
 
 	<Style
 		x:Key="FrameStyle"
-		TargetType="xamarin:Frame">
-		<Setter
+		TargetType="Frame">
+		<!--<Setter
 			Property="CornerRadius"
-			Value="16" />
+			Value="16" />-->
 		<Setter
 			Property="Width"
 			Value="32" />
@@ -224,8 +224,8 @@
 	</Style>
 
 	<Style
-		x:Key="LabelStyle"
-		TargetType="xamarin:Label">
+		x:Key="TitleStyle"
+		TargetType="Title">
 		<Setter
 			Property="FontWeight"
 			Value="SemiBold" />
@@ -239,7 +239,7 @@
 
 	<Style
 		x:Key="ByteSliderStyle"
-		TargetType="xamarin:Slider">
+		TargetType="Slider">
 		<Setter						
 			Property="Minimum"
 			Value="0" />
@@ -258,8 +258,8 @@
 	</Style>
 
 	<Style
-		x:Key="CenteredLabel"
-		TargetType="xamarin:Label">
+		x:Key="CenteredTitle"
+		TargetType="Title">
 		<Setter
 			Property="Padding"
 			Value="2" />
@@ -271,12 +271,12 @@
 			Value="Center" />
 		<Setter
 			Property="Background"
-			Value="{DynamicResource LabelBrush}" />
+			Value="{DynamicResource TitleBrush}" />
 	</Style>
 
 	<Style
 		x:Key="LiteButton"
-		TargetType="xamarin:Button">
+		TargetType="Button">
 		<Setter
 			Property="Width"
 			Value="24" />

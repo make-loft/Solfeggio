@@ -14,6 +14,8 @@ namespace Solfeggio
 
 		public static void CheckExpirationStatus(Editions edition)
 		{
+			return;
+
 			if (edition.Is(Gratitude)) return;
 			var versionAge = DateTime.Now - new DateTime(2019, 7, 25);
 			if (versionAge > TimeSpan.FromDays(64))
@@ -27,6 +29,8 @@ namespace Solfeggio
 
 		public static void CheckSessionDuration(Editions edition, DateTime startupTimestamp)
 		{
+			return;
+
 			if (edition.Is(Gratitude)) return;
 			var sessionDuration = DateTime.Now - startupTimestamp;
 			if (sessionDuration > LongSessionDuation)

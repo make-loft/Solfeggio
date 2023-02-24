@@ -7,9 +7,9 @@
 	Width="300"
 	Name="This"
 	>
-	<Grid
-		Rack.Rows="^ ^ ^ ^ ^ ^ *"
-		Rack.Columns="^ *"
+	<Rack
+		Rows="^ ^ ^ ^ ^ ^ *"
+		Columns="^ *"
 		>
 
 
@@ -17,9 +17,9 @@
 			Rack.Cell="R0 C0 CS0"
 			Header="Source"
 			>
-			<Grid
-				Rack.Rows="^ ^ ^ ^"
-				Rack.Columns="^ *"
+			<Rack
+				Rows="^ ^ ^ ^"
+				Columns="^ *"
 				Name="SourceMetadata"
 				>
 				<Button
@@ -54,16 +54,16 @@
 					IsChecked="{Binding KeepPhase, ElementName=This}"
 					Content="Keep Phase"
 					/>
-			</Grid>
+			</Rack>
 		</GroupBox>
 		<GroupBox
 			Rack.Cell="R1 C0 CS0"
 			Header="Target"
 			>
-			<Grid
+			<Rack
 				Rack.Cell="R3 C0 CS0"
-				Rack.Rows="^ ^ ^ ^ ^"
-				Rack.Columns="^ *"
+				Rows="^ ^ ^ ^ ^"
+				Columns="^ *"
 				Name="TargetMetadata"
 				>
 				<TextBox
@@ -107,7 +107,7 @@
 					IsChecked="{Binding UseOverlapping, ElementName=This}"
 					Content="Overlaping"
 					/>
-			</Grid>
+			</Rack>
 		</GroupBox>
 
 		<Button
@@ -128,5 +128,5 @@
 			Rack.Cell="R3 C1"
 			x:Name="DecodeProgress"
 			/>
-	</Grid>
+	</Rack>
 </Window>

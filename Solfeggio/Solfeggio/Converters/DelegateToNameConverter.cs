@@ -1,16 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-using Ace;
-
-namespace Solfeggio.Converters
+﻿namespace Solfeggio.Converters
 {
-	class DelegateToNameConverter : IValueConverter
+	class DelegateToNameConverter : Ace.Markup.Patterns.AValueConverter
 	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-			value.To<Delegate>().Method.Name;
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-			throw new NotImplementedException();
+		public override object Convert(object value) => value is System.Delegate d ? d.Method.Name : value;
 	}
 }

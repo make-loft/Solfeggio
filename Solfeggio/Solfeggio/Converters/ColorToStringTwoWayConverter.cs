@@ -1,11 +1,15 @@
-﻿using System.Windows.Media;
+﻿#if NETSTANDARD
+using Xamarin.Forms;
+#else
+using System.Windows.Media;
+#endif
 
 namespace Solfeggio.Converters
 {
 	public class ColorToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 	{
 		public override object Convert(object value) => value?.ToString();
-
+#if !NETSTANDARD
 		public override object ConvertBack(object value)
 		{
 			try
@@ -19,5 +23,6 @@ namespace Solfeggio.Converters
 				return Colors.Gray;
 			}
 		}
+#endif
 	}
 }

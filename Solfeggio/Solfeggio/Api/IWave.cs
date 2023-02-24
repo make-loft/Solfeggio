@@ -20,7 +20,6 @@ namespace Solfeggio.Api
 	{
 		IProcessor Source { get; set; }
 		float Level { get; set; }
-		float Boost { get; set; }
 		void Wake();
 		void Lull();
 		void Free();

@@ -3,7 +3,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:xa="http://xamarin.com/schemas/2014/forms"
 	xmlns:views="clr-namespace:Solfeggio.Views"
 	xmlns:controls="clr-namespace:Solfeggio.Controls"
 	DataContext="{StoreBinding StoreKey=vm:AppViewModel, Path=Tape}"
@@ -13,7 +12,7 @@
 	Width="{Smart Width, DefaultValue=512}"
 	Left="{Smart Left, DefaultValue=NaN}"
 	Top="{Smart Top, DefaultValue=NaN}"
-	Title="{Localizing Key=Tape, Modifiers=ToUpper}"
+	Title="{Localizing Tape, Modifiers=ToUpper}"
 	MouseDoubleClick="Window_MouseDoubleClick"
 	MouseDown="Window_MouseDown"
 	MouseMove="Window_MouseMove"
@@ -86,7 +85,7 @@
 			ByDefault="1.0"
 			/>
 	</Control.Resources>
-	<Grid
+	<Rack
 		Background="{DynamicResource GeometryBackgroundBrush}"
 		>
 		<Viewport3D
@@ -171,18 +170,18 @@
 			<views:PopupView
 				IsOpen="{Binding ElementName=Expander, Path=IsExpanded, Mode=TwoWay}"
 				>
-				<Grid
-					Rack.Rows="^ ^ ^ ^ ^ ^ ^"
-					Rack.Columns="^ ^ ^"
+				<Rack
+					Rows="^ ^ ^ ^ ^ ^ ^"
+					Columns="^ ^ ^"
 					>
 
 					<Border
 						Rack.Cell="R0 C0 RS0 CS0"
 						CornerRadius="0 0 0 5"
-						Background="{DynamicResource LabelBrush}"
+						Background="{DynamicResource TitleBrush}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R0 C0"
 						Text="{Localizing Camera}"
 						/>
@@ -221,7 +220,7 @@
 						</Picker.ItemTemplate>
 					</Picker>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R1 C0"
 						HorizontalAlignment="Right"
 						Visibility="{Binding Camera, Converter={StaticResource PespectiveToVsibleConverter}}"
@@ -235,7 +234,7 @@
 						Value="{Binding Camera.FieldOfView}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R2 C0"
 						Text="{Localizing Radius}"
 						/>
@@ -246,7 +245,7 @@
 						Value="{Binding Radius}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R3 C0"
 						Text="{Localizing Depth}"
 						/>
@@ -257,7 +256,7 @@
 						Value="{Binding Depth}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R4 C0"
 						Text="{Localizing Thin}"
 						/>
@@ -268,12 +267,12 @@
 						Value="{Binding Thin}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R5 C0"
 						VerticalAlignment="Top"
 						Text="{Localizing Approximation}"
 						/>
-					<xa:Label
+					<Title
 						Rack.Cell="R5 C0"
 						VerticalAlignment="Bottom"
 						Text="{Smart GeometryPointsCount}"
@@ -285,7 +284,7 @@
 						Value="{Binding Approximation}"
 						/>
 
-					<xa:Label
+					<Title
 						Rack.Cell="R6 C0"
 						Text="{Localizing Joystick}"
 						/>
@@ -293,18 +292,18 @@
 						Rack.Cell="R6 C1"
 						IsToggled="{Binding Joystick, Mode=TwoWay}"
 						/>
-				</Grid>
+				</Rack>
 			</views:PopupView>
 		</Expander>
 
-		<Grid
+		<Rack
 			Rack.Cell="R0 C0 RS0 CS0"
-			Rack.Rows="* * *"
-			Rack.Columns="^ ^ ^ * ^ ^ ^"
+			Rows="* * *"
+			Columns="^ ^ ^ * ^ ^ ^"
 			VerticalAlignment="Bottom"
 			Visibility="{Binding Joystick, Converter={StaticResource TrueToVisibleConverter}}"
 			>
-			<Grid.Resources>
+			<Rack.Resources>
 				<Style
 					TargetType="ButtonBase"
 					>
@@ -325,7 +324,7 @@
 					TargetType="Button"
 					BasedOn="{StaticResource {x:Type ButtonBase}}"
 					/>
-			</Grid.Resources>
+			</Rack.Resources>
 
 			<Button
 				Rack.Cell="R0 C0"
@@ -367,9 +366,9 @@
 				x:Name="D"
 				Content="D"
 				/>
-			<Grid
+			<Rack
 				Rack.Cell="R1 C1"
-				Rack.Rows="* *"
+				Rows="* *"
 				>
 				<Button
 					Rack.Cell="R0"
@@ -385,7 +384,7 @@
 					Height="12"
 					Margin="5 0 5 5"
 					/>
-			</Grid>
+			</Rack>
 
 			<WrapPanel
 				Rack.Cell="R0 C3 RS0"
@@ -449,9 +448,9 @@
 				Content="🡸"
 				/>
 
-			<Grid
+			<Rack
 				Rack.Cell="R1 C5"
-				Rack.Rows="* *"
+				Rows="* *"
 				>
 				<Button
 					Rack.Cell="R0"
@@ -467,8 +466,8 @@
 					Height="12"
 					Margin="4 0 4 4"
 					/>
-			</Grid>
-		</Grid>
-	</Grid>
+			</Rack>
+		</Rack>
+	</Rack>
 
 </controls:WindowView>

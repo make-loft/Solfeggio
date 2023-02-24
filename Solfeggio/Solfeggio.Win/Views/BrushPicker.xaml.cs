@@ -4,9 +4,8 @@ using Ace.Markup.Patterns;
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
-
-using Xamarin.Forms;
 
 namespace Solfeggio.Views
 {

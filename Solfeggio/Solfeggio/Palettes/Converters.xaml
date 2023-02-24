@@ -1,22 +1,33 @@
 ﻿<ResourceDictionary
 	x:Class="Solfeggio.Palettes.Converters"
-	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:Solfeggio.Converters"
 	>
-
-	<Double x:Key="PlusSinglePi">+3.1415926535897932384626433832795</Double>
-	<Double x:Key="MinusSinglePi">-3.1415926535897932384626433832795</Double>
-
-	<Double x:Key="PlusSingleE">+2.7182818284590452353602874713527</Double>
-	<Double x:Key="MinusSingleE">-2.7182818284590452353602874713527</Double>
-
-	<Double x:Key="MinHarmonicOpacityLevel">0.368</Double>
-
+	<c:DelegateToNameConverter
+		x:Key="DelegateToNameConverter"
+		/>
+	<c:Int32ToStringTwoWayConverter
+		x:Key="Int32ToStringTwoWayConverter"
+		/>
 	<c:DoubleToStringTwoWayConverter
 		x:Key="DoubleToStringTwoWayConverter"
 		/>
-
+	<c:ThicknessToDoubleTwoWayConverter
+		x:Key="ThicknessToDoubleTwoWayConverter"
+		/>
+	<c:ColorToStringTwoWayConverter
+		x:Key="ColorToStringTwoWayConverter"
+		/>
+	<c:ByteToHexStringTwoWayConverter
+		x:Key="ByteToHexStringTwoWayConverter"
+		/>
+	<c:ColorToSolidBrushConverter
+		x:Key="ColorToSolidBrushConverter"
+		/>
+	<c:PianoKeyToBrushConverter
+		x:Key="PianoKeyToBrushConverter"
+		/>
 	<c:MathConverter
 		x:Key="HarmonicOpacityConverter"
 		Operation="Increment"
@@ -25,7 +36,7 @@
 	<c:MathConverter
 		x:Key="RadianDegreeConverter"
 		Operation="Stretch"
-		Parameter="{Double 57.295779513082320876798154814105}"
+		Parameter="{Double Value=57.295779513082320876798154814105}"
 		/>
 	<c:MathConverter
 		x:Key="RadianPiConverter"
@@ -36,9 +47,8 @@
 	<AggregateConverter
 		x:Key="RadianDegreeFormattedConverter"
 		>
-		<c:MathConverter
-			Operation="Stretch"
-			Parameter="{Double 57.295779513082320876798154814105}"
+		<RemoteConverter
+			Source="{StaticResource RadianDegreeConverter}"
 			/>
 		<c:DoubleToStringTwoWayConverter
 			Tail="°"
@@ -47,9 +57,8 @@
 	<AggregateConverter
 		x:Key="RadianPiFormattedConverter"
 		>
-		<c:MathConverter
-			Operation="Squeeze"
-			Parameter="{StaticResource PlusSinglePi}"
+		<RemoteConverter
+			Source="{StaticResource RadianPiConverter}"
 			/>
 		<c:DoubleToStringTwoWayConverter
 			Tail="π"
@@ -61,11 +70,11 @@
 		>
 		<Case
 			Key="Flow"
-			Value="{Localizing Key=Flow}"
+			Value="{Localizing Flow}"
 			/>
 		<Case
 			Key="Loop"
-			Value="{Localizing Key=Loop}"
+			Value="{Localizing Loop}"
 			/>
 	</SwitchConverter>
 
@@ -74,11 +83,11 @@
 		>
 		<Case
 			Key="{True}"
-			Value="{Localizing Key=Loud, StringFormat='🔊 {0}', ForceStringFormat=True}"
+			Value="{Localizing Loud, StringFormat='🔊 {0}', ForceStringFormat=True}"
 			/>
 		<Case
 			Key="{False}"
-			Value="{Localizing Key=Mute, StringFormat='🔇 {0}', ForceStringFormat=True}"
+			Value="{Localizing Mute, StringFormat='🔇 {0}', ForceStringFormat=True}"
 			/>
 	</SwitchConverter>
 
@@ -88,23 +97,16 @@
 		Value="True"
 		/>
 
-	<!--<TwoWayConverter
+	<TwoWayConverter
 		x:Key="IsVisibleConverter"
 		GetConverter="{StaticResource VisibleToTrueConverter}"
 		SetConverter="{StaticResource TrueToVisibleConverter}"
-		/>-->
-
-	<Converter
-		x:Key="HarmonicOffsetToColorConverter"
-		Convert="HarmonicOffsetToColor_Convert"
 		/>
 
-	<c:TextLengthToFontSizeConverter
-		x:Key="TextLengthToFontSizeConverter"
-		/>
-
-	<c:DelegateToNameConverter
-		x:Key="DelegateToNameConverter"
+	<c:MathConverter
+		x:Key="ScaleValueConverter"
+		Operation="Log"
+		Parameter="{Double 2.0}"
 		/>
 
 	<SwitchConverter
@@ -114,13 +116,7 @@
 		<Case Key="Bemole" Value="D♭" />
 		<Case Key="Combined" Value="C♯|D♭" />
 	</SwitchConverter>
-
-	<c:MathConverter
-		x:Key="ScaleValueConverter"
-		Operation="Log"
-		Parameter="{Double 2.0}"
-		/>
-
+	
 	<Converter
 		x:Key="ScaleConverter"
 		Convert="ToVisualValue"

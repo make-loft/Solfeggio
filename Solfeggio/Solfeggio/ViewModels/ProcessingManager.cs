@@ -60,20 +60,20 @@ namespace Solfeggio.ViewModels
 
 			this[() => ActiveProfile].Changing += (sender, args) =>
 			{
-				if (ActiveProfile.Is(out var activeProfile).Not())
+				if (ActiveProfile.Is(out var profile).Not())
 					return;
 
-				activeProfile.SampleReady -= OnActiveProfileOnDataReady;
-				activeProfile.Dispose();
+				profile.SampleReady -= OnActiveProfileOnDataReady;
+				profile.Dispose();
 			};
 
 			this[() => ActiveProfile].Changed += (sender, args) =>
 			{
-				if (ActiveProfile.Is(out var activeProfile).Not())
+				if (ActiveProfile.Is(out var profile).Not())
 					return;
 
-				activeProfile.SampleReady += OnActiveProfileOnDataReady;
-				activeProfile.Expose();
+				profile.SampleReady += OnActiveProfileOnDataReady;
+				profile.Expose();
 			};
 
 			EvokePropertyChanged(nameof(ActiveProfile));
