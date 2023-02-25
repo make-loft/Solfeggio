@@ -39,7 +39,7 @@ namespace Solfeggio.Presenters
 		public void Expose()
 		{
 #if !NETSTANDARD
-			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Ace.Controls.Entry.GlobalTextBindingRefresh();
+			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Ace.Controls.Field.GlobalTextBindingRefresh();
 #endif
 			Format[() => Format.ScreenNumericFormat].Changed += (o, e) =>
 			{

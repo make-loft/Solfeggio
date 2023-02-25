@@ -97,7 +97,7 @@
 			Value="{Binding B}"
 			Style="{StaticResource ByteSliderStyle}" />
 
-		<Entry
+		<Field
 			Rack.Cell="R0 C1"
 			Margin="4 4 20 4"
 			Text="{Binding Value, Mode=TwoWay}" />
@@ -118,11 +118,11 @@
 								Style="{StaticResource FrameStyle}"
 								Background="{Binding Brush}" />
 						</Frame>
-						<Entry
+						<Field
 							Width="80"
 							IsReadOnly="True"
 							Text="{Binding Color}" />
-						<Entry
+						<Field
 							IsReadOnly="True"
 							Text="{Binding Name}" />
 					</Stack>
@@ -138,31 +138,31 @@
 			HorizontalAlignment="Center"
 			Text="HEX" />
 
-		<Entry
+		<Field
 			Width="30"
 			Rack.Cell="R1 C2"
 			Text="{Binding A, Mode=TwoWay}" />
-		<Entry
+		<Field
 			Rack.Cell="R2 C2"
 			Text="{Binding R, Mode=TwoWay}" />
-		<Entry
+		<Field
 			Rack.Cell="R3 C2"
 			Text="{Binding G, Mode=TwoWay}" />
-		<Entry
+		<Field
 			Rack.Cell="R4 C2"
 			Text="{Binding B, Mode=TwoWay}" />
 
-		<Entry
+		<Field
 			Width="30"
 			Rack.Cell="R1 C3"
 			Text="{Binding A, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Entry
+		<Field
 			Rack.Cell="R2 C3"
 			Text="{Binding R, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Entry
+		<Field
 			Rack.Cell="R3 C3"
 			Text="{Binding G, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Entry
+		<Field
 			Rack.Cell="R4 C3"
 			Text="{Binding B, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
 

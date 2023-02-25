@@ -17,7 +17,7 @@
 			<Expander
 				x:Name="TemplateRoot">
 				<Expander.Header>
-					<Entry
+					<Field
 						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 				</Expander.Header>
 				<views:PopupView

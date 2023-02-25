@@ -78,17 +78,17 @@
 				Rack.Cell="C2 R1"
 				TickFrequency="0.207"
 				TickPlacement="TopLeft"
-				Minimum="{StaticResource MinusSinglePi}"
-				Maximum="{StaticResource PlusSinglePi}"
+				Minimum="{StaticResource NegativeSinglePi}"
+				Maximum="{StaticResource PositiveSinglePi}"
 				Value="{Binding Phase}"
 				/>
 
-			<Entry
+			<Field
 				Rack.Cell="C0 R0"
 				ToolTip="{Binding Magnitude}"
 				Text="{Binding Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 				/>
-			<Entry
+			<Field
 				Rack.Cell="C1 R0"
 				ToolTip="{Binding Frequency}"
 				Text="{Binding Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
@@ -107,23 +107,23 @@
 				Rack.Cell="C2 R0"
 				Columns="* * *"
 				>
-				<Entry
+				<Field
 					Rack.Cell="C0 CS0"
 					ToolTip="{Binding Phase}"
 					Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 					/>
-				<Entry
+				<Field
 					Rack.Cell="C0"
 					ToolTip="{Binding Phase, Converter={StaticResource RadianDegreeConverter}}"
 					Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
 					/>
-				<Entry
+				<Field
 					Rack.Cell="C1"
 					ToolTip="{Binding Phase, Converter={StaticResource RadianPiConverter}}"
 					Text="{Binding Phase, Converter={StaticResource RadianPiFormattedConverter}, UpdateSourceTrigger=PropertyChanged}"
 					/>
 			</Rack>
-			<Entry
+			<Field
 				Rack.Cell="C3 R2"
 				ToolTip="{Localizing Gap}"
 				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
@@ -282,7 +282,7 @@
 					ItemDisplayBinding="{Binding Title}"
 					SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
 					/>
-				<Entry
+				<Field
 					Margin="4 4 22 4"
 					Text="{Binding ActiveProfile.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					/>
@@ -308,7 +308,7 @@
 			<Title
 				Text="{Localizing Title}"
 				/>
-			<Entry
+			<Field
 				Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				/>
 			<Button
@@ -331,7 +331,7 @@
 			<Expander
 				x:Name="TemplateRoot">
 				<Expander.Header>
-					<Entry
+					<Field
 						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>
 				</Expander.Header>
@@ -666,32 +666,32 @@
 				Rack.Cell="R1 C0"
 				Text="{Localizing Limit}" />
 
-			<Entry
+			<Field
 				Rack.Cell="R2 C1"
 				ToolTip="{Binding Threshold.Upper}"
 				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Entry
+			<Field
 				Rack.Cell="R2 C2"
 				ToolTip="{Binding Threshold.Lower}"
 				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Entry
+			<Field
 				Rack.Cell="R1 C1"
 				ToolTip="{Binding Limit.Upper}"
 				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Entry
+			<Field
 				Rack.Cell="R1 C2"
 				ToolTip="{Binding Limit.Lower}"
 				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
 
-			<Entry
+			<Field
 				Rack.Cell="R2 C3"
-				Style="{StaticResource ReadOnlyEntryStyle}"
+				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				ToolTip="{Binding Threshold.Length}"
 				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Entry
+			<Field
 				Rack.Cell="R1 C3"
-				Style="{StaticResource ReadOnlyEntryStyle}"
+				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				ToolTip="{Binding Limit.Length}"
 				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
@@ -933,7 +933,7 @@
 
 				Background="{StaticResource TitleBrush}"
 				/>
-			<Entry
+			<Field
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToStringTwoWayConverter}}"
@@ -956,7 +956,7 @@
 						Rows="* *"
 						Columns="^ ^ ^"
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-						<Entry
+						<Field
 							Rack.Cell="R0 C0"
 							ToolTip="{Binding Threshold.Upper}"
 							Text="{Binding Threshold.Upper, Converter={StaticResource DoubleToStringTwoWayConverter}}"
@@ -965,7 +965,7 @@
 							Rack.Cell="R0 C1"
 							Text="-"
 							/>
-						<Entry
+						<Field
 							Rack.Cell="R0 C2"
 							ToolTip="{Binding Threshold.Lower}"
 							Text="{Binding Threshold.Lower, Converter={StaticResource DoubleToStringTwoWayConverter}}"
@@ -974,9 +974,9 @@
 							Rack.Cell="R1 C1"
 							Text="="
 							/>
-						<Entry
+						<Field
 							Rack.Cell="R1 C2"
-							Style="{StaticResource ReadOnlyEntryStyle}"
+							Style="{StaticResource ReadOnlyFieldStyle}"
 							ToolTip="{Binding Threshold.Length}"
 							Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
@@ -1026,7 +1026,7 @@
 					<Border
 						CornerRadius="10"
 						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
-					<Entry
+					<Field
 						Margin="10 4"
 						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
 				</Rack>
@@ -1078,7 +1078,7 @@
 									Style="{StaticResource FrameStyle}"
 									Background="{Binding Value}" />
 							</Border>
-							<Entry
+							<Field
 								IsReadOnly="True"
 								Text="{Binding Key}" />
 						</Stack>

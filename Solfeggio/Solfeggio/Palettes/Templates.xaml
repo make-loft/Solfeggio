@@ -124,8 +124,8 @@
 				/>
 			<Slider
 				Rack.Cell="C2 R1"
-				Maximum="{StaticResource PlusSinglePi}"
-				Minimum="{StaticResource MinusSinglePi}"
+				Maximum="{StaticResource PositiveSinglePi}"
+				Minimum="{StaticResource NegativeSinglePi}"
 				Value="{Binding Phase, Mode=TwoWay}"
 				/>
 

@@ -13,7 +13,7 @@
 			ConvertBack="PowBase2"
 			/>
 		<AggregateConverter
-			x:Key="EntryValueConverter">
+			x:Key="FieldValueConverter">
 			<Converter
 				Convert="ExpandRange"
 				/>
@@ -32,9 +32,9 @@
 					DataContext="{Binding ElementName=This}"
 					Orientation="Horizontal"
 					>
-					<Entry
+					<Field
 						Width="60"
-						Text="{Binding Value, Mode=TwoWay, Converter={StaticResource EntryValueConverter}}"
+						Text="{Binding Value, Mode=TwoWay, Converter={StaticResource FieldValueConverter}}"
 						ToolTip="{Binding Value}"
 						/>
 					<Slider

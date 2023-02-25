@@ -36,12 +36,12 @@
 	<c:MathConverter
 		x:Key="RadianDegreeConverter"
 		Operation="Stretch"
-		Parameter="{Double Value=57.295779513082320876798154814105}"
+		Parameter="{StaticResource RadianToDegreeStretchFactor}"
 		/>
 	<c:MathConverter
 		x:Key="RadianPiConverter"
 		Operation="Squeeze"
-		Parameter="{StaticResource PlusSinglePi}"
+		Parameter="{StaticResource PositiveSinglePi}"
 		/>
 
 	<AggregateConverter
