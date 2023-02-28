@@ -737,10 +737,10 @@
 					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
 					/>-->
 
-				<Grid
+				<Rack
 					Rack.Cell="R0 C3 RS4"
-					Rack.Rows="^ ^ ^ ^ ^ ^ ^ ^"
-					Rack.Columns="^ ^ ^"
+					Rows="^ ^ ^ ^ ^ ^ ^ ^"
+					Columns="^ ^ ^"
 					Alignment.X="Center"
 					Alignment.Y="Center"
 					>
@@ -849,7 +849,7 @@
 						Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
 						Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
 						/>-->
-				</Grid>
+				</Rack>
 			</Grid>
 		</Stack>
 	</DataTemplate>

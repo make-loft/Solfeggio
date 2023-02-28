@@ -3,7 +3,7 @@ using Ace;
 using Rainbow;
 using Solfeggio.Models;
 
-namespace Solfeggio
+namespace Solfeggio.Api
 {
 	public interface IAudioInputDevice : IExposable, IDisposable
 	{

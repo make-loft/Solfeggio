@@ -5,6 +5,7 @@ using Ace;
 
 using Rainbow;
 
+using Solfeggio.Api;
 using Solfeggio.Models;
 
 using static Rainbow.Windowing;

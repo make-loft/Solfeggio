@@ -10,11 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\VisualizationProfile.cs" />
     <Compile Remove="Processors\EncodeProcessor.cs" />
     <Compile Remove="Processors\IdealSignalProcessor.cs" />
     <Compile Remove="Processors\PcmReader.cs" />
-    <Compile Remove="ViewModels\VisualizationManager.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +48,9 @@
     <Compile Update="Palettes\Converters.xaml.cs">
       <DependentUpon>Converters.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Palettes\ColorPalettes.xaml.cs">
+      <DependentUpon>ColorPalettes.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Palettes\Values.xaml.cs">
       <DependentUpon>Values.xaml</DependentUpon>
     </Compile>
@@ -72,6 +73,9 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\ColorPalettes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Values.xaml">

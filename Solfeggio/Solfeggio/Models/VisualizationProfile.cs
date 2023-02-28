@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
 using System.Windows;
-using System.Windows.Media;
 #endif
 
 namespace Solfeggio.Models
@@ -120,7 +120,7 @@ namespace Solfeggio.Models
 				else resources[p.Key] = p.Value;
 			});
 
-			resources.MergedDictionaries[3] = colors;
+			AppPalette.Colors = colors;
 			resources.EvokePropertyChanged();
 
 			IsBusy = false;
@@ -132,7 +132,7 @@ namespace Solfeggio.Models
 			var resources = AppPalette.Resources;
 			var brushes = AppPalette.Brushes;
 			var palettes = AppPalette.ColorPalettes;
-			resources.MergedDictionaries[3] = (Map)palettes[Palette];
+			AppPalette.Colors = (Map)palettes[Palette];
 			foreach (var key in brushes.Keys)
 			{
 				if (brushes[key].Is(out Brush b))

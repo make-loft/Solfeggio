@@ -201,7 +201,7 @@
 				Alignment.X="Till"
 				Alignment.Y="From"
 				Margin="+2,-3"
-				Size.X="48"
+				Length.X="48"
 				/>
 		</Rack>
 	</Rack>

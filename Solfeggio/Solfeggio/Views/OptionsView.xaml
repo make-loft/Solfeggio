@@ -1,6 +1,6 @@
 ﻿<ContentView
 	x:Class="Solfeggio.Views.OptionsView"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
@@ -67,17 +67,18 @@
 					>
 					<Scroll>
 						<Stack
-							DataContext="{Store vm:VisualizationManager}"
+							Data.Context="{Store vm:VisualizationManager}"
 							>
-							<!--<ContentView
-								Template="{StaticResource TitleTemplate}"
+							<Slot
+								Item="{Binding}"
+								ItemTemplate="{StaticResource TitleTemplate}"
+								Alignment.X="Center"
 								/>
 							<Pivot
 								ItemsSource="{Binding Profiles}"
 								ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
-								ContentTemplate="{StaticResource VisualizationProfileTemplate}"
-								/>-->
+								/>
 						</Stack>
 					</Scroll>
 				</Item>
@@ -141,10 +142,10 @@
 			<Rack
 				Rows="^ *"
 				>
-				<Slot
+				<!--<Slot
 					Rack.Cell="R0"
-					Template="{StaticResource HarmonicHeaderTemplate}"
-					/>
+					ControlTemplate="{StaticResource HarmonicHeaderTemplate}"
+					/>-->
 				<Scroll
 					Rack.Cell="R1"
 					>

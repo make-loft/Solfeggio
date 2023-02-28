@@ -1,7 +1,5 @@
-using Ace;
-using Ace.Zest.Dictionaries;
+﻿using Ace;
 
-using Solfeggio.Palettes;
 using Solfeggio.Presenters;
 using Solfeggio.ViewModels;
 
@@ -10,16 +8,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using Yandex.Metrica;
+
+using Store = Ace.Store;
 
 using static Solfeggio.Editions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Skip)]
 namespace Solfeggio
 {
-	public partial class App
+	public enum Editions { Developer, Portable, Education, Gratitude }
+
+	public partial class App : Application
 	{
 #if DEBUG
 		public static Editions Edition { get; } = Developer;
@@ -49,17 +52,7 @@ namespace Solfeggio
 			Store.Get<AppViewModel>();
 			Store.Get<MusicalPresenter>();
 
-			InitializeComponent();
-
-			Resources.MergedDictionaries
-				.Use(r => r.Add(new AppConverters()))
-				.Use(r => r.Add(new Values()))
-				.Use(r => r.Add(new Brushes()))
-				.Use(r => r.Add(new Palettes.Converters()))
-				.Use(r => r.Add(new Sets()))
-				.Use(r => r.Add(new Templates()))
-				.Use(r => r.Add(new Styles()))
-				;
+			AppPalette.Load();
 
 			MainPage = new Views.SolfeggioView();
 		}
