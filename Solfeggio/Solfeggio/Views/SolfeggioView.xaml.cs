@@ -135,6 +135,18 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 
+			AppPalette.VisualThemeChanged += () =>
+			{
+				FlowerStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Geometry");
+				SpiralStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Geometry");
+
+				MagnitudePolyline.Fill = AppPalette.GetBrush("Fill.MagnitudePMI");
+				MagnitudePolyline.Stroke = AppPalette.GetBrush("Stroke.MagnitudePMI");
+
+				MagnitudeRawFramePolyline.Fill = AppPalette.GetBrush("Fill.MagnitudeRawFrame");
+				MagnitudeRawFramePolyline.Stroke = AppPalette.GetBrush("Stroke.MagnitudeRawFrame");
+			};
+
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
 
 			Loop(100, () =>
@@ -146,7 +158,7 @@ namespace Solfeggio.Views
 				SpectrogramCanvas.InvalidateSurface();
 				MagnitudeRawFrameCanvas.InvalidateSurface();
 				FlowerStrokeCanvas.InvalidateSurface();
-				FlowerFillCanvas.InvalidateSurface();
+				SpiralStrokeCanvas.InvalidateSurface();
 				FlowerCanvas.InvalidateSurface();
 
 				//foreach (var path in _completedPaths)
@@ -186,7 +198,7 @@ namespace Solfeggio.Views
 		void Render()
 		{
 			FlowerStrokeCanvas.WidthRequest = MagnitudeRawFrameCanvas.Height;
-			FlowerFillCanvas.WidthRequest = MagnitudeRawFrameCanvas.Height;
+			SpiralStrokeCanvas.WidthRequest = MagnitudeRawFrameCanvas.Height;
 
 			var spectrum = ProcessingManager.SpectrumBetter;
 			if (spectrum.IsNot())
@@ -207,9 +219,9 @@ namespace Solfeggio.Views
 			var centerY = MagnitudeRawFrameCanvas.Height / 2d;
 			var radius = Math.Max(Math.Min(centerX, centerY), 1d);
 
-			FlowerFillPolyline.Points.Clear();
+			SpiralStrokePolyline.Points.Clear();
 			FlowerStrokePolyline.Points.Clear();
-			geometryFill.ForEach(p => FlowerFillPolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
+			geometryFill.ForEach(p => SpiralStrokePolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
 			geometryStroke.ForEach(p => FlowerStrokePolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
 
 			if (FlowerCanvas.Width > 0)
@@ -261,7 +273,7 @@ namespace Solfeggio.Views
 					p.VerticalOptions = LayoutOptions.Start;
 					Canvas.Measure(p);
 					MagnitudeCanvas.Children.Add(p);
-					p.Margin = new(p.Margin.Left - p.WidthRequest / 2d, p.Margin.Top - p.Height / 8d, 0d, 0d);
+					p.Margin = new(p.Margin.Left - p.Width / 2d, p.Margin.Top - p.Height / 8d, 0d, 0d);
 				});
 			}
 
@@ -287,8 +299,8 @@ namespace Solfeggio.Views
 				{
 					BindingContext = new SpectrogramFrame(spectrum, pianoKeys),
 					Background = GetSpectrogramLineBrush(spectrum, transformer, w, magnitudeProjection),
-					WidthRequest = ww,
-					HeightRequest = hh,
+					Width = ww,
+					Height = hh,
 				}));
 			}
 

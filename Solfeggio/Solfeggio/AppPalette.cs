@@ -3,10 +3,14 @@ using Ace.Markup;
 
 using System.Runtime.CompilerServices;
 using System.Collections;
-using Ace.Dictionaries;
-using Solfeggio.Palettes;
+using System.Linq;
+using Brushes = Solfeggio.Palettes.Brushes;
 
 #if NETSTANDARD
+using Ace.Dictionaries;
+
+using Solfeggio.Palettes;
+
 using Xamarin.Forms;
 #else
 using System.Windows;
@@ -17,13 +21,14 @@ namespace Solfeggio
 {
 	static class AppPalette
 	{
+#if NETSTANDARD
 		static AppPalette() => Application.Current.Resources = new Map();
 
 		public static void Load() => Resources.MergedDictionaries
 			.Use(r => r.Add(new AppConverters()))
 			.Use(r => r.Add(Values = new Values()))
 			.Use(r => r.Add(ColorPalettes = new ColorPalettes()))
-			.Use(r => r.Add((Map)Resources["Nature"]))
+			.Use(r => r.Add(new Map(Resources["Nature"].To<Map>())))
 			.Use(r => r.Add(Brushes = new Brushes()))
 			.Use(r => r.Add(new Palettes.Converters()))
 			.Use(r => r.Add(new Sets()))
@@ -31,16 +36,28 @@ namespace Solfeggio
 			.Use(r => r.Add(new Styles()))
 			;
 
-		public static Map Resources => (Map)Application.Current.Resources;
 		public static Map Values { get; private set; }
 		public static Map ColorPalettes { get; private set; }
+		public static Map Brushes { get; private set; }
+#else
+		public static Map Values { get => (Map)Resources.MergedDictionaries.To<IList>()[1]; }
+		public static Map ColorPalettes { get => (Map)Resources.MergedDictionaries.To<IList>()[2]; }
+		public static Map Brushes { get => (Map)Resources.MergedDictionaries.To<IList>()[4]; }
+#endif
+		public static Map Resources => (Map)Application.Current.Resources;
 		public static Map Colors
 		{
 			get => (Map)Resources.MergedDictionaries.To<IList>()[3];
-			set => Resources.MergedDictionaries.To<IList>()[3] = value;
+			set
+			{
+				var colors = Resources.MergedDictionaries.To<IList>()[3].To<Map>();
+				Map.EnumerateResources(value).ToList().ForEach(p => colors[p.Key] = p.Value);
+				new Brushes().ForEach(p => Brushes[p.Key] = p.Value);
+				VisualThemeChanged?.Invoke();
+			}
 		}
 
-		public static Map Brushes { get; private set; }
+		public static event System.Action VisualThemeChanged;
 
 		public static Brush GetBrush([CallerMemberName] string key = default) => (Brush)Resources[key];
 

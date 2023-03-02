@@ -3,6 +3,8 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using Ace;
+using Ace.Controls;
+
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Solfeggio.Presenters;
@@ -10,6 +12,8 @@ using Solfeggio.Presenters;
 using Xamarin.Forms;
 
 using static Xamarin.Forms.LayoutOptions;
+
+using Ext = Solfeggio.Presenters.Ext;
 
 namespace Solfeggio.Presenters
 {
@@ -35,6 +39,14 @@ namespace Solfeggio.Presenters
 			brush.EndPoint
 		);
 
+		public static SKPaint ToStrokeSkPaint(this Brush brush, double strokeThickness, double w, double h, double opacity)
+		{
+			var skBrush = brush.ToSkPaint(w, h, opacity);
+			skBrush.StrokeWidth = (float)(strokeThickness * Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density);
+			skBrush.Style = SKPaintStyle.Stroke;
+			return skBrush;
+		}
+	
 		public static SKPaint ToSkPaint(this Brush brush, double w, double h, double opacity) =>
 			brush.As<LinearGradientBrush>()?.ToSkPaint(w, h, opacity) ??
 			brush.As<RadialGradientBrush>()?.ToSkPaint(w, h, opacity) ??
@@ -153,38 +165,19 @@ namespace System.Windows.Controls
 
 	public class View : Primitive
 	{
+		public Thickness Margin { get; set; }
+		public Thickness CornerRadius { get; set; }
+		public Thickness BorderThickness { get; set; }
+		public Brush BorderBrush { set => Stroke = value; }
+		public Brush Background { set => Fill = value; }
+
+		public object BindingContext { get; set; }
 		public void Measure() => Canvas.Measure(this);
+		public object Tag { get; set; }
+		public double StrokeThikness { get => BorderThickness.Top; }
 
 		public LayoutOptions VerticalOptions { get; set; }
 		public LayoutOptions HorizontalOptions { get; set; }
-
-		public object BindingContext { get; set; }
-		public object Tag { get; set; }
-
-		public Thickness Margin { get; set; }
-		public Thickness CornerRadius { get; set; }
-
-		public double Width
-		{
-			get => WidthRequest;
-			set => WidthRequest = value;
-		}
-
-		public double Height
-		{
-			get => HeightRequest;
-			set => HeightRequest = value;
-		}
-
-		public Thickness BorderThickness { get; set; }
-
-		public Brush BorderBrush { get; set; }
-
-		public override Brush Stroke
-		{
-			get => BorderBrush;
-			set => BorderBrush = value;
-		}
 
 		public override SKPath ToSkPath()
 		{
@@ -193,10 +186,10 @@ namespace System.Windows.Controls
 
 			var Points = new Point[]
 			{
-				new Point(X, Y),
-				new Point(X + Width, Y),
-				new Point(X + Width, Y + Height),
-				new Point(X, Y + Height)
+				new(X, Y),
+				new(X + Width, Y),
+				new(X + Width, Y + Height),
+				new(X, Y + Height)
 			};
 
 			var points = Points.Select(p => p.ToSkPoint()).ToList();
@@ -218,10 +211,7 @@ namespace System.Windows.Controls
 	{
 		static SolidColorBrush TransparentBrush = new(Color.Transparent);
 
-		public Border()
-		{
-			Background = TransparentBrush;
-		}
+		public Border() => Background = TransparentBrush;
 
 		public View Content { get; set; }
 	}
@@ -233,7 +223,7 @@ namespace System.Windows.Controls
 		public float ActualWidth { get; set; }
 		public float ActualHeight { get; set; }
 
-		public new List<Primitive> Children { get; } = new();
+		public List<Primitive> Children { get; } = new();
 
 		public void Draw(SKPaintSurfaceEventArgs _args)
 		{
@@ -256,8 +246,8 @@ namespace System.Windows.Controls
 					using var path = child.ToSkPath();
 					//child.Measure();
 
-					var w = child.WidthRequest < 0 ? ActualWidth / density : child.WidthRequest;
-					var h = child.HeightRequest < 0 ? ActualHeight / density : child.HeightRequest;
+					var w = child.Width < 0 ? ActualWidth / density : child.Width;
+					var h = child.Height < 0 ? ActualHeight / density : child.Height;
 
 					if (child.Fill.Is())
 					{
@@ -286,8 +276,8 @@ namespace System.Windows.Controls
 			if (view.IsNot())
 				return;
 
-			var wr = view.WidthRequest;
-			var hr = view.HeightRequest;
+			var wr = view.Width;
+			var hr = view.Height;
 			var skipMeasure = wr > 0d && hr > 0d;
 
 			if (skipMeasure)
@@ -305,38 +295,38 @@ namespace System.Windows.Controls
 						var text = l.Text.Replace('♯', '#').Replace('♭', 'b');
 						stroke.MeasureText(text, ref rect);
 						var correction = 1.0 + l.FontSize * density / 200d;
-						l.WidthRequest = correction * rect.Size.Width / density;
-						l.HeightRequest = rect.Size.Height / density;
+						l.Width = correction * rect.Size.Width / density;
+						l.Height = rect.Size.Height / density;
 					}
 					break;
 				case Border g:
 					{
-						if (g.WidthRequest < 0d)
-							g.WidthRequest = w - (g.Margin.Left + g.Margin.Right);
+						if (g.Width < 0d)
+							g.Width = w - (g.Margin.Left + g.Margin.Right);
 
-						if (g.HeightRequest < 0d)
-							g.HeightRequest = h - (g.Margin.Top + g.Margin.Bottom);
+						if (g.Height < 0d)
+							g.Height = h - (g.Margin.Top + g.Margin.Bottom);
 					}
 					break;
 				case Grid g:
 					{
 						if (g.HorizontalOptions.Is(Center))
-							g.WidthRequest = w - (g.Margin.Left + g.Margin.Right);
-						else if (g.WidthRequest < 0d)
+							g.Width = w - (g.Margin.Left + g.Margin.Right);
+						else if (g.Width < 0d)
 						{
 							g.Children.ForEach(c => Measure(c));
-							g.WidthRequest = g.Children.Any() ? g.Children.Max(c => c.WidthRequest) : w;
+							g.Width = g.Children.Any() ? g.Children.Max(c => c.Width) : w;
 						}
 
 						if (g.VerticalOptions.Is(Center))
-							g.HeightRequest = h - (g.Margin.Top + g.Margin.Bottom);
-						else if (g.HeightRequest < 0d)
+							g.Height = h - (g.Margin.Top + g.Margin.Bottom);
+						else if (g.Height < 0d)
 						{
 							g.Children.ForEach(c => Measure(c));
-							g.HeightRequest = g.Children.Any() ? g.Children.Max(c => c.HeightRequest) : h;
+							g.Height = g.Children.Any() ? g.Children.Max(c => c.Height) : h;
 						}
 
-						g.Children.ForEach(c => Measure(c, g.WidthRequest, g.HeightRequest));
+						g.Children.ForEach(c => Measure(c, g.Width, g.Height));
 					}
 					break;
 				case Stack s:
@@ -344,36 +334,36 @@ namespace System.Windows.Controls
 
 						if (s.Orientation.Is(StackOrientation.Horizontal))
 						{
-							s.WidthRequest = 0d;
+							s.Width = 0d;
 
 							foreach (var child in s.Children)
 							{
-								if (child.WidthRequest < 0) Measure(child);
+								if (child.Width < 0) Measure(child);
 
-								var width = child.WidthRequest + child.Margin.Left + child.Margin.Right;
-								s.WidthRequest += width;
+								var width = child.Width + child.Margin.Left + child.Margin.Right;
+								s.Width += width;
 
-								var height = child.HeightRequest + child.Margin.Top + child.Margin.Bottom;
-								if (s.HeightRequest < height)
-									s.HeightRequest = height;
+								var height = child.Height + child.Margin.Top + child.Margin.Bottom;
+								if (s.Height < height)
+									s.Height = height;
 
 							}
 						}
 
 						if (s.Orientation.Is(StackOrientation.Vertical))
 						{
-							s.HeightRequest = 0d;
+							s.Height = 0d;
 
 							foreach (var child in s.Children)
 							{
-								if (child.HeightRequest < 0) Measure(child);
+								if (child.Height < 0) Measure(child);
 
-								var height = child.HeightRequest + child.Margin.Top + child.Margin.Bottom;
-								s.HeightRequest += height;
+								var height = child.Height + child.Margin.Top + child.Margin.Bottom;
+								s.Height += height;
 
-								var width = child.WidthRequest + child.Margin.Left + child.Margin.Right;
-								if (s.WidthRequest < width)
-									s.WidthRequest = width;
+								var width = child.Width + child.Margin.Left + child.Margin.Right;
+								if (s.Width < width)
+									s.Width = width;
 							}
 						}
 					}
@@ -402,8 +392,8 @@ namespace System.Windows.Controls
 			var rect = new SKRect(
 				(float)((x + view.Margin.Left) * density),
 				(float)((y + view.Margin.Top) * density),
-				(float)((x + view.Margin.Left + view.WidthRequest) * density),
-				(float)((y + view.Margin.Top + view.HeightRequest) * density)
+				(float)((x + view.Margin.Left + view.Width) * density),
+				(float)((y + view.Margin.Top + view.Height) * density)
 				);
 
 			var opacity = view.Opacity * baseOpacity;
@@ -412,7 +402,7 @@ namespace System.Windows.Controls
 				case Label l:
 					using (SKPath roundRectPath = new())
 					{
-						using var fill = l.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
+						using var fill = l.Fill.ToSkPaint(view.Width, view.Height, opacity);
 
 						using var stroke = GetStroke(l, opacity);
 
@@ -425,14 +415,14 @@ namespace System.Windows.Controls
 						{
 							LayoutAlignment.Start => x + l.Margin.Left,
 							LayoutAlignment.End => x + (w - l.Margin.Right),
-							_ => x + (w - l.WidthRequest) / 2d,
+							_ => x + (w - l.Width) / 2d,
 						};
 
 						var top = l.VerticalOptions.Alignment switch
 						{
-							LayoutAlignment.Start => y + l.Margin.Top + l.HeightRequest,
+							LayoutAlignment.Start => y + l.Margin.Top + l.Height,
 							LayoutAlignment.End => y + (h - l.Margin.Bottom),
-							_ => y + (h + l.HeightRequest) / 2d,
+							_ => y + (h + l.Height) / 2d,
 						};
 
 						var text = l.Text.Replace('♯', '#').Replace('♭', 'b');
@@ -461,7 +451,7 @@ namespace System.Windows.Controls
 
 						if (b.Fill.Is())
 						{
-							using var fill = b.Fill.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
+							using var fill = b.Fill.ToSkPaint(view.Width, view.Height, opacity);
 							{
 								DrawBorder(fill);
 							}
@@ -469,7 +459,7 @@ namespace System.Windows.Controls
 
 						if (b.Stroke.Is())
 						{
-							using var stroke = b.GetStrokeSkPaint(view.WidthRequest, view.HeightRequest, opacity);
+							using var stroke = b.Stroke.ToStrokeSkPaint(b.StrokeThikness, view.Width, view.Height, opacity);
 							{
 								DrawBorder(stroke);
 							}
@@ -480,7 +470,7 @@ namespace System.Windows.Controls
 					break;
 				case Grid g:
 					{
-						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
+						using var fill = g.Fill.ToSkPaint(view.Width, view.Height, opacity);
 						if (fill.Is()) canvas.DrawRect(rect, fill);
 
 						foreach (var child in g.Children)
@@ -491,7 +481,7 @@ namespace System.Windows.Controls
 					break;
 				case Stack g:
 					{
-						using var fill = g.Background.ToSkPaint(view.WidthRequest, view.HeightRequest, opacity);
+						using var fill = g.Fill.ToSkPaint(view.Width, view.Height, opacity);
 						if (fill.Is()) canvas.DrawRect(rect, fill);
 
 						var offsetX = 0d;
@@ -500,16 +490,16 @@ namespace System.Windows.Controls
 						{
 							if (g.Orientation.Is(StackOrientation.Horizontal))
 							{
-								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, child.WidthRequest, view.HeightRequest, opacity);
+								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, child.Width, view.Height, opacity);
 
-								offsetX += child.WidthRequest + child.Margin.Left + child.Margin.Right;
+								offsetX += child.Width + child.Margin.Left + child.Margin.Right;
 							}
 
 							if (g.Orientation.Is(StackOrientation.Vertical))
 							{
-								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, view.WidthRequest, child.HeightRequest, opacity);
+								Draw(canvas, child, x + offsetX + g.Margin.Left, y + offsetY + g.Margin.Top, view.Width, child.Height, opacity);
 
-								offsetY += child.HeightRequest + child.Margin.Top + child.Margin.Bottom;
+								offsetY += child.Height + child.Margin.Top + child.Margin.Bottom;
 							}
 						}
 					}
@@ -548,7 +538,7 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static Xamarin.Forms.LayoutOptions ToLayoutOptions(this HorizontalAlignment o) =>
+		public static LayoutOptions ToLayoutOptions(this HorizontalAlignment o) =>
 
 			o.Is(HorizontalAlignment.Center) ? Center :
 			o.Is(HorizontalAlignment.Left) ? Start :
@@ -557,7 +547,7 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static Xamarin.Forms.LayoutOptions ToLayoutOptions(this VerticalAlignment o) =>
+		public static LayoutOptions ToLayoutOptions(this VerticalAlignment o) =>
 
 			o.Is(VerticalAlignment.Center) ? Center :
 			o.Is(VerticalAlignment.Top) ? Start :
@@ -570,22 +560,17 @@ namespace System.Windows.Controls
 
 namespace System.Windows.Shapes
 {
-	public abstract class Primitive// : Xamarin.Forms.Frame
+	public abstract class Primitive
 	{
-		public Brush Background { get; set; }
-		public double WidthRequest { get; set; } = -1;
-		public double HeightRequest { get; set; } = -1;
+		public double Width { get; set; } = -1;
+		public double Height { get; set; } = -1;
 
-		public virtual Brush Fill
-		{
-			get => this.Background;
-			set => this.Background = value;
-		}
+		public double Opacity { get; set; } = 1d;
 
+		public virtual Brush Fill { get; set; }
 		public virtual Brush Stroke { get; set; }
 
 		public double StrokeThickness { get; set; }
-		public double Opacity { get; set; } = 1.0d;
 
 		public abstract SKPath ToSkPath();
 		public SKPaint GetStrokeSkPaint(double w, double h, double opacity)

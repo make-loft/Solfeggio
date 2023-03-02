@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +39,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Solfeggio.App</StartupObject>
@@ -66,6 +68,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Solfeggio\Api\IAudioInputDevice.cs">
+      <Link>Api\IAudioInputDevice.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Api\IWave.cs">
       <Link>Api\IWave.cs</Link>
     </Compile>
@@ -102,17 +107,14 @@
     <Compile Include="..\Solfeggio\Converters\ThicknessToDoubleTwoWayConverter.cs">
       <Link>Converters\ThicknessToDoubleTwoWayConverter.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Editions.cs">
-      <Link>Editions.cs</Link>
+    <Compile Include="..\Solfeggio\Extensions\PatchingExtensions.cs">
+      <Link>Extensions\PatchingExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Extensions\SignalExtensions.cs">
       <Link>Extensions\SignalExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Headers\WavePcmFormat.cs">
       <Link>Headers\WavePcmFormat.cs</Link>
-    </Compile>
-    <Compile Include="..\Solfeggio\IAudioInputDevice.cs">
-      <Link>IAudioInputDevice.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Localizator.cs">
       <Link>Localizator.cs</Link>
@@ -134,6 +136,10 @@
     </Compile>
     <Compile Include="..\Solfeggio\Models\VisualProfile.cs">
       <Link>Models\VisualProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Palettes\ColorPalettes.xaml.cs">
+      <Link>Palettes\ColorPalettes.xaml.cs</Link>
+      <DependentUpon>ColorPalettes.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\Solfeggio\Palettes\Converters.xaml.cs">
       <Link>Palettes\Converters.xaml.cs</Link>
@@ -232,6 +238,9 @@
     </Compile>
     <Compile Include="Controls\WindowView.cs" />
     <Compile Include="Extensions\CameraExtensions.cs" />
+    <Compile Include="Palettes\Brushes.xaml.cs">
+      <DependentUpon>Brushes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EncoderView.xaml.cs">
       <DependentUpon>EncoderView.xaml</DependentUpon>
     </Compile>
@@ -269,6 +278,11 @@
     <Compile Include="Views\ValuePicker.xaml.cs">
       <DependentUpon>ValuePicker.xaml</DependentUpon>
     </Compile>
+    <Page Include="..\Solfeggio\Palettes\ColorPalettes.xaml">
+      <Link>Palettes\ColorPalettes.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="..\Solfeggio\Palettes\Converters.xaml">
       <Link>Palettes\Converters.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
@@ -321,10 +335,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Palettes\Brushes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Palettes\ColorPalettes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

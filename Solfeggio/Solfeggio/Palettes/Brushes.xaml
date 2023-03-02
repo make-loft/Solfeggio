@@ -153,13 +153,13 @@
 		StartPoint="0,0"
 		EndPoint="0,1">
 		<GradientStop
-			Color="{DynamicResource ColorA}"
+			Color="{StaticResource ColorA}"
 			Offset="0" />
 		<GradientStop
-			Color="{DynamicResource ColorB}"
+			Color="{StaticResource ColorB}"
 			Offset="0.5" />
 		<GradientStop
-			Color="{DynamicResource ColorA}"
+			Color="{StaticResource ColorA}"
 			Offset="1" />
 	</LinearGradientBrush>
 
@@ -168,10 +168,10 @@
 		StartPoint="0,0"
 		EndPoint="0,1">
 		<GradientStop
-			Color="{DynamicResource ColorA}"
+			Color="{StaticResource ColorA}"
 			Offset="0" />
 		<GradientStop
-			Color="{DynamicResource ColorB}"
+			Color="{StaticResource ColorB}"
 			Offset="1" />
 	</LinearGradientBrush>
 
@@ -180,10 +180,10 @@
 		StartPoint="0,0"
 		EndPoint="0,1">
 		<GradientStop
-			Color="{DynamicResource ColorB}"
+			Color="{StaticResource ColorB}"
 			Offset="0" />
 		<GradientStop
-			Color="{DynamicResource ColorA}"
+			Color="{StaticResource ColorA}"
 			Offset="1" />
 	</LinearGradientBrush>
 
@@ -221,7 +221,7 @@
 
 	<SolidColorBrush
 		x:Key="Stroke.PhasePMI"
-		Color="{DynamicResource ColorC}" />
+		Color="{StaticResource ColorC}" />
 
 	<LinearGradientBrush
 		x:Key="Fill.PhasePMI"
@@ -229,13 +229,13 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="{DynamicResource ColorB}" />
+			Color="{StaticResource ColorB}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -243,10 +243,10 @@
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
-			Color="{DynamicResource ColorB}"
+			Color="{StaticResource ColorB}"
 			Offset="0.00" />
 		<GradientStop
-			Color="{DynamicResource ColorC}"
+			Color="{StaticResource ColorC}"
 			Offset="1.00" />
 	</LinearGradientBrush>
 
@@ -255,10 +255,10 @@
 		EndPoint="0,1"
 		StartPoint="0,0">
 		<GradientStop
-			Color="{DynamicResource ColorC}"
+			Color="{StaticResource ColorC}"
 			Offset="0.39" />
 		<GradientStop
-			Color="{DynamicResource ColorB}"
+			Color="{StaticResource ColorB}"
 			Offset="1.00" />
 	</LinearGradientBrush>
 
@@ -268,13 +268,13 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="{DynamicResource ColorB}" />
+			Color="{StaticResource ColorB}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -283,13 +283,13 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 	</LinearGradientBrush>
 
 	<SolidColorBrush
@@ -306,10 +306,10 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.618"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="1.236"
-			Color="{DynamicResource ColorD}" />
+			Color="{StaticResource ColorD}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -318,10 +318,10 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -333,7 +333,7 @@
 			Color="#00FFFFFF" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource PressedFullToneKeyColor}" />
+			Color="{StaticResource PressedFullToneKeyColor}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -345,12 +345,12 @@
 			Color="#00000000" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource PressedHalfToneKeyColor}" />
+			Color="{StaticResource PressedHalfToneKeyColor}" />
 	</LinearGradientBrush>
 
 	<SolidColorBrush
 		x:Key="FullToneKeyBrush"
-		Color="{DynamicResource ColorD}" />
+		Color="{StaticResource ColorD}" />
 
 	<LinearGradientBrush
 		x:Key="HalfToneKeyBrush"
@@ -361,10 +361,10 @@
 			Color="#00FFBE22" />
 		<GradientStop
 			Offset="0.1"
-			Color="{DynamicResource ColorE}" />
+			Color="{StaticResource ColorE}" />
 		<GradientStop
 			Offset="0.95"
-			Color="{DynamicResource ColorE}" />
+			Color="{StaticResource ColorE}" />
 		<GradientStop
 			Offset="1.0"
 			Color="#FF0C0C0C" />
@@ -392,13 +392,13 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="0.367"
-			Color="{DynamicResource ColorA}" />
+			Color="{StaticResource ColorA}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorB}" />
+			Color="{StaticResource ColorB}" />
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
@@ -407,25 +407,25 @@
 		EndPoint="0,1">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 		<GradientStop
 			Offset="0.5"
-			Color="{DynamicResource ColorA}" />
+			Color="{StaticResource ColorA}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorC}" />
+			Color="{StaticResource ColorC}" />
 	</LinearGradientBrush>
 
 	<RadialGradientBrush
 		x:Key="Stroke.Geometry"
 		Center="0.5,0.5"
-		GradientStops="{DynamicResource RainbowGradient}"
+		GradientStops="{StaticResource RainbowGradient}"
 		/>
 
 	<RadialGradientBrush
 		x:Key="Stroke.Geometry_"
 		Center="0.5,0.5"
-		GradientStops="{DynamicResource RainbowGradient_}"
+		GradientStops="{StaticResource RainbowGradient_}"
 		/>
 
 	<RadialGradientBrush
@@ -433,10 +433,10 @@
 		Center="0.5,0.5">
 		<GradientStop
 			Offset="0.0"
-			Color="{DynamicResource ColorB}" />
+			Color="{StaticResource ColorB}" />
 		<GradientStop
 			Offset="1.0"
-			Color="{DynamicResource ColorA}" />
+			Color="{StaticResource ColorA}" />
 	</RadialGradientBrush>
 
 	<RadialGradientBrush

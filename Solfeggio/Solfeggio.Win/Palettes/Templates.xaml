@@ -183,7 +183,7 @@
 		</Rack>
 	</DataTemplate>
 
-	<ControlTemplate
+	<DataTemplate
 		x:Key="HarmonicHeaderTemplate"
 		>
 		<Rack
@@ -210,7 +210,7 @@
 				Text="{Localizing Magnitude}"
 				/>
 		</Rack>
-	</ControlTemplate>
+	</DataTemplate>
 
 	<DataTemplate
 		x:Key="HarmonicOutTemplate"

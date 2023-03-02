@@ -6,8 +6,9 @@
 	xmlns:c="clr-namespace:System.Windows.Controls"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
+	xmlns:local="clr-namespace:Solfeggio"
 	BindingContext="{Store Key=vm:ProcessingManager}"
-	Background="{StaticResource RainbowBrush.H}"
+	Background="{DynamicResource RainbowBrush.H}"
 	LayoutChanged="ContentPage_LayoutChanged"
 	>
 	<Rack
@@ -25,7 +26,7 @@
 				x:Name="FlowerStrokeCanvas"
 				EnableTouchEvents="True"
 				Touch="OnTouchEffectAction"
-				Background="{StaticResource GeometryBackgroundBrush}"
+				Background="{DynamicResource GeometryBackgroundBrush}"
 				>
 				<sh:Polyline
 					x:Name="FlowerStrokePolyline"
@@ -51,13 +52,13 @@
 
 			<c:Canvas
 				Rack.Cell="C2"
-				x:Name="FlowerFillCanvas"
+				x:Name="SpiralStrokeCanvas"
 				EnableTouchEvents="True"
 				Touch="OnTouchEffectAction"
-				Background="{StaticResource GeometryBackgroundBrush}"
+				Background="{DynamicResource GeometryBackgroundBrush}"
 				>
 				<sh:Polyline
-					x:Name="FlowerFillPolyline"
+					x:Name="SpiralStrokePolyline"
 					Stroke="{StaticResource Stroke.Geometry}"
 					StrokeThickness=".3"
 					/>
@@ -79,6 +80,17 @@
 				StrokeThickness="{StaticResource StrokeThickness.MagnitudePMI}"
 				/>
 		</c:Canvas>
+
+		<!--Fakes to force brushes refresh-->
+		<Stack
+			Rack.Cell="R1 C0 CS2"
+			IsVisible="False"
+			>
+			<Stack Background="{DynamicResource Fill.MagnitudePMI}" />
+			<Stack Background="{DynamicResource Stroke.MagnitudePMI}" />
+			<Stack Background="{DynamicResource Fill.MagnitudeRawFrame}" />
+			<Stack Background="{DynamicResource Stroke.MagnitudeRawFrame}" />
+		</Stack>
 
 		<!--Piano-->
 		<c:Canvas
@@ -105,7 +117,7 @@
 		<c:Canvas
 			Rack.Cell="C2 R0 RS4"
 			x:Name="FlowerCanvas"
-			Background="{StaticResource GeometryBackgroundBrush_}"
+			Background="{DynamicResource GeometryBackgroundBrush_}"
 			WidthRequest="0"
 			>
 			<sh:Polyline

@@ -12,11 +12,13 @@ using Ace.Replication.MemberProviders;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 
-using static System.Environment;
 using static Solfeggio.Editions;
+using static System.Environment;
 
 namespace Solfeggio
 {
+	public enum Editions { Developer, Portable, Education, Gratitude }
+
 	public partial class App
 	{
 		public static Editions Edition { get; } = Education;
