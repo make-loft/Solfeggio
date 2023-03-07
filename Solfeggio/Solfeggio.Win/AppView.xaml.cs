@@ -23,8 +23,8 @@ namespace Solfeggio
 			FlowerView = new FlowerView();
 			TapeView = new TapeView();
 
-			EncoderView = new EncoderView();
-			EncoderView.Show();
+			//EncoderView = new EncoderView();
+			//EncoderView.Show();
 
 			static void ShowVisible(params Window[] windows) =>
 				windows.Where(w => w.Visibility is Visibility.Visible).ForEach(w => w.Show());

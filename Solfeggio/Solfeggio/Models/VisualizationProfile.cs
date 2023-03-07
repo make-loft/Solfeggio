@@ -82,8 +82,10 @@ namespace Solfeggio.Models
 			var brushKeys = AppPalette.Brushes.Keys.OfType<string>();
 
 			var theme =
-				colorsKeys.OrderBy()
-				.Concat(valueKeys.Concat(brushKeys).OrderBy())
+				colorsKeys
+				.Concat(valueKeys.Concat(brushKeys))
+				.Distinct()
+				.OrderBy()
 				.ToDictionary(k => k, k => resources[k]);
 
 			if (asyncDelay)

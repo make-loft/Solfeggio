@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary
+	x:Class="Solfeggio.Palettes.Templates"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Solfeggio.Models"
@@ -22,6 +23,14 @@
 		>
 		<Title
 			Text="{Binding Converter={StaticResource LocalizingConverter}}"
+			/>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="TitleTextTemplate"
+		>
+		<Title
+			Text="{Binding Title}"
 			/>
 	</DataTemplate>
 
@@ -100,7 +109,7 @@
 				ItemsSource="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music.PianoKeys}"
 				SelectedValue="{Binding Frequency, Mode=TwoWay}"
 				SelectedValuePath="EthalonFrequency"
-				Height="22"
+				Margin="4"
 				Width="20"
 				/>
 			<Rack
@@ -128,16 +137,16 @@
 				ToolTip="{Localizing Gap}"
 				Text="{Binding Gap, Converter={StaticResource DoubleToStringTwoWayConverter}, UpdateSourceTrigger=PropertyChanged}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="C3 R0"
 				ItemsSource="{Binding BasisFuncs}"
-				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
+				ActiveItem="{Binding BasisFunc, Mode=TwoWay}"
 				ItemTemplate="{StaticResource DelegateToNameTemplate}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="C4 R0"
 				ItemsSource="{Enum Type=m:PhaseMode}"
-				SelectedItem="{Binding PhaseMode, Mode=TwoWay}"
+				ActiveItem="{Binding PhaseMode, Mode=TwoWay}"
 				/>
 
 			<Switch
@@ -188,6 +197,7 @@
 		>
 		<Rack
 			Rack.Columns="48 96 96 96 *"
+			Background="{StaticResource TitleBrush}"
 			>
 			<Title
 				Rack.Cell="C0"
@@ -277,10 +287,10 @@
 				Text="{Localizing Profile}"
 				/>
 			<Rack>
-				<Picker
+				<Pick
 					ItemsSource="{Binding Profiles}"
-					ItemDisplayBinding="{Binding Title}"
-					SelectedItem="{Binding ActiveProfile, Mode=TwoWay}"
+					ItemTemplate="{StaticResource TitleTextTemplate}"
+					ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 					/>
 				<Field
 					Margin="4 4 22 4"
@@ -386,19 +396,19 @@
 					Text="{Localizing Pcs}"
 					/>
 
-				<Picker
+				<Pick
 					Rack.Cell="R1 C1"
 					MinWidth="210"
 					Tag="{Localizing Input}"
 					ItemsSource="{Binding InputDevices}"
-					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+					ActiveItem="{Binding ActiveInputDevice, Mode=TwoWay}"
 					DisplayMemberPath="ProductName"
 					/>
-				<Picker
+				<Pick
 					Rack.Cell="R2 C1"
 					MinWidth="210"
 					ItemsSource="{Binding OutputDevices}"
-					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+					ActiveItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
 					DisplayMemberPath="ProductName"
 					/>
 				<ContentView
@@ -411,10 +421,10 @@
 					DataContext="{Binding OutputLevel, Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
-				<Picker
+				<Pick
 					Rack.Cell="R1 C3"
 					ItemsSource="{StaticResource AllowedBuffersCount}"
-					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
+					ActiveItem="{Binding BuffersCount, Mode=TwoWay}"
 					/>
 			</Rack>
 
@@ -467,16 +477,16 @@
 					Text="{Localizing Hz}"
 					/>
 
-				<Picker
+				<Pick
 					Rack.Cell="R1 C1"
 					ItemsSource="{Binding Windows}"
-					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ActiveItem="{Binding ActiveWindow, Mode=TwoWay}"
 					ItemTemplate="{StaticResource DelegateToNameTemplate}"
 					/>
-				<Picker
+				<Pick
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding SampleRates}"
-					SelectedItem="{Binding SampleRate, Mode=TwoWay}" />
+					ActiveItem="{Binding SampleRate, Mode=TwoWay}" />
 
 				<Stack
 					Rack.Cell="R4 C1"
@@ -485,9 +495,9 @@
 					<Title
 						Text="2 ^"
 						/>
-					<Picker
+					<Pick
 						ItemsSource="{StaticResource AllowedPowsOf2}"
-						SelectedItem="{Binding FramePow, Mode=TwoWay}"
+						ActiveItem="{Binding FramePow, Mode=TwoWay}"
 						/>
 					<Title
 						Text="{Binding FrameSize, StringFormat='= {0}'}"
@@ -585,7 +595,8 @@
 			</Expander>
 			<Rack
 				Columns="2* 3* 3* * * * *"
-				Rows="* *">
+				Background="{StaticResource TitleBrush}"
+				>
 				<Title
 					Rack.Cell="C0"
 					Text="{Localizing Magnitude}"
@@ -645,56 +656,66 @@
 
 		<Rack
 			Rows="^ ^ ^"
-			Columns="^ ^ ^ ^"
+			Columns="^ * * *"
 			HorizontalAlignment="Center">
 
 			<Title
-				Rack.Cell="R0 C1"
-				Text="{Localizing Upper}" />
+				Rack.Cell="R0 C3"
+				Text="{Localizing Upper}"
+				/>
 			<Title
 				Rack.Cell="R0 C2"
-				Text="{Localizing Lower}" />
+				Text="{Localizing Length}"
+				/>
 			<Title
-				Rack.Cell="R0 C3"
-				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Localizing Length}" />
+				Rack.Cell="R0 C1"
+				Text="{Localizing Lower}"
+				/>
 
 			<Title
 				Rack.Cell="R2 C0"
-				Text="{Localizing Threshold}" />
+				Text="{Localizing Threshold}"
+				/>
 			<Title
 				Rack.Cell="R1 C0"
-				Text="{Localizing Limit}" />
-
-			<Field
-				Rack.Cell="R2 C1"
-				ToolTip="{Binding Threshold.Upper}"
-				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Field
-				Rack.Cell="R2 C2"
-				ToolTip="{Binding Threshold.Lower}"
-				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Field
-				Rack.Cell="R1 C1"
-				ToolTip="{Binding Limit.Upper}"
-				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
-			<Field
-				Rack.Cell="R1 C2"
-				ToolTip="{Binding Limit.Lower}"
-				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Text="{Localizing Limit}"
+				/>
 
 			<Field
 				Rack.Cell="R2 C3"
+				ToolTip="{Binding Threshold.Upper}"
+				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R2 C2"
 				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				ToolTip="{Binding Threshold.Length}"
-				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R2 C1"
+				ToolTip="{Binding Threshold.Lower}"
+				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			
 			<Field
 				Rack.Cell="R1 C3"
+				ToolTip="{Binding Limit.Upper}"
+				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C2"
 				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				ToolTip="{Binding Limit.Length}"
-				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}" />
+				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C1"
+				ToolTip="{Binding Limit.Lower}"
+				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
 		</Rack>
 
 	</DataTemplate>
@@ -721,9 +742,9 @@
 				<Title
 					Text="{Localizing Scale}" />
 
-				<Picker
+				<Pick
 					ItemsSource="{Binding VisualScaleFuncs}"
-					SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
+					ActiveItem="{Binding VisualScaleFunc, Mode=TwoWay}"
 					ItemTemplate="{StaticResource DelegateToNameTemplate}"
 					/>
 
@@ -794,7 +815,7 @@
 				/>
 			<Title
 				Rack.Cell="R0 C2"
-
+				Style="{StaticResource UnitTitleStyle}"
 				Text="{Localizing Pcs}"
 				/>
 
@@ -867,30 +888,46 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="FormattingTemplate">
+		x:Key="FormatTemplate"
+		>
 		<Rack
-			Rows="* *"
-			Columns="^ ^ ^"
+			Rows="^ ^ ^"
+			Columns="^ ^ * *"
 			>
 			<Title
-				Rack.Cell="R1 C0"
-				Text="{Localizing Numeric}" />
-			<Title
-				Rack.Cell="R0 C1"
-				Text="{Localizing Monitor}" />
-			<Picker
-				Rack.Cell="R1 C1"
-				HorizontalAlignment="Center"
-				ItemsSource="{Binding NumericFormats}"
-				SelectedItem="{Binding MonitorNumericFormat, Mode=TwoWay}" />
-			<Title
 				Rack.Cell="R0 C2"
-				Text="{Localizing Screen}" />
-			<Picker
+				Text="{Localizing Numeric}"
+				/>
+
+			<Title
+				Rack.Cell="R1 C0"
+				Text="🎛️"
+				/>
+			<Title
+				Rack.Cell="R1 C1"
+				Text="{Localizing Monitor}"
+				/>
+			<Pick
 				Rack.Cell="R1 C2"
-				HorizontalAlignment="Center"
+				Alignment.X="Center"
 				ItemsSource="{Binding NumericFormats}"
-				SelectedItem="{Binding ScreenNumericFormat, Mode=TwoWay}" />
+				ActiveItem="{Binding MonitorNumericFormat, Mode=TwoWay}"
+				/>
+
+			<Title
+				Rack.Cell="R2 C0"
+				Text="🎹"
+				/>
+			<Title
+				Rack.Cell="R2 C1"
+				Text="{Localizing Screen}"
+				/>
+			<Pick
+				Rack.Cell="R2 C2"
+				Alignment.X="Center"
+				ItemsSource="{Binding NumericFormats}"
+				ActiveItem="{Binding ScreenNumericFormat, Mode=TwoWay}"
+				/>
 		</Rack>
 	</DataTemplate>
 

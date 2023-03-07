@@ -39,7 +39,7 @@ namespace Solfeggio.Launcher
 		static byte[] GetAppRawAssembly() => Assemblies.App_exe.ConvertBytes(CompressionMode.Decompress);
 		static IEnumerable<byte[]> GetAppNestedRawAssemblies() => App.EnumerateNestedRawAssemblies();
 
-		[STAThread] static void Main(string[] _) => App.Main();
+		[STAThread] static void Main(string[] args) => App.Main(args);
 
 		static bool TryDelete(string path)
 		{
@@ -61,7 +61,6 @@ namespace Solfeggio.Launcher
 			{
 				"Ace.dll", "Ace.pdb",
 				"Rainbow.dll", "Rainbow.pdb",
-				"Xamarin.Synonyms.dll", "Xamarin.Synonyms.pdb",
 				"Yandex.Metrica.NET.dll",
 				"Solfeggio.pdb",
 			};

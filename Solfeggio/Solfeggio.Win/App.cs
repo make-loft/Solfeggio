@@ -19,7 +19,7 @@ namespace Solfeggio
 {
 	public enum Editions { Developer, Portable, Education, Gratitude }
 
-	public partial class App
+	public partial class App : Application
 	{
 		public static Editions Edition { get; } = Education;
 
@@ -67,6 +67,16 @@ namespace Solfeggio
 			}
 		}
 
+		public static void Main(string[] _) => System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() => new App().Run());
+
+		public App()
+		{
+			AppPalette.Load();
+
+			Startup += App_OnStartup;
+			Exit += App_OnExit;
+		}
+
 		private DateTime _startupTimestamp;
 
 		private void App_OnStartup(object sender, StartupEventArgs args)
@@ -104,6 +114,9 @@ namespace Solfeggio
 
 			Store.Get<AppViewModel>();
 			_startupTimestamp = DateTime.Now;
+
+			Current.MainWindow = new AppView();
+			Current.MainWindow.Show();
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e)

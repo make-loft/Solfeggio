@@ -84,7 +84,7 @@ namespace Solfeggio.Models
 				else
 				{
 					var hit = (int)(Abs(value / Pi.Double) % Gap) == 0d;
-					yield return hit ^ _gap > 0d ? 0d : Magnitude * BasisFunc(value);
+					yield return hit ^ _gap > 0d ? 0d : _magnitude * BasisFunc(value);
 				}
 			}
 		}

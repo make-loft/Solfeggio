@@ -23,6 +23,7 @@
 						Alignment.X="Center"
 						/>
 					<Pivot
+						ActiveItemUnset="False"
 						ItemsSource="{Binding Profiles}"
 						ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
@@ -46,6 +47,7 @@
 						Alignment.X="Center"
 						/>
 					<Pivot
+						ActiveItemUnset="False"
 						ItemsSource="{Binding Profiles}"
 						ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 						ItemTemplate="{StaticResource ProfileHeaderTemplate}"
@@ -60,7 +62,7 @@
 			Header="{Localizing Visualization}"
 			>
 			<Pivot
-				ActiveItemOffset="1"
+				ActiveItemOffset="{Smart [Options.Visualization.ActiveItemOffset], DefaultValue={Double 0}}"
 				>
 				<Item
 					Header="{Localizing Theme}"
@@ -75,6 +77,7 @@
 								Alignment.X="Center"
 								/>
 							<Pivot
+								ActiveItemUnset="False"
 								ItemsSource="{Binding Profiles}"
 								ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
@@ -103,14 +106,14 @@
 					>
 					<Slot
 						Item="{Binding Format, Source={Store p:MusicalPresenter}}"
-						ItemTemplate="{StaticResource FormattingTemplate}"
+						ItemTemplate="{StaticResource FormatTemplate}"
 						/>
 				</Item>
 				<Item
 					Header="{Localizing Range}"
 					>
 					<Pivot
-						ActiveItemOffset="0"
+						ActiveItemOffset="{Smart [Options.Visualization.Range.ActiveItemOffset], DefaultValue={Double 0}}"
 						>
 						<Item
 							Header="{Localizing Frequency}"
@@ -121,6 +124,7 @@
 								ItemTemplate="{StaticResource RangeTemplate}"
 								/>
 						</Item>
+						
 						<Item
 							Header="{Localizing Magnitude}"
 							>
@@ -186,12 +190,13 @@
 					<Title
 						Text="{Localizing Language}"
 						/>
-					<Picker
+					
+					<Pick
 						Length.X="128"
 						Data.Context="{Store vm:AppViewModel}"
 						ItemsSource="{Binding Languages}"
-						SelectedItem="{Binding ActiveLanguage, Mode=TwoWay}"
-						ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
+						ActiveItem="{Binding ActiveLanguage, Mode=TwoWay}"
+						ItemTemplate="{StaticResource LocalizingTemplate}"
 						/>
 				</Stack>
 				

@@ -36,6 +36,6 @@ namespace Solfeggio.Processors
 
 		public float[] NextSample() => _manager.ActiveProfile
 			.GenerateSignalSample(SampleSize, SampleRate, false)
-			.StretchArray(Level * Boost);
+			.StretchArray(Level);
 	}
 }

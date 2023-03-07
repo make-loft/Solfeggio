@@ -48,10 +48,11 @@ namespace Solfeggio.Models
 			private static float[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool gobalLoop)
 			{
 				var signalSample = new float[length];
-				var harmonicSamples = harmonics.
-					Where(h => h.IsEnabled && h.Frequency > 0d).
-					Select(h => h.EnumerateBins(rate, gobalLoop).Select(d => (float)d).Take(length).ToArray()).
-					ToArray();
+				var harmonicSamples = harmonics
+					.Where(h => h.IsEnabled && h.Frequency > 0d)
+					.Select(h => h.EnumerateBins(rate, gobalLoop)
+					.Select(d => (float)d).Take(length).ToArray())
+					.ToArray();
 
 				foreach (var harmonicSample in harmonicSamples)
 				{

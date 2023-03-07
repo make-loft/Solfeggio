@@ -1,16 +1,15 @@
 ﻿using Ace;
+using Ace.Dictionaries;
 using Ace.Markup;
 
 using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Linq;
+using Solfeggio.Palettes;
+
 using Brushes = Solfeggio.Palettes.Brushes;
 
 #if NETSTANDARD
-using Ace.Dictionaries;
-
-using Solfeggio.Palettes;
-
 using Xamarin.Forms;
 #else
 using System.Windows;
@@ -21,7 +20,7 @@ namespace Solfeggio
 {
 	static class AppPalette
 	{
-#if NETSTANDARD
+
 		static AppPalette() => Application.Current.Resources = new Map();
 
 		public static void Load() => Resources.MergedDictionaries
@@ -32,18 +31,14 @@ namespace Solfeggio
 			.Use(r => r.Add(Brushes = new Brushes()))
 			.Use(r => r.Add(new Palettes.Converters()))
 			.Use(r => r.Add(new Sets()))
-			.Use(r => r.Add(new Templates()))
 			.Use(r => r.Add(new Styles()))
+			.Use(r => r.Add(new Templates()))
 			;
 
 		public static Map Values { get; private set; }
 		public static Map ColorPalettes { get; private set; }
 		public static Map Brushes { get; private set; }
-#else
-		public static Map Values { get => (Map)Resources.MergedDictionaries.To<IList>()[1]; }
-		public static Map ColorPalettes { get => (Map)Resources.MergedDictionaries.To<IList>()[2]; }
-		public static Map Brushes { get => (Map)Resources.MergedDictionaries.To<IList>()[4]; }
-#endif
+
 		public static Map Resources => (Map)Application.Current.Resources;
 		public static Map Colors
 		{

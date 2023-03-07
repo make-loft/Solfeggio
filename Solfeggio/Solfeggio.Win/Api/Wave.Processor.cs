@@ -35,7 +35,8 @@ namespace Solfeggio.Api
 					var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
 					if (buffer.Is())
 					{
-						var sample = e.Sample.StretchArray(Level * Boost).Select(f => (short)(f * short.MaxValue)).ToArray();
+						var scale = Level * short.MaxValue;
+						var sample = e.Sample.Select(f => (short)(f * scale)).ToArray();
 						Array.Copy(sample, buffer.Data, e.Sample.Length);
 						if (State.Is(Processing)) buffer.MarkForProcessing();
 					}
@@ -104,7 +105,7 @@ namespace Solfeggio.Api
 					{
 						if (message.Is(Message.WaveInData))
 						{
-							var sample = buffer.Data.Select(b => (float)b).ToArray().StretchArray(Level * Boost / short.MaxValue);
+							var sample = buffer.Data.Select(b => (float)b).ToArray().StretchArray(Level / short.MaxValue);
 							DataAvailable?.Invoke(this, new(this, sample));
 							if (State.Is(Processing)) buffer.MarkForProcessing();
 						}
@@ -118,8 +119,6 @@ namespace Solfeggio.Api
 			}
 
 			public float Level { get; set; } = 1f;
-
-			public float Boost { get; set; } = 1f;
 
 			public void Wake()
 			{

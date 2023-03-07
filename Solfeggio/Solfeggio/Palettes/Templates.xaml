@@ -6,6 +6,30 @@
     xmlns:p="clr-namespace:Solfeggio.Presenters"
 	>
 
+	<DataTemplate
+		x:Key="DelegateToNameTemplate"
+		>
+		<Title
+			Text="{Binding Converter={StaticResource DelegateToNameConverter}}"
+			/>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="LocalizingTemplate"
+		>
+		<Title
+			Text="{Binding Converter={StaticResource LocalizingConverter}}"
+			/>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="TitleTextTemplate"
+		>
+		<Title
+			Text="{Binding Title}"
+			/>
+	</DataTemplate>
+
 	<!--<DataTemplate
 		x:Key="NoteNameToFrequencyTemplate"
 		>
@@ -464,7 +488,7 @@
 	</DataTemplate>
 
 	<DataTemplate
-		x:Key="FormattingTemplate"
+		x:Key="FormatTemplate"
 		>
 		<Rack
 			Rows="^ ^ ^"
@@ -598,10 +622,10 @@
 				<Title
 					Text="{Localizing Scale}"
 					/>
-				<Picker
+				<Pick
 					ItemsSource="{Binding VisualScaleFuncs}"
-					SelectedItem="{Binding VisualScaleFunc, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+					ActiveItem="{Binding VisualScaleFunc, Mode=TwoWay}"
+					ItemTemplate="{StaticResource DelegateToNameTemplate}"
 					/>
 			</Stack>
 		</Stack>

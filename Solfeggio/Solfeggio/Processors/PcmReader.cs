@@ -127,7 +127,7 @@ namespace Solfeggio.Processors
 
 			var signal = Next(valuePeaks);
 
-			return signal.StretchArray(Level * Boost);
+			return signal.StretchArray(Level);
 		}
 
 		float[] overlap;
@@ -152,7 +152,7 @@ namespace Solfeggio.Processors
 				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			return signal.StretchArray(Level * Boost);
+			return signal.StretchArray(Level);
 		}
 
 		public override BinaryReader CreateReader(Stream stream) => new(stream);

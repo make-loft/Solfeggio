@@ -84,7 +84,7 @@ namespace Solfeggio.Processors
 				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			return signal.StretchArray(Level * Boost);
+			return signal.StretchArray(Level);
 		}
 
 		public override BinaryReader CreateReader(Stream stream) => new(stream);
@@ -148,7 +148,7 @@ namespace Solfeggio.Processors
 				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}
 
-			return signal.StretchArray(Level * Boost);
+			return signal.StretchArray(Level);
 		}
 	}
 }

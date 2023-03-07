@@ -173,7 +173,7 @@ namespace Solfeggio.Views
 			{
 				var spectrum = processingManager.Spectrum;
 				var spectrumInterpolated = processingManager.SpectrumBetter;
-				if (spectrum.IsNot()) return;
+				var activeProcessingProfile = processingManager.ActiveProfile;
 
 				PianoCanvas.Children.Clear();
 
@@ -197,6 +197,9 @@ namespace Solfeggio.Views
 					}
 				}).OfType<Polyline>().ForEach(p => p.Points.Clear());
 				FrameCanvas.Children.OfType<Polyline>().ForEach(p => p.Points.Clear());
+
+				if (spectrum.IsNot()) return;
+				if (activeProcessingProfile.IsNot()) return;
 
 				static bool IsVisible(UIElement element) => element.Visibility.IsNot(Visibility.Collapsed);
 
@@ -253,7 +256,7 @@ namespace Solfeggio.Views
 				MagnitudeCanvas.Children.Add(FFTHistogramCanvas);
 				MagnitudeCanvas.Children.Add(PMIHistogramCanvas);
 
-				var discreteStep = processingManager.ActiveProfile.SampleRate / processingManager.ActiveProfile.FrameSize;
+				var discreteStep = activeProcessingProfile.SampleRate / activeProcessingProfile.FrameSize;
 
 				var resources = App.Current.Resources;
 

@@ -11,8 +11,6 @@
 		Rows="^ ^ ^ ^ ^ ^ *"
 		Columns="^ *"
 		>
-
-
 		<GroupBox
 			Rack.Cell="R0 C0 CS0"
 			Header="Source"
@@ -27,24 +25,24 @@
 					Content="Choose"
 					Click="Button_Click_1"
 					/>
-				<TextBox
+				<Field
 					Rack.Cell="R0 C1"
 					x:Name="SourceFile"
 					/>
 				
-				<TextBlock
+				<Title
 					Rack.Cell="R1 C0"
 					Text="Channels"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R1 C1"
 					Text="{Binding NumChannels}"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R2 C0"
 					Text="Sample Rate"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R2 C1"
 					Text="{Binding SampleRate}"
 					/>
@@ -66,7 +64,7 @@
 				Columns="^ *"
 				Name="TargetMetadata"
 				>
-				<TextBox
+				<Field
 					Rack.Cell="R0 C1"
 					x:Name="TargetFile"
 					/>
@@ -76,19 +74,19 @@
 					Click="Button_Click_2"
 					/>
 
-				<TextBlock
+				<Title
 					Rack.Cell="R1 C0"
 					Text="Channels"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R1 C1"
 					Text="{Binding NumChannels}"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R2 C0"
 					Text="Sample Rate"
 					/>
-				<TextBox
+				<Field
 					Rack.Cell="R2 C1"
 					Text="{Binding SampleRate}"
 					/>
@@ -98,7 +96,7 @@
 					ItemsSource="{Binding FrameSizes}"
 					SelectedItem="{Binding FrameSize, Mode=TwoWay}"
 					/>
-				<TextBlock
+				<Title
 					Rack.Cell="R3 C0"
 					Text="Frame Size"
 					/>

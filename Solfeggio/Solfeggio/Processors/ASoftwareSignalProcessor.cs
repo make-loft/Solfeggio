@@ -7,7 +7,6 @@ namespace Solfeggio.Processors
 	{
 		public IProcessor Source { get; set; }
 		public float Level { get; set; } = 1f;
-		public float Boost { get; set; } = 1f;
 		public int SampleRate { get; private set; }
 		public int SampleSize { get; private set; }
 
@@ -21,7 +20,7 @@ namespace Solfeggio.Processors
 			SampleSize = sampleSize;
 		}
 
-		public void Tick() => DataAvailable?.Invoke(this, new(this, Next().StretchArray(Level * Boost)));
+		public void Tick() => DataAvailable?.Invoke(this, new(this, Next().StretchArray(Level)));
 		public abstract float[] Next();
 
 		public void Free() { }
