@@ -2,8 +2,9 @@
     x:Class="Solfeggio.Palettes.Templates"
 	xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:m="clr-namespace:Ace.Markup;assembly=Ace"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
+    xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+    xmlns:m="clr-namespace:Solfeggio.Models"
 	>
 
 	<DataTemplate
@@ -62,6 +63,7 @@
 			Rows="* *"
 			Columns="2* 3* 2* * * *"
 			Opacity="{Binding Magnitude, Converter={StaticResource HarmonicOpacityConverter}}"
+			Margin="4,2,4,0"
 			>
 			<Rack.Resources>
 				<LinearGradientBrush
@@ -95,7 +97,7 @@
 			<Border
 				Rack.Cell="R0 C0 RS2 CS6"
 				Background="{Binding IsEnabled, Converter={StaticResource IsActiveToBrushConverter}}"
-				CornerRadius="5"
+				CornerRadius="8"
 				Opacity="0.617"
 				/>
 
@@ -134,37 +136,38 @@
 					/>
 			</Rack>
 
-			<Slider
+			<Grip
 				Rack.Cell="C0 R1"
-				Minimum="{Binding Spectrum.Magnitude.Limit.Lower, Source={Store p:MusicalPresenter}}"
-				Maximum="{Binding Spectrum.Magnitude.Limit.Upper, Source={Store p:MusicalPresenter}}"
+				From="{Binding Spectrum.Magnitude.Scope.From, Source={Store p:MusicalPresenter}}"
+				Till="{Binding Spectrum.Magnitude.Scope.Till, Source={Store p:MusicalPresenter}}"
 				Value="{Binding Magnitude, Mode=TwoWay}"
 				/>
-			<Slider
+			<Grip
 				Rack.Cell="C1 R1"
-				Maximum="{Binding Spectrum.Frequency.Limit.Upper, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
-				Minimum="{Binding Spectrum.Frequency.Limit.Lower, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
+				From="{Binding Spectrum.Frequency.Scope.From, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
+				Till="{Binding Spectrum.Frequency.Scope.Till, Source={Store p:MusicalPresenter}, Converter={StaticResource ScaleConverter}}"
 				Value="{Binding Frequency, Mode=TwoWay, Converter={StaticResource ScaleConverter}}"
 				/>
-			<Slider
+			<Grip
 				Rack.Cell="C2 R1"
-				Maximum="{StaticResource PositiveSinglePi}"
-				Minimum="{StaticResource NegativeSinglePi}"
+				From="{StaticResource NegativeSinglePi}"
+				Till="{StaticResource PositiveSinglePi}"
 				Value="{Binding Phase, Mode=TwoWay}"
 				/>
 
-			<Picker
+			<Pick
 				Rack.Cell="C3 R0"
 				Alignment.Y="Center"
 				ItemsSource="{Binding BasisFuncs}"
-				SelectedItem="{Binding BasisFunc, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+				ActiveItem="{Binding BasisFunc, Mode=TwoWay}"
+				ItemTemplate="{StaticResource DelegateToNameTemplate}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="C3 R1"
 				Alignment.Y="Center"
+				ItemTemplate="{StaticResource LocalizingTemplate}"
 				ItemsSource="{Enum m:PhaseMode}"
-				SelectedItem="{Binding PhaseMode, Mode=TwoWay}"
+				ActiveItem="{Binding PhaseMode, Mode=TwoWay}"
 				/>
 			<Switch
 				Rack.Cell="C4 R0 RS2"
@@ -185,6 +188,7 @@
 		<Stack>
 			<Rack
 				Columns="2* 3* 2* * * *"
+				Margin="4,0"
 				>
 				<Title
 					Rack.Cell="C0"
@@ -239,7 +243,9 @@
 		x:Key="HarmonicHeaderTemplate"
 		>
 		<Rack
-			Rack.Columns="48 96 96 96 *"
+			Rack.Columns="3* 2* 2* 2* 3*"
+			BackgroundColor="#66CCCCCC"
+			Margin="4,4,4,0"
 			>
 			<Title
 				Rack.Cell="C0"
@@ -268,8 +274,9 @@
 		x:Key="HarmonicOutTemplate"
 		>
 		<Rack
+			Rack.Columns="3* 2* 2* 2* 3*"
 			Opacity="{Binding RelativeOpacity}"
-			Rack.Columns="48 96 96 96 *"
+			Margin="4,2,4,0"
 			>
 			<Title
 				Rack.Cell="C0"
@@ -284,7 +291,7 @@
 			<Border
 				Rack.Cell="C2"
 				CornerRadius="10"
-				BackgroundColor="{Binding Converter={StaticResource HarmonicOffsetToColorConverter}}"
+				Background="{Binding Converter={StaticResource HarmonicOffsetToBrushConverter}}"
 				/>
 			<Title
 				Rack.Cell="C2"
@@ -355,7 +362,7 @@
 		>
 		<Rack
 			Rows="^ ^"
-			Columns="^ ^ ^ ^">
+			Columns="^ * ^ 3*">
 			<Title
 				Rack.Cell="R0 C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
@@ -363,7 +370,7 @@
 			<Field
 				Rack.Cell="R0 C1"
 				Keyboard="Numeric"
-				Text="{Binding ActivePitchStandard, Mode=TwoWay}"
+				Text="{Binding ActivePitchStandard, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<!--<Pick
 				Rack.Cell="R0 C2"
@@ -536,72 +543,77 @@
 		>
 		<Rack
 			Rows="^ ^ ^"
-			Columns="^ ^ ^ ^"
+			Columns="^ ^ ^ ^ ^"
 			>
 
 			<Title
-				Rack.Cell="R0 C0"
-				Style="{StaticResource UnitTitleStyle}"
-				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
-				/>
-			<Title
 				Rack.Cell="R0 C1"
-				Text="{Localizing Upper}"
+				Text="{Localizing From}"
 				/>
 			<Title
 				Rack.Cell="R0 C2"
-				Text="{Localizing Lower}"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Localizing Length}"
 				/>
 			<Title
 				Rack.Cell="R0 C3"
+				Text="{Localizing Till}"
+				/>
+
+			<Title
+				Rack.Cell="R1 C0"
+				Text="{Localizing Scope}"
+				/>
+			<Field
+				Rack.Cell="R1 C1"
+				Ext.ToolTip="{Binding Scope.From}"
+				Text="{Binding Scope.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C2"
+				IsReadOnly="True"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Localizing Length}"
+				Ext.ToolTip="{Binding Scope.Length}"
+				Text="{Binding Scope.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Field
+				Rack.Cell="R1 C3"
+				Ext.ToolTip="{Binding Scope.Till}"
+				Text="{Binding Scope.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Title
+				Rack.Cell="R2 C4"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
 				/>
 
 			<Title
 				Rack.Cell="R2 C0"
-				Text="{Localizing Threshold}"
+				Text="{Localizing Window}"
 				/>
-			<Title
-				Rack.Cell="R1 C0"
-				Text="{Localizing Limit}"
-				/>
-
 			<Field
 				Rack.Cell="R2 C1"
-				Ext.ToolTip="{Binding Threshold.Upper}"
-				Text="{Binding Threshold.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Ext.ToolTip="{Binding Window.From}"
+				Text="{Binding Window.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Field
 				Rack.Cell="R2 C2"
-				Ext.ToolTip="{Binding Threshold.Lower}"
-				Text="{Binding Threshold.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				IsReadOnly="True"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Ext.ToolTip="{Binding Window.Length}"
+				Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Field
-				Rack.Cell="R1 C1"
-				Ext.ToolTip="{Binding Limit.Upper}"
-				Text="{Binding Limit.Upper, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
-			<Field
-				Rack.Cell="R1 C2"
-				Ext.ToolTip="{Binding Limit.Lower}"
-				Text="{Binding Limit.Lower, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
-
 			<Field
 				Rack.Cell="R2 C3"
-				IsReadOnly="True"
-				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Ext.ToolTip="{Binding Threshold.Length}"
-				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Ext.ToolTip="{Binding Window.Till}"
+				Text="{Binding Window.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Field
-				Rack.Cell="R1 C3"
-				IsReadOnly="True"
+			<Title
+				Rack.Cell="R1 C4"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Ext.ToolTip="{Binding Limit.Length}"
-				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
 				/>
+
 		</Rack>
 	</DataTemplate>
 
@@ -617,7 +629,7 @@
 				/>
 			<Stack
 				Orientation="Horizontal"
-				Alignment.X="Till"
+				Alignment.X="Center"
 				>
 				<Title
 					Text="{Localizing Scale}"
@@ -655,227 +667,210 @@
 	<DataTemplate
 		x:Key="ProcessingProfileTemplate"
 		>
-		<Stack>
-			<Grid
-				Rack.Rows="^ ^ ^ *"
-				Rack.Columns="^ 2* 3* ^"
-				Alignment.X="Stretch"
+		<Rack
+			Rows="^ ^ ^ ^ *"
+			Columns="^ 2* 3* ^"
+			Alignment.X="Stretch"
+			Alignment.Y="Center"
+			>
+			<Title
+				Rack.Cell="R0 C1"
+				Text="{Localizing Device}"
+				/>
+			<Title
+				Rack.Cell="R0 C2"
+				Text="{Localizing Level}"
+				/>
+
+			<Title
+				Rack.Cell="R1 C0"
+				Text="{Localizing Input}"
+				/>
+			<Picker
+				Rack.Cell="R1 C1"
+				ItemsSource="{Binding InputDevices}"
+				SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+				/>
+
+			<Title
+				Rack.Cell="R2 C0"
+				Text="{Localizing Output}"
+				/>
+			<Picker
+				Rack.Cell="R2 C1"
+				ItemsSource="{Binding OutputDevices}"
+				SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
+				ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+				/>
+
+			<Rack
+				Rack.Cell="R1 C2"
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Keyboard="Numeric"
+					Alignment.X="Center"
+					HorizontalTextAlignment="Center"
+					Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-8.0"
+					Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+
+			<Stack
+				Rack.Cell="R3 C2"
+				Orientation="Horizontal"
+				Alignment.X="Center"
+				>
+				<Title
+					Text="{Localizing Adaptation}"
+					/>
+				<Switch
+					IsToggled="{Binding AdaptationState, Mode=TwoWay}"
+					/>
+			</Stack>
+
+			<Rack
+				Rack.Cell="R2 C2"
+				Rows="^ *"
+				>
+				<Field
+					Rack.Cell="R0"
+					Keyboard="Numeric"
+					Alignment.X="Center"
+					HorizontalTextAlignment="Center"
+					Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Slider
+					Rack.Cell="R1"
+					Maximum="+8.0"
+					Minimum="-8.0"
+					Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
+					/>
+			</Rack>
+
+			<Rack
+				Rack.Cell="R0 C3 RS4"
+				Rows="^ ^ ^ ^ ^ ^ ^ ^"
+				Columns="^ ^ ^"
+				Alignment.X="Center"
 				Alignment.Y="Center"
 				>
 				<Title
 					Rack.Cell="R0 C1"
-					Text="{Localizing Device}"
-					/>
-				<Title
-					Rack.Cell="R0 C2"
-					Text="{Localizing Level}"
+					Text="{Localizing Sample}"
 					/>
 				<!--<Title
-					Rack.Cell="R0 C3"
-					Text="{Localizing Boost}"
-					/>-->
-				<!--<Title
-					Rack.Cell="R0 C3"
-					Text="{Localizing Buffers}"
-					/>-->
-				<!--<Title
-					Rack.Cell="R1 C4"
-					Text="{Localizing Pcs}"
+					Rack.Cell="R1 C0"
+					Text="{Localizing Window}"
 					/>-->
 
-				<Title
-					Rack.Cell="R1 C0"
-					Text="{Localizing Input}"
-					/>
-				<Picker
+				<!--<Title
+					Rack.Cell="R6 C2"
+					Text="{Localizing Hz}"
+					/>-->
+				<!--<Title
+					Rack.Cell="R7 C2"
+					Text="{Localizing Hz}"
+					/>-->
+
+				<!--<Picker
 					Rack.Cell="R1 C1"
-					ItemsSource="{Binding InputDevices}"
-					SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
-					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
-					/>
+					ItemsSource="{Binding Windows}"
+					SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
+					ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
+					/>-->
 
 				<Title
 					Rack.Cell="R2 C0"
-					Text="{Localizing Output}"
+					Text="{Localizing Rate}"
 					/>
 				<Picker
 					Rack.Cell="R2 C1"
-					ItemsSource="{Binding OutputDevices}"
-					SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-					ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+					ItemsSource="{Binding SampleRates}"
+					SelectedItem="{Binding SampleRate, Mode=TwoWay}"
 					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 					/>
-
-				<Rack
-					Rack.Cell="R1 C2"
-					Rows="^ *"
-					>
-					<Field
-						Rack.Cell="R0"
-						Keyboard="Numeric"
-						Alignment.X="Center"
-						HorizontalTextAlignment="Center"
-						Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
-					<Slider
-						Rack.Cell="R1"
-						Maximum="+8.0"
-						Minimum="-8.0"
-						Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
-						/>
-				</Rack>
-
-				<Rack
+				<Title
 					Rack.Cell="R2 C2"
-					Rows="^ *"
-					>
-					<Field
-						Rack.Cell="R0"
-						Keyboard="Numeric"
-						Alignment.X="Center"
-						HorizontalTextAlignment="Center"
-						Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
-					<Slider
-						Rack.Cell="R1"
-						Maximum="+8.0"
-						Minimum="-8.0"
-						Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
-						/>
-				</Rack>
-
-				<!--<Slot
-					Rack.Cell="R1 C2"
-					Item="{Binding InputLevel, Mode=TwoWay}"
-					ControlTemplate="{StaticResource ValuePickerTemplate}"
+					Text="{Localizing Hz}"
 					/>
-				<Slot
-					Rack.Cell="R2 C2"
-					Item="{Binding OutputLevel, Mode=TwoWay}"
-					ControlTemplate="{StaticResource ValuePickerTemplate}"
-					/>-->
-				<!--<Picker
-					Rack.Cell="R1 C3"
-					ItemsSource="{StaticResource AllowedBuffersCount}"
-					SelectedItem="{Binding BuffersCount, Mode=TwoWay}"
-					/>-->
 
-				<Rack
-					Rack.Cell="R0 C3 RS4"
-					Rows="^ ^ ^ ^ ^ ^ ^ ^"
-					Columns="^ ^ ^"
-					Alignment.X="Center"
-					Alignment.Y="Center"
+				<Title
+					Rack.Cell="R3 C1 CS2"
+					Text="{Localizing Frame}"
+					/>
+
+				<Title
+					Rack.Cell="R4 C0"
+					Text="{Localizing Size}"
+					/>
+				<Stack
+					Rack.Cell="R4 C1"
+					Orientation="Horizontal"
 					>
 					<Title
-						Rack.Cell="R0 C1"
-						Text="{Localizing Sample}"
-						/>
-					<!--<Title
-						Rack.Cell="R1 C0"
-						Text="{Localizing Window}"
-						/>-->
-
-					<!--<Title
-						Rack.Cell="R6 C2"
-						Text="{Localizing Hz}"
-						/>-->
-					<!--<Title
-						Rack.Cell="R7 C2"
-						Text="{Localizing Hz}"
-						/>-->
-
-					<!--<Picker
-						Rack.Cell="R1 C1"
-						ItemsSource="{Binding Windows}"
-						SelectedItem="{Binding ActiveWindow, Mode=TwoWay}"
-						ItemDisplayBinding="{Binding Converter={StaticResource DelegateToNameConverter}}"
-						/>-->
-
-					<Title
-						Rack.Cell="R2 C0"
-						Text="{Localizing Rate}"
+						Text="2 ^"
 						/>
 					<Picker
-						Rack.Cell="R2 C1"
-						ItemsSource="{Binding SampleRates}"
-						SelectedItem="{Binding SampleRate, Mode=TwoWay}"
+						ItemsSource="{StaticResource AllowedPowsOf2}"
+						SelectedItem="{Binding FramePow, Mode=TwoWay}"
 						IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 						/>
 					<Title
-						Rack.Cell="R2 C2"
-						Text="{Localizing Hz}"
+						Text="{Binding FrameSize, StringFormat='= {0}'}"
 						/>
+				</Stack>
+				<Title
+					Rack.Cell="R4 C2"
+					Text="{Localizing Pcs}"
+					/>
 
-					<Title
-						Rack.Cell="R3 C1 CS2"
-						Text="{Localizing Frame}"
-						/>
+				<Title
+					Rack.Cell="R5 C0 CS2"
+					Alignment.X="From"
+					Text="{Localizing Duration}"
+					/>
+				<Title
+					Rack.Cell="R5 C1"
+					Alignment.X="Till"
+					Text="{Binding FrameDuration.TotalMilliseconds}"
+					/>
+				<Title
+					Rack.Cell="R5 C2"
+					Text="{Localizing ms}"
+					/>
 
-					<Title
-						Rack.Cell="R4 C0"
-						Text="{Localizing Size}"
-						/>
-					<Stack
-						Rack.Cell="R4 C1"
-						Orientation="Horizontal"
-						>
-						<Title
-							Text="2 ^"
-							/>
-						<Picker
-							ItemsSource="{StaticResource AllowedPowsOf2}"
-							SelectedItem="{Binding FramePow, Mode=TwoWay}"
-							IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
-							/>
-						<Title
-							Text="{Binding FrameSize, StringFormat='= {0}'}"
-							/>
-					</Stack>
-					<Title
-						Rack.Cell="R4 C2"
-						Text="{Localizing Pcs}"
-						/>
-
-					<Title
-						Rack.Cell="R5 C0 CS2"
-						Alignment.X="From"
-						Text="{Localizing Duration}"
-						/>
-					<Title
-						Rack.Cell="R5 C1"
-						Alignment.X="Till"
-						Text="{Binding FrameDuration.TotalMilliseconds}"
-						/>
-					<Title
-						Rack.Cell="R5 C2"
-						Text="{Localizing ms}"
-						/>
-
-					<!--<Title
-						Rack.Cell="R6 C0"
-						Text="{Localizing Step}"
-						/>
-					<Title
-						Rack.Cell="R6 C1"
-						Alignment.X="Till"
-						Ext.ToolTip="{Binding BorderStep}"
-						Text="{Binding BorderStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>
-					<Title
-						Rack.Cell="R7 C0"
-						Text="{Localizing Accuracy}"
-						/>
-					<Title
-						Rack.Cell="R7 C1"
-						Alignment.X="Till"
-						Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
-						Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
-						/>-->
-				</Rack>
-			</Grid>
-		</Stack>
+				<!--<Title
+					Rack.Cell="R6 C0"
+					Text="{Localizing Step}"
+					/>
+				<Title
+					Rack.Cell="R6 C1"
+					Alignment.X="Till"
+					Ext.ToolTip="{Binding BorderStep}"
+					Text="{Binding BorderStep, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+				<Title
+					Rack.Cell="R7 C0"
+					Text="{Localizing Accuracy}"
+					/>
+				<Title
+					Rack.Cell="R7 C1"
+					Alignment.X="Till"
+					Ext.ToolTip="{Binding Accuracy, StringFormat='±{0}'}"
+					Text="{Binding Accuracy, StringFormat='±{0}', Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>-->
+			</Rack>
+		</Rack>
 	</DataTemplate>
 
 </ResourceDictionary>

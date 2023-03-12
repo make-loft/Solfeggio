@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-#if XAMARIN
+#if NETSTANDARD
 using Xamarin.Essentials;
 #endif
 
@@ -50,10 +50,6 @@ namespace Solfeggio.ViewModels
 			{
 				try
 				{
-#if !XAMARIN
-					var uri = e.Parameter?.ToString();
-					await System.Diagnostics.Process.Start(uri).ToAsync();
-#else
 					var uri = e.Parameter?.ToString().Format(AppInfo.PackageName);
 
 					if (uri.Contains("gitlab"))
@@ -61,8 +57,10 @@ namespace Solfeggio.ViewModels
 						this["OptionsIsVisible"] = false;
 						this["CarePageVisit"] = true;
 					}
-
+#if NETSTANDARD
 					await Browser.OpenAsync(uri);
+#else
+					await System.Diagnostics.Process.Start(uri).ToAsync();
 #endif
 				}
 				catch (Exception exception)

@@ -27,6 +27,7 @@ namespace Solfeggio
 		public static o Solfeggio = _("Solfeggio", "Сольфеджио");
 		public static o Сalibration = _("Сalibration", "Калибровка", "Каліброўка");
 		public static o Visualization = _("Visualization", "Визуализация", "Візуалізацыя");
+		public static o Adaptation = _("Adaptation", "Адаптация");
 		public static o Advanced = _("Advanced", "Расширенные");
 		public static o Telemetry = _("Telemetry", "Телеметрия");
 		public static o Sensitive = _("Sensitive", "Чувствительность");
@@ -55,6 +56,7 @@ namespace Solfeggio
 		public static o Frequency = _("Frequency", "Частота");
 		public static o Magnitude = _("Magnitude", "Амплитуда");
 		public static o Phase = _("Phase", "Фаза");
+		public static o Scope = _("Scope", "Рамки");
 		public static o Bandwidth = _("Bandwidth", "Полоса пропускания");
 		public static o Notation = _("Notation", "Нотация");
 		public static o Threshold = _("Threshold", "Порог");

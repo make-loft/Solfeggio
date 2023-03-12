@@ -122,6 +122,14 @@
 		<GradientStop Color="{StaticResource ColorA}" Offset="1" />
 	</LinearGradientBrush>
 
+	<LinearGradientBrush
+		x:Key="SplitterBackgroundBrush_"
+		StartPoint="0,0"
+		EndPoint="0,1">
+		<GradientStop Color="{StaticResource ColorD}" Offset="0" />
+		<GradientStop Color="{StaticResource ColorC}" Offset="1" />
+	</LinearGradientBrush>
+
 	<SolidColorBrush
 		x:Key="Fill.MagnitudeFFT"
 		Color="#44FF0000"
@@ -235,7 +243,7 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="PressToneKeyBrush"
+		x:Key="PressedFullToneKeyBrush"
 		StartPoint="0,0"
 		EndPoint="0,1"
 		>
@@ -244,7 +252,7 @@
 	</LinearGradientBrush>
 
 	<LinearGradientBrush
-		x:Key="PressHalfToneKeyBrush"
+		x:Key="PressedHalfToneKeyBrush"
 		StartPoint="0,0"
 		EndPoint="0,1"
 		>

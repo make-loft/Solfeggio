@@ -88,8 +88,8 @@ namespace Solfeggio.Views
 				{
 					if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
 					{
-						bandwidth.Limit.Lower = bandwidth.Threshold.Lower;
-						bandwidth.Limit.Upper = bandwidth.Threshold.Upper;
+						bandwidth.Limit.From = bandwidth.Threshold.From;
+						bandwidth.Limit.Till = bandwidth.Threshold.Till;
 					}
 
 					return;
@@ -312,10 +312,10 @@ namespace Solfeggio.Views
 				Draw(peaks, activeProfile.SampleSize, activeProfile.SampleRate);
 
 				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
-					AppPalette.GetBrush("PhasePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
+					AppPalette.GetBrush("PhasePeakBrush"), default, pianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
 
 				musicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
-					AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency), zIndexA);
+					AppPalette.GetBrush("MagnitudePeakBrush"), default, pianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
 
 				if (App.Current.MainWindow.IsNot())
 					return;
@@ -506,15 +506,15 @@ namespace Solfeggio.Views
 
 		bool IsStateChanged(Projection actualScaleFunc, SmartRange threshold) =>
 			_sizeChanged ||
-			threshold.Lower.IsNot(_previousLower) ||
-			threshold.Upper.IsNot(_previousUpper) ||
+			threshold.From.IsNot(_previousLower) ||
+			threshold.Till.IsNot(_previousUpper) ||
 			actualScaleFunc.IsNot(_previousScaleFunc);
 
 		void KeepState(Projection actualScaleFunc, SmartRange threshold)
 		{
 			_sizeChanged = false;
-			_previousLower = threshold.Lower;
-			_previousUpper = threshold.Upper;
+			_previousLower = threshold.From;
+			_previousUpper = threshold.Till;
 			_previousScaleFunc = actualScaleFunc;
 		}
 

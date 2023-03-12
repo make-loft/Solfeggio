@@ -104,8 +104,8 @@
 		/>
 
 	<Converter
-        x:Key="HarmonicOffsetToColorConverter"
-        Convert="HarmonicOffsetToColor_Convert"
+        x:Key="HarmonicOffsetToBrushConverter"
+        Convert="HarmonicOffsetToBrush_Convert"
         />
 
 	<c:MathConverter

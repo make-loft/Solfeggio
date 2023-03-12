@@ -24,22 +24,22 @@ namespace Solfeggio.Presenters
 			{ Lineal, _2Pow, Exp, Log, Pow2 };
 
 		[DataMember] public string Units { get; set; }
-		[DataMember] public SmartRange Limit { get; set; }
-		[DataMember] public SmartRange Threshold { get; set; }
+		[DataMember] public SmartRange Scope { get; set; }
+		[DataMember] public SmartRange Window { get; set; }
 		[DataMember] public Projection[] VisualScaleFuncs { get; set; } = ScaleFuncs;
 		[DataMember] public Projection VisualScaleFunc { get; set; } = Lineal;
 		public Projection LogicalScaleFunc => BackScaleFuncs[Array.IndexOf(ScaleFuncs, VisualScaleFunc)];
 
 		public void LimitThreshold()
 		{
-			var l = Limit;
-			var t = Threshold;
+			var l = Scope;
+			var t = Window;
 
-			if (t.Lower < l.Lower) t.Lower = l.Lower;
-			if (t.Lower > l.Upper) t.Lower = l.Upper;
+			if (t.From < l.From) t.From = l.From;
+			if (t.From > l.Till) t.From = l.Till;
 
-			if (t.Upper > l.Upper) t.Upper = l.Upper;
-			if (t.Upper < l.Lower) t.Upper = l.Lower;
+			if (t.Till > l.Till) t.Till = l.Till;
+			if (t.Till < l.From) t.Till = l.From;
 		}
 
 		public void ShiftThreshold(double from, double till) =>
@@ -53,27 +53,27 @@ namespace Solfeggio.Presenters
 			{
 				var offset = shift ? from - till : till - from;
 
-				Threshold.Lower += shift ? +offset : -offset;
-				Threshold.Upper += offset;
+				Window.From += shift ? +offset : -offset;
+				Window.Till += offset;
 			}
 			else
 			{
 				var scale = shift ? from / till : till / from;
 
-				Threshold.Lower *= shift ? scale : (1 / scale);
-				Threshold.Upper *= scale;
+				Window.From *= shift ? scale : (1 / scale);
+				Window.Till *= scale;
 			}
 
-			if (Threshold.Lower < Limit.Lower)
-				Threshold.Lower = Limit.Lower;
+			if (Window.From < Scope.From)
+				Window.From = Scope.From;
 
-			if (Threshold.Upper > Limit.Upper)
-				Threshold.Upper = Limit.Upper;
+			if (Window.Till > Scope.Till)
+				Window.Till = Scope.Till;
 
-			if (Threshold.Length < Limit.Length / 1024d && Limit.Lower < Limit.Upper)
+			if (Window.Length < Scope.Length / 1024d && Scope.From < Scope.Till)
 			{
-				Threshold.Lower = Limit.Lower;
-				Threshold.Upper = Limit.Upper;
+				Window.From = Scope.From;
+				Window.Till = Scope.Till;
 			}
 		}
 	}

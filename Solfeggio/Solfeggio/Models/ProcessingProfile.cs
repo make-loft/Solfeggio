@@ -234,6 +234,37 @@ namespace Solfeggio.Models
 			set => Set(() => OutputLevel, value);
 		}
 
+		[DataMember]
+		public bool AdaptationState { get; set; } = true;
+
+		private void AdaptLevels(Complex[] sample)
+		{
+			var scale = 0.8f;
+			var thresholdLevel = 0.9f;
+			var optimalInputLevel = 1.0f;
+			var optimalOutputLevel = 0.1f;
+
+			if (sample.Max(c => c.Real).To(out float maxLevel) <= thresholdLevel)
+				return;
+
+			if (InputLevel > optimalInputLevel)
+			{
+				var scaledLevel = InputLevel * scale;
+				InputLevel = scaledLevel < optimalInputLevel
+					? optimalInputLevel
+					: scaledLevel;
+			}
+			
+			if (OutputLevel > optimalOutputLevel)
+			{
+				OutputLevel *= scale;
+				var scaledLevel = InputLevel * scale;
+				InputLevel = scaledLevel < optimalOutputLevel
+					? optimalOutputLevel 
+					: scaledLevel;
+			}
+		}
+
 		private void OnInputDataAvailable(object sender, ProcessingEventArgs args)
 		{
 			var sampleSize = args.Sample.Length;
@@ -242,6 +273,9 @@ namespace Solfeggio.Models
 			{
 				sample[i] = args.Sample[i];
 			}
+
+			if (AdaptationState.Is(true))
+				AdaptLevels(sample);
 
 			SampleReady?.Invoke(this, new(this, sample, SampleRate));
 		}

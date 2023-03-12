@@ -21,14 +21,14 @@ namespace Solfeggio.Palettes
 	public partial class Converters
 	{
 #if NETSTANDARD
-		static Color FromArgb(double a, double r, double g, double b) => new Color(a, r, g, b);
+		static Color FromArgb(double a, double r, double g, double b) => new(r, g, b, a);
 #else
 		static Color FromArgb(double a, double r, double g, double b) =>
 			Color.FromArgb((byte)(a * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
 #endif
 		public Converters() => InitializeComponent();
 
-		private object HarmonicOffsetToColor_Convert(ConvertArgs args)
+		private object HarmonicOffsetToBrush_Convert(ConvertArgs args)
 		{
 			var k = (PianoKey)args.Value;
 			if (k.IsNot())
@@ -36,13 +36,13 @@ namespace Solfeggio.Palettes
 
 			var color = FromArgb
 			(
+				0.368 + 0.632 * k.Magnitude,
 				0.0,
-				1.0 - 2.0 * Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency).To(out var d),
-				0.5 + 1.0 * d,
-				0.8 + 0.2 * k.Magnitude
+				1.0 - (2.0 * Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)).To(out var colorOffset),
+				1.0
 			);
 
-			return color;
+			return new SolidColorBrush(color);
 		}
 
 		Bandwidth FrequencyBandwidth = Store.Get<MusicalPresenter>().Spectrum.Frequency;

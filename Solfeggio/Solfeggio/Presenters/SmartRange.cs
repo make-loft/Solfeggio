@@ -5,40 +5,40 @@ namespace Solfeggio.Presenters
 	[DataContract]
 	public class SmartRange<T> : SmartObject where T : struct
 	{
-		T _lower, _upper;
+		T _from, _till;
 
 		[DataMember]
-		public T Upper
+		public T Till
 		{
-			get => _upper;
-			set => value.To(out _upper).Notify(this).Notify(this, nameof(Length));
+			get => _till;
+			set => value.To(out _till).Notify(this).Notify(this, nameof(Length));
 		}
 
 		[DataMember]
-		public T Lower
+		public T From
 		{
-			get => _lower;
-			set => value.To(out _lower).Notify(this).Notify(this, nameof(Length));
+			get => _from;
+			set => value.To(out _from).Notify(this).Notify(this, nameof(Length));
 		}
 
 		public virtual T Length { get; }
 
-		public void Deconstruct(out T lower, out T upper)
+		public void Deconstruct(out T from, out T till)
 		{
-			lower = _lower;
-			upper = _upper;
+			from = _from;
+			till = _till;
 		}
 	}
 
 	[DataContract]
 	public class SmartRange : SmartRange<double>
 	{
-		public override double Length => Upper - Lower;
+		public override double Length => Till - From;
 
-		public static SmartRange Create(double lower, double upper) => new()
+		public static SmartRange Create(double from, double till) => new()
 		{
-			Lower = lower,
-			Upper = upper
+			From = from,
+			Till = till,
 		};
 	}
 }

@@ -56,8 +56,8 @@ namespace Solfeggio
 
 		public static Brush GetBrush([CallerMemberName] string key = default) => (Brush)Resources[key];
 
-		public static Brush PressHalfToneKeyBrush => GetBrush();
-		public static Brush PressToneKeyBrush => GetBrush();
+		public static Brush PressedHalfToneKeyBrush => GetBrush();
+		public static Brush PressedFullToneKeyBrush => GetBrush();
 		public static Brush FullToneKeyBrush => GetBrush();
 		public static Brush HalfToneKeyBrush => GetBrush();
 

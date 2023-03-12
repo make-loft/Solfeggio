@@ -140,7 +140,7 @@
 		<RackSplitter
 			Rack.Cell="R3"
 			Style="{StaticResource HorizontalRackSplitterStyle}"
-			Background="{DynamicResource SplitterBackgroundBrush}"
+			Background="{DynamicResource SplitterBackgroundBrush_}"
 			/>
 
 		<Rack
@@ -158,12 +158,13 @@
 			<RackSplitter
 				Rack.Cell="R1"
 				Style="{StaticResource HorizontalRackSplitterStyle}"
-				Background="{DynamicResource SplitterBackgroundBrush}"
+				Background="{DynamicResource SplitterBackgroundBrush_}"
 				/>
 
 			<Border
 				Rack.Cell="R2"
-				Name="SpectrogramFrame">
+				Name="SpectrogramFrame"
+				>
 				<Stack
 					Rack.Cell="R2"
 					Name="SpectrogramCanvas"

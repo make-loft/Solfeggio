@@ -43,6 +43,7 @@ namespace Solfeggio
 		static App()
 		{
 			CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
 			Store.ActiveBox.KeyFormat = Path.Combine(AppDataFolderPath, "{0}.json");
 		}
@@ -61,6 +62,7 @@ namespace Solfeggio
 		{
 			YandexMetrica.Wake();
 		}
+
 		protected override void OnSleep()
 		{
 			Store.Get<ProcessingManager>().ActiveProfile?.Dispose();

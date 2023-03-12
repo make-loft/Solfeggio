@@ -49,6 +49,14 @@ namespace Solfeggio.Presenters
 				var profileName = nameof(VisualProfile.OffsetFrequency);
 				VisualProfile.PeakProfiles[profileName].StringFormat = $"+0.{zeros};−0.{zeros};•0.{zeros}";
 			};
+
+			bool IsSpectrumCollapsed() =>
+				Spectrum.Frequency.Window.Length.Is(0d) ||
+				Spectrum.Magnitude.Window.Length.Is(0d) ||
+				Spectrum.Phase.Window.Length.Is(0d);
+
+			if (IsSpectrumCollapsed())
+				Spectrum = new();
 		}
 
 		public void DrawMarkers(System.Collections.IList items, double width, double height,
@@ -57,7 +65,7 @@ namespace Solfeggio.Presenters
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
 
-			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
+			hBand.Window.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var allMarkers = markers.ToArray();
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
@@ -105,7 +113,7 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<double> EnumerateGrid(double frequencyStep)
 		{
-			Spectrum.Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
+			Spectrum.Frequency.Window.Deconstruct(out _, out var upperFrequency);
 			var startFrequency = 0d; //Math.Ceiling(lowerFrequency / frequencyStep) * frequencyStep;
 
 			for (var value = startFrequency; value < upperFrequency; value += frequencyStep)
@@ -116,7 +124,7 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<double> EnumerateNotes(double breakFrequency = default)
 		{
-			Spectrum.Frequency.Threshold.Deconstruct(out _, out var upperFrequency);
+			Spectrum.Frequency.Window.Deconstruct(out _, out var upperFrequency);
 			breakFrequency = breakFrequency.Is(default) ? upperFrequency : breakFrequency;
 
 			for (var j = 0; ; j++)
@@ -173,7 +181,7 @@ namespace Solfeggio.Presenters
 
 		public static ScaleTransformer GetScaleTransformer(Bandwidth band, double visualLength,
 			Projection correction = default) => new(band.VisualScaleFunc, visualLength,
-				band.Threshold.Lower, band.Threshold.Upper, correction);
+				band.Window.From, band.Window.Till, correction);
 
 		public static IEnumerable<TOut> Draw<TIn, TOut>(
 			IEnumerable<TIn> points,
@@ -188,8 +196,8 @@ namespace Solfeggio.Presenters
 			var hScaleTransformer = GetScaleTransformer(hBand, hLength, hCorrection);
 			var vScaleTransformer = GetScaleTransformer(vBand, vLength, vCorrection);
 
-			hBand.Threshold.Deconstruct(out var hLowerValue, out var hUpperValue);
-			vBand.Threshold.Deconstruct(out var vLowerValue, out var vUpperValue);
+			hBand.Window.Deconstruct(out var hLowerValue, out var hUpperValue);
+			vBand.Window.Deconstruct(out var vLowerValue, out var vUpperValue);
 			vScaleTransformer.GetVisualOffset(0d).To(out var vZeroLevel);
 
 			if (createWithContent.IsNot()) yield return create(0d, in vZeroLevel);
@@ -252,8 +260,8 @@ namespace Solfeggio.Presenters
 			var hScaleTransformer = GetScaleTransformer(hBand, hLength, default);
 			var vScaleTransformer = GetScaleTransformer(vBand, vLength, v => v.Negation().Increment(height));
 
-			hBand.Threshold.Deconstruct(out var hLowerValue, out var hUpperValue);
-			vBand.Threshold.Deconstruct(out var vLowerValue, out var vUpperValue);
+			hBand.Window.Deconstruct(out var hLowerValue, out var hUpperValue);
+			vBand.Window.Deconstruct(out var vLowerValue, out var vUpperValue);
 
 			for (int i = 1; i < spectrum.Count - 1; i++)
 			{
@@ -383,7 +391,7 @@ namespace Solfeggio.Presenters
 
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, IList<Bin> peaks)
 		{
-			Spectrum.Magnitude.Threshold.Deconstruct(out var lowMagnitude, out var upperMagnitude);
+			Spectrum.Magnitude.Window.Deconstruct(out var lowMagnitude, out var upperMagnitude);
 
 			var vVisualStretchFactor = height.Squeeze(upperMagnitude);
 			var useNoteFilter = UseNoteFilter;
@@ -394,7 +402,7 @@ namespace Solfeggio.Presenters
 			var hBand = Spectrum.Frequency;
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
 
-			hBand.Threshold.Deconstruct(out var lowerFrequency, out var upperFrequency);
+			hBand.Window.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var keys = Music.EnumeratePianoKeys().ToList();
 			//var averagePeaksMagnitude = peaks.Aggregate(0d, (s, p) => s += p.Magnitude) / peaks.Count;
@@ -446,7 +454,7 @@ namespace Solfeggio.Presenters
 				if (key.Peaks.Count.Is(0))
 					continue;
 
-				var brush = isTone ? AppPalette.PressToneKeyBrush : AppPalette.PressHalfToneKeyBrush;
+				var brush = isTone ? AppPalette.PressedFullToneKeyBrush : AppPalette.PressedHalfToneKeyBrush;
 				var gradientBrush = (LinearGradientBrush)brush.Clone();
 				var value = Math.Sqrt(key.Magnitude);
 #if NETSTANDARD
@@ -464,7 +472,7 @@ namespace Solfeggio.Presenters
 		private static Border CreateBorder(double lowerOffset, double upperOffset, double height,
 			Brush strokeBrush, Brush fillBrush, Thickness borderThickness = default) => new()
 		{
-			Width = (upperOffset - lowerOffset).To(out var w),
+			Width = Math.Abs(upperOffset - lowerOffset).To(out var w),
 			CornerRadius = new(w / 16, w / 16, w / 4, w / 4),
 			Margin = new(lowerOffset, 0d, 0d, 0d),
 			BorderThickness = borderThickness,
