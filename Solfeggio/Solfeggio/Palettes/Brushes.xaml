@@ -351,4 +351,24 @@
 		<GradientStop Offset="1.0" Color="{StaticResource ColorA}" />
 	</RadialGradientBrush>
 
+	<LinearGradientBrush
+		x:Key="ActiveHarmonicBrush"
+		StartPoint="0,0"
+		EndPoint="0,1"
+		>
+		<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
+		<GradientStop Offset="0.5" Color="Pink" />
+		<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush
+		x:Key="HarmonicBrush"
+		StartPoint="0,0"
+		EndPoint="0,1"
+		>
+		<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
+		<GradientStop Offset="0.5" Color="{StaticResource RegularColor}" />
+		<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
+	</LinearGradientBrush>
+
 </Map>

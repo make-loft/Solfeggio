@@ -29,6 +29,7 @@ namespace Solfeggio.Views
 		public SolfeggioView()
 		{
 			InitializeComponent();
+
 			Loaded += (o, e) => Focus();
 			SizeChanged += (o, e) => _sizeChanged = true;
 
@@ -88,8 +89,8 @@ namespace Solfeggio.Views
 				{
 					if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
 					{
-						bandwidth.Limit.From = bandwidth.Threshold.From;
-						bandwidth.Limit.Till = bandwidth.Threshold.Till;
+						bandwidth.Scope.From = bandwidth.Window.From;
+						bandwidth.Scope.Till = bandwidth.Window.Till;
 					}
 
 					return;
@@ -398,11 +399,11 @@ namespace Solfeggio.Views
 					FullSpectrogramRefresh();
 				}
 
-				var threshold = actualBand.Threshold;
-				if (IsStateChanged(actualBand.VisualScaleFunc, threshold).Not())
+				var window = actualBand.Window;
+				if (IsStateChanged(actualBand.VisualScaleFunc, window).Not())
 					return;
 
-				KeepState(actualBand.VisualScaleFunc, threshold);
+				KeepState(actualBand.VisualScaleFunc, window);
 				RequestFullSpectrogramRefresh(500);
 			};
 
@@ -411,7 +412,7 @@ namespace Solfeggio.Views
 
 		int _requestsCount = 0;
 		Projection _previousScaleFunc;
-		double _previousLower, _previousUpper;
+		double _previousWindowFrom, _previousWindowTill;
 
 		IList<Bin> _peaks;
 		int _sampleSize;
@@ -504,17 +505,17 @@ namespace Solfeggio.Views
 
 		bool _sizeChanged;
 
-		bool IsStateChanged(Projection actualScaleFunc, SmartRange threshold) =>
+		bool IsStateChanged(Projection actualScaleFunc, SmartRange window) =>
 			_sizeChanged ||
-			threshold.From.IsNot(_previousLower) ||
-			threshold.Till.IsNot(_previousUpper) ||
+			window.From.IsNot(_previousWindowFrom) ||
+			window.Till.IsNot(_previousWindowTill) ||
 			actualScaleFunc.IsNot(_previousScaleFunc);
 
-		void KeepState(Projection actualScaleFunc, SmartRange threshold)
+		void KeepState(Projection actualScaleFunc, SmartRange window)
 		{
 			_sizeChanged = false;
-			_previousLower = threshold.From;
-			_previousUpper = threshold.Till;
+			_previousWindowFrom = window.From;
+			_previousWindowTill = window.Till;
 			_previousScaleFunc = actualScaleFunc;
 		}
 

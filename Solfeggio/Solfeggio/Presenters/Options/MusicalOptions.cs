@@ -14,8 +14,22 @@ using System.Windows.Media;
 namespace Solfeggio.Presenters.Options
 {
 	[DataContract]
-	public class MusicalOptions : ContextObject
+	public class MusicalOptions : ContextObject, IExposable
 	{
+		public MusicalOptions() => Expose();
+
+		public void Expose()
+		{
+			this[() => ActivePitchStandard].Changed += (o, e) =>
+			{
+				BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(ActivePitchStandard);
+				PianoKeys = EnumeratePianoKeys().ToList();
+				EvokePropertyChanged(nameof(PianoKeys));
+			};
+
+			EvokePropertyChanged(nameof(ActivePitchStandard));
+		}
+
 		public static double DefaultPitchStandard = 440d;
 		[DataMember]
 		public double[] PitchStandards { get; } =
@@ -25,13 +39,7 @@ namespace Solfeggio.Presenters.Options
 		public double ActivePitchStandard
 		{
 			get => Get(() => ActivePitchStandard, DefaultPitchStandard);
-			set
-			{
-				Set(() => ActivePitchStandard, value);
-				BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(value);
-				PianoKeys = EnumeratePianoKeys().ToList();
-				EvokePropertyChanged(nameof(PianoKeys));
-			}
+			set => Set(() => ActivePitchStandard, value);
 		}
 
 		public Dictionary<string, string[]> NotationToNotes { get; set; } = new()

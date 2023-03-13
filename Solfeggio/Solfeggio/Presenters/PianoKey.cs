@@ -19,6 +19,8 @@ namespace Solfeggio.Models
 
 		public double RelativeOpacity { get; set; } = 1d;
 
+		public override string ToString() => $"{EthalonFrequency:F2} Hz • {NoteName}";
+
 		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
 		{
 			var lowNoteNumber = 0;

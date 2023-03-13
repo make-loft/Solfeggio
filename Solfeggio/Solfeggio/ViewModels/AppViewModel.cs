@@ -1,16 +1,16 @@
 ﻿using Ace;
 
 using Solfeggio.Models;
+#if !NETSTANDARD
 using Solfeggio.Views;
+#endif
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-#if NETSTANDARD
 using Xamarin.Essentials;
-#endif
 
 namespace Solfeggio.ViewModels
 {
@@ -70,7 +70,10 @@ namespace Solfeggio.ViewModels
 			};
 
 			if (this["CarePageVisit"].IsNot(true))
+			{
 				this["OptionsIsVisible"] = true;
+				this["Options.ActiveItemOffset"] = 4; /* agreement item */
+			}
 
 			ActiveLanguage = ActiveLanguage.Is(LanguageCodes.Default)
 				? new[] { "ru", "be" }.Contains(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)

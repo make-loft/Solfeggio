@@ -33,6 +33,9 @@ namespace Solfeggio
 			.Use(r => r.Add(new Sets()))
 			.Use(r => r.Add(new Styles()))
 			.Use(r => r.Add(new Templates()))
+#if !NETSTANDARD
+			.Use(r => r.Add(new TemplatesDesktop()))
+#endif
 			;
 
 		public static Map Values { get; private set; }

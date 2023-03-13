@@ -4,20 +4,18 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
-	Data.Context="{Store vm:AppViewModel}"
 	>
 	<Pivot
-		ActiveItemOffset="{Smart [Options.ActiveItemOffset], DefaultValue={Double 0}}"
+		ActiveItemOffset="{Smart [Options.ActiveItemOffset], DefaultValue={Double 0}, StoreKey=vm:AppViewModel}"
 		>
 
 		<!--Signal-->
 		<Item
 			Header="{Localizing Signal}"
+			Data.Context="{Store vm:ProcessingManager}"
 			>
 			<Scroll>
-				<Stack
-					Data.Context="{Store vm:ProcessingManager}"
-					>
+				<Stack>
 					<Slot
 						Item="{Binding}"
 						ItemTemplate="{StaticResource TitleTemplate}"
@@ -37,11 +35,10 @@
 		<!--Generator-->
 		<Item
 			Header="{Localizing Generator}"
+			Data.Context="{Store vm:HarmonicManager}"
 			>
 			<Scroll>
-				<Stack
-					Data.Context="{Store vm:HarmonicManager}"
-					>
+				<Stack>
 					<Slot
 						Item="{Binding}"
 						ItemTemplate="{StaticResource TitleTemplate}"
@@ -63,7 +60,7 @@
 			Header="{Localizing Visualization}"
 			>
 			<Pivot
-				ActiveItemOffset="{Smart [Options.Visualization.ActiveItemOffset], DefaultValue={Double 0}}"
+				ActiveItemOffset="{Smart [Options.Visualization.ActiveItemOffset], DefaultValue={Double 0}, StoreKey=vm:AppViewModel}"
 				>
 				<Item
 					Header="{Localizing Theme}"
@@ -114,7 +111,7 @@
 					Header="{Localizing Range}"
 					>
 					<Pivot
-						ActiveItemOffset="{Smart [Options.Visualization.Range.ActiveItemOffset], DefaultValue={Double 0}}"
+						ActiveItemOffset="{Smart [Options.Visualization.Range.ActiveItemOffset], DefaultValue={Double 0}, StoreKey=vm:AppViewModel}"
 						>
 						<Item
 							Header="{Localizing Frequency}"
@@ -177,8 +174,8 @@
 
 		<!--Agreement-->
 		<Item
-			x:Name="AgreementItem"
 			Header="{Localizing Agreement}"
+			Data.Context="{Store vm:AppViewModel}"
 			>
 			<Rack
 				Rows="^ ^ * ^ ^"
@@ -194,7 +191,6 @@
 					
 					<Pick
 						Length.X="128"
-						Data.Context="{Store vm:AppViewModel}"
 						ItemsSource="{Binding Languages}"
 						ActiveItem="{Binding ActiveLanguage, Mode=TwoWay}"
 						ItemTemplate="{StaticResource LocalizingTemplate}"
@@ -216,7 +212,7 @@
 					Rack.Cell="R3"
 					FontSize="14"
 					CommandParameter="{Localizing ReadyToHelpLink}"
-					Command="{Context Navigate, StoreKey=vm:AppViewModel}"
+					Command="{Context Navigate}"
 					Content="{Localizing ReadyToHelpMessage, Modifiers=ToUpper}"
 					/>
 				

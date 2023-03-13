@@ -149,6 +149,10 @@
       <Link>Palettes\Sets.xaml.cs</Link>
       <DependentUpon>Sets.xaml</DependentUpon>
     </Compile>
+    <Compile Include="..\Solfeggio\Palettes\Templates.xaml.cs">
+      <Link>Palettes\Templates.xaml.cs</Link>
+      <DependentUpon>Templates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="..\Solfeggio\Palettes\Values.xaml.cs">
       <Link>Palettes\Values.xaml.cs</Link>
       <DependentUpon>Values.xaml</DependentUpon>
@@ -242,8 +246,8 @@
     <Compile Include="Palettes\Styles.xaml.cs">
       <DependentUpon>Styles.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Palettes\Templates.xaml.cs">
-      <DependentUpon>Templates.xaml</DependentUpon>
+    <Compile Include="Palettes\Templates.Desktop.xaml.cs">
+      <DependentUpon>Templates.Desktop.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EncoderView.xaml.cs">
       <DependentUpon>EncoderView.xaml</DependentUpon>
@@ -300,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="..\Solfeggio\Palettes\Templates.xaml">
+      <Link>Palettes\Templates.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="..\Solfeggio\Palettes\Values.xaml">
       <Link>Palettes\Values.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
@@ -322,6 +330,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Palettes\Templates.Desktop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
     <Page Include="Views\EncoderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -343,10 +355,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Palettes\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Palettes\Templates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

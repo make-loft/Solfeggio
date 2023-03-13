@@ -1,0 +1,141 @@
+﻿<ResourceDictionary
+	x:Class="Solfeggio.Palettes.TemplatesDesktop"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:local="clr-namespace:Solfeggio"
+	>
+
+	<DataTemplate
+		x:Key="WindowMenuTemplate"
+		>
+		<Rack
+			Rows="^ ^ ^ ^ ^"
+			Columns="^ ^ ^"
+			DataContext="{Store vm:AppViewModel}"
+			>
+			<Title
+				Rack.Cell="R1 C1"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Visible}"
+				Text="🗔"
+				/>
+			<Title
+				Rack.Cell="R1 C2"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Topmost}"
+				Text="📌"
+				/>
+
+			<Title
+				Rack.Cell="R2 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Flower}"
+				Text="🌸"
+				/>
+			<Switch
+				Rack.Cell="R2 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R2 C2"
+				Opacity="0.5"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.FlowerView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+
+			<Title
+				Rack.Cell="R3 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Tape}"
+				Text="📼"
+				/>
+			<Switch
+				Rack.Cell="R3 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R3 C2"
+				Opacity="0.5"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.TapeView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+
+			<Title
+				Rack.Cell="R4 C0"
+				FontSize="20"
+				Foreground="{StaticResource SpectrogramBackgroundBrush}"
+				ToolTip="{Localizing Monitor}"
+				Text="🎚️"
+				/>
+			<Switch
+				Rack.Cell="R4 C1"
+				IsChecked="{Binding Visibility, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+			<Switch
+				Rack.Cell="R4 C2"
+				Opacity="0.5"
+				IsChecked="{Binding Topmost, Source={x:Static local:AppView.MonitorView}, Mode=TwoWay, Converter={StaticResource TrueToTrueConverter}}"
+				/>
+		</Rack>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="MenuTemplate"
+		>
+		<Rack
+			Margin="-22 0 0 0"
+			Rows="^ ^ ^ ^ ^"
+			Columns="^ ^ ^"
+			DataContext="{Store vm:AppViewModel}"
+			>
+			<GroupBox
+				Rack.Cell="R0 C0 CS0"
+				BorderThickness="0"
+				HorizontalAlignment="Right"
+				Background="{StaticResource TitleBrush}"
+				>
+				<Rack
+					Margin="0 5 0 0"
+					Rows="* *"
+					Columns="* *"
+					>
+					<Button
+						Rack.Cell="R0 C0"
+						Opacity="0.5"
+						Command="{Context LoadActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Load}"
+						Content="📂"
+						/>
+					<Button
+						Rack.Cell="R0 C1"
+						Opacity="0.5"
+						Command="{Context SaveActiveFrame, StoreKey=vm:AppViewModel}"
+						ToolTip="{Localizing Save}"
+						Content="💾"
+						/>
+					<Switch
+						Rack.Cell="R1 C0"
+						IsChecked="{StoreBinding Path=IsPaused, StoreKey=vm:ProcessingManager, Mode=TwoWay}"
+						/>
+					<Title
+						Rack.Cell="R1 C1"
+						Foreground="{StaticResource SpectrogramBackgroundBrush}"
+						ToolTip="{Localizing Frame}"
+						FontSize="20"
+						Text="📷"
+						/>
+				</Rack>
+			</GroupBox>
+
+			<GroupBox
+				Rack.Cell="R1 C0 RS0 CS0"
+				BorderThickness="0"
+				Background="{StaticResource TitleBrush}"
+				ContentTemplate="{StaticResource WindowMenuTemplate}"
+				/>
+		</Rack>
+	</DataTemplate>
+</ResourceDictionary>

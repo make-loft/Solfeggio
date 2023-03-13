@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary
 	x:Class="Solfeggio.Palettes.Templates"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:m="clr-namespace:Solfeggio.Models"
 	xmlns:c="clr-namespace:Solfeggio.Controls"
@@ -79,8 +79,8 @@
 				Rack.Cell="C1 R1"
 				TickFrequency="100"
 				TickPlacement="TopLeft"
-				Maximum="{StoreBinding Spectrum.Frequency.Limit.Till, StoreKey=p:MusicalPresenter, Converter={StaticResource ScaleConverter}}"
-				Minimum="{StoreBinding Spectrum.Frequency.Limit.From, StoreKey=p:MusicalPresenter, Converter={StaticResource ScaleConverter}}"
+				Maximum="{StoreBinding Spectrum.Frequency.Scope.Till, StoreKey=p:MusicalPresenter, Converter={StaticResource ScaleConverter}}"
+				Minimum="{StoreBinding Spectrum.Frequency.Scope.From, StoreKey=p:MusicalPresenter, Converter={StaticResource ScaleConverter}}"
 				Value="{Binding Frequency, Converter={StaticResource ScaleConverter}}"
 				/>
 			<Slider
@@ -811,47 +811,47 @@
 
 			<Title
 				Rack.Cell="R2 C0"
-				Text="{Localizing Threshold}"
+				Text="{Localizing Window}"
 				/>
 			<Title
 				Rack.Cell="R1 C0"
-				Text="{Localizing Limit}"
+				Text="{Localizing Scope}"
 				/>
 
 			<Field
 				Rack.Cell="R2 C3"
-				ToolTip="{Binding Threshold.Till}"
-				Text="{Binding Threshold.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Window.Till}"
+				Text="{Binding Window.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Field
 				Rack.Cell="R2 C2"
 				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				ToolTip="{Binding Threshold.Length}"
-				Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Window.Length}"
+				Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Field
 				Rack.Cell="R2 C1"
-				ToolTip="{Binding Threshold.From}"
-				Text="{Binding Threshold.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Window.From}"
+				Text="{Binding Window.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			
 			<Field
 				Rack.Cell="R1 C3"
-				ToolTip="{Binding Limit.Till}"
-				Text="{Binding Limit.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Scope.Till}"
+				Text="{Binding Scope.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Field
 				Rack.Cell="R1 C2"
 				Style="{StaticResource ReadOnlyFieldStyle}"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				ToolTip="{Binding Limit.Length}"
-				Text="{Binding Limit.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Scope.Length}"
+				Text="{Binding Scope.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Field
 				Rack.Cell="R1 C1"
-				ToolTip="{Binding Limit.From}"
-				Text="{Binding Limit.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Scope.From}"
+				Text="{Binding Scope.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 		</Rack>
 
@@ -867,10 +867,10 @@
 				ContentTemplate="{StaticResource RangeRackTemplate}" />
 
 			<c:RangeBar
-				Maximum="{Binding Limit.Till, Mode=TwoWay}"
-				Minimum="{Binding Limit.From, Mode=TwoWay}"
-				SelectionEnd="{Binding Threshold.Till, Mode=TwoWay}"
-				SelectionStart="{Binding Threshold.From, Mode=TwoWay}" />
+				Maximum="{Binding Scope.Till, Mode=TwoWay}"
+				Minimum="{Binding Scope.From, Mode=TwoWay}"
+				SelectionEnd="{Binding Window.Till, Mode=TwoWay}"
+				SelectionStart="{Binding Window.From, Mode=TwoWay}" />
 
 			<Stack
 				Orientation="Horizontal"
@@ -1132,8 +1132,8 @@
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
 						<Field
 							Rack.Cell="R0 C0"
-							ToolTip="{Binding Threshold.Till}"
-							Text="{Binding Threshold.Till, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							ToolTip="{Binding Window.Till}"
+							Text="{Binding Window.Till, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
 						<Title
 							Rack.Cell="R0 C1"
@@ -1141,8 +1141,8 @@
 							/>
 						<Field
 							Rack.Cell="R0 C2"
-							ToolTip="{Binding Threshold.From}"
-							Text="{Binding Threshold.From, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							ToolTip="{Binding Window.From}"
+							Text="{Binding Window.From, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
 						<Title
 							Rack.Cell="R1 C1"
@@ -1151,8 +1151,8 @@
 						<Field
 							Rack.Cell="R1 C2"
 							Style="{StaticResource ReadOnlyFieldStyle}"
-							ToolTip="{Binding Threshold.Length}"
-							Text="{Binding Threshold.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							ToolTip="{Binding Window.Length}"
+							Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 							/>
 					</Rack>
 				</Expander.Header>

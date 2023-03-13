@@ -1,6 +1,7 @@
 ﻿using Ace;
 using Ace.Markup.Patterns;
 
+using Solfeggio.Models;
 using Solfeggio.ViewModels;
 
 using Xamarin.Forms.Xaml;
@@ -16,5 +17,9 @@ namespace Solfeggio.Palettes
 
 		object LevelToPointsCount(ConvertArgs args) =>
 			(int) (ProcessingManager.ActiveProfile.FrameSize / args.Value.To<double>());
+
+		object PianoKeyToFrequencyConvert(ConvertArgs args) => args.Value is PianoKey key
+			? key.EthalonFrequency
+			: Xamarin.Forms.Binding.DoNothing;
 	}
 }

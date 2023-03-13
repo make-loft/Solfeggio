@@ -50,6 +50,7 @@ namespace Solfeggio.ViewModels
 				b.DefaultTitleFormat = "∿ {0}",
 				b.DefaultTitle = "Generator",
 				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+				b.AdaptationState = false,
 				b.OutputLevel = .5f,
 				b.FramePow = 10
 			);

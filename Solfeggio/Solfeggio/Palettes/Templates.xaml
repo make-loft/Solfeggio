@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     x:Class="Solfeggio.Palettes.Templates"
 	xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:p="clr-namespace:Solfeggio.Presenters"
     xmlns:vm="clr-namespace:Solfeggio.ViewModels"
     xmlns:m="clr-namespace:Solfeggio.Models"
@@ -31,7 +31,7 @@
 			/>
 	</DataTemplate>
 
-	<!--<DataTemplate
+	<DataTemplate
 		x:Key="NoteNameToFrequencyTemplate"
 		>
 		<Rack
@@ -54,7 +54,7 @@
 				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 		</Rack>
-	</DataTemplate>-->
+	</DataTemplate>
 
 	<DataTemplate
 		x:Key="HarmonicTemplate"
@@ -66,26 +66,6 @@
 			Margin="4,2,4,0"
 			>
 			<Rack.Resources>
-				<LinearGradientBrush
-					x:Key="ActiveHarmonicBrush"
-					StartPoint="0,0"
-					EndPoint="0,1"
-					>
-					<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
-					<GradientStop Offset="0.5" Color="Pink" />
-					<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
-				</LinearGradientBrush>
-
-				<LinearGradientBrush
-					x:Key="HarmonicBrush"
-					StartPoint="0,0"
-					EndPoint="0,1"
-					>
-					<GradientStop Offset="0.0" Color="{StaticResource RegularColor}" />
-					<GradientStop Offset="0.5" Color="{StaticResource RegularColor}" />
-					<GradientStop Offset="1.0" Color="{StaticResource RegularColor}" />
-				</LinearGradientBrush>
-
 				<KeyToValueConverter
 					x:Key="IsActiveToBrushConverter"
 					Key="{True}"
@@ -106,11 +86,37 @@
 				Keyboard="Numeric"
 				Text="{Binding Magnitude, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Field
+			<Rack
 				Rack.Cell="C1"
-				Keyboard="Numeric"
-				Text="{Binding Frequency, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				/>
+				Columns="* 3*"
+				>
+				
+				<Rack.Resources>
+					<Converter
+						x:Key="PianoKeyToFrequencyConverter"
+						ConvertBack="PianoKeyToFrequencyConvert"
+						/>
+				</Rack.Resources>
+				
+				<Pick
+					Rack.Cell="C0"
+					ItemTemplate="{StaticResource NoteNameToFrequencyTemplate}"
+					ItemsSource="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music.PianoKeys}"
+					ActiveItem="{Binding Frequency, Mode=OneWayToSource, Converter={StaticResource PianoKeyToFrequencyConverter}}"
+					/>
+				<Button
+					Rack.Cell="C0"
+					InputTransparent="True"
+					Content="🎶"
+					Padding="0"
+					Margin="0"
+					/>
+				<Field
+					Rack.Cell="C1"
+					Keyboard="Numeric"
+					Text="{Binding Frequency, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					/>
+			</Rack>
 			<Rack
 				Rack.Cell="C2"
 				Columns="* *"
@@ -175,7 +181,7 @@
 				/>
 			<Button
 				Rack.Cell="C5 R0 RS2"
-				Text="➖"
+				Content="➖"
 				CommandParameter="{Binding}"
 				Command="{Context Key=Set.Delete, StoreKey=vm:HarmonicManager, KeyPath=ActiveProfile}"
 				/>
@@ -233,7 +239,7 @@
 				/>
 			<Button
 				Alignment.X="Center"
-				Text="{Localizing Create, StringFormat='{}{0} ➕'}"
+				Content="{Localizing Create, StringFormat='{}{0} ➕'}"
 				Command="{Context Key=Set.Create, TrackedPath=BindingContext}"
 				/>
 		</Stack>
@@ -244,7 +250,7 @@
 		>
 		<Rack
 			Rack.Columns="3* 2* 2* 2* 3*"
-			BackgroundColor="#66CCCCCC"
+			Background="#66CCCCCC"
 			Margin="4,4,4,0"
 			>
 			<Title
@@ -339,18 +345,17 @@
 				/>
 			<Field
 				Length.X="128"
-				BindingContext="{Binding ActiveProfile}"
-				Text="{Binding Title, Mode=TwoWay}"
-				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+				Text="{Binding ActiveProfile.Title, Mode=TwoWay}"
+				IsEnabled="{Binding ActiveProfile.IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				/>
 			<Button
 				Length.X="48"
-				Text="➕"
+				Content="➕"
 				Command="{Context Key=Set.Create}"
 				/>
 			<Button
 				Length.X="48"
-				Text="➖"
+				Content="➖"
 				CommandParameter="{Binding ActiveProfile}"
 				Command="{Context Key=Set.Delete, TrackedPath=CommandParameter}"
 				/>
@@ -365,7 +370,7 @@
 			Columns="^ * ^ 3*">
 			<Title
 				Rack.Cell="R0 C0"
-				Text="{Localizing Standard, StringFormat='{}{0} [A1]'}"
+				Text="{Localizing Standard, StringFormat='{}{0} [A4]'}"
 				/>
 			<Field
 				Rack.Cell="R0 C1"
@@ -385,11 +390,10 @@
 				Rack.Cell="R1 C0"
 				Text="{Localizing Notation}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="R1 C1"
 				ItemsSource="{Binding Notations}"
-				SelectedItem="{Binding ActiveNotation, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding Converter={StaticResource LocalizingConverter}}"
+				ActiveItem="{Binding ActiveNotation, Mode=TwoWay}"
 				/>
 			<Title
 				Rack.Cell="R1 C2"
@@ -414,6 +418,12 @@
 			Rows="^ ^ ^"
 			Columns="^ ^ * *"
 			>
+			<Rack.Resources>
+				<Converter
+					x:Key="LevelToPointsCountConverter"
+					Convert="LevelToPointsCount"
+					/>
+			</Rack.Resources>
 			<Title
 				Rack.Cell="R0 C2"
 				Text="{Localizing Approximation}"
@@ -440,13 +450,13 @@
 					Rack.Cell="R0"
 					Keyboard="Numeric"
 					Alignment.X="Center"
-					HorizontalTextAlignment="Center"
+					TextAlignment="Center"
 					Text="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-				<Slider
+				<Grip
 					Rack.Cell="R1"
-					Maximum="+8.0"
-					Minimum="-2.0"
+					From="-2.0"
+					Till="+8.0"
 					Value="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
@@ -455,7 +465,7 @@
 				Opacity="0.35"
 				Alignment.X="Till"
 				Alignment.Y="From"
-				Text="{Binding FlowerApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				Text="{Binding FlowerApproximationLevel, Converter={StaticResource LevelToPointsCountConverter}}"
 				/>
 
 			<Title
@@ -474,13 +484,13 @@
 					Rack.Cell="R0"
 					Keyboard="Numeric"
 					Alignment.X="Center"
-					HorizontalTextAlignment="Center"
+					TextAlignment="Center"
 					Text="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-				<Slider
+				<Grip
 					Rack.Cell="R1"
-					Maximum="+8.0"
-					Minimum="-2.0"
+					From="-2.0"
+					Till="+8.0"
 					Value="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
@@ -489,7 +499,7 @@
 				Opacity="0.35"
 				Alignment.X="Till"
 				Alignment.Y="From"
-				Text="{Binding SpiralApproximationLevel, Converter={Converter Convert=LevelToPointsCount}}"
+				Text="{Binding SpiralApproximationLevel, Converter={StaticResource LevelToPointsCountConverter}}"
 				/>
 		</Rack>
 	</DataTemplate>
@@ -654,11 +664,10 @@
 				Keyboard="Numeric"
 				Text="{TemplateBinding Item, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
-			<Slider
-				x:Name="Slider"
+			<Grip
 				Rack.Cell="R1"
-				Maximum="1.0"
-				Minimum="0.0"
+				From="0.0"
+				Till="1.0"
 				Value="{TemplateBinding Item, Mode=TwoWay}"
 				/>
 		</Rack>
@@ -686,24 +695,24 @@
 				Rack.Cell="R1 C0"
 				Text="{Localizing Input}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="R1 C1"
 				ItemsSource="{Binding InputDevices}"
-				SelectedItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+				ActiveItem="{Binding ActiveInputDevice, Mode=TwoWay}"
 				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+				DisplayMemberPath="ProductName"
 				/>
 
 			<Title
 				Rack.Cell="R2 C0"
 				Text="{Localizing Output}"
 				/>
-			<Picker
+			<Pick
 				Rack.Cell="R2 C1"
 				ItemsSource="{Binding OutputDevices}"
-				SelectedItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-				ItemDisplayBinding="{Binding ProductName, Converter={StaticResource LocalizingConverter}}"
+				ActiveItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
 				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
+				DisplayMemberPath="ProductName"
 				/>
 
 			<Rack
@@ -714,13 +723,13 @@
 					Rack.Cell="R0"
 					Keyboard="Numeric"
 					Alignment.X="Center"
-					HorizontalTextAlignment="Center"
+					TextAlignment="Center"
 					Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-				<Slider
+				<Grip
 					Rack.Cell="R1"
-					Maximum="+8.0"
-					Minimum="-8.0"
+					From="-8.0"
+					Till="+8.0"
 					Value="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
@@ -746,13 +755,13 @@
 					Rack.Cell="R0"
 					Keyboard="Numeric"
 					Alignment.X="Center"
-					HorizontalTextAlignment="Center"
+					TextAlignment="Center"
 					Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 					/>
-				<Slider
+				<Grip
 					Rack.Cell="R1"
-					Maximum="+8.0"
-					Minimum="-8.0"
+					From="-8.0"
+					Till="+8.0"
 					Value="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource ScaleValueConverter}}"
 					/>
 			</Rack>
@@ -793,10 +802,10 @@
 					Rack.Cell="R2 C0"
 					Text="{Localizing Rate}"
 					/>
-				<Picker
+				<Pick
 					Rack.Cell="R2 C1"
 					ItemsSource="{Binding SampleRates}"
-					SelectedItem="{Binding SampleRate, Mode=TwoWay}"
+					ActiveItem="{Binding SampleRate, Mode=TwoWay}"
 					IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 					/>
 				<Title
@@ -820,9 +829,9 @@
 					<Title
 						Text="2 ^"
 						/>
-					<Picker
+					<Pick
 						ItemsSource="{StaticResource AllowedPowsOf2}"
-						SelectedItem="{Binding FramePow, Mode=TwoWay}"
+						ActiveItem="{Binding FramePow, Mode=TwoWay}"
 						IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 						/>
 					<Title

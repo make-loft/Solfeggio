@@ -2,6 +2,7 @@
 	x:Class="Solfeggio.Palettes.Styles"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xm="http://xamarin.com/schemas/2014/forms"
 	>
 
 	<!--<Style
@@ -199,6 +200,11 @@
 		<Setter Property="Alignment.X" Value="Center" />
 		<Setter Property="Alignment.Y" Value="Center" />
 	</Style>
+
+	<Style
+		TargetType="xm:Button"
+		BasedOn="{StaticResource {Type Key=Button}}"
+		/>
 
 	<DataTemplate
 		x:Key="OptionTemplate">
