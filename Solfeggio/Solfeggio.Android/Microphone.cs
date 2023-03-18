@@ -10,7 +10,7 @@ namespace Solfeggio.Droid
 {
 	public class Microphone : AudioDevice<AudioRecord>
 	{
-		public static readonly Microphone Default = new Microphone();
+		public static readonly Microphone Default = new();
 
 		public bool IsReady => Device.Is() && Device.RecordingState.Is(RecordState.Recording);
 
@@ -62,12 +62,19 @@ namespace Solfeggio.Droid
 			if (IsReady.Not())
 				return default;
 
-			var length = Device.Read(_sample, 0, _sample.Length, 0);
-			var sample = _sample?.StretchArray(Level * Boost);
+			try
+			{
+				var length = Device.Read(_sample, 0, _sample.Length, 0);
+				var sample = _sample?.StretchArray(Level);
 
-			EvokeDataAvailable(sample);
+				EvokeDataAvailable(sample);
 
-			return sample;
+				return sample;
+			}
+			catch
+			{
+				return default;
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Ace;
+using Ace.Extensions;
 
 using Rainbow;
 
@@ -15,6 +16,8 @@ using Solfeggio.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
+using static Ace.Extensions.Colority;
 
 using Grid = System.Windows.Controls.Grid;
 
@@ -310,10 +313,11 @@ namespace Solfeggio.Views
 				var pressedFullToneKeyColor = (Color)App.Current.Resources["PressedFullToneKeyColor"];
 
 				grid.Children.Clear();
+
 				grid.BindingContext.To<SpectrogramFrame>().PianoKeys.Select(k => new Border
 				{
 					Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-					Fill = new SolidColorBrush(SetAlpha(color, magnitudeProjection(k.Magnitude))),
+					Fill = new SolidColorBrush(color.Mix(Channel.A, magnitudeProjection(k.Magnitude))),
 					Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, ww - transformer.GetVisualOffset(k.UpperFrequency), 0),
 					Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
 					Height = hh,
@@ -323,13 +327,7 @@ namespace Solfeggio.Views
 				grid.BindingContext.To<SpectrogramFrame>().PianoKeys.Select(k => new Border
 				{
 					Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-					Fill = new SolidColorBrush(FromArgb
-					(
-						0.368 + 0.632 * magnitudeProjection(k.Magnitude),
-						0.0,
-						1.0 - (2.0 * Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)).To(out var colorOffset),
-						1.0
-					)),
+					Fill = new SolidColorBrush(Palettes.Converters.GetOffsetColor(k, magnitudeProjection)),
 					Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
 					Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency).To(out var x) - w / 2d, 0, ww - (x + w / 2d), 0),
 					Height = hh,
@@ -375,12 +373,9 @@ namespace Solfeggio.Views
 
 			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
-				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), (float)(transformer.GetVisualOffset(p.Frequency) / length)));
+				.Select(p => new GradientStop(color.Mix(Channel.A, magnitudeProjection(p.Magnitude)), (float)(transformer.GetVisualOffset(p.Frequency) / length)));
 			return new(new GradientStopCollection().AppendRange(stops));
 		}
-
-		static Color SetAlpha(Color color, double alpha) => Color.FromRgba(color.R, color.G, color.B, alpha);
-		static Color FromArgb(double a, double r, double g, double b) => Color.FromRgba(r, g, b, a);
 
 		private void SwitchGeometry() => FlowerCanvas?
 			.With(FlowerCanvas.WidthRequest = FlowerSwitch.IsToggled || SpiralSwitch.IsToggled ? Height : 0d);

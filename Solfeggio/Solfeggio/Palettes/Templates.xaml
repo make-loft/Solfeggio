@@ -240,7 +240,7 @@
 			<Button
 				Alignment.X="Center"
 				Content="{Localizing Create, StringFormat='{}{0} ➕'}"
-				Command="{Context Key=Set.Create, TrackedPath=BindingContext}"
+				Command="{Context Key=Set.Create, TrackedPath=''}"
 				/>
 		</Stack>
 	</DataTemplate>

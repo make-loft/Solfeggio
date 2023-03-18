@@ -46,11 +46,18 @@ namespace Solfeggio.Droid
 			if (Device.IsNot(track))
 				return;
 
-			var sample = Source.Next()?.StretchArray(Level * Boost);
+			var sample = Source.Next()?.StretchArray(Level);
 			if (sample.Is())
 			{
-				var length = track.Write(sample, 0, sample.Length, WriteMode.Blocking);
-				EvokeDataAvailable(sample);
+				try
+				{
+					var length = track.Write(sample, 0, sample.Length, WriteMode.Blocking);
+					EvokeDataAvailable(sample);
+				}
+				catch
+				{
+					return;
+				}
 			}
 
 			goto Loop;

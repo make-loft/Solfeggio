@@ -7,13 +7,19 @@ namespace Solfeggio.Models
 {
 	public class PianoKey
 	{
-		public int NoteNumber { get; set; }
-		public string NoteName { get; set; }
-		public double Magnitude { get; set; }
-		public double LowerFrequency { get; set; }
-		public double UpperFrequency { get; set; }
-		public double EthalonFrequency { get; set; }
+		public int NoteNumber { get; private set; }
+		public string NoteName { get; private set; }
+		public double LowerFrequency { get; private set; }
+		public double UpperFrequency { get; private set; }
+		public double EthalonFrequency { get; private set; }
 		public double OffsetFrequency => Harmonic.Frequency - EthalonFrequency;
+		public double LowerValue { get; private set; }
+		public double UpperValue { get; private set; }
+		public double EthalonValue { get; private set; }
+		public double OffsetValue => Math.Log(Harmonic.Frequency, 2d) - EthalonValue;
+		public double RelativeOffset => 2d * OffsetValue / (UpperValue - LowerValue);
+
+		public double Magnitude { get; set; }
 		public Bin Harmonic { get; set; }
 		public List<Bin> Peaks { get; set; } = new();
 
@@ -26,25 +32,28 @@ namespace Solfeggio.Models
 			var lowNoteNumber = 0;
 			var topNoteNumber = oktaveNotes.Length - 1;
 
-			var activeNote = oktaveNotes[noteNumber];
-			var lowNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
-			var topNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
+			var ethalonFrequency = oktaveNotes[noteNumber];
+			var lowerNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
+			var upperNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
 
-			var ethalonOffset = Math.Log(activeNote, 2d);
-			var lowOffset = (Math.Log(lowNote, 2d) + ethalonOffset) / 2d;
-			var topOffset = (ethalonOffset + Math.Log(topNote, 2d)) / 2d;
+			var ethalonValue = Math.Log(ethalonFrequency, 2d);
+			var lowerValue = (Math.Log(lowerNote, 2d) + ethalonValue) / 2d;
+			var upperValue = (ethalonValue + Math.Log(upperNote, 2d)) / 2d;
 
-			var lowFrequency = Math.Pow(2d, lowOffset);
-			var topFrequency = Math.Pow(2d, topOffset);
-			var ethalonFrequency = activeNote; // Math.Pow(2d, ethalonOffset)
+			var lowerFrequency = Math.Pow(2d, lowerValue);
+			var upperFrequency = Math.Pow(2d, upperValue);
 
 			return new()
 			{
 				NoteNumber = noteNumber,
 				NoteName = note + oktaveNumber,
-				LowerFrequency = lowFrequency,
-				UpperFrequency = topFrequency,
+				LowerFrequency = lowerFrequency,
+				UpperFrequency = upperFrequency,
 				EthalonFrequency = ethalonFrequency,
+
+				LowerValue = lowerValue,
+				UpperValue = upperValue,
+				EthalonValue = ethalonValue,
 			};
 		}
 	}

@@ -18,7 +18,6 @@ namespace Solfeggio.Droid
 		public double SampleRate { get; set; } = 22050;
 		public int DesiredFrameSize { get; set; } = 2048;
 		public float Level { get; set; } = 1f;
-		public float Boost { get; set; } = 1f;
 		
 		protected TDevice Device;
 

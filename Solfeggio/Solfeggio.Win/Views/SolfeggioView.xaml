@@ -15,28 +15,57 @@
 			Rack.IsTwoWayMode="True"
 			Rows="{Smart RackAA, DefaultValue='39* ^ 61*'}"
 			>
-			<Canvas
+			<Rack
 				Rack.Cell="R0"
-				Name="FrameCanvas"
-				Background="{DynamicResource FrameBackgroundBrush}"
+				Columns="^ * ^"
 				>
-				<Polyline
-					Name="Polyline_Frame_Direct"
-					Fill="{DynamicResource Fill.MagnitudeRawFrame}"
-					Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
-					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
-					Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
-					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
-					/>
-				<Polyline
-					Name="Polyline_Frame_Window"
-					Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
-					Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
-					StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
-					Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
-					Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
-					/>
-			</Canvas>
+				<Canvas
+					Rack.Cell="C0"
+					x:Name="FlowerStrokeCanvas"
+					Background="{DynamicResource GeometryBackgroundBrush_}"
+					>
+					<Polyline
+						x:Name="FlowerStrokePolyline"
+						Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+						StrokeThickness=".5"
+						/>
+				</Canvas>
+				
+				<Canvas
+					Rack.Cell="C1"
+					Name="FrameCanvas"
+					Background="{DynamicResource FrameBackgroundBrush}"
+					>
+					<Polyline
+						Name="Polyline_Frame_Direct"
+						Fill="{DynamicResource Fill.MagnitudeRawFrame}"
+						Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+						StrokeThickness="{DynamicResource StrokeThickness.MagnitudeRawFrame}"
+						Visibility="{DynamicResource Visibility.MagnitudeRawFrame}"
+						Panel.ZIndex="{DynamicResource ZIndex.MagnitudeRawFrame}"
+						/>
+					<Polyline
+						Name="Polyline_Frame_Window"
+						Fill="{DynamicResource Fill.MagnitudeWindowFrame}"
+						Stroke="{DynamicResource Stroke.MagnitudeWindowFrame}"
+						StrokeThickness="{DynamicResource StrokeThickness.MagnitudeWindowFrame}"
+						Visibility="{DynamicResource Visibility.MagnitudeWindowFrame}"
+						Panel.ZIndex="{DynamicResource ZIndex.MagnitudeWindowFrame}"
+						/>
+				</Canvas>
+
+				<Canvas
+					Rack.Cell="C2"
+					x:Name="SpiralStrokeCanvas"
+					Background="{DynamicResource GeometryBackgroundBrush_}"
+					>
+					<Polyline
+						x:Name="SpiralStrokePolyline"
+						Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
+						StrokeThickness=".5"
+						/>
+				</Canvas>
+			</Rack>
 			
 			<RackSplitter
 				Rack.Cell="R1"

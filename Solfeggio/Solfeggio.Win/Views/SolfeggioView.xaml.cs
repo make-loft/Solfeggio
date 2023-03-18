@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Ace;
+using Ace.Extensions;
 
 using Microsoft.Win32;
 
@@ -17,6 +18,8 @@ using Rainbow;
 using Solfeggio.Presenters;
 using Solfeggio.Presenters.Options;
 using Solfeggio.ViewModels;
+
+using static Ace.Extensions.Colority;
 
 namespace Solfeggio.Views
 {
@@ -290,6 +293,25 @@ namespace Solfeggio.Views
 				var peaks = processingManager.Peaks;
 				var pianoKeys = musicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, peaks);
 
+				var activeProfile = processingManager.ActiveProfile;
+				var geometryFill = MusicalPresenter.DrawGeometry(processingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+					musicalPresenter.Geometry.SpiralApproximationLevel, 1d / activeProfile.FrameSize, Pi.Half);
+				var geometryStroke = MusicalPresenter.DrawGeometry(processingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+					musicalPresenter.Geometry.FlowerApproximationLevel, 0d, Pi.Half);
+
+				var centerX = FrameCanvas.ActualHeight / 2d;
+				var centerY = FrameCanvas.ActualHeight / 2d;
+				var radius = Math.Max(Math.Min(centerX, centerY), 1d);
+
+				FlowerStrokeCanvas.Width = FrameCanvas.ActualHeight;
+				SpiralStrokeCanvas.Width = FrameCanvas.ActualHeight;
+
+				SpiralStrokePolyline.Points.Clear();
+				FlowerStrokePolyline.Points.Clear();
+				geometryFill.ForEach(p => SpiralStrokePolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
+				geometryStroke.ForEach(p => FlowerStrokePolyline.Points.Add(new(centerY - p.X * radius, centerY - p.Y * radius)));
+
+
 				if (pianoKeys.Is() && pianoKeys.Any())
 				{
 					var maxMagnitude = pianoKeys.Max(k => k.Magnitude);
@@ -308,8 +330,6 @@ namespace Solfeggio.Views
 						p.Margin = new(p.Margin.Left - p.ActualWidth / 2d, p.Margin.Top - p.ActualHeight / 8d, 0d, 0d);
 					});
 
-				var activeProfile = processingManager.ActiveProfile;
-
 				Draw(peaks, activeProfile.SampleSize, activeProfile.SampleRate);
 
 				musicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
@@ -323,26 +343,26 @@ namespace Solfeggio.Views
 
 				appViewModel.Harmonics.Value = pianoKeys;
 
-				if (processingManager.IsPaused)
-					return;
-
 				var w = SpectrogramCanvas.ActualWidth;
 				var h = SpectrogramCanvas.ActualHeight;
 
 				var actualBand = musicalPresenter.Spectrum.Frequency;
 				var transformer = MusicalPresenter.GetScaleTransformer(actualBand, w);
+				var magnitudeProjection = musicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
 
 				var count = 127;
 				if (SpectrogramCanvas.Children.Count > count)
 					SpectrogramCanvas.Children.RemoveAt(count);
 
-				var magnitudeProjection = musicalPresenter.Spectrum.Magnitude.VisualScaleFunc;
-				SpectrogramCanvas.Children.Insert(0, DrawKeys(new Grid 
+				if (processingManager.IsPaused.Not())
 				{
-					Tag = spectrumInterpolated,
-					DataContext = pianoKeys,
-					Background = GetSpectrogramLineBrush(spectrumInterpolated, transformer, w, magnitudeProjection),
-				}));
+					SpectrogramCanvas.Children.Insert(0, DrawKeys(new Grid
+					{
+						Tag = spectrumInterpolated,
+						DataContext = pianoKeys,
+						Background = GetSpectrogramLineBrush(spectrumInterpolated, transformer, w, magnitudeProjection),
+					}));
+				}
 
 				Grid DrawKeys(Grid grid)
 				{
@@ -353,7 +373,7 @@ namespace Solfeggio.Views
 					grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
 					{
 						Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-						Fill = new SolidColorBrush(SetAlpha(color, magnitudeProjection(k.Magnitude))),
+						Fill = new SolidColorBrush(color.Mix(Channel.A, magnitudeProjection(k.Magnitude))),
 						Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
 						Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, 0, 0),
 						HorizontalAlignment = HorizontalAlignment.Left,
@@ -363,15 +383,7 @@ namespace Solfeggio.Views
 					grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
 					{
 						Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-						Fill = new SolidColorBrush(FromArgb
-						(
-							//1d,
-							//System.Math.Sqrt(magnitudeProjection(k.Magnitude)),
-							0.8 + 0.2 * magnitudeProjection(k.Magnitude),
-							0.0,
-							1.0 - 2.0 * System.Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency),
-							0.5 + 1.0 * System.Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)
-						)),
+						Fill = new SolidColorBrush(Palettes.Converters.GetOffsetColor(k, magnitudeProjection)),
 						Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
 						Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency) - w / 2d, 0, 0, 0),
 						HorizontalAlignment = HorizontalAlignment.Left,
@@ -526,12 +538,8 @@ namespace Solfeggio.Views
 
 			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
-				.Select(p => new GradientStop(SetAlpha(color, magnitudeProjection(p.Magnitude)), transformer.GetVisualOffset(p.Frequency) / width));
+				.Select(p => new GradientStop(color.Mix(Channel.A, magnitudeProjection(p.Magnitude)), transformer.GetVisualOffset(p.Frequency) / width));
 			return new(new(stops));
 		}
-
-		static Color SetAlpha(Color color, double alpha) => Color.FromArgb((byte)(alpha * 255), color.R, color.G, color.B);
-		static Color FromArgb(double a, double r, double g, double b) =>
-			Color.FromArgb((byte)(a * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
 	}
 }

@@ -8,6 +8,7 @@ using System;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Ace.Extensions;
 
 #if NETSTANDARD
 using Colors = Xamarin.Forms.Color;
@@ -20,30 +21,21 @@ namespace Solfeggio.Palettes
 	[XamlCompilation(XamlCompilationOptions.Skip)]
 	public partial class Converters
 	{
-#if NETSTANDARD
-		static Color FromArgb(double a, double r, double g, double b) => new(r, g, b, a);
-#else
-		static Color FromArgb(double a, double r, double g, double b) =>
-			Color.FromArgb((byte)(a * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
-#endif
 		public Converters() => InitializeComponent();
 
-		private object HarmonicOffsetToBrush_Convert(ConvertArgs args)
+		public static Colority.GradientPoint[] GradientPoints = new Colority.GradientPoint[]
 		{
-			var k = (PianoKey)args.Value;
-			if (k.IsNot())
-				return Colors.Transparent;
+			new() { Color = Colority.FromRGBA(0x00, 0xFF, 0x00), Offset = 0.0 },
+			new() { Color = Colority.FromRGBA(0x00, 0x00, 0xFF), Offset = 1.0 },
+		};
 
-			var color = FromArgb
-			(
-				0.368 + 0.632 * k.Magnitude,
-				0.0,
-				1.0 - (2.0 * Math.Abs(k.OffsetFrequency) / (k.UpperFrequency - k.LowerFrequency)).To(out var colorOffset),
-				1.0
-			);
+		public static Color GetOffsetColor(PianoKey key, Rainbow.Projection magnitudeProjection) =>
+			Colority.GetColor(GradientPoints, Math.Abs(key.RelativeOffset))
+			.Mix(Colority.Channel.A, 0.368 + 0.632 * magnitudeProjection(key.Magnitude));
 
-			return new SolidColorBrush(color);
-		}
+		private object HarmonicOffsetToBrush_Convert(ConvertArgs args) => args.Value is PianoKey key
+			? new SolidColorBrush(GetOffsetColor(key, v => v))
+			: args.Value;
 
 		Bandwidth FrequencyBandwidth = Store.Get<MusicalPresenter>().Spectrum.Frequency;
 		object ToVisualValue(ConvertArgs args) => FrequencyBandwidth.VisualScaleFunc((double)args.Value);

@@ -2,7 +2,7 @@
 
 namespace Solfeggio.Presenters
 {
-	public static class ColorExtensions
+	public static class ColorExtensions1
 	{
 #if NETSTANDARD
 		private static byte Convert(this in double c) => (byte)(255d * c);

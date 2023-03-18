@@ -6,8 +6,7 @@
 	xmlns:c="clr-namespace:System.Windows.Controls"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
-	BindingContext="{Store Key=vm:ProcessingManager}"
-	Background="{DynamicResource RainbowBrush.H}"
+	BindingContext="{Store vm:ProcessingManager}"
 	LayoutChanged="ContentPage_LayoutChanged"
 	>
 	<Rack
