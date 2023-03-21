@@ -30,7 +30,7 @@ namespace Solfeggio.Presenters
 		[DataMember] public FrameOptions Frame { get; set; } = new();
 		[DataMember] public MusicalOptions Music { get; set; } = new();
 		[DataMember] public FormatOptions Format { get; set; } = new();
-		[DataMember] public GeometryApproximationOptions Geometry { get; set; } = new();
+		[DataMember] public GeometryOptions Geometry { get; set; } = new();
 		public VisualProfile VisualProfile { get; set; } = new();
 
 		[DataMember] public bool UseNoteFilter { get; set; } = true;
@@ -179,16 +179,16 @@ namespace Solfeggio.Presenters
 			}
 		}
 
-		public static ScaleTransformer GetScaleTransformer(Bandwidth band, double visualLength,
-			Projection correction = default) => new(band.VisualScaleFunc, visualLength,
-				band.Window.From, band.Window.Till, correction);
+		public static ScaleTransformer GetScaleTransformer(Span span, double visualLength,
+			Projection correction = default) => new(span.VisualScaleFunc, visualLength,
+				span.Window.From, span.Window.Till, correction);
 
 		public static IEnumerable<TOut> Draw<TIn, TOut>(
 			IEnumerable<TIn> points,
 			Create<TOut> create,
 			CreateWithContent<TIn, TOut> createWithContent,
 			Deconstruct<TIn, double> deconstruct,
-			Bandwidth hBand, Bandwidth vBand,
+			Span hBand, Span vBand,
 			double hLength, double vLength,
 			Projection hCorrection,
 			Projection vCorrection)
@@ -405,13 +405,8 @@ namespace Solfeggio.Presenters
 			hBand.Window.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
 			var keys = Music.EnumeratePianoKeys().ToList();
-			//var averagePeaksMagnitude = peaks.Aggregate(0d, (s, p) => s += p.Magnitude) / peaks.Count;
-			var averageSignalMagnitude = data.Aggregate(0d, (s, p) => s += p.Magnitude) / data.Count;
-			var thresholdMagnitude = averageSignalMagnitude * Pi.Double;
-			thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
-			var valuePeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
 
-			foreach (var bin in valuePeaks)
+			foreach (var bin in peaks)
 			{
 				bin.Deconstruct(out var activeFrequency, out var activeMagnitude, out _);
 				if (activeFrequency < lowerFrequency || activeFrequency > upperFrequency) continue;
@@ -431,7 +426,6 @@ namespace Solfeggio.Presenters
 			}
 
 			var harmonics = keys
-				.Where(k => k.Magnitude > thresholdMagnitude)
 				.OrderByDescending(k => k.Magnitude)
 				.Take(MaxHarmonicsCount)
 				.ToList();

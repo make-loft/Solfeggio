@@ -6,11 +6,11 @@
 	xmlns:c="clr-namespace:System.Windows.Controls"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:v="clr-namespace:Solfeggio.Views"
-	BindingContext="{Store vm:ProcessingManager}"
 	LayoutChanged="ContentPage_LayoutChanged"
+	BindingContext="{Store vm:ProcessingManager}"
 	>
 	<Rack
-		Rows="* 3.236* * 1.618*"
+		Rows="* ^ 3.236* ^ * ^ 1.618*"
 		Columns="^ * ^"
 		>
 		
@@ -28,8 +28,8 @@
 				>
 				<sh:Polyline
 					x:Name="FlowerStrokePolyline"
-					Stroke="{StaticResource Stroke.Geometry}"
-					StrokeThickness=".3"
+					Stroke="{StaticResource Stroke.Flower}"
+					StrokeThickness="{StaticResource StrokeThickness.Flower}"
 					/>
 			</c:Canvas>
 
@@ -57,15 +57,21 @@
 				>
 				<sh:Polyline
 					x:Name="SpiralStrokePolyline"
-					Stroke="{StaticResource Stroke.Geometry}"
-					StrokeThickness=".3"
+					Stroke="{StaticResource Stroke.Spiral}"
+					StrokeThickness="{StaticResource StrokeThickness.Spiral}"
 					/>
 			</c:Canvas>
 		</Rack>
 
+		<RackSplitter
+			Rack.Cell="R1 C0 CS2"
+			Style="{StaticResource HorizontalRackSplitterStyle}"
+			Background="{DynamicResource SplitterABackgroundBrush}"
+			/>
+
 		<!--Magnitude-->
 		<c:Canvas
-			Rack.Cell="R1 C0 CS2"
+			Rack.Cell="R2 C0 CS2"
 			x:Name="MagnitudeCanvas"
 			EnableTouchEvents="True"
 			Touch="OnTouchEffectAction"
@@ -81,28 +87,41 @@
 
 		<!--Fakes to force brushes refresh-->
 		<Stack
-			Rack.Cell="R1 C0 CS2"
+			Rack.Cell="R2 C0 CS2"
 			IsVisible="False"
 			>
+			<Stack Background="{DynamicResource Stroke.Flower}" />
+			<Stack Background="{DynamicResource Stroke.Spiral}" />
 			<Stack Background="{DynamicResource Fill.MagnitudePMI}" />
 			<Stack Background="{DynamicResource Stroke.MagnitudePMI}" />
 			<Stack Background="{DynamicResource Fill.MagnitudeRawFrame}" />
 			<Stack Background="{DynamicResource Stroke.MagnitudeRawFrame}" />
 		</Stack>
+		
+		<RackSplitter
+			Rack.Cell="R3 C0 CS2"
+			Style="{StaticResource HorizontalRackSplitterStyle}"
+			Background="{DynamicResource SplitterCBackgroundBrush}"
+			/>
 
 		<!--Piano-->
 		<c:Canvas
-			Rack.Cell="R2 C0 CS2"
+			Rack.Cell="R4 C0 CS2"
 			x:Name="PianoCanvas"
 			EnableTouchEvents="True"
 			Touch="OnTouchEffectAction"
 			Background="{DynamicResource PianoBackgroundBrush}"
-			>
-		</c:Canvas>
+			/>
+
+		<RackSplitter
+			Rack.Cell="R5 C0 CS2"
+			Style="{StaticResource HorizontalRackSplitterStyle}"
+			Background="{DynamicResource SplitterDBackgroundBrush}"
+			/>
 
 		<!--Spectrogram-->
 		<c:Canvas
-			Rack.Cell="R3 C0 CS2"
+			Rack.Cell="R6 C0 CS2"
 			x:Name="SpectrogramCanvas"
 			Background="{DynamicResource SpectrogramBackgroundBrush}"
 			>
@@ -113,7 +132,7 @@
 
 		<!--Geometry-->
 		<c:Canvas
-			Rack.Cell="C2 R0 RS4"
+			Rack.Cell="C2 R0 RS7"
 			x:Name="FlowerCanvas"
 			Background="{DynamicResource GeometryBackgroundBrush}"
 			WidthRequest="0"
@@ -132,7 +151,7 @@
 
 		<!--Switches-L-->
 		<Rack
-			Rack.Cell="R3 C0"
+			Rack.Cell="R6 C0"
 			Rows="^ ^"
 			Columns="^ ^"
 			Alignment.X="From"
@@ -163,7 +182,7 @@
 
 		<!--Switches-R-->
 		<Rack
-			Rack.Cell="R3 C1"
+			Rack.Cell="R6 C1"
 			Rows="^ ^"
 			Columns="^ ^"
 			Alignment.X="Till"
@@ -196,7 +215,7 @@
 
 		<!--Options-->
 		<Rack
-			Rack.Cell="R0 C0 CS3 RS4"
+			Rack.Cell="R0 C0 CS3 RS7"
 			IsVisible="{Binding Source={Reference OptionsSwitch}, Path=IsToggled}"
 			>
 			<Rack

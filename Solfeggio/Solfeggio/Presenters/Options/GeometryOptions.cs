@@ -3,7 +3,7 @@
 namespace Solfeggio.Presenters.Options
 {
 	[DataContract]
-	public class GeometryApproximationOptions : ContextObject
+	public class GeometryOptions : ContextObject
 	{
 		[DataMember]
 		public double FlowerApproximationLevel

@@ -104,8 +104,18 @@ namespace Solfeggio.ViewModels
 			else
 			{
 				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-				SpectrumBetter = Filtering.Interpolate(spectrum, out var peaks).ToArray();
+				var spectrumInterpolated = Filtering.Interpolate(spectrum, out var peaks).ToArray();
+
+				var data = spectrumInterpolated;
+				var averageSignalMagnitude = data.Aggregate(0d, (s, p) => s += p.Magnitude) / data.Length;
+				var thresholdMagnitude = averageSignalMagnitude * Pi.Double;
+				thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
+				var powerPeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
+
+				SpectrumBetter = spectrumInterpolated;
 				Spectrum = spectrum;
+				
+				PowerPeaks = powerPeaks;
 				Peaks = peaks;
 			}
 
@@ -113,8 +123,13 @@ namespace Solfeggio.ViewModels
 			//var innerFrame = spectralFrame.Decimation(false);
 			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
 			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
+
+			SampleProcessed?.Invoke();
 		}
 
+		public event System.Action SampleProcessed;
+
+		public IList<Bin> PowerPeaks { get; set; }
 		public IList<Bin> Peaks { get; set; }
 
 		private Complex[] GetSpectrum(Complex[] timeFrame, ApodizationFunc activeWindow)

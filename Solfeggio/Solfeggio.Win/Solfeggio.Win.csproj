@@ -157,23 +157,23 @@
       <Link>Palettes\Values.xaml.cs</Link>
       <DependentUpon>Values.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\Solfeggio\Presenters\Bandwidth.cs">
-      <Link>Presenters\Bandwidth.cs</Link>
-    </Compile>
     <Compile Include="..\Solfeggio\Presenters\MusicalPresenter.cs">
       <Link>Presenters\MusicalPresenter.cs</Link>
-    </Compile>
-    <Compile Include="..\Solfeggio\Presenters\Options\BandwidthOptions.cs">
-      <Link>Presenters\Options\BandwidthOptions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\Options\FormatOptions.cs">
       <Link>Presenters\Options\FormatOptions.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Presenters\Options\GeometryApproximationOptions.cs">
-      <Link>Presenters\Options\GeometryApproximationOptions.cs</Link>
+    <Compile Include="..\Solfeggio\Presenters\Options\FrameOptions.cs">
+      <Link>Presenters\Options\FrameOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\GeometryOptions.cs">
+      <Link>Presenters\Options\GeometryOptions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\Options\MusicalOptions.cs">
       <Link>Presenters\Options\MusicalOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Options\SpectralOptions.cs">
+      <Link>Presenters\Options\SpectralOptions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\PianoKey.cs">
       <Link>Presenters\PianoKey.cs</Link>
@@ -183,6 +183,9 @@
     </Compile>
     <Compile Include="..\Solfeggio\Presenters\SmartRange.cs">
       <Link>Presenters\SmartRange.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Presenters\Span.cs">
+      <Link>Presenters\Span.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Processors\ASoftwareSignalProcessor.cs">
       <Link>Processors\ASoftwareSignalProcessor.cs</Link>
@@ -265,7 +268,6 @@
     <Compile Include="Palettes\Sets.Visualization.xaml.cs">
       <DependentUpon>Sets.Visualization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\ColorExtensions.cs" />
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

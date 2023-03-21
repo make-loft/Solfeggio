@@ -70,7 +70,7 @@ namespace Solfeggio.Views
 					if (fromOrigin.Is(tillOrigin))
 						return;
 
-					var bandwidth = MusicalPresenter.Spectrum.Frequency;
+					var span = MusicalPresenter.Spectrum.Frequency;
 					var from = new Point(fromOrigin.X / density, fromOrigin.Y / density);
 					var till = new Point(tillOrigin.X / density, tillOrigin.Y / density);
 
@@ -82,15 +82,15 @@ namespace Solfeggio.Views
 
 					if (isHorizontalMove)
 					{
-						var originalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+						var originalScaler = MusicalPresenter.GetScaleTransformer(span, width);
 						var originalFromOffset = originalScaler.GetLogicalOffset(from.X);
 						var originalTillOffset = originalScaler.GetLogicalOffset(till.X);
 
-						bandwidth.ShiftThreshold(originalFromOffset, originalTillOffset);
+						span.ShiftWindow(originalFromOffset, originalTillOffset);
 					}
 					else
 					{
-						bandwidth.TransformRelative(width, height, from, till);
+						span.TransformRelative(width, height, from, till);
 					}
 
 					RequestFullSpectrogramRefresh(256);
@@ -140,8 +140,11 @@ namespace Solfeggio.Views
 
 			AppPalette.VisualThemeChanged += () =>
 			{
-				FlowerStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Geometry");
-				SpiralStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Geometry");
+				FlowerStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Flower"];
+				SpiralStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Spiral"];
+				
+				FlowerStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Flower");
+				SpiralStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Spiral");
 
 				MagnitudePolyline.Fill = AppPalette.GetBrush("Fill.MagnitudePMI");
 				MagnitudePolyline.Stroke = AppPalette.GetBrush("Stroke.MagnitudePMI");
@@ -152,8 +155,26 @@ namespace Solfeggio.Views
 
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
 
-			Loop(100, () =>
+			var skipFrameFlag = true;
+
+			Appearing += async (o, e) =>
 			{
+				await Task.Delay(3000);
+				skipFrameFlag = false;
+			};
+
+			ProcessingManager.SampleProcessed += () =>
+			{
+				if (skipFrameFlag.Is(true))
+					return;
+
+				Device.InvokeOnMainThreadAsync(RenderFrame);
+			};
+
+			void RenderFrame()
+			{
+				skipFrameFlag = true;
+
 				Render();
 
 				PianoCanvas.InvalidateSurface();
@@ -164,16 +185,8 @@ namespace Solfeggio.Views
 				SpiralStrokeCanvas.InvalidateSurface();
 				FlowerCanvas.InvalidateSurface();
 
-				//foreach (var path in _completedPaths)
-				//{
-				//    canvas.DrawPath(path, paint);
-				//}
-
-				//foreach (var path in _inProgressPaths.Values)
-				//{
-				//    canvas.DrawPath(path, paint);
-				//}
-			});
+				skipFrameFlag = false;
+			}
 		}
 
 		private async void Loop(int milliseconds, Action actionToExecute)
@@ -210,7 +223,8 @@ namespace Solfeggio.Views
 			var pianoCanvas = PianoCanvas;
 			pianoCanvas.Children.Clear();
 
-			var pianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, ProcessingManager.Peaks);
+			var powerPeaks = ProcessingManager.PowerPeaks;
+			var pianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, powerPeaks);
 
 			var activeProfile = ProcessingManager.ActiveProfile;
 			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
@@ -256,9 +270,8 @@ namespace Solfeggio.Views
 
 			MagnitudeCanvas.Children.Clear();
 
-			var peaks = pianoKeys.SelectMany(h => h.Peaks);
 			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, MagnitudeCanvas.Width, MagnitudeCanvas.Height,
-				AppPalette.GetBrush("MagnitudePeakBrush"), default, peaks.Select(p => p.Frequency));
+				AppPalette.GetBrush("MagnitudePeakBrush"), default, powerPeaks.Select(p => p.Frequency));
 
 			MagnitudeCanvas.Children.Add(MagnitudePolyline);
 
@@ -288,7 +301,7 @@ namespace Solfeggio.Views
 			var actualBand = MusicalPresenter.Spectrum.Frequency;
 			var transformer = MusicalPresenter.GetScaleTransformer(actualBand, w);
 
-			var count = 32;
+			var count = MusicalPresenter.Music.SpectrogramFramesCount;
 			if (SpectrogramStack.Children.Count > count)
 				SpectrogramStack.Children.RemoveAt(count);
 

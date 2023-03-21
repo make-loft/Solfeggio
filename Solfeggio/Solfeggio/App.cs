@@ -52,14 +52,14 @@ namespace Solfeggio
 		{
 			Store.Get<AppViewModel>();
 			Store.Get<MusicalPresenter>();
-
-			AppPalette.Load();
-
-			MainPage = new Views.SolfeggioView();
 		}
 
 		protected override void OnStart()
 		{
+			AppPalette.Load();
+
+			MainPage = new Views.SolfeggioView();
+
 			YandexMetrica.Wake();
 		}
 

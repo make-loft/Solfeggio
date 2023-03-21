@@ -13,7 +13,7 @@
 		<Rack
 			Rack.Cell="R0"
 			Rack.IsTwoWayMode="True"
-			Rows="{Smart RackAA, DefaultValue='39* ^ 61*'}"
+			Rack.Rows="{Smart RackAA, DefaultValue='61* ^ 39*'}"
 			>
 			<Rack
 				Rack.Cell="R0"
@@ -26,8 +26,8 @@
 					>
 					<Polyline
 						x:Name="FlowerStrokePolyline"
-						Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
-						StrokeThickness=".5"
+						Stroke="{DynamicResource Stroke.Flower}"
+						StrokeThickness="{DynamicResource StrokeThickness.Flower}"
 						/>
 				</Canvas>
 				
@@ -61,8 +61,8 @@
 					>
 					<Polyline
 						x:Name="SpiralStrokePolyline"
-						Stroke="{DynamicResource Stroke.MagnitudeRawFrame}"
-						StrokeThickness=".5"
+						Stroke="{DynamicResource Stroke.Spiral}"
+						StrokeThickness="{DynamicResource StrokeThickness.Spiral}"
 						/>
 				</Canvas>
 			</Rack>
@@ -70,7 +70,7 @@
 			<RackSplitter
 				Rack.Cell="R1"
 				Style="{StaticResource HorizontalRackSplitterStyle}"
-				Background="{DynamicResource SplitterBackgroundBrush}"
+				Background="{DynamicResource SplitterABackgroundBrush}"
 				/>
 
 			<Canvas
@@ -100,7 +100,7 @@
 		<RackSplitter
 			Rack.Cell="R1"
 			Style="{StaticResource HorizontalRackSplitterStyle}"
-			Background="{DynamicResource SplitterBackgroundBrush}"
+			Background="{DynamicResource SplitterBBackgroundBrush}"
 			/>
 
 		<Canvas
@@ -169,7 +169,7 @@
 		<RackSplitter
 			Rack.Cell="R3"
 			Style="{StaticResource HorizontalRackSplitterStyle}"
-			Background="{DynamicResource SplitterBackgroundBrush_}"
+			Background="{DynamicResource SplitterCBackgroundBrush}"
 			/>
 
 		<Rack
@@ -187,7 +187,7 @@
 			<RackSplitter
 				Rack.Cell="R1"
 				Style="{StaticResource HorizontalRackSplitterStyle}"
-				Background="{DynamicResource SplitterBackgroundBrush_}"
+				Background="{DynamicResource SplitterDBackgroundBrush}"
 				/>
 
 			<Border

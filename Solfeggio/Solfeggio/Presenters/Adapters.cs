@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Shapes;
@@ -11,6 +12,7 @@ using Solfeggio.Presenters;
 
 using Xamarin.Forms;
 
+using static System.Windows.Controls.Canvas;
 using static Xamarin.Forms.LayoutOptions;
 
 using Ext = Solfeggio.Presenters.Ext;
@@ -41,15 +43,27 @@ namespace Solfeggio.Presenters
 
 		public static SKPaint ToStrokeSkPaint(this Brush brush, double strokeThickness, double w, double h, double opacity)
 		{
-			var skBrush = brush.ToSkPaint(w, h, opacity);
+			Clamp clamp = new() { MaxX = w, MaxY = h };
+			return ToStrokeSkPaint(brush, strokeThickness, opacity, ref clamp);
+		}
+
+		public static SKPaint ToStrokeSkPaint(this Brush brush, double strokeThickness, double opacity, ref Clamp clamp)
+		{
+			var skBrush = brush.ToSkPaint(opacity, ref clamp);
 			skBrush.StrokeWidth = (float)(strokeThickness * Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density);
 			skBrush.Style = SKPaintStyle.Stroke;
 			return skBrush;
 		}
-	
-		public static SKPaint ToSkPaint(this Brush brush, double w, double h, double opacity) =>
-			brush.As<LinearGradientBrush>()?.ToSkPaint(w, h, opacity) ??
-			brush.As<RadialGradientBrush>()?.ToSkPaint(w, h, opacity) ??
+
+		public static SKPaint ToSkPaint(this Brush brush, double w, double h, double opacity)
+		{
+			Clamp clamp = new() { MaxX = w, MaxY = h };
+			return ToSkPaint(brush,opacity, ref clamp);
+		}
+
+		public static SKPaint ToSkPaint(this Brush brush, double opacity, ref Clamp clamp) =>
+			brush.As<LinearGradientBrush>()?.ToSkPaint(opacity, ref clamp) ??
+			brush.As<RadialGradientBrush>()?.ToSkPaint(opacity, ref clamp) ??
 			brush.As<SolidColorBrush>()?.ToSkPaint(opacity);
 
 		public static SKPaint ToSkPaint(this SolidColorBrush brush, double opacity) => new()
@@ -60,13 +74,24 @@ namespace Solfeggio.Presenters
 
 		public static double density = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
 
-		public static SKPaint ToSkPaint(this LinearGradientBrush brush, double w, double h, double opacity)
+		public static SKPaint ToSkPaint(this LinearGradientBrush brush, double opacity, ref Clamp clamp)
 		{
-			var startPoint = new SKPoint { X = (float)(brush.StartPoint.X * w * density), Y = (float)(brush.StartPoint.Y * h * density) };
-			var endPoint = new SKPoint { X = (float)(brush.EndPoint.X * w * density), Y = (float)(brush.EndPoint.Y * h * density) };
+			var startPoint = new SKPoint
+			{
+				X = (float)((clamp.MinX + brush.StartPoint.X * clamp.LengthX) * density),
+				Y = (float)((clamp.MinY + brush.StartPoint.Y * clamp.LengthY) * density),
+			};
+
+			var endPoint = new SKPoint
+			{
+				X = (float)((clamp.MinX + brush.EndPoint.X * clamp.LengthX) * density),
+				Y = (float)((clamp.MinY + brush.EndPoint.Y * clamp.LengthY) * density),
+			};
+
 			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor().WithOpacity(opacity)).ToArray();
 			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateLinearGradient(startPoint, endPoint, colors, offsets, SKShaderTileMode.Clamp);
+
 			return new SKPaint
 			{
 				Style = SKPaintStyle.Fill,
@@ -74,14 +99,19 @@ namespace Solfeggio.Presenters
 			};
 		}
 
-		public static SKPaint ToSkPaint(this RadialGradientBrush brush, double w, double h, double opacity)
+		public static SKPaint ToSkPaint(this RadialGradientBrush brush, double opacity, ref Clamp clamp)
 		{
-			var c = System.Math.Min(w, h) * density;
-			var center = new SKPoint { X = (float)(brush.Center.X * c), Y = (float)(brush.Center.Y * c) };
-			var radius = (float)(brush.Radius * c);
+			var center = new SKPoint
+			{
+				X = (float)((clamp.MinX + brush.Center.X * clamp.LengthX) * density),
+				Y = (float)((clamp.MinY + brush.Center.Y * clamp.LengthY) * density),
+			};
+
+			var radius = (float)(brush.Radius * Math.Min(clamp.LengthX, clamp.LengthY) * density);
 			var colors = brush.GradientStops.Select(s => s.Color.ToSKColor().WithOpacity(opacity)).ToArray();
 			var offsets = brush.GradientStops.Select(s => (float)s.Offset).ToArray();
 			var shader = SKShader.CreateRadialGradient(center, radius, colors, offsets, SKShaderTileMode.Clamp);
+
 			return new SKPaint
 			{
 				Style = SKPaintStyle.Fill,
@@ -93,8 +123,8 @@ namespace Solfeggio.Presenters
 	public static class ColorConverters
 	{
 		//public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
-		public static Color SkToXamarin(this SKColor c) => Xamarin.Forms.Color.FromRgb(c.Red, c.Green, c.Blue);
-		public static SKColor XamarinToSk(this Xamarin.Forms.Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
+		public static Color SkToXamarin(this SKColor c) => Color.FromRgb(c.Red, c.Green, c.Blue);
+		public static SKColor XamarinToSk(this Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
 	}
 }
 
@@ -225,6 +255,13 @@ namespace System.Windows.Controls
 
 		public List<Primitive> Children { get; } = new();
 
+		public struct Clamp 
+		{
+			public double MinX, MinY, MaxX, MaxY;
+			public double LengthX => MaxX - MinX;
+			public double LengthY => MaxY - MinY;
+		}
+
 		public void Draw(SKPaintSurfaceEventArgs _args)
 		{
 			var canvas = _args.Surface.Canvas;
@@ -249,15 +286,55 @@ namespace System.Windows.Controls
 					var w = child.Width < 0 ? ActualWidth / density : child.Width;
 					var h = child.Height < 0 ? ActualHeight / density : child.Height;
 
+					Clamp clamp = default;
+
+					if (child is Line line)
+					{
+						clamp.MinX = Math.Min(line.X1, line.X2);
+						clamp.MinY = Math.Min(line.Y1, line.Y2);
+						
+						clamp.MaxX = Math.Max(line.X1, line.X2);
+						clamp.MaxY = Math.Max(line.Y1, line.Y2);
+					}
+
+					if (child is Polyline polyline)
+					{
+						double minX = double.PositiveInfinity, minY = double.PositiveInfinity;
+						double maxX = double.NegativeInfinity, maxY = double.NegativeInfinity;
+
+						var points = polyline.Points;
+
+						for (var i = 0; i < points.Count; i++)
+						{
+							var point = points[i];
+
+							if (point.X < minX) minX = point.X;
+							if (point.Y < minY) minY = point.Y;
+
+
+							if (point.X > maxX) maxX = point.X;
+							if (point.Y > maxY) maxY = point.Y;
+						}
+
+						clamp.MinX = minX;
+						clamp.MinY = minY;
+
+						clamp.MaxX = maxX;
+						clamp.MaxY = maxY;
+
+						var lengthX = maxX - minX;
+						var lengthY = maxY - minY;
+					}
+
 					if (child.Fill.Is())
 					{
-						using var paint = child.Fill.ToSkPaint(w, h, child.Opacity);
+						using var paint = child.Fill.ToSkPaint(child.Opacity, ref clamp);
 						canvas.DrawPath(path, paint);
 					}
 
 					if (child.Stroke.Is())
 					{
-						using var paint = child.GetStrokeSkPaint(w, h, child.Opacity);
+						using var paint = child.GetStrokeSkPaint(child.Opacity, ref clamp);
 						canvas.DrawPath(path, paint);
 					}
 				}
@@ -573,9 +650,9 @@ namespace System.Windows.Shapes
 		public double StrokeThickness { get; set; }
 
 		public abstract SKPath ToSkPath();
-		public SKPaint GetStrokeSkPaint(double w, double h, double opacity)
+		public SKPaint GetStrokeSkPaint(double opacity, ref Clamp clamp)
 		{
-			var skBrush = Stroke.ToSkPaint(w, h, opacity);
+			var skBrush = Stroke.ToSkPaint(opacity, ref clamp);
 			skBrush.StrokeWidth = (float)(StrokeThickness * Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density);
 			skBrush.Style = SKPaintStyle.Stroke;
 			return skBrush;

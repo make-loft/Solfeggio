@@ -71,8 +71,6 @@ namespace Solfeggio
 
 		public App()
 		{
-			AppPalette.Load();
-
 			Startup += App_OnStartup;
 			Exit += App_OnExit;
 		}
@@ -115,8 +113,9 @@ namespace Solfeggio
 			Store.Get<AppViewModel>();
 			_startupTimestamp = DateTime.Now;
 
-			Current.MainWindow = new AppView();
-			Current.MainWindow.Show();
+			AppPalette.Load();
+
+			(Current.MainWindow = new AppView()).Show();
 		}
 
 		private void App_OnExit(object sender, ExitEventArgs e)

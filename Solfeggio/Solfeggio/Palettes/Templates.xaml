@@ -366,7 +366,7 @@
 		x:Key="MusicOptionsTemplate"
 		>
 		<Rack
-			Rows="^ ^"
+			Rows="^ ^ ^"
 			Columns="^ * ^ 3*">
 			<Title
 				Rack.Cell="R0 C0"
@@ -386,6 +386,7 @@
 				Rack.Cell="R0 C2"
 				Text="{Localizing Hz}"
 				/>
+
 			<Title
 				Rack.Cell="R1 C0"
 				Text="{Localizing Notation}"
@@ -408,6 +409,20 @@
 				BindingContext="{Binding Resources[Visibility.Peak], Mode=TwoWay, Source={x:Static local:App.Current}}"
 				Template="{StaticResource VisibilityTemplate}"
 				/>-->
+
+			<Title
+				Rack.Cell="R2 C0"
+				Text="{Localizing Spectrogram}"
+				/>
+			<Field
+				Rack.Cell="R2 C1"
+				Keyboard="Numeric"
+				Text="{Binding SpectrogramFramesCount, Mode=TwoWay, FallbackValue={Int32 64}}"
+				/>
+			<Title
+				Rack.Cell="R2 C2"
+				Text="{Localizing Pcs}"
+				/>
 		</Rack>
 	</DataTemplate>
 

@@ -20,7 +20,6 @@ namespace Solfeggio
 {
 	static class AppPalette
 	{
-
 		static AppPalette() => Application.Current.Resources = new Map();
 
 		public static void Load() => Resources.MergedDictionaries
@@ -42,7 +41,10 @@ namespace Solfeggio
 		public static Map ColorPalettes { get; private set; }
 		public static Map Brushes { get; private set; }
 
-		public static Map Resources => (Map)Application.Current.Resources;
+		public static Map Resources => Application.Current.Resources is Map map
+			? map
+			: (Map)(Application.Current.Resources = new Map());
+
 		public static Map Colors
 		{
 			get => (Map)Resources.MergedDictionaries.To<IList>()[3];

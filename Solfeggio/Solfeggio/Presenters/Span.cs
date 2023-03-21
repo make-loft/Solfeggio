@@ -15,7 +15,7 @@ using static Rainbow.ScaleFuncs;
 namespace Solfeggio.Presenters
 {
 	[DataContract]
-	public class Bandwidth
+	public class Span
 	{
 		public static readonly Projection[] ScaleFuncs =
 			{ Lineal, Log2, Log, Exp, Sqrt };
@@ -42,23 +42,23 @@ namespace Solfeggio.Presenters
 			if (t.Till < l.From) t.Till = l.From;
 		}
 
-		public void ShiftThreshold(double from, double till) =>
-			TransformThreshold(from, till, true);
-		public void ScaleThreshold(double from, double till) =>
-			TransformThreshold(from, till, false);
+		public void ShiftWindow(double fromOffset, double tillOffset) =>
+			TransformWindow(fromOffset, tillOffset, true);
+		public void ScaleWindow(double fromOffset, double tillOffset) =>
+			TransformWindow(fromOffset, tillOffset, false);
 
-		public void TransformThreshold(double from, double till, bool shift)
+		public void TransformWindow(double fromOffset, double tillOffset, bool shift)
 		{
 			if (VisualScaleFunc.Is(Lineal))
 			{
-				var offset = shift ? from - till : till - from;
+				var valueOffset = shift ? fromOffset - tillOffset : tillOffset - fromOffset;
 
-				Window.From += shift ? +offset : -offset;
-				Window.Till += offset;
+				Window.From += shift ? +valueOffset : -valueOffset;
+				Window.Till += valueOffset;
 			}
 			else
 			{
-				var scale = shift ? from / till : till / from;
+				var scale = shift ? fromOffset / tillOffset : tillOffset / fromOffset;
 
 				Window.From *= shift ? scale : (1 / scale);
 				Window.Till *= scale;
@@ -80,35 +80,35 @@ namespace Solfeggio.Presenters
 
 	public static class BandwidthExtensions
 	{
-		public static void Transform(this Bandwidth bandwidth, double width, double offset, bool shift)
+		public static void Transform(this Span span, double width, double offset, bool shift)
 		{
 			var center = width / 2d;
-			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var basicScaler = MusicalPresenter.GetScaleTransformer(span, width);
 			var from = basicScaler.GetLogicalOffset(center);
 			var till = basicScaler.GetLogicalOffset(center + offset);
-			bandwidth.TransformThreshold(from, till, shift);
+			span.TransformWindow(from, till, shift);
 		}
 
-		public static void TransformRelative(this Bandwidth bandwidth, double width, double height, Point from, Point till)
+		public static void TransformRelative(this Span span, double width, double height, Point from, Point till)
 		{
 			var center = width / 2d;
 
-			var alignScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var alignScaler = MusicalPresenter.GetScaleTransformer(span, width);
 			var alignFromOffset = alignScaler.GetLogicalOffset(from.X);
 			var alignTillOffset = alignScaler.GetLogicalOffset(center);
-			bandwidth.ShiftThreshold(alignFromOffset, alignTillOffset);
+			span.ShiftWindow(alignFromOffset, alignTillOffset);
 
-			var basicScaler = MusicalPresenter.GetScaleTransformer(bandwidth, height);
+			var basicScaler = MusicalPresenter.GetScaleTransformer(span, height);
 			var centerY = height / 2d;
 			var offsetY = from.Y - till.Y;
 			var basicFromOffset = basicScaler.GetLogicalOffset(centerY);
 			var basicTillOffset = basicScaler.GetLogicalOffset(centerY + offsetY);
-			bandwidth.ScaleThreshold(basicFromOffset, basicTillOffset);
+			span.ScaleWindow(basicFromOffset, basicTillOffset);
 
-			var finalScaler = MusicalPresenter.GetScaleTransformer(bandwidth, width);
+			var finalScaler = MusicalPresenter.GetScaleTransformer(span, width);
 			var finalFromOffset = finalScaler.GetLogicalOffset(center);
 			var finalTillOffset = finalScaler.GetLogicalOffset(from.X);
-			bandwidth.ShiftThreshold(finalFromOffset, finalTillOffset);
+			span.ShiftWindow(finalFromOffset, finalTillOffset);
 		}
 	}
 }

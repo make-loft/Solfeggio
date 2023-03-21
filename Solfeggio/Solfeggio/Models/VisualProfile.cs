@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Solfeggio.Presenters;
 #if NETSTANDARD
 using Xamarin.Forms;
 using Color = Xamarin.Forms.Color;
@@ -56,7 +55,7 @@ namespace Solfeggio.Models
 			string stringFormat = default,
 			bool isVisible = true) => new()
 			{
-				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color).DoFreeze(),
+				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color),
 				FontFamilyName = "Consolas",
 				StringFormat = stringFormat,
 				IsVisible = isVisible,
@@ -72,18 +71,18 @@ namespace Solfeggio.Models
 		static readonly int PointsCount = 12;
 		public static Color[] Rainbow = Enumerable.Range(0, PointsCount).Select(i => Colority.FromHSVA((double)i / PointsCount, 1d, 1d)).ToArray();
 
-		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
-		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c).DoFreeze()).ToArray();
+		public Brush[] NoteBrushes = Rainbow.Select(c => new SolidColorBrush(c)).ToArray();
+		public Brush[] NoteTextBrushes = Rainbow.Select(c => new SolidColorBrush(c)).ToArray();
 
 		private PeakProfile GetProfile([CallerMemberName]string key = default) => PeakProfiles[key];
 
 		//[DataMember]
 		public Dictionary<string, PeakProfile> PeakProfiles { get; set; } = new()
 		{
-			{ nameof(ActualMagnitude), CreateProfile(Colority.FromHEX("#60FFFFFF"), 12d) },
-			{ nameof(ActualFrequency), CreateProfile(Colority.FromHEX("#A0FFFFFF"), 14d) },
+			{ nameof(ActualMagnitude), CreateProfile(Colority.FromHEX("#A0FFFFFF"), 12d) },
+			{ nameof(ActualFrequency), CreateProfile(Colority.FromHEX("#C0FFFFFF"), 14d) },
 			{ nameof(OffsetFrequency), CreateProfile(Colority.FromHEX("#FFFFFFFF"), 16d, "+0.0;−0.0;•0.0") },
-			{ nameof(EthalonFrequency), CreateProfile(Colority.FromHEX("#A0FFFFFF"), 14d) },
+			{ nameof(EthalonFrequency), CreateProfile(Colority.FromHEX("#C0FFFFFF"), 14d) },
 			{ nameof(NoteName), CreateProfile(Colority.FromHEX("#FFFFFFFF"), 16d, default) },
 		};
 	}

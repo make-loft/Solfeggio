@@ -9,6 +9,7 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Ace.Extensions;
+using Span = Solfeggio.Presenters.Span;
 
 #if NETSTANDARD
 using Colors = Xamarin.Forms.Color;
@@ -37,9 +38,16 @@ namespace Solfeggio.Palettes
 			? new SolidColorBrush(GetOffsetColor(key, v => v))
 			: args.Value;
 
+
+/* Unmerged change from project 'Solfeggio'
+Before:
 		Bandwidth FrequencyBandwidth = Store.Get<MusicalPresenter>().Spectrum.Frequency;
-		object ToVisualValue(ConvertArgs args) => FrequencyBandwidth.VisualScaleFunc((double)args.Value);
-		object ToLogicalValue(ConvertArgs args) => FrequencyBandwidth.LogicalScaleFunc((double)args.Value);
+After:
+		Presenters.Span FrequencyBandwidth = Store.Get<MusicalPresenter>().Spectrum.Frequency;
+*/
+		Span FrequencySpan = Store.Get<MusicalPresenter>().Spectrum.Frequency;
+		object ToVisualValue(ConvertArgs args) => FrequencySpan.VisualScaleFunc((double)args.Value);
+		object ToLogicalValue(ConvertArgs args) => FrequencySpan.LogicalScaleFunc((double)args.Value);
 
 		object Debug_Convert(ConvertArgs args) =>
 			args.Value;

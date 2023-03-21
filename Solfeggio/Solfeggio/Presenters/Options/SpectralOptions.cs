@@ -10,7 +10,7 @@ namespace Solfeggio.Presenters.Options
 	public class SpectralOptions
 	{
 		[DataMember]
-		public Bandwidth Frequency { get; set; } = new()
+		public Span Frequency { get; set; } = new()
 		{
 			Scope = SmartRange.Create(10d, Api.AudioInputDevice.DefaultSampleRate / 2),
 			Window = SmartRange.Create(20d, 2870d),
@@ -19,7 +19,7 @@ namespace Solfeggio.Presenters.Options
 		};
 
 		[DataMember]
-		public Bandwidth Magnitude { get; set; } = new()
+		public Span Magnitude { get; set; } = new()
 		{
 			Scope = SmartRange.Create(0.00d, 1d),
 			Window = SmartRange.Create(0.00d, 1d),
@@ -27,31 +27,11 @@ namespace Solfeggio.Presenters.Options
 		};
 
 		[DataMember]
-		public Bandwidth Phase { get; set; } = new()
+		public Span Phase { get; set; } = new()
 		{
 			Scope = SmartRange.Create(-Pi.Single, +Pi.Single),
 			Window = SmartRange.Create(-Pi.Single, +Pi.Single),
 			Units = "Rad",
-		};
-	}
-
-	[DataContract]
-	public class FrameOptions
-	{
-		[DataMember]
-		public Bandwidth Level { get; set; } = new()
-		{
-			Scope = SmartRange.Create(-1d, +1d),
-			Window = SmartRange.Create(-1d, +1d),
-			VisualScaleFunc = Lineal,
-		};
-
-		[DataMember]
-		public Bandwidth Offset { get; set; } = new()
-		{
-			Scope = SmartRange.Create(+0d, +1d),
-			Window = SmartRange.Create(+0d, +1d),
-			VisualScaleFunc = Lineal,
 		};
 	}
 }

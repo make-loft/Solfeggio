@@ -30,6 +30,14 @@ namespace Solfeggio.Presenters.Options
 			EvokePropertyChanged(nameof(ActivePitchStandard));
 		}
 
+		[DataMember]
+		public int SpectrogramFramesCount { get; set; }
+#if NETSTANDARD
+			= 32;
+#else
+			= 64;
+#endif
+
 		public static double DefaultPitchStandard = 440d;
 		[DataMember]
 		public double[] PitchStandards { get; } =

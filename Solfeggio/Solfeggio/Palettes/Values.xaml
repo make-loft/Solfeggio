@@ -28,6 +28,8 @@
 	<Double x:Key="StrokeThickness.PhaseFFT" Value="1" />
 	<Double x:Key="StrokeThickness.PhasePMI" Value="1" />
 
+	<Double x:Key="StrokeThickness.Flower" Value="0.6" />
+	<Double x:Key="StrokeThickness.Spiral" Value="0.6" />
 	<Double x:Key="StrokeThickness.MagnitudeRawFrame" Value="1" />
 	<Double x:Key="StrokeThickness.MagnitudeWindowFrame" Value="1" />
 

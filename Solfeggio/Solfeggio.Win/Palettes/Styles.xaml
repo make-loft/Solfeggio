@@ -143,10 +143,10 @@
 		BasedOn="{StaticResource {x:Type RackSplitter}}"
 		TargetType="RackSplitter">
 		<Setter
-			Property="HorizontalAlignment"
+			Property="Alignment.X"
 			Value="Stretch" />
 		<Setter
-			Property="VerticalAlignment"
+			Property="Alignment.Y"
 			Value="Center" />
 	</Style>
 
