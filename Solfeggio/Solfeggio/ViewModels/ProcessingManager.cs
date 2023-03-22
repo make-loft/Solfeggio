@@ -112,6 +112,9 @@ namespace Solfeggio.ViewModels
 				thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
 				var powerPeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
 
+				AverageSignalMagnitude = averageSignalMagnitude;
+				ThresholdMagnitude = thresholdMagnitude;
+
 				SpectrumBetter = spectrumInterpolated;
 				Spectrum = spectrum;
 				
@@ -128,6 +131,9 @@ namespace Solfeggio.ViewModels
 		}
 
 		public event System.Action SampleProcessed;
+
+		public double AverageSignalMagnitude { get; set; }
+		public double ThresholdMagnitude { get; set; }
 
 		public IList<Bin> PowerPeaks { get; set; }
 		public IList<Bin> Peaks { get; set; }

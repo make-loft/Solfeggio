@@ -16,7 +16,7 @@ namespace Solfeggio.ViewModels
 		public TProfile ActiveProfile
 		{
 			get => Get(() => ActiveProfile, GetDefault());
-			set => Set(() => ActiveProfile, value);
+			set => Set(() => ActiveProfile, value, matching: true);
 		}
 
 		public virtual void Expose()

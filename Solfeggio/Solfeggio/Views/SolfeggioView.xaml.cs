@@ -138,8 +138,10 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 
-			AppPalette.VisualThemeChanged += () =>
+			AppPalette.VisualThemeChanged += async () =>
 			{
+				await Task.Delay(256);
+
 				FlowerStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Flower"];
 				SpiralStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Spiral"];
 				
@@ -155,24 +157,15 @@ namespace Solfeggio.Views
 
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
 
-			var skipFrameFlag = true;
+			var skipFrameFlag = false;
 
-			Appearing += async (o, e) =>
-			{
-				await Task.Delay(3000);
-				skipFrameFlag = false;
-			};
+			Loop(RenderFrame);
 
-			ProcessingManager.SampleProcessed += () =>
+			void RenderFrame()
 			{
 				if (skipFrameFlag.Is(true))
 					return;
 
-				Device.InvokeOnMainThreadAsync(RenderFrame);
-			};
-
-			void RenderFrame()
-			{
 				skipFrameFlag = true;
 
 				Render();
@@ -189,11 +182,12 @@ namespace Solfeggio.Views
 			}
 		}
 
-		private async void Loop(int milliseconds, Action actionToExecute)
+		private async void Loop(Action actionToExecute)
 		{
 			while (true)
 			{
-				await Task.Delay(milliseconds);
+				var delay = ProcessingManager.ActiveProfile?.SampleDuration ?? TimeSpan.FromMilliseconds(100);
+				await Task.Delay(delay);
 				actionToExecute();
 			}
 		}
@@ -224,7 +218,13 @@ namespace Solfeggio.Views
 			pianoCanvas.Children.Clear();
 
 			var powerPeaks = ProcessingManager.PowerPeaks;
-			var pianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, powerPeaks);
+			var allPianoKeys = MusicalPresenter.DrawPiano(pianoCanvas.Children, spectrum, pianoCanvas.Width, pianoCanvas.Height, powerPeaks);
+
+			var powerPianoKeys = allPianoKeys
+				.Where(k => k.Magnitude > ProcessingManager.ThresholdMagnitude)
+				.OrderBy(k => k.Magnitude)
+				.Take(MusicalPresenter.MaxHarmonicsCount)
+				.ToList();
 
 			var activeProfile = ProcessingManager.ActiveProfile;
 			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
@@ -275,14 +275,14 @@ namespace Solfeggio.Views
 
 			MagnitudeCanvas.Children.Add(MagnitudePolyline);
 
-			if (pianoKeys.Is() && pianoKeys.Any())
+			if (powerPianoKeys.Is() && powerPianoKeys.Any())
 			{
-				var maxMagnitude = pianoKeys.Max(k => k.Magnitude);
+				var maxMagnitude = powerPianoKeys.Max(k => k.Magnitude);
 				var minOpacity = 0.632d;
 				var topOpacity = 1 - minOpacity;
-				pianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
+				powerPianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
 
-				var labels = MusicalPresenter.DrawPeakTitles(pianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
+				var labels = MusicalPresenter.DrawPeakTitles(powerPianoKeys, MagnitudeCanvas.Width, MagnitudeCanvas.Height);
 				labels.ForEach(p =>
 				{
 					p.HorizontalOptions = LayoutOptions.Start;
@@ -293,7 +293,7 @@ namespace Solfeggio.Views
 				});
 			}
 
-			AppViewModel.Harmonics.Value = pianoKeys;
+			AppViewModel.Harmonics.Value = powerPianoKeys;
 
 			var w = SpectrogramCanvas.Width;
 			var h = SpectrogramCanvas.Height;
@@ -313,7 +313,7 @@ namespace Solfeggio.Views
 			{
 				SpectrogramStack.Children.Insert(0, DrawKeys(new Grid
 				{
-					BindingContext = new SpectrogramFrame(spectrum, pianoKeys),
+					BindingContext = new SpectrogramFrame(spectrum, powerPianoKeys),
 					Background = GetSpectrogramLineBrush(spectrum, transformer, w, magnitudeProjection),
 					Width = ww,
 					Height = hh,

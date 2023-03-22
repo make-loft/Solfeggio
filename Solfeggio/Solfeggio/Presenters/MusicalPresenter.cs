@@ -425,11 +425,6 @@ namespace Solfeggio.Presenters
 				}
 			}
 
-			var harmonics = keys
-				.OrderByDescending(k => k.Magnitude)
-				.Take(MaxHarmonicsCount)
-				.ToList();
-
 			foreach (var key in keys.Where(k => k.LowerFrequency < upperFrequency))
 			{
 				var basicBrush = MusicalOptions.OktaveBrushes()[key.NoteNumber];
@@ -460,7 +455,7 @@ namespace Solfeggio.Presenters
 				CreateBorder(lowerOffset, upperOffset, actualHeight, default, gradientBrush).Call(items.Add);
 			}
 
-			return harmonics;
+			return keys;
 		}
 
 		private static Border CreateBorder(double lowerOffset, double upperOffset, double height,

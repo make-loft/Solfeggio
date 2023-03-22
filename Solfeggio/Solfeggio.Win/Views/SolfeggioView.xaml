@@ -175,7 +175,7 @@
 		<Rack
 			Rack.Cell="R4"
 			Rack.IsTwoWayMode="True"
-			Rows="{Smart RackAB, DefaultValue='61* ^ 39*'}"
+			Rows="{Smart RackAB, DefaultValue='39* ^ 61*'}"
 			>
 			<Canvas
 				Rack.Cell="R0"

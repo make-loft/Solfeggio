@@ -112,7 +112,7 @@ namespace Solfeggio.Models
 
 			var resources = AppPalette.Resources;
 			var values = AppPalette.Values;
-			var colors = new Map();
+			var colors = AppPalette.Colors;
 			var theme = Ace.Store.ActiveBox.Revive<Dictionary<string, object>>(FileName);
 
 			theme.ForEach(p =>
@@ -122,7 +122,6 @@ namespace Solfeggio.Models
 				else resources[p.Key] = p.Value;
 			});
 
-			AppPalette.Colors = colors;
 			resources.EvokePropertyChanged();
 
 			IsBusy = false;
@@ -134,7 +133,7 @@ namespace Solfeggio.Models
 			var resources = AppPalette.Resources;
 			var brushes = AppPalette.Brushes;
 			var palettes = AppPalette.ColorPalettes;
-			AppPalette.Colors = (Map)palettes[Palette];
+			AppPalette.Colors = new Map((Map)palettes[Palette]);
 			foreach (var key in brushes.Keys)
 			{
 				if (brushes[key].Is(out Brush b))

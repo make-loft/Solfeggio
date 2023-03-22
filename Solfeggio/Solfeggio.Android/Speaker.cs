@@ -33,6 +33,7 @@ namespace Solfeggio.Droid
 
 		private async void StartWriteLoop()
 		{
+			var exceptionCounter = 0;
 			var track = Device;
 
 			Loop:
@@ -56,6 +57,11 @@ namespace Solfeggio.Droid
 				}
 				catch
 				{
+					if (exceptionCounter < 16)
+					{
+						exceptionCounter++;
+						goto Loop;
+					}
 					return;
 				}
 			}

@@ -26,7 +26,7 @@ namespace Solfeggio
 			.Use(r => r.Add(new AppConverters()))
 			.Use(r => r.Add(Values = new Values()))
 			.Use(r => r.Add(ColorPalettes = new ColorPalettes()))
-			.Use(r => r.Add(new Map(Resources["Nature"].To<Map>())))
+			.Use(r => r.Add(new Map((Map)Resources["Nature"])))
 			.Use(r => r.Add(Brushes = new Brushes()))
 			.Use(r => r.Add(new Palettes.Converters()))
 			.Use(r => r.Add(new Sets()))
@@ -41,9 +41,7 @@ namespace Solfeggio
 		public static Map ColorPalettes { get; private set; }
 		public static Map Brushes { get; private set; }
 
-		public static Map Resources => Application.Current.Resources is Map map
-			? map
-			: (Map)(Application.Current.Resources = new Map());
+		public static Map Resources => (Map)Application.Current.Resources;
 
 		public static Map Colors
 		{
@@ -53,6 +51,7 @@ namespace Solfeggio
 				var colors = Resources.MergedDictionaries.To<IList>()[3].To<Map>();
 				Map.EnumerateResources(value).ToList().ForEach(p => colors[p.Key] = p.Value);
 				new Brushes().ForEach(p => Brushes[p.Key] = p.Value);
+				//Resources.MergedDictionaries.To<IList>()[4] = new Brushes();
 				VisualThemeChanged?.Invoke();
 			}
 		}
