@@ -14,6 +14,7 @@ using Yandex.Metrica;
 
 using static Solfeggio.Editions;
 using static System.Environment;
+using System.Text;
 
 namespace Solfeggio
 {
@@ -96,6 +97,9 @@ namespace Solfeggio
 				YandexMetricaFolder.SetCurrent(metricaFolder);
 				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
 				//AgreementManager.CheckExpirationStatus(Edition);
+
+				var settingsVersionKey = Path.Combine(settingsFolder, "AppVersion.txt");
+				ActualizeSettings(box, settingsVersionKey);
 			}
 			catch (Exception exception)
 			{
@@ -141,6 +145,37 @@ namespace Solfeggio
 					MessageBox.Show($"{key} - {type}\n{exception}");
 				else YandexMetrica.ReportError($"{key} - {type}", exception);
 			};
+		}
+
+		private Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
+		{
+			using var stream = storage.GetReadStream(key);
+			using var streamReader = new StreamReader(stream, Encoding.UTF8);
+			var data = streamReader.ReadToEnd();
+			return System.Version.TryParse(data, out var version)
+				? version
+				: new Version();
+		}
+
+		private Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
+		{
+			using var stream = storage.GetWriteStream(key);
+			using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
+			streamWriter.Write(version.ToString());
+			return version;
+		}
+
+		private void ActualizeSettings(Memory box, string settingsVersionKey)
+		{
+			var targetVersion = new Version(4, 1);
+			var storage = box.Storage;
+			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
+			{
+				box.Destroy<ProcessingManager>();
+				box.Destroy<HarmonicManager>();
+			}
+
+			WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
 		}
 	}
 }

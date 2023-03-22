@@ -16,6 +16,7 @@ using Yandex.Metrica;
 using Store = Ace.Store;
 
 using static Solfeggio.Editions;
+using System.Text;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Skip)]
 namespace Solfeggio
@@ -46,6 +47,9 @@ namespace Solfeggio
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
 			Store.ActiveBox.KeyFormat = Path.Combine(AppDataFolderPath, "{0}.json");
+
+			var settingsVersionKey = Path.Combine(AppDataFolderPath, "AppVersion.txt");
+			ActualizeSettings(Store.ActiveBox, settingsVersionKey);
 		}
 
 		public App()
@@ -77,6 +81,37 @@ namespace Solfeggio
 			YandexMetrica.Wake();
 
 			Store.Get<ProcessingManager>().ActiveProfile?.Expose();
+		}
+
+		private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
+		{
+			using var stream = storage.GetReadStream(key);
+			using var streamReader = new StreamReader(stream, Encoding.UTF8);
+			var data = streamReader.ReadToEnd();
+			return Version.TryParse(data, out var version)
+				? version
+				: new Version();
+		}
+
+		private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
+		{
+			using var stream = storage.GetWriteStream(key);
+			using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
+			streamWriter.Write(version.ToString());
+			return version;
+		}
+
+		private static void ActualizeSettings(Memory box, string settingsVersionKey)
+		{
+			var targetVersion = new Version(4, 1);
+			var storage = box.Storage;
+			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
+			{
+				box.Destroy<ProcessingManager>();
+				box.Destroy<HarmonicManager>();
+			}
+
+			WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
 		}
 	}
 }
