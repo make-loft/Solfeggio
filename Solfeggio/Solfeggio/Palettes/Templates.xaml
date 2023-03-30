@@ -897,4 +897,11 @@
 		</Rack>
 	</DataTemplate>
 
+	<DataTemplate
+		x:Key="VisualizationProfileTemplate"
+		>
+		<Rack
+			/>
+	</DataTemplate>
+
 </ResourceDictionary>

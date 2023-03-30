@@ -79,6 +79,7 @@
 								ItemsSource="{Binding Profiles}"
 								ActiveItem="{Binding ActiveProfile, Mode=TwoWay}"
 								ItemTemplate="{StaticResource ProfileHeaderTemplate}"
+								ContentTemplate="{StaticResource VisualizationProfileTemplate}"
 								/>
 						</Stack>
 					</Scroll>

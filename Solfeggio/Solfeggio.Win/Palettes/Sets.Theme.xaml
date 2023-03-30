@@ -1,19 +1,19 @@
-﻿<ResourceDictionary
-	x:Class="Solfeggio.Palettes.Sets_Visualization"
+﻿<Map
+	x:Class="Solfeggio.Palettes.Sets_Theme"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
 	xmlns:p="clr-namespace:Solfeggio.Presenters"
 	xmlns:local="clr-namespace:Solfeggio"
 	>
-
 	<Set
 		x:Shared="False"
-		x:Key="VisualizationSet"
+		x:Key="ThemeSet"
 		>
 		<Expander
-			IsExpanded="True"
+			IsExpanded="False"
 			Header="{Localizing Palette}"
+			DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 			>
 			<Rack
 				Rows="^ ^"
@@ -30,6 +30,7 @@
 						/>
 					<Picker
 						Width="17"
+						Margin="0 10"
 						DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 						ItemsSource="{Binding MergedDictionaries[2]}"
 						SelectedValue="{Binding MergedDictionaries[3], Mode=OneWayToSource}"
@@ -89,12 +90,12 @@
 		<Expander
 			IsExpanded="True"
 			Header="{Localizing Visualization}"
+			DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 			>
 
 			<Rack
 				Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
 				Columns="^ ^ ^ ^ ^ ^ ^ ^"
-				DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 				>
 				<Title
 					Rack.Cell="R0 C1"
@@ -168,7 +169,7 @@
 						/>
 					<Title
 						Rack.Cell="R1 C1"
-						Text="{Localizing Rack}"
+						Text="{Localizing Grid}"
 						/>
 				</Rack>
 
@@ -521,6 +522,7 @@
 		<Expander
 			IsExpanded="True"
 			Header="{Localizing Background}"
+			DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
 			>
 			<Rack
 				Rows="^ ^ ^ ^ ^"
@@ -604,7 +606,9 @@
 
 		<Expander
 			IsExpanded="True"
-			Header="{Localizing PianoKey}">
+			Header="{Localizing PianoKey}"
+			DataContext="{Binding Resources, Source={x:Static local:App.Current}}"
+			>
 			<Rack
 				Rows="^ ^ ^"
 				Columns="^ ^ ^"
@@ -647,19 +651,5 @@
 					/>
 			</Rack>
 		</Expander>
-
-		<Expander
-			IsExpanded="True"
-			Header="{Localizing Music}"
-			ContentTemplate="{StaticResource MusicOptionsTemplate}"
-			Content="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music}"
-			/>
-
-		<Expander
-			Header="{Localizing Format}"
-			ContentTemplate="{StaticResource FormattingTemplate}"
-			Content="{Store p:MusicalPresenter}"
-			/>
 	</Set>
-
-</ResourceDictionary>
+</Map>

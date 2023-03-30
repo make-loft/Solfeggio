@@ -265,8 +265,8 @@
       <DependentUpon>MonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="AgreementManager.cs" />
-    <Compile Include="Palettes\Sets.Visualization.xaml.cs">
-      <DependentUpon>Sets.Visualization.xaml</DependentUpon>
+    <Compile Include="Palettes\Sets.Theme.xaml.cs">
+      <DependentUpon>Sets.Theme.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Assemblies.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -352,7 +352,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Palettes\Sets.Visualization.xaml">
+    <Page Include="Palettes\Sets.Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -215,6 +215,7 @@
 
 		<!--Options-->
 		<Rack
+			x:Name="OptionsRack"
 			Rack.Cell="R0 C0 CS3 RS7"
 			IsVisible="{Binding Source={Reference OptionsSwitch}, Path=IsToggled}"
 			>
@@ -222,8 +223,14 @@
 				Opacity=".5"
 				BackgroundColor="Gray"
 				/>
-			<v:OptionsView
+			<!--<v:OptionsView
 				IsVisible="{Binding Source={Reference OptionsSwitch}, Path=IsToggled}"
+				/>-->
+			<Rack/>
+			<Title
+				x:Name="BusyTitle"
+				Text="⏳"
+				FontSize="26"
 				/>
 			<Button
 				Text="✖"

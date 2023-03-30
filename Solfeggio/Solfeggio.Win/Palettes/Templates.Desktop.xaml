@@ -3,9 +3,53 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+	xmlns:v="clr-namespace:Solfeggio.Views"
 	xmlns:local="clr-namespace:Solfeggio"
 	>
+	<Style
+		x:Key="BorderStyle"
+		TargetType="Border">
+		<!--<Setter
+			Property="CornerRadius"
+			Value="16" />-->
+		<Setter
+			Property="Width"
+			Value="32" />
+		<Setter
+			Property="Height"
+			Value="24" />
+	</Style>
+	
+	<DataTemplate
+		x:Key="NamedColorTemplate">
+		<Stack
+			Orientation="Horizontal">
+			<Border
+				Style="{StaticResource BorderStyle}"
+				Background="{Binding Value}" />
+			<Title
+				Text="{Binding Value}" />
+			<Title
+				Text="{Binding Key}" />
+		</Stack>
+	</DataTemplate>
 
+	<DataTemplate
+		x:Key="BrushPreviewTemplate">
+		<Rack
+			Width="26"
+			Height="26">
+			<Border
+				Rack.Cell="C1"
+				CornerRadius="10"
+				Background="{StaticResource ChessBrush}" />
+			<Border
+				Rack.Cell="C1"
+				CornerRadius="10"
+				Background="{Binding}" />
+		</Rack>
+	</DataTemplate>
+	
 	<DataTemplate
 		x:Key="WindowMenuTemplate"
 		>
@@ -30,7 +74,7 @@
 				/>
 
 			<Title
-				Rack.Cell="R2 C0"
+				Rack.Cell="АR2 C0"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
 				ToolTip="{Localizing Flower}"
@@ -135,6 +179,217 @@
 				BorderThickness="0"
 				Background="{StaticResource TitleBrush}"
 				ContentTemplate="{StaticResource WindowMenuTemplate}"
+				/>
+		</Rack>
+	</DataTemplate>
+
+	<ControlTemplate
+		x:Key="VisibilityTemplate">
+		<Rack>
+			<Border
+				Rack.Cell="C0 CS2"
+				Margin="2"
+				CornerRadius="10"
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Switch
+				Rack.Cell="R1 C1"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				IsToggled="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource IsVisibleConverter}}"
+				/>
+		</Rack>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="ColorValueTemplate">
+		<Expander
+			x:Name="Root">
+			<Expander.Header>
+				<Rack>
+					<Border
+						CornerRadius="10"
+						Background="LightGray" />
+					<Border
+						CornerRadius="10"
+						Background="{StaticResource ChessBrush}" />
+					<Border
+						CornerRadius="10"
+						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
+					<Field
+						Margin="10 4"
+						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
+				</Rack>
+			</Expander.Header>
+			<v:PopupView
+				IsOpen="{Binding IsExpanded, ElementName=Root}">
+				<v:ColorPicker
+					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+			</v:PopupView>
+		</Expander>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="BrushPickerTemplate">
+		<Rack
+			Columns="^ *">
+			<Border
+				Rack.Cell="C0 CS2"
+				Margin="2"
+				CornerRadius="10"
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Expander
+				Rack.Cell="C0"
+				x:Name="Root"
+				Header="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+				HeaderTemplate="{StaticResource BrushPreviewTemplate}">
+				<v:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=Root}">
+					<v:BrushPicker
+						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+						/>
+				</v:PopupView>
+			</Expander>
+			<Picker
+				Rack.Cell="C1"
+				Width="17"
+				Height="17"
+				Margin="0 0 8 0"
+				SelectedValuePath="Value"
+				ItemsSource="{Binding Resources.MergedDictionaries[4], Source={x:Static local:App.Current}}"
+				SelectedValue="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
+				<Picker.ItemTemplate>
+					<DataTemplate>
+						<Stack
+							Orientation="Horizontal">
+							<Border
+								Background="{Binding ChessBrush}">
+								<Border
+									Style="{StaticResource BorderStyle}"
+									Background="{Binding Value}" />
+							</Border>
+							<Field
+								IsReadOnly="True"
+								Text="{Binding Key}" />
+						</Stack>
+					</DataTemplate>
+				</Picker.ItemTemplate>
+			</Picker>
+		</Rack>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="RangePickerTemplate">
+		<Rack>
+			<Border
+				Margin="2"
+				CornerRadius="10"
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Rack
+						Rows="* *"
+						Columns="^ ^ ^"
+						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+						<Field
+							Rack.Cell="R0 C0"
+							ToolTip="{Binding Window.Till}"
+							Text="{Binding Window.Till, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							/>
+						<Title
+							Rack.Cell="R0 C1"
+							Text="-"
+							/>
+						<Field
+							Rack.Cell="R0 C2"
+							ToolTip="{Binding Window.From}"
+							Text="{Binding Window.From, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							/>
+						<Title
+							Rack.Cell="R1 C1"
+							Text="="
+							/>
+						<Field
+							Rack.Cell="R1 C2"
+							Style="{StaticResource ReadOnlyFieldStyle}"
+							ToolTip="{Binding Window.Length}"
+							Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							/>
+					</Rack>
+				</Expander.Header>
+				<v:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<ContentPresenter
+						Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+						ContentTemplate="{StaticResource RangeTemplate}"
+						/>
+				</v:PopupView>
+			</Expander>
+		</Rack>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="ValuePickerTemplate">
+		<Rack
+			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<Border
+				Margin="2"
+				CornerRadius="10"
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Expander
+				x:Name="TemplateRoot">
+				<Expander.Header>
+					<Field
+						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+						/>
+				</Expander.Header>
+				<v:PopupView
+					IsOpen="{Binding IsExpanded, ElementName=TemplateRoot}">
+					<v:ValuePicker
+						Minimum="0"
+						Maximum="1"
+						Value="{Binding DataContext, Mode=TwoWay}"
+						/>
+				</v:PopupView>
+			</Expander>
+		</Rack>
+	</ControlTemplate>
+
+	<ControlTemplate
+		x:Key="ZIndexTemplate">
+		<Rack
+			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+			<Border
+				Margin="2"
+
+				Background="{StaticResource TitleBrush}"
+				/>
+			<Field
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToStringTwoWayConverter}}"
+				/>
+		</Rack>
+	</ControlTemplate>
+
+	<DataTemplate
+		x:Key="VisualizationProfileTemplate"
+		>
+		<Rack>
+			<ItemsControl
+				ItemsSource="{StaticResource ThemeSet}"
+				Visibility="{Binding IsBusy, Converter={StaticResource FalseToVisibleConverter}}"
+				/>
+			<Title
+				Text="⏳"
+				Margin="64"
+				FontSize="26"
+				Foreground="HotPink"
+				Visibility="{Binding IsBusy, Converter={StaticResource TrueToVisibleConverter}}"
 				/>
 		</Rack>
 	</DataTemplate>

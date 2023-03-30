@@ -138,7 +138,14 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 
-			AppPalette.VisualThemeChanged += async () =>
+			AppPalette.ColorPaletteChanging += async () =>
+			{
+				BusyTitle.IsVisible = true;
+
+				await this.DisplayAlert("VisualThemeChanging", "A", "cancel");
+			};
+
+			AppPalette.ColorPaletteChanged += async () =>
 			{
 				await Task.Delay(256);
 
@@ -153,9 +160,20 @@ namespace Solfeggio.Views
 
 				MagnitudeRawFramePolyline.Fill = AppPalette.GetBrush("Fill.MagnitudeRawFrame");
 				MagnitudeRawFramePolyline.Stroke = AppPalette.GetBrush("Stroke.MagnitudeRawFrame");
+
+				BusyTitle.IsVisible = false;
 			};
 
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
+
+			Appearing += async (o, e) =>
+			{
+				await Task.Delay(2000);
+
+				BusyTitle.IsVisible = true;
+				OptionsRack.Children[1] = new OptionsView();
+				BusyTitle.IsVisible = false;
+			};
 
 			var skipFrameFlag = false;
 

@@ -3,7 +3,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	>
-
 	<Set
 		x:Key="AllowedBuffersCount"
 		>
@@ -48,4 +47,7 @@
 		<String Value="F5" />
 	</Set>
 
+	<Set
+		x:Key="ThemeSet"
+		/>
 </Map>

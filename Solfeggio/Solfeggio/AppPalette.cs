@@ -34,6 +34,7 @@ namespace Solfeggio
 			.Use(r => r.Add(new Templates()))
 #if !NETSTANDARD
 			.Use(r => r.Add(new TemplatesDesktop()))
+			.Use(r => r.Add(new Sets_Theme()))
 #endif
 			;
 
@@ -48,15 +49,22 @@ namespace Solfeggio
 			get => (Map)Resources.MergedDictionaries.To<IList>()[3];
 			set
 			{
-				var colors = Resources.MergedDictionaries.To<IList>()[3].To<Map>();
-				Map.EnumerateResources(value).ToList().ForEach(p => colors[p.Key] = p.Value);
-				new Brushes().ForEach(p => Brushes[p.Key] = p.Value);
-				//Resources.MergedDictionaries.To<IList>()[4] = new Brushes();
-				VisualThemeChanged?.Invoke();
+				ColorPaletteChanging?.Invoke();
+				ChangeColorPalette(value);
+				ColorPaletteChanged?.Invoke();
 			}
 		}
 
-		public static event System.Action VisualThemeChanged;
+		static void ChangeColorPalette(Map value)
+		{
+			var colors = Resources.MergedDictionaries.To<IList>()[3].To<Map>();
+			Map.EnumerateResources(value).ToList().ForEach(p => colors[p.Key] = p.Value);
+			new Brushes().ForEach(p => Brushes[p.Key] = p.Value);
+			//Resources.MergedDictionaries.To<IList>()[4] = new Brushes();
+		}
+
+		public static event System.Action ColorPaletteChanging;
+		public static event System.Action ColorPaletteChanged;
 
 		public static Brush GetBrush([CallerMemberName] string key = default) => (Brush)Resources[key];
 

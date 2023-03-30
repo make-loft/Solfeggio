@@ -3,12 +3,12 @@ using Ace.Controls;
 
 using System.Collections;
 
-using Xamarin.Forms;
-
 namespace Solfeggio.Palettes
 {
-	partial class Sets_Visualization
+	partial class Sets_Theme
 	{
+		public Sets_Theme() => InitializeComponent();
+
 		void ResetPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) =>
 			Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
 			.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.To<string>());

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 
 using Ace;
@@ -12,9 +13,10 @@ using Ace.Replication.MemberProviders;
 using Solfeggio.ViewModels;
 using Yandex.Metrica;
 
+using Version = System.Version;
+
 using static Solfeggio.Editions;
 using static System.Environment;
-using System.Text;
 
 namespace Solfeggio
 {
@@ -147,17 +149,17 @@ namespace Solfeggio
 			};
 		}
 
-		private Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
+		private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
 		{
 			using var stream = storage.GetReadStream(key);
 			using var streamReader = new StreamReader(stream, Encoding.UTF8);
 			var data = streamReader.ReadToEnd();
-			return System.Version.TryParse(data, out var version)
+			return Version.TryParse(data, out var version)
 				? version
 				: new Version();
 		}
 
-		private Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
+		private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
 		{
 			using var stream = storage.GetWriteStream(key);
 			using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
@@ -165,7 +167,7 @@ namespace Solfeggio
 			return version;
 		}
 
-		private void ActualizeSettings(Memory box, string settingsVersionKey)
+		private static void ActualizeSettings(Memory box, string settingsVersionKey)
 		{
 			var targetVersion = new Version(4, 1);
 			var storage = box.Storage;
