@@ -38,61 +38,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Palettes\ResourceDictionary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
 	<ProjectReference Include="..\..\Ace\Ace.Xamarin.csproj" />
 	<ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj" />
 	<ProjectReference Include="..\..\yandex.metric\Yandex.Metrica\Yandex.Metrica.Xamarin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Palettes\Styles.xaml.cs">
-      <DependentUpon>Styles.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Palettes\Sets.xaml.cs">
-      <DependentUpon>Sets.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Palettes\Converters.xaml.cs">
-      <DependentUpon>Converters.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Palettes\ColorPalettes.xaml.cs">
-      <DependentUpon>ColorPalettes.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Palettes\Values.xaml.cs">
-      <DependentUpon>Values.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Palettes\Brushes.xaml.cs">
-      <DependentUpon>Brushes.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\SolfeggioView.xaml.cs">
-      <DependentUpon>SolfeggioView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\OptionsView.xaml.cs">
-      <DependentUpon>OptionsView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Palettes\Styles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Sets.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Converters.xaml">
+    <EmbeddedResource Update="Palettes\Brushes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Palettes\ColorPalettes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Sets.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Palettes\Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Palettes\Values.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Brushes.xaml">
+    <EmbeddedResource Update="Views\OptionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SolfeggioView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

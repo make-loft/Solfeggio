@@ -76,6 +76,7 @@ namespace Solfeggio.Models
 
 		public async void Keep(bool asyncDelay = true)
 		{
+#if !XAMARIN
 			var resources = AppPalette.Resources;
 			var valueKeys = AppPalette.Values.Keys.OfType<string>();
 			var colorsKeys = EnumerateAllKeys(AppPalette.Colors).OfType<string>().Distinct();
@@ -92,9 +93,10 @@ namespace Solfeggio.Models
 				await Task.Delay(AsyncDelay);
 
 			Ace.Store.ActiveBox.TryKeep(theme, FileName);
-		}
+#endif
+        }
 
-		public async void Load(bool asyncDelay = true)
+        public async void Load(bool asyncDelay = true)
 		{
 			IsBusy = true;
 

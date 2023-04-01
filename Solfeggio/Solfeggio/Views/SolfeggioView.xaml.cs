@@ -138,18 +138,13 @@ namespace Solfeggio.Views
 		{
 			InitializeComponent();
 
-			AppPalette.ColorPaletteChanging += async () =>
-			{
-				BusyTitle.IsVisible = true;
-
-				await this.DisplayAlert("VisualThemeChanging", "A", "cancel");
-			};
+			AppPalette.ColorPaletteChanging += () => BusyTitle.IsVisible = true;
 
 			AppPalette.ColorPaletteChanged += async () =>
 			{
 				await Task.Delay(256);
 
-				FlowerStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Flower"];
+                FlowerStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Flower"];
 				SpiralStrokePolyline.StrokeThickness = (double)AppPalette.Resources["StrokeThickness.Spiral"];
 				
 				FlowerStrokePolyline.Stroke = AppPalette.GetBrush("Stroke.Flower");
@@ -161,7 +156,7 @@ namespace Solfeggio.Views
 				MagnitudeRawFramePolyline.Fill = AppPalette.GetBrush("Fill.MagnitudeRawFrame");
 				MagnitudeRawFramePolyline.Stroke = AppPalette.GetBrush("Stroke.MagnitudeRawFrame");
 
-				BusyTitle.IsVisible = false;
+                BusyTitle.IsVisible = false;
 			};
 
 			SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
