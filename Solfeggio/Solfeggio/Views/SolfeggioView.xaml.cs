@@ -86,7 +86,7 @@ namespace Solfeggio.Views
 						var originalFromOffset = originalScaler.GetLogicalOffset(from.X);
 						var originalTillOffset = originalScaler.GetLogicalOffset(till.X);
 
-						span.ShiftWindow(originalFromOffset, originalTillOffset);
+						span.TransformWindow(originalFromOffset, originalTillOffset, OffsetMode.Shift);
 					}
 					else
 					{

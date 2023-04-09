@@ -5,7 +5,6 @@
 	xmlns:sh="clr-namespace:System.Windows.Shapes"
 	xmlns:c="clr-namespace:System.Windows.Controls"
 	xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-	xmlns:v="clr-namespace:Solfeggio.Views"
 	LayoutChanged="ContentPage_LayoutChanged"
 	BindingContext="{Store vm:ProcessingManager}"
 	>

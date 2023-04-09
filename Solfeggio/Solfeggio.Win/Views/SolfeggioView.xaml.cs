@@ -79,7 +79,7 @@ namespace Solfeggio.Views
 					var originalFromOffset = originalScaler.GetLogicalOffset(from.X);
 					var originalTillOffset = originalScaler.GetLogicalOffset(till.X);
 
-					bandwidth.ShiftWindow(originalFromOffset, originalTillOffset);
+					bandwidth.TransformWindow(originalFromOffset, originalTillOffset, OffsetMode.Shift);
 				}
 				else
 				{
@@ -99,7 +99,7 @@ namespace Solfeggio.Views
 					return;
 				}
 
-				bandwidth.LimitThreshold();
+				bandwidth.LimitWindow();
 			};
 
 			MouseWheel += (o, e) =>

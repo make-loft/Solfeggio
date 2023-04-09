@@ -104,9 +104,8 @@
 					ItemsSource="{StoreBinding StoreKey=p:MusicalPresenter, Path=Music.PianoKeys}"
 					ActiveItem="{Binding Frequency, Mode=OneWayToSource, Converter={StaticResource PianoKeyToFrequencyConverter}}"
 					/>
-				<Button
+				<Knob
 					Rack.Cell="C0"
-					InputTransparent="True"
 					Content="🎶"
 					Padding="0"
 					Margin="0"
@@ -179,7 +178,7 @@
 				Rack.Cell="C4 R0 RS2"
 				IsToggled="{Binding IsEnabled, Mode=TwoWay}"
 				/>
-			<Button
+			<Knob
 				Rack.Cell="C5 R0 RS2"
 				Content="➖"
 				CommandParameter="{Binding}"
@@ -237,7 +236,7 @@
 				Children.ItemsSource="{Binding Harmonics}"
 				Children.ItemTemplate="{StaticResource HarmonicTemplate}"
 				/>
-			<Button
+			<Knob
 				Alignment.X="Center"
 				Content="{Localizing Create, StringFormat='{}{0} ➕'}"
 				Command="{Context Key=Set.Create, TrackedPath=''}"
@@ -326,7 +325,7 @@
 			<Title
 				Text="{Binding Title}"
 				/>
-			<!--<Button
+			<!--<Knob
 				Content="✗"
 				Command="{Context Key=Set.Delete, StoreKey=local:Generator}"
 				CommandParameter="{Binding}"
@@ -348,12 +347,12 @@
 				Text="{Binding ActiveProfile.Title, Mode=TwoWay}"
 				IsEnabled="{Binding ActiveProfile.IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				/>
-			<Button
+			<Knob
 				Length.X="48"
 				Content="➕"
 				Command="{Context Key=Set.Create}"
 				/>
-			<Button
+			<Knob
 				Length.X="48"
 				Content="➖"
 				CommandParameter="{Binding ActiveProfile}"

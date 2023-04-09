@@ -1,4 +1,4 @@
-﻿<ContentView
+﻿<Item
 	x:Class="Solfeggio.Views.OptionsView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -209,7 +209,7 @@
 						/>
 				</Scroll>
 				
-				<Button
+				<Knob
 					Rack.Cell="R3"
 					FontSize="14"
 					CommandParameter="{Localizing ReadyToHelpLink}"
@@ -227,4 +227,4 @@
 		</Item>
 
 	</Pivot>
-</ContentView>
+</Item>

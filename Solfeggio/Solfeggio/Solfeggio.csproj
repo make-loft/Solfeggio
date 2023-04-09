@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Extensions\PatchingExtensions.cs" />
     <Compile Remove="Processors\EncodeProcessor.cs" />
     <Compile Remove="Processors\IdealSignalProcessor.cs" />
     <Compile Remove="Processors\PcmReader.cs" />

@@ -74,7 +74,7 @@
 				/>
 
 			<Title
-				Rack.Cell="АR2 C0"
+				Rack.Cell="R2 C0"
 				FontSize="20"
 				Foreground="{StaticResource SpectrogramBackgroundBrush}"
 				ToolTip="{Localizing Flower}"

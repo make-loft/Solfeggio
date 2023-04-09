@@ -45,7 +45,7 @@ namespace Solfeggio.Extensions
 			}
 			catch (Exception exception)
 			{
-				exception = exception;
+				Console.WriteLine(exception.ToString());
 			}
 		}
 

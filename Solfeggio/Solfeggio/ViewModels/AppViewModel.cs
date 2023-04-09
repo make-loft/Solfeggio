@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-using Xamarin.Essentials;
-
 namespace Solfeggio.ViewModels
 {
 	[DataContract]
@@ -50,7 +48,12 @@ namespace Solfeggio.ViewModels
 			{
 				try
 				{
-					var uri = e.Parameter?.ToString().Format(AppInfo.PackageName);
+#if NETSTANDARD
+					var packageName = Xamarin.Essentials.AppInfo.PackageName;
+#else
+					var packageName = App.Current.GetType().Assembly.GetName();
+#endif
+					var uri = e.Parameter?.ToString().Format(packageName);
 
 					if (uri.Contains("gitlab"))
 					{
@@ -58,7 +61,7 @@ namespace Solfeggio.ViewModels
 						this["CarePageVisit"] = true;
 					}
 #if NETSTANDARD
-					await Browser.OpenAsync(uri);
+					await Xamarin.Essentials.Browser.OpenAsync(uri);
 #else
 					await System.Diagnostics.Process.Start(uri).ToAsync();
 #endif

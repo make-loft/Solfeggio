@@ -3,4 +3,4 @@
 [assembly: AssemblyTitle("S O L F E G G I O")]
 [assembly: AssemblyProduct("Solfeggio")]
 [assembly: AssemblyCopyright("© Makeloft Studio")]
-[assembly: AssemblyVersion("4.1.0.0")]
+[assembly: AssemblyVersion("5.0.0.0")]

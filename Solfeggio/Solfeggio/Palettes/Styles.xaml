@@ -108,7 +108,7 @@
 	</Style>
 
 	<Style
-		TargetType="Button"
+		TargetType="Knob"
 		>
 		<!--<Setter Property="Padding" Value="-10 0" />-->
 		<Setter Property="Margin" Value="2" />

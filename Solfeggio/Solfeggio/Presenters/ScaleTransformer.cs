@@ -6,7 +6,7 @@ using static Rainbow.ScaleFuncs;
 
 namespace Solfeggio.Presenters
 {
-	public struct ScaleTransformer
+	public readonly struct ScaleTransformer
 	{
 		public readonly Projection
 			Correction, UnscaleFunc, InscaleFunc;

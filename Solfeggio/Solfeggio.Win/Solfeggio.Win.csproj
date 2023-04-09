@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
@@ -12,13 +12,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Solfeggio</RootNamespace>
     <AssemblyName>Solfeggio</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,9 +99,6 @@
     </Compile>
     <Compile Include="..\Solfeggio\Converters\ThicknessToDoubleTwoWayConverter.cs">
       <Link>Converters\ThicknessToDoubleTwoWayConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Solfeggio\Extensions\PatchingExtensions.cs">
-      <Link>Extensions\PatchingExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Extensions\SignalExtensions.cs">
       <Link>Extensions\SignalExtensions.cs</Link>
@@ -230,22 +224,24 @@
       <DependentUpon>OptionsView.xaml</DependentUpon>
       <Link>Views\OptionsView.xaml.cs</Link>
     </Compile>
+    <Compile Include="App.cs" />
     <Compile Include="Api\MmResult.cs" />
     <Compile Include="Api\MmTime.cs" />
     <Compile Include="Api\Wave.In.Imports.cs" />
     <Compile Include="Api\Wave.Out.Imports.cs" />
     <Compile Include="Api\Wave.Processor.cs" />
     <Compile Include="Api\Wave.cs" />
+    <Compile Include="Api\Wave.In.cs" />
     <Compile Include="Api\Wave.Out.cs" />
     <Compile Include="Api\Wave.Buffer.cs" />
+    <Compile Include="Api\Wave.Header.cs" />
     <Compile Include="Api\WaveFormat.cs" />
     <Compile Include="Api\WaveCapabilities.cs" />
-    <Compile Include="App.cs" />
+    <Compile Include="Extensions\CameraExtensions.cs" />
+    <Compile Include="Controls\WindowView.cs" />
     <Compile Include="Controls\RangeBar.xaml.cs">
       <DependentUpon>RangeBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WindowView.cs" />
-    <Compile Include="Extensions\CameraExtensions.cs" />
     <Compile Include="Palettes\Styles.xaml.cs">
       <DependentUpon>Styles.xaml</DependentUpon>
     </Compile>
@@ -385,29 +381,17 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Assemblies.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Assemblies.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Api\Wave.In.cs" />
-    <Compile Include="Api\Wave.Header.cs" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Ace\Ace.Desktop.csproj">
+    <ProjectReference Include="..\..\Ace\Ace.Win.csproj">
       <Project>{72f032c7-6cd2-4ece-8f8a-ea42742a59c6}</Project>
-      <Name>Ace.Desktop</Name>
+      <Name>Ace.Win</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rainbow\Rainbow\Rainbow.Standard1.0.csproj">
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
@@ -415,12 +399,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assemblies\Yandex.Metrica.NET.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assemblies\Rainbow.dll" />
-    <None Include="Assemblies\Xamarin.Synonyms.dll" />
     <None Include="Assemblies\Ace.dll" />
+    <None Include="Assemblies\Rainbow.dll" />
+    <None Include="Assemblies\Yandex.Metrica.NET.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\..\logo.ico" />

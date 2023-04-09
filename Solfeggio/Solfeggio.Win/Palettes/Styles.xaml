@@ -192,7 +192,7 @@
 	</Style>
 
 	<Style
-		TargetType="Button"
+		TargetType="Knob"
 		>
 		<Setter Property="Padding" Value="4" />
 		<Setter Property="Margin" Value="{StaticResource RegularMargin}" />
@@ -200,11 +200,6 @@
 		<Setter Property="Alignment.X" Value="Center" />
 		<Setter Property="Alignment.Y" Value="Center" />
 	</Style>
-
-	<Style
-		TargetType="xm:Button"
-		BasedOn="{StaticResource {Type Key=Button}}"
-		/>
 
 	<DataTemplate
 		x:Key="OptionTemplate">
