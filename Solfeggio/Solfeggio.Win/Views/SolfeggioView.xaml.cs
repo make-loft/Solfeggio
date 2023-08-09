@@ -7,13 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
-using Ace;
-using Ace.Extensions;
 
 using Microsoft.Win32;
 
 using Rainbow;
+
+using Ace;
+using Ace.Extensions;
 
 using Solfeggio.Presenters;
 using Solfeggio.Presenters.Options;
@@ -289,31 +289,58 @@ namespace Solfeggio.Views
 			var discreteStep = activeProcessingProfile.SampleRate / activeProcessingProfile.FrameSize;
 
 			var resources = App.Current.Resources;
+			var phaseBand = MusicalPresenter.Spectrum.Phase;
+			var magnitudeBand = MusicalPresenter.Spectrum.Magnitude;
+			var frequencyBand = MusicalPresenter.Spectrum.Frequency;
 
 			var vA = resources["Visibility.FrequencyDiscreteGrid"];
 			var zIndexA = (int)resources["ZIndex.FrequencyDiscreteGrid"];
 			if (vA.Is(Visibility.Visible))
 			{
-				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
-					AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-					MusicalPresenter.EnumerateGrid(discreteStep), zIndexA);
 
-				MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
-					AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-					MusicalPresenter.EnumerateGrid(discreteStep), zIndexA);
+				width = PhaseCanvas.ActualWidth;
+				height = PhaseCanvas.ActualHeight;
+				
+				var phaseMarkers = MusicalPresenter.EnumerateGrid(phaseBand, Pi.Half);
+
+				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, phaseBand, width, height,
+					AppPalette.ButterflyGridBrush, AppPalette.ButterflyGridBrush,
+					phaseMarkers, zIndexA, horizontal: false, projection: v => v.Negation().Increment(height/2d));
+
+
+				var frequancyMarkers = MusicalPresenter.EnumerateGrid(frequencyBand, discreteStep);
+
+				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, frequencyBand, width, height,
+					AppPalette.ButterflyGridBrush, AppPalette.ButterflyGridBrush,
+					frequancyMarkers, zIndexA);
+
+				width = MagnitudeCanvas.ActualWidth;
+				height = MagnitudeCanvas.ActualHeight;
+
+				MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, frequencyBand, width, height,
+					AppPalette.ButterflyGridBrush, AppPalette.ButterflyGridBrush,
+					frequancyMarkers, zIndexA);
+
+				var magnitudeMarkers = MusicalPresenter.EnumerateGrid(magnitudeBand, 0.1);
+
+				MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, magnitudeBand, width, height,
+					AppPalette.ButterflyGridBrush, AppPalette.ButterflyGridBrush,
+					magnitudeMarkers, zIndexA, horizontal: false, projection: v => v.Negation().Increment(height));
 			}
 
 			var vB = resources["Visibility.FrequencyNotesGrid"];
 			var zIndexB = (int)resources["ZIndex.FrequencyNotesGrid"];
 			if (vB.Is(Visibility.Visible))
 			{
-				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, width, height,
-					AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
-					MusicalPresenter.EnumerateNotes(), zIndexB);
+				var noteMarkers = MusicalPresenter.EnumerateNotes();
 
-				MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
-					AppPalette.ButterflyGridBrush, AppPalette.NoteGridBrush,
-					MusicalPresenter.EnumerateNotes(), zIndexB);
+				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, frequencyBand, width, height,
+					AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+					noteMarkers, zIndexB);
+
+				MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, frequencyBand, width, height,
+					AppPalette.NoteGridBrush, AppPalette.NoteGridBrush,
+					noteMarkers, zIndexB);
 			}
 
 			var powerPeaks = ProcessingManager.PowerPeaks;
@@ -327,9 +354,9 @@ namespace Solfeggio.Views
 				.ToList();
 
 			var activeProfile = ProcessingManager.ActiveProfile;
-			var geometryFill = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+			var geometryFill = GeometryPresenter.Draw(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
 				MusicalPresenter.Geometry.SpiralApproximationLevel, 1d / activeProfile.FrameSize, Pi.Half);
-			var geometryStroke = MusicalPresenter.DrawGeometry(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
+			var geometryStroke = GeometryPresenter.Draw(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
 				MusicalPresenter.Geometry.FlowerApproximationLevel, 0d, Pi.Half);
 
 			var centerX = FrameCanvas.ActualHeight / 2d;
@@ -365,10 +392,10 @@ namespace Solfeggio.Views
 
 			Draw(powerPeaks, activeProfile.SampleSize, activeProfile.SampleRate);
 
-			MusicalPresenter.DrawMarkers(PhaseCanvas.Children, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
+			MusicalPresenter.DrawMarkers(PhaseCanvas.Children, frequencyBand, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
 				AppPalette.GetBrush("PhasePeakBrush"), default, powerPianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
 
-			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, width, height,
+			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, frequencyBand, width, height,
 				AppPalette.GetBrush("MagnitudePeakBrush"), default, powerPianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
 
 			if (App.Current.MainWindow.IsNot())
@@ -470,7 +497,7 @@ namespace Solfeggio.Views
 			}
 
 			var approximation = AppView.TapeView.TapeViewModel.Approximation;
-			var geometry = MusicalPresenter.DrawGeometry(_peaks, _sampleSize, _sampleRate, approximation).ToList();
+			var geometry = GeometryPresenter.Draw(_peaks, _sampleSize, _sampleRate, approximation).ToList();
 
 			if (AppView.FlowerView.To(out var flowerView).IsVisible) flowerView.Draw(geometry);
 			if (AppView.TapeView.To(out var tapeView).IsVisible) tapeView.Draw(geometry);

@@ -76,7 +76,7 @@
 			<Canvas
 				Rack.Cell="R2"
 				Name="PhaseCanvas"
-				Background="{DynamicResource FrameBackgroundBrush}"
+				Background="{DynamicResource PhaseBackgroundBrush}"
 				>
 				<Polyline
 					Name="Polyline_Phase_FFT"

@@ -319,43 +319,43 @@
 
 				<ContentView
 					Rack.Cell="R3 C1"
-					DataContext="{Binding [Visibility.FrequencyNotesRack], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.FrequencyNotesGrid], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C3"
-					DataContext="{Binding [Stroke.FrequencyNotesRack], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.FrequencyNotesGrid], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C4"
-					DataContext="{Binding [StrokeThickness.FrequencyNotesRack], Mode=TwoWay}"
+					DataContext="{Binding [StrokeThickness.FrequencyNotesGrid], Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R3 C5"
-					DataContext="{Binding [ZIndex.FrequencyNotesRack], Mode=TwoWay}"
+					DataContext="{Binding [ZIndex.FrequencyNotesGrid], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
 
 				<ContentView
 					Rack.Cell="R4 C1"
-					DataContext="{Binding [Visibility.FrequencyDiscreteRack], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.FrequencyDiscreteGrid], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C3"
-					DataContext="{Binding [Stroke.FrequencyDiscreteRack], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.FrequencyDiscreteGrid], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C4"
-					DataContext="{Binding [StrokeThickness.FrequencyDiscreteRack], Mode=TwoWay}"
+					DataContext="{Binding [StrokeThickness.FrequencyDiscreteGrid], Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R4 C5"
-					DataContext="{Binding [ZIndex.FrequencyDiscreteRack], Mode=TwoWay}"
+					DataContext="{Binding [ZIndex.FrequencyDiscreteGrid], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
 

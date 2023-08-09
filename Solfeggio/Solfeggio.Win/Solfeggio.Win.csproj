@@ -151,6 +151,9 @@
       <Link>Palettes\Values.xaml.cs</Link>
       <DependentUpon>Values.xaml</DependentUpon>
     </Compile>
+    <Compile Include="..\Solfeggio\Presenters\GeometryPresenter.cs">
+      <Link>Presenters\GeometryPresenter.cs</Link>
+    </Compile>
     <Compile Include="..\Solfeggio\Presenters\MusicalPresenter.cs">
       <Link>Presenters\MusicalPresenter.cs</Link>
     </Compile>

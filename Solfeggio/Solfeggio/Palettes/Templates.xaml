@@ -85,6 +85,7 @@
 				Rack.Cell="C0"
 				Keyboard="Numeric"
 				Text="{Binding Magnitude, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				ToolTip="{Binding Magnitude}"
 				/>
 			<Rack
 				Rack.Cell="C1"
@@ -114,6 +115,7 @@
 					Rack.Cell="C1"
 					Keyboard="Numeric"
 					Text="{Binding Frequency, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					ToolTip="{Binding Frequency}"
 					/>
 			</Rack>
 			<Rack
@@ -126,6 +128,7 @@
 					FontSize="12"
 					Alignment.Y="From"
 					Text="{Binding Phase, Converter={StaticResource RadianDegreeFormattedConverter}}"
+					ToolTip="{Binding Phase}"
 					/>
 				<Title
 					Rack.Cell="C0"
@@ -133,11 +136,13 @@
 					FontSize="12"
 					Alignment.Y="Till"
 					Text="{Binding Phase, Mode=TwoWay, Converter={StaticResource RadianPiFormattedConverter}}"
+					ToolTip="{Binding Phase}"
 					/>
 				<Field
 					Rack.Cell="C1"
 					Keyboard="Numeric"
 					Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					ToolTip="{Binding Phase}"
 					/>
 			</Rack>
 

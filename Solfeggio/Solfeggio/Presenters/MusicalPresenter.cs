@@ -28,8 +28,8 @@ namespace Solfeggio.Presenters
 	{
 		[DataMember] public SpectralOptions Spectrum { get; set; } = new();
 		[DataMember] public FrameOptions Frame { get; set; } = new();
-		[DataMember] public MusicalOptions Music { get; set; } = new();
 		[DataMember] public FormatOptions Format { get; set; } = new();
+		[DataMember] public MusicalOptions Music { get; set; } = new();
 		[DataMember] public GeometryOptions Geometry { get; set; } = new();
 		public VisualProfile VisualProfile { get; set; } = new();
 
@@ -59,21 +59,27 @@ namespace Solfeggio.Presenters
 				Spectrum = new();
 		}
 
-		public void DrawMarkers(System.Collections.IList items, double width, double height,
-			Brush lineBrush, Brush textBrush, IEnumerable<double> markers, int zIndex = 0, double vTitleOffset = 0d)
+		public void DrawMarkers(System.Collections.IList items, Span hBand, double width, double height,
+			Brush lineBrush, Brush textBrush, IEnumerable<double> values, int zIndex = 0, double vTitleOffset = 0d,
+			bool horizontal = true, Projection projection = default)
 		{
-			var hBand = Spectrum.Frequency;
+			var w = width;
+			var h = height;
+
+			width = horizontal ? w : h;
+			height = horizontal ? h : w;
+
 			var hScaleTransformer = GetScaleTransformer(hBand, width);
 
 			hBand.Window.Deconstruct(out var lowerFrequency, out var upperFrequency);
 
-			var allMarkers = markers.ToArray();
+			var allMarkers = values.ToArray();
 			var skip = allMarkers.Length > 8 ? allMarkers.Length / 8 : 0;
 			var i = 0;
 			var opacityLineBrush = lineBrush.Clone();
 			var skipTitles = textBrush.IsNot();
 
-			foreach (var activeFrequency in markers)
+			foreach (var activeFrequency in values)
 			{
 				var skipTitle = skip > 0 && i++ % skip > 0;
 				if (activeFrequency < lowerFrequency) continue;
@@ -82,41 +88,47 @@ namespace Solfeggio.Presenters
 				var hVisualOffset = hScaleTransformer.GetVisualOffset(activeFrequency);
 				var offset = hVisualOffset.Is(double.NaN) ? 0d : hVisualOffset;
 
-				var line = CreateVerticalLine(offset, height, skipTitle ? opacityLineBrush : lineBrush);
+				offset = projection.IsNot() ? offset : projection(offset);
+
+				//opacityLineBrush.Opacity = skipTitle ? 0.3 : 1.0;
+
+				var line = CreateVerticalLine(offset, height, skipTitle ? opacityLineBrush : lineBrush, vertical: horizontal);
 				Panel.SetZIndex(line, zIndex);
 
 				items.Add(line);
 
 				if (skipTitles || skipTitle) continue;
 
-				var panel = new StackPanel();
+				var panel = new StackPanel { Background = textBrush };
 				Panel.SetZIndex(panel, zIndex);
-				var fontSize = hScaleTransformer.InscaleFunc.Is(ScaleFuncs.Lineal) ? 12 : 8 * width / hVisualOffset;
-				fontSize = fontSize > 20d || fontSize < 5d ? 20d : fontSize;
+				var fontSize = hScaleTransformer.InscaleFunc.Is(ScaleFuncs.Lineal) ? 12d : 8d * width / hVisualOffset;
+				fontSize = fontSize > 20d || fontSize < 5d || fontSize.Is(double.NaN) ? 20d : fontSize;
 				panel.Children.Add(new TextBlock
 				{
 					FontSize = fontSize,
-					Foreground = textBrush,
+					Foreground = Brushes.White,
 					Text = activeFrequency.ToString(Format.ScreenNumericFormat)
 				});
 
 				items.Add(panel);
 #if NETSTANDARD
 				panel.Measure();
-				panel.Margin = new(hVisualOffset - panel.Width / 2d, height * vTitleOffset, 0d, 0d);
+				var left = hVisualOffset - (horizontal ? panel.Width : -panel.Height) / 2d;
 #else
 				panel.UpdateLayout();
-				panel.Margin = new(hVisualOffset - panel.ActualWidth / 2d, height * vTitleOffset, 0d, 0d);
+				var left = hVisualOffset - (horizontal ? panel.ActualWidth : -panel.ActualHeight) / 2d;
 #endif
+				var top = height * vTitleOffset;
+				left = projection.IsNot() ? left : projection(left);
+				panel.Margin = horizontal ? new(left, top, 0d, 0d) : new(top, left, 0d, 0d);
 			}
 		}
 
-		public IEnumerable<double> EnumerateGrid(double frequencyStep)
+		public IEnumerable<double> EnumerateGrid(Span band, double step)
 		{
-			Spectrum.Frequency.Window.Deconstruct(out _, out var upperFrequency);
-			var startFrequency = 0d; //Math.Ceiling(lowerFrequency / frequencyStep) * frequencyStep;
+			band.Window.Deconstruct(out var from, out var till);
 
-			for (var value = startFrequency; value < upperFrequency; value += frequencyStep)
+			for (var value = Math.Ceiling(from / step) * step; value < till; value += step)
 			{
 				yield return value;
 			}
@@ -183,6 +195,15 @@ namespace Solfeggio.Presenters
 			Projection correction = default) => new(span.VisualScaleFunc, visualLength,
 				span.Window.From, span.Window.Till, correction);
 
+		static bool GetShortLength(double periodHalf, double from, double till, out double distance)
+		{
+			distance = (till - from) / periodHalf;
+
+			var turn = Math.Abs(distance + 0.5) > 1.0;
+
+			return turn;
+		}
+
 		public static IEnumerable<TOut> Draw<TIn, TOut>(
 			IEnumerable<TIn> points,
 			Create<TOut> create,
@@ -191,7 +212,8 @@ namespace Solfeggio.Presenters
 			Span hBand, Span vBand,
 			double hLength, double vLength,
 			Projection hCorrection,
-			Projection vCorrection)
+			Projection vCorrection,
+			bool isPhaseMode = false)
 		{
 			var hScaleTransformer = GetScaleTransformer(hBand, hLength, hCorrection);
 			var vScaleTransformer = GetScaleTransformer(vBand, vLength, vCorrection);
@@ -200,18 +222,77 @@ namespace Solfeggio.Presenters
 			vBand.Window.Deconstruct(out var vLowerValue, out var vUpperValue);
 			vScaleTransformer.GetVisualOffset(0d).To(out var vZeroLevel);
 
+			var vPhaseValue = (vUpperValue - vLowerValue) / 2d;
+			TIn previousPoint = default;
+
 			if (createWithContent.IsNot()) yield return create(0d, in vZeroLevel);
 
 			foreach(var activePoint in EnumerateActivePoints(points, deconstruct, hLowerValue, hUpperValue))
 			{
 				deconstruct(in activePoint, out var hActiveValue, out var vActiveValue);
 
-				var hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
-				var vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
+				if (isPhaseMode && previousPoint.IsNot(default))
+				{
 
-				yield return createWithContent.IsNot()
-					? create(in hVisualOffset, in vVisualOffset)
-					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+					deconstruct(in previousPoint, out var hPreviousValue, out var vPreviousValue);
+
+					if (GetShortLength(Pi.Single, vPreviousValue, vActiveValue, out var distance))
+					{
+						var sign = vPreviousValue < vActiveValue ? +1 : -1;
+
+						var a = vPhaseValue - Math.Abs(vPreviousValue); 
+						var b = vPhaseValue - Math.Abs(vActiveValue);
+						var l = hActiveValue - hPreviousValue;
+						var c = a * l / (a + b);
+
+						var hVisualOffset = hScaleTransformer.GetVisualOffset(hPreviousValue + c);
+						var vVisualOffset = vScaleTransformer.GetVisualOffset(-vPhaseValue * sign);
+
+						yield return createWithContent.IsNot()
+							? create(in hVisualOffset, in vVisualOffset)
+							: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+
+
+
+						hVisualOffset = hScaleTransformer.GetVisualOffset(hPreviousValue + c);
+						vVisualOffset = vScaleTransformer.GetVisualOffset(+vPhaseValue * sign);
+
+						yield return createWithContent.IsNot()
+							? create(in hVisualOffset, in vVisualOffset)
+							: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+
+
+
+						hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
+						vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
+
+						yield return createWithContent.IsNot()
+							? create(in hVisualOffset, in vVisualOffset)
+							: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+
+					}
+					else
+					{
+						var hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
+						var vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
+
+						yield return createWithContent.IsNot()
+							? create(in hVisualOffset, in vVisualOffset)
+							: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+
+					}
+				}
+				else
+				{
+					var hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
+					var vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
+
+					yield return createWithContent.IsNot()
+						? create(in hVisualOffset, in vVisualOffset)
+						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+				}
+
+				previousPoint = activePoint;
 			}
 
 			if (createWithContent.IsNot())
@@ -237,7 +318,8 @@ namespace Solfeggio.Presenters
 			Spectrum.Frequency, Spectrum.Phase,
 			width, height,
 			default,
-			v => v.Negation().Increment(height)
+			v => v.Negation().Increment(height),
+			true
 		);
 
 		public IEnumerable<Point> DrawMagnitude(IEnumerable<Bin> spectrum, double width, double height) => Draw
@@ -289,16 +371,18 @@ namespace Solfeggio.Presenters
 
 		public IEnumerable<Grid> DrawPeakTitles(IList<PianoKey> keys, double width, double height) => Draw
 		(
-			keys, default,
+			keys.SelectMany(k => k.Peaks.ToDictionary(p => p, p => k)), default,
 			(in double x, in double y,
-				PianoKey pianoKey, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
+				KeyValuePair<Bin, PianoKey> peakToPianoKey, double activeMagnitude, double activeFrequency, double upperMagnitude) =>
 			{
-				var expressionLevel = 1d + activeMagnitude / upperMagnitude;
+				var pianoKey = peakToPianoKey.Value;
+				var p = peakToPianoKey.Key;
+				var expressionLevel = 1d + p.Magnitude / upperMagnitude;
 				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
 
 				var strokeBorder = new Border
 				{
-					BorderThickness = new(1 + 4d * activeMagnitude),
+					BorderThickness = new(1 + 4d * p.Magnitude),
 					BorderBrush = VisualProfile.NoteTextBrushes[pianoKey.NoteNumber],
 					CornerRadius = new(4d * expressionLevel * height / 256),
 				};
@@ -310,8 +394,8 @@ namespace Solfeggio.Presenters
 					Background = VisualProfile.NoteBrushes[pianoKey.NoteNumber] //VisualProfile.TopBrush
 				};
 
-				var infoPanel = new StackPanel { Margin = new(activeMagnitude * 6d) };
-				EnumeratePanelContent(pianoKey, activeFrequency, activeMagnitude, expressionLevel, width, height).
+				var infoPanel = new StackPanel { Margin = new(p.Magnitude * 6d) };
+				EnumeratePanelContent(pianoKey, p.Frequency, p.Magnitude, expressionLevel, width, height).
 					ForEach(infoPanel.Children.Add);
 
 				var l = x.Is(double.NaN) ? 0d : x;
@@ -326,7 +410,8 @@ namespace Solfeggio.Presenters
 				Panel.SetZIndex(grid, (int)(expressionLevel * 1024));
 				return grid;
 			},
-			(in PianoKey p, out double h, out double v) => p.Harmonic.Deconstruct(out h, out v, out _),
+			(in KeyValuePair<Bin, PianoKey> peakToPianoKey, out double h, out double v) =>
+				peakToPianoKey.Key.Deconstruct(out h, out v, out _),
 			Spectrum.Frequency, Spectrum.Magnitude,
 			width, height, default, default
 		);
@@ -361,34 +446,6 @@ namespace Solfeggio.Presenters
 			});
 		}
 
-		public static IEnumerable<Point> DrawGeometry(IList<Bin> peaks, int sampleSize, double sampleRate,
-			double approximation = 1d, double delta = 0d, double phaseAngle = 0d)
-		{
-			if (peaks.Count.Is(0))
-				yield break;
-
-			var spiral = 1d;
-			var pointsCount = (int)(sampleSize / approximation);
-			for (var i = 0; i < pointsCount; i++, spiral -= delta)
-			{
-				var a = 0d;
-				var b = 0d;
-
-				for (var j = 0; j < peaks.Count; j++)
-				{
-					var peak = peaks[j];
-					var w = Pi.Double * peak.Frequency;
-					var t = 2d * i / sampleRate * approximation;
-					var phase = peak.Phase + w * t + phaseAngle;
-					var magnitude = peak.Magnitude * spiral;
-					a += magnitude * Math.Cos(phase);
-					b += magnitude * Math.Sin(phase);
-				}
-
-				yield return new(a, b);
-			}
-		}
-
 		public List<PianoKey> DrawPiano(System.Collections.IList items, IList<Bin> data, double width, double height, IList<Bin> peaks)
 		{
 			Spectrum.Magnitude.Window.Deconstruct(out var lowMagnitude, out var upperMagnitude);
@@ -417,7 +474,7 @@ namespace Solfeggio.Presenters
 
 				key.Peaks.Add(bin);
 
-				var topPeak = key.Peaks.OrderBy(p => p.Magnitude).FirstOrDefault();
+				var topPeak = key.Peaks.OrderByDescending(p => p.Magnitude).FirstOrDefault();
 				if (topPeak.Is())
 				{
 					key.Magnitude = topPeak.Magnitude;
@@ -470,12 +527,13 @@ namespace Solfeggio.Presenters
 			Height = height,
 		};
 
-		private static Line CreateVerticalLine(double offset, double length, Brush strokeBrush, double strokeThickness = 1d) => new()
+		private static Line CreateVerticalLine(double offset, double length,
+			Brush strokeBrush, double strokeThickness = 1d, bool vertical = true) => new()
 		{
-			Y1 = 0d,
-			Y2 = length,
-			X1 = offset,
-			X2 = offset,
+			Y1 = vertical ? 0d : offset,
+			Y2 = vertical ? length : offset,
+			X1 = vertical ? offset : 0d,
+			X2 = vertical ? offset : length,
 			Stroke = strokeBrush,
 			StrokeThickness = strokeThickness
 		};
