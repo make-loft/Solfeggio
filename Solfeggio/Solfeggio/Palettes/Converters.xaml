@@ -7,6 +7,9 @@
 	<c:DelegateToNameConverter
 		x:Key="DelegateToNameConverter"
 		/>
+	<c:Int32ToDoubleTwoWayConverter
+		x:Key="Int32ToDoubleTwoWayConverter"
+		/>
 	<c:Int32ToStringTwoWayConverter
 		x:Key="Int32ToStringTwoWayConverter"
 		/>

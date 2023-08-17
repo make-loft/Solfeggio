@@ -85,8 +85,11 @@
     <Compile Include="..\Solfeggio\Converters\DoubleToStringTwoWayConverter.cs">
       <Link>Converters\DoubleToStringTwoWayConverter.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Converters\Int32ToStringTwoWayConverter.cs">
-      <Link>Converters\Int32ToStringTwoWayConverter.cs</Link>
+    <Compile Include="..\Solfeggio\Converters\Int32ToDoubleTwoWayConverter.cs">
+      <Link>Converters\Int32ToDoubleTwoWayConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Converters\Int32ToStringTwoWayConverte.cs">
+      <Link>Converters\Int32ToStringTwoWayConverte.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Converters\MathConverter.cs">
       <Link>Converters\MathConverter.cs</Link>

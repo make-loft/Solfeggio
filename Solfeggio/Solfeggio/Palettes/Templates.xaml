@@ -81,11 +81,11 @@
 				Opacity="0.617"
 				/>
 
-			<Field
+			<NumericField
 				Rack.Cell="C0"
-				Keyboard="Numeric"
-				Text="{Binding Magnitude, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-				ToolTip="{Binding Magnitude}"
+				From="{Binding Spectrum.Magnitude.Scope.From, Source={Store p:MusicalPresenter}}"
+				Till="{Binding Spectrum.Magnitude.Scope.Till, Source={Store p:MusicalPresenter}}"
+				Value="{Binding Magnitude, Mode=TwoWay}"
 				/>
 			<Rack
 				Rack.Cell="C1"
@@ -111,11 +111,11 @@
 					Padding="0"
 					Margin="0"
 					/>
-				<Field
+				<NumericField
 					Rack.Cell="C1"
-					Keyboard="Numeric"
-					Text="{Binding Frequency, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-					ToolTip="{Binding Frequency}"
+					From="{Binding Spectrum.Frequency.Scope.From, Source={Store p:MusicalPresenter}}"
+					Till="{Binding Spectrum.Frequency.Scope.Till, Source={Store p:MusicalPresenter}}"
+					Value="{Binding Frequency, Mode=TwoWay}"
 					/>
 			</Rack>
 			<Rack
@@ -138,11 +138,11 @@
 					Text="{Binding Phase, Mode=TwoWay, Converter={StaticResource RadianPiFormattedConverter}}"
 					ToolTip="{Binding Phase}"
 					/>
-				<Field
+				<NumericField
 					Rack.Cell="C1"
-					Keyboard="Numeric"
-					Text="{Binding Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
-					ToolTip="{Binding Phase}"
+					From="{StaticResource NegativeSinglePi}"
+					Till="{StaticResource PositiveSinglePi}"
+					Value="{Binding Phase, Mode=TwoWay}"
 					/>
 			</Rack>
 
@@ -376,10 +376,9 @@
 				Rack.Cell="R0 C0"
 				Text="{Localizing Standard, StringFormat='{}{0} [A4]'}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R0 C1"
-				Keyboard="Numeric"
-				Text="{Binding ActivePitchStandard, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding ActivePitchStandard, Mode=TwoWay}"
 				/>
 			<!--<Pick
 				Rack.Cell="R0 C2"
@@ -418,10 +417,11 @@
 				Rack.Cell="R2 C0"
 				Text="{Localizing Spectrogram}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R2 C1"
-				Keyboard="Numeric"
-				Text="{Binding SpectrogramFramesCount, Mode=TwoWay, FallbackValue={Int32 64}}"
+				Format="F0"
+				From="+1.0"
+				Value="{Binding SpectrogramFramesCount, Mode=TwoWay, FallbackValue={Int32 64}}"
 				/>
 			<Title
 				Rack.Cell="R2 C2"
@@ -465,12 +465,12 @@
 				Rack.Cell="R1 C2"
 				Rows="^ *"
 				>
-				<Field
+				<NumericField
 					Rack.Cell="R0"
-					Keyboard="Numeric"
 					Alignment.X="Center"
-					TextAlignment="Center"
-					Text="{Binding FlowerApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					From ="+0.25"
+					Till="+256.0"
+					Value="{Binding FlowerApproximationLevel, Mode=TwoWay}"
 					/>
 				<Grip
 					Rack.Cell="R1"
@@ -499,12 +499,12 @@
 				Rack.Cell="R2 C2"
 				Rows="^ *"
 				>
-				<Field
+				<NumericField
 					Rack.Cell="R0"
-					Keyboard="Numeric"
 					Alignment.X="Center"
-					TextAlignment="Center"
-					Text="{Binding SpiralApproximationLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					From ="+0.25"
+					Till="+256.0"
+					Value="{Binding SpiralApproximationLevel, Mode=TwoWay}"
 					/>
 				<Grip
 					Rack.Cell="R1"
@@ -593,22 +593,19 @@
 				Rack.Cell="R1 C0"
 				Text="{Localizing Scope}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R1 C1"
-				Ext.ToolTip="{Binding Scope.From}"
-				Text="{Binding Scope.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Scope.From, Mode=TwoWay}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R1 C2"
 				IsReadOnly="True"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Ext.ToolTip="{Binding Scope.Length}"
-				Text="{Binding Scope.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Scope.Length, Mode=OneWay}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R1 C3"
-				Ext.ToolTip="{Binding Scope.Till}"
-				Text="{Binding Scope.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Scope.Till, Mode=TwoWay}"
 				/>
 			<Title
 				Rack.Cell="R2 C4"
@@ -620,22 +617,19 @@
 				Rack.Cell="R2 C0"
 				Text="{Localizing Window}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R2 C1"
-				Ext.ToolTip="{Binding Window.From}"
-				Text="{Binding Window.From, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Window.From, Mode=TwoWay}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R2 C2"
 				IsReadOnly="True"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Ext.ToolTip="{Binding Window.Length}"
-				Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Window.Length, Mode=OneWay}"
 				/>
-			<Field
+			<NumericField
 				Rack.Cell="R2 C3"
-				Ext.ToolTip="{Binding Window.Till}"
-				Text="{Binding Window.Till, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{Binding Window.Till, Mode=TwoWay}"
 				/>
 			<Title
 				Rack.Cell="R1 C4"
@@ -678,10 +672,9 @@
 		<Rack
 			Rows="^ *"
 			>
-			<Field
+			<NumericField
 				Rack.Cell="R0"
-				Keyboard="Numeric"
-				Text="{TemplateBinding Item, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Value="{TemplateBinding Item, Mode=TwoWay}"
 				/>
 			<Grip
 				Rack.Cell="R1"
@@ -738,12 +731,11 @@
 				Rack.Cell="R1 C2"
 				Rows="^ *"
 				>
-				<Field
+				<NumericField
 					Rack.Cell="R0"
-					Keyboard="Numeric"
 					Alignment.X="Center"
-					TextAlignment="Center"
-					Text="{Binding InputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					From="+0.0"
+					Value="{Binding InputLevel, Mode=TwoWay}"
 					/>
 				<Grip
 					Rack.Cell="R1"
@@ -770,12 +762,10 @@
 				Rack.Cell="R2 C2"
 				Rows="^ *"
 				>
-				<Field
+				<NumericField
 					Rack.Cell="R0"
-					Keyboard="Numeric"
 					Alignment.X="Center"
-					TextAlignment="Center"
-					Text="{Binding OutputLevel, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					Value="{Binding OutputLevel, Mode=TwoWay}"
 					/>
 				<Grip
 					Rack.Cell="R1"

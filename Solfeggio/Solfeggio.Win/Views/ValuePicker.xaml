@@ -12,15 +12,10 @@
 			Convert="LogBase2"
 			ConvertBack="PowBase2"
 			/>
-		<AggregateConverter
-			x:Key="FieldValueConverter">
-			<Converter
-				Convert="ExpandRange"
-				/>
-			<RemoteConverter
-				Source="{StaticResource DoubleToStringTwoWayConverter}"
-				/>
-		</AggregateConverter>
+		<Converter
+			x:Key="FieldValueConverter"
+			Convert="ExpandRange"
+			/>
 	</Slider.Resources>
 	<Slider.Template>
 		<ControlTemplate>
@@ -32,10 +27,9 @@
 					DataContext="{Binding ElementName=This}"
 					Orientation="Horizontal"
 					>
-					<Field
+					<NumericField
 						Width="60"
-						Text="{Binding Value, Mode=TwoWay, Converter={StaticResource FieldValueConverter}}"
-						ToolTip="{Binding Value}"
+						Value="{Binding Value, Mode=TwoWay, Converter={StaticResource FieldValueConverter}}"
 						/>
 					<Slider
 						x:Name="VisualSlider"

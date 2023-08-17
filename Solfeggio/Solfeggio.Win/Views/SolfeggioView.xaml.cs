@@ -588,6 +588,8 @@ namespace Solfeggio.Views
 			_previousScaleFunc = actualScaleFunc;
 		}
 
+		static Point fromPoint = new(0.0, 0.5);
+		static Point tillPoint = new(1.0, 0.5);
 		static LinearGradientBrush GetSpectrogramLineBrush(IList<Bin> bins, ScaleTransformer transformer, double width, Projection magnitudeProjection)
 		{
 			var from = transformer.GetLogicalOffset(0);
@@ -596,7 +598,7 @@ namespace Solfeggio.Views
 			var color = (Color)App.Current.Resources["ColorD"];
 			var stops = bins.Where(p => from <= p.Frequency && p.Frequency <= till)
 				.Select(p => new GradientStop(color.Mix(Channel.A, magnitudeProjection(p.Magnitude)), transformer.GetVisualOffset(p.Frequency) / width));
-			return new(new(stops));
+			return new(new(stops)) { StartPoint = fromPoint, EndPoint = tillPoint };
 		}
 	}
 }

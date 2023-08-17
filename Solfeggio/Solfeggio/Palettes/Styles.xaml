@@ -43,6 +43,17 @@
 		<Setter Property="HorizontalTextAlignment" Value="End" />
 	</Style>
 
+
+	<Style
+		TargetType="NumericField"
+		>
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="FontSize" Value="Small" />
+		<Setter Property="VerticalOptions" Value="Center" />
+		<Setter Property="MinimumWidthRequest" Value="64" />
+		<Setter Property="HorizontalTextAlignment" Value="End" />
+	</Style>
+
 	<c:TextLengthToFontSizeConverter
 		x:Key="TextLengthToFontSizeConverter"
 		/>

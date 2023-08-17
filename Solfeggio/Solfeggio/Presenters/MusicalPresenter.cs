@@ -378,7 +378,7 @@ namespace Solfeggio.Presenters
 				var pianoKey = peakToPianoKey.Value;
 				var p = peakToPianoKey.Key;
 				var expressionLevel = 1d + p.Magnitude / upperMagnitude;
-				expressionLevel = double.IsInfinity(expressionLevel) ? 1d : expressionLevel;
+				expressionLevel = Math.Abs(expressionLevel) > 1d ? 1d : expressionLevel;
 
 				var strokeBorder = new Border
 				{

@@ -294,29 +294,26 @@
 						Rows="* *"
 						Columns="^ ^ ^"
 						DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-						<Field
+						<NumericField
 							Rack.Cell="R0 C0"
-							ToolTip="{Binding Window.Till}"
-							Text="{Binding Window.Till, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							Value="{Binding Window.Till, Mode=TwoWay}"
 							/>
 						<Title
 							Rack.Cell="R0 C1"
 							Text="-"
 							/>
-						<Field
+						<NumericField
 							Rack.Cell="R0 C2"
-							ToolTip="{Binding Window.From}"
-							Text="{Binding Window.From, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							Value="{Binding Window.From, Mode=TwoWay}"
 							/>
 						<Title
 							Rack.Cell="R1 C1"
 							Text="="
 							/>
-						<Field
+						<NumericField
 							Rack.Cell="R1 C2"
-							Style="{StaticResource ReadOnlyFieldStyle}"
-							ToolTip="{Binding Window.Length}"
-							Text="{Binding Window.Length, Mode=OneWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+							Style="{StaticResource ReadOnlyNumericFieldStyle}"
+							Value="{Binding Window.Length, Mode=OneWay}"
 							/>
 					</Rack>
 				</Expander.Header>
@@ -343,8 +340,8 @@
 			<Expander
 				x:Name="TemplateRoot">
 				<Expander.Header>
-					<Field
-						Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+					<NumericField
+						Value="{Binding DataContext, Mode=TwoWay}"
 						/>
 				</Expander.Header>
 				<v:PopupView
@@ -365,13 +362,13 @@
 			DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
 			<Border
 				Margin="2"
-
 				Background="{StaticResource TitleBrush}"
 				/>
-			<Field
+			<NumericField
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
-				Text="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToStringTwoWayConverter}}"
+				Format="F0"
+				Value="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToDoubleTwoWayConverter}}"
 				/>
 		</Rack>
 	</ControlTemplate>
