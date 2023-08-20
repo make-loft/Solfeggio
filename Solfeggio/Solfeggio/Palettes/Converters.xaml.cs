@@ -10,6 +10,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Ace.Extensions;
 using Span = Solfeggio.Presenters.Span;
+using System.Collections.Generic;
+using Rainbow;
 
 #if NETSTANDARD
 using Colors = Xamarin.Forms.Color;
@@ -30,14 +32,17 @@ namespace Solfeggio.Palettes
 			new() { Color = Colority.FromRGBA(0x00, 0x00, 0xFF), Offset = 1.0 },
 		};
 
-		public static Color GetOffsetColor(PianoKey key, Rainbow.Projection magnitudeProjection) =>
-			Colority.GetColor(GradientPoints, Math.Abs(key.RelativeOffset))
-			.Mix(Colority.Channel.A, 0.368 + 0.632 * magnitudeProjection(key.Magnitude));
+		public static Color GetOffsetColor(KeyValuePair<Bin, PianoKey> pair, Projection magnitudeProjection) =>
+			Colority.GetColor(GradientPoints, Math.Abs(pair.Value.GetRelativeOffset(pair.Key.Frequency)))
+			.Mix(Colority.Channel.A, 0.368 + 0.632 * magnitudeProjection(pair.Key.Magnitude));
 
-		private object HarmonicOffsetToBrush_Convert(ConvertArgs args) => args.Value is PianoKey key
+		private object HarmonicOffsetToBrush_Convert(ConvertArgs args) => args.Value is KeyValuePair<Bin, PianoKey> key
 			? new SolidColorBrush(GetOffsetColor(key, v => v))
 			: args.Value;
 
+		private object HarmonicOffset_Convert(ConvertArgs args) => args.Value is KeyValuePair<Bin, PianoKey> pair
+			? pair.Value.GetOffsetFrequency(pair.Key.Frequency)
+			: args.Value;
 
 /* Unmerged change from project 'Solfeggio'
 Before:

@@ -195,6 +195,8 @@ namespace Solfeggio.Presenters
 			Projection correction = default) => new(span.VisualScaleFunc, visualLength,
 				span.Window.From, span.Window.Till, correction);
 
+		private static bool PreviousSign = false;
+
 		static bool GetShortLength(double periodHalf, double from, double till, out double distance)
 		{
 			distance = (till - from) / periodHalf;
@@ -425,7 +427,7 @@ namespace Solfeggio.Presenters
 			double GetValueByKey(string key) =>
 				key.Is("ActualMagnitude") ? activeMagnitude :
 				key.Is("ActualFrequency") ? activeFrequency :
-				key.Is("OffsetFrequency") ? pianoKey.OffsetFrequency :
+				key.Is("OffsetFrequency") ? pianoKey.GetOffsetFrequency(pianoKey.TopPeak.Frequency) :
 				key.Is("EthalonFrequency") ? pianoKey.EthalonFrequency :
 				default;
 
@@ -477,8 +479,7 @@ namespace Solfeggio.Presenters
 				var topPeak = key.Peaks.OrderByDescending(p => p.Magnitude).FirstOrDefault();
 				if (topPeak.Is())
 				{
-					key.Magnitude = topPeak.Magnitude;
-					key.Harmonic = topPeak;
+					key.TopPeak = topPeak;
 				}
 			}
 
@@ -502,7 +503,7 @@ namespace Solfeggio.Presenters
 
 				var brush = isTone ? AppPalette.PressedFullToneKeyBrush : AppPalette.PressedHalfToneKeyBrush;
 				var gradientBrush = (LinearGradientBrush)brush.Clone();
-				var value = Math.Sqrt(key.Magnitude);
+				var value = Math.Sqrt(key.TopPeak.Magnitude);
 #if NETSTANDARD
 				gradientBrush.GradientStops[0].Offset = 1.0f - (float)value;
 #else

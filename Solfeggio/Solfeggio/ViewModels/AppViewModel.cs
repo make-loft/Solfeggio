@@ -1,5 +1,7 @@
 ﻿using Ace;
 
+using Rainbow;
+
 using Solfeggio.Models;
 #if !NETSTANDARD
 using Solfeggio.Views;
@@ -24,7 +26,7 @@ namespace Solfeggio.ViewModels
 			set => Set(() => ActiveLanguage, value);
 		}
 
-		public Segregator<IList<PianoKey>> Harmonics { get; } = new();
+		public Segregator<IDictionary<Bin, PianoKey>> Harmonics { get; } = new();
 
 		[DataMember] public TapeViewModel Tape { get; set; }
 		[DataMember] public FlowerViewModel Flower { get; set; }

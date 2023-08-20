@@ -107,6 +107,11 @@
 		/>
 
 	<Converter
+        x:Key="HarmonicOffsetConverter"
+        Convert="HarmonicOffset_Convert"
+        />
+
+	<Converter
         x:Key="HarmonicOffsetToBrushConverter"
         Convert="HarmonicOffsetToBrush_Convert"
         />

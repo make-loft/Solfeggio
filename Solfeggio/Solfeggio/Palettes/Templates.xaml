@@ -253,7 +253,7 @@
 		x:Key="HarmonicHeaderTemplate"
 		>
 		<Rack
-			Rack.Columns="3* 2* 2* 2* 3*"
+			Rack.Columns="2* 2* 2* 2* 2* 2*"
 			Background="#66CCCCCC"
 			Margin="4,4,4,0"
 			>
@@ -277,6 +277,10 @@
 				Rack.Cell="C4"
 				Text="{Localizing Magnitude}"
 				/>
+			<Title
+				Rack.Cell="C5"
+				Text="{Localizing Phase}"
+				/>
 		</Rack>
 	</DataTemplate>
 
@@ -284,19 +288,19 @@
 		x:Key="HarmonicOutTemplate"
 		>
 		<Rack
-			Rack.Columns="3* 2* 2* 2* 3*"
+			Rack.Columns="2* 2* 2* 2* 2* 2*"
 			Opacity="{Binding RelativeOpacity}"
 			Margin="4,2,4,0"
 			>
 			<Title
 				Rack.Cell="C0"
 				FontAttributes="Bold"
-				Text="{Binding NoteName}"
+				Text="{Binding Value.NoteName}"
 				/>
 			<Title
 				Rack.Cell="C1"
 				Ext.ToolTip="{Binding EthalonFrequency}"
-				Text="{Binding EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Text="{Binding Value.EthalonFrequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Border
 				Rack.Cell="C2"
@@ -305,18 +309,23 @@
 				/>
 			<Title
 				Rack.Cell="C2"
-				Ext.ToolTip="{Binding OffsetFrequency}"
-				Text="{Binding OffsetFrequency, StringFormat='({0:+0.00;-0.00;0.00})'}"
+				Ext.ToolTip="{Binding Converter={StaticResource HarmonicOffsetConverter}}"
+				Text="{Binding Converter={StaticResource HarmonicOffsetConverter}, StringFormat='({0:+0.00;-0.00;0.00})'}"
 				/>
 			<Title
 				Rack.Cell="C3"
-				Ext.ToolTip="{Binding Harmonic.Frequency}"
-				Text="{Binding Harmonic.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Ext.ToolTip="{Binding Key.Frequency}"
+				Text="{Binding Key.Frequency, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 			<Title
 				Rack.Cell="C4"
-				Ext.ToolTip="{Binding Harmonic.Magnitude}"
-				Text="{Binding Harmonic.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				Ext.ToolTip="{Binding Key.Magnitude}"
+				Text="{Binding Key.Magnitude, Converter={StaticResource DoubleToStringTwoWayConverter}}"
+				/>
+			<Title
+				Rack.Cell="C5"
+				Ext.ToolTip="{Binding Key.Phase}"
+				Text="{Binding Key.Phase, Converter={StaticResource DoubleToStringTwoWayConverter}}"
 				/>
 		</Rack>
 	</DataTemplate>

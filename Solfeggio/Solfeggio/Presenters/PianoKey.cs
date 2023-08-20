@@ -12,15 +12,15 @@ namespace Solfeggio.Models
 		public double LowerFrequency { get; private set; }
 		public double UpperFrequency { get; private set; }
 		public double EthalonFrequency { get; private set; }
-		public double OffsetFrequency => Harmonic.Frequency - EthalonFrequency;
 		public double LowerValue { get; private set; }
 		public double UpperValue { get; private set; }
 		public double EthalonValue { get; private set; }
-		public double OffsetValue => Math.Log(Harmonic.Frequency, 2d) - EthalonValue;
-		public double RelativeOffset => 2d * OffsetValue / (UpperValue - LowerValue);
+		public double GetOffsetValue(double frequency) => Math.Log(frequency, 2d) - EthalonValue;
+		public double GetOffsetFrequency(double frequency) => frequency - EthalonFrequency;
+		public double GetRelativeOffset(double frequency) =>
+			2d * GetOffsetValue(frequency) / (UpperValue - LowerValue);
 
-		public double Magnitude { get; set; }
-		public Bin Harmonic { get; set; }
+		public Bin TopPeak { get; set; }
 		public List<Bin> Peaks { get; set; } = new();
 
 		public double RelativeOpacity { get; set; } = 1d;

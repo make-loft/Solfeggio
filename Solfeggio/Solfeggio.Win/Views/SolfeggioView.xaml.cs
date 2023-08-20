@@ -20,6 +20,7 @@ using Solfeggio.Presenters.Options;
 using Solfeggio.ViewModels;
 
 using static Ace.Extensions.Colority;
+using Solfeggio.Models;
 
 namespace Solfeggio.Views
 {
@@ -300,12 +301,12 @@ namespace Solfeggio.Views
 
 				width = PhaseCanvas.ActualWidth;
 				height = PhaseCanvas.ActualHeight;
-				
+
 				var phaseMarkers = MusicalPresenter.EnumerateGrid(phaseBand, Pi.Half);
 
 				MusicalPresenter.DrawMarkers(PhaseCanvas.Children, phaseBand, width, height,
 					AppPalette.ButterflyGridBrush, AppPalette.ButterflyGridBrush,
-					phaseMarkers, zIndexA, horizontal: false, projection: v => v.Negation().Increment(height/2d));
+					phaseMarkers, zIndexA, horizontal: false, projection: v => v.Negation().Increment(height / 2d));
 
 
 				var frequancyMarkers = MusicalPresenter.EnumerateGrid(frequencyBand, discreteStep);
@@ -348,8 +349,8 @@ namespace Solfeggio.Views
 			var allPianoKeys = MusicalPresenter.DrawPiano(PianoCanvas.Children, spectrumInterpolated, PianoCanvas.ActualWidth, PianoCanvas.ActualHeight, powerPeaks);
 
 			var powerPianoKeys = allPianoKeys
-				.Where(k => k.Magnitude > ProcessingManager.ThresholdMagnitude)
-				.OrderBy(k => k.Magnitude)
+				.Where(k => k.TopPeak.Magnitude > ProcessingManager.ThresholdMagnitude)
+				.OrderBy(k => k.TopPeak.Magnitude)
 				.Take(MusicalPresenter.MaxHarmonicsCount)
 				.ToList();
 
@@ -374,10 +375,10 @@ namespace Solfeggio.Views
 
 			if (powerPianoKeys.Is() && powerPianoKeys.Any())
 			{
-				var maxMagnitude = powerPianoKeys.Max(k => k.Magnitude);
+				var maxMagnitude = powerPianoKeys.Max(k => k.TopPeak.Magnitude);
 				var minOpacity = 0.632d;
 				var topOpacity = 1 - minOpacity;
-				powerPianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.Magnitude / maxMagnitude);
+				powerPianoKeys.ForEach(k => k.RelativeOpacity = minOpacity + topOpacity * k.TopPeak.Magnitude / maxMagnitude);
 			}
 
 			var vC = resources["Visibility.Peak"];
@@ -393,15 +394,24 @@ namespace Solfeggio.Views
 			Draw(powerPeaks, activeProfile.SampleSize, activeProfile.SampleRate);
 
 			MusicalPresenter.DrawMarkers(PhaseCanvas.Children, frequencyBand, PhaseCanvas.ActualWidth, PhaseCanvas.ActualHeight,
-				AppPalette.GetBrush("PhasePeakBrush"), default, powerPianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
+				AppPalette.GetBrush("PhasePeakBrush"), default, powerPianoKeys.Select(k => k.TopPeak.Frequency), zIndexA);
 
 			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, frequencyBand, width, height,
-				AppPalette.GetBrush("MagnitudePeakBrush"), default, powerPianoKeys.Select(k => k.Harmonic.Frequency), zIndexA);
+				AppPalette.GetBrush("MagnitudePeakBrush"), default, powerPianoKeys.Select(k => k.TopPeak.Frequency), zIndexA);
 
 			if (App.Current.MainWindow.IsNot())
 				return;
 
-			AppViewModel.Harmonics.Value = powerPianoKeys;
+			var peakToKey = new Dictionary<Bin, PianoKey>();
+			foreach (var key in powerPianoKeys)
+			{
+				foreach (var peak in key.Peaks)
+				{
+					peakToKey[peak] = key;
+				}
+			}
+
+			AppViewModel.Harmonics.Value = peakToKey;
 
 			var w = SpectrogramCanvas.ActualWidth;
 			var h = SpectrogramCanvas.ActualHeight;
@@ -430,22 +440,23 @@ namespace Solfeggio.Views
 				var pressedFullToneKeyColor = (Color)App.Current.Resources["PressedFullToneKeyColor"];
 
 				grid.Children.Clear();
-				grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
+
+				grid.DataContext.To<IList<PianoKey>>().Select(k => new Rectangle
 				{
 					Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-					Fill = new SolidColorBrush(color.Mix(Channel.A, magnitudeProjection(k.Magnitude))),
+					Fill = new SolidColorBrush(color.Mix(Channel.A, magnitudeProjection(k.TopPeak.Magnitude))),
 					Width = transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency),
 					Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, 0, 0),
 					HorizontalAlignment = HorizontalAlignment.Left,
 				})
 				.ForEach(grid.Children.Add);
 
-				grid.DataContext.To<IList<Models.PianoKey>>().Select(k => new Rectangle
+				grid.DataContext.To<IList<PianoKey>>().Select(k => new Rectangle
 				{
 					Tag = (MusicalOptions.Tones[k.NoteNumber] ? pressedFullToneKeyColor : pressedHalfToneKeyColor).To(out var color),
-					Fill = new SolidColorBrush(Palettes.Converters.GetOffsetColor(k, magnitudeProjection)),
+					Fill = new SolidColorBrush(Palettes.Converters.GetOffsetColor(new(k.TopPeak, k), magnitudeProjection)),
 					Width = (0.2d * (transformer.GetVisualOffset(k.UpperFrequency) - transformer.GetVisualOffset(k.LowerFrequency))).To(out var w),
-					Margin = new(transformer.GetVisualOffset(k.Harmonic.Frequency) - w / 2d, 0, 0, 0),
+					Margin = new(transformer.GetVisualOffset(k.LowerFrequency), 0, 0, 0),
 					HorizontalAlignment = HorizontalAlignment.Left,
 				})
 				.ForEach(grid.Children.Add);
