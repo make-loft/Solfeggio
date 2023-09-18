@@ -1,4 +1,5 @@
 ﻿using Ace;
+using Ace.Controls;
 using Ace.Extensions;
 
 using System.ComponentModel;
@@ -13,14 +14,13 @@ namespace Solfeggio.Views
 {
 	public partial class ColorPicker : INotifyPropertyChanged
 	{
-		public static readonly DependencyProperty ValueProperty =
-			DependencyProperty.Register(nameof(Value), typeof(Color), typeof(ColorPicker),
-				new((s, a) => s.To<ColorPicker>().InvokePropertyChanged(PropertyNames)));
+		public static readonly DependencyProperty ValueProperty = Type<ColorPicker>.Create(v => v.Value, args =>
+			args.Sender.InvokePropertyChanged(PropertyNames));
 
 		public Color Value
 		{
-			get => (Color)GetValue(ValueProperty);
-			set => SetValue(ValueProperty, value);
+			get => this.Get(ValueProperty, Colors.Transparent);
+			set => this.Set(ValueProperty, value);
 		}
 
 		static readonly string[] PropertyNames = { nameof(Value), nameof(A), nameof(R), nameof(G), nameof(B) };

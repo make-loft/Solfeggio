@@ -8,6 +8,7 @@ using System.Linq;
 using Solfeggio.Palettes;
 
 using Brushes = Solfeggio.Palettes.Brushes;
+using System.Threading.Tasks;
 
 #if NETSTANDARD
 using Xamarin.Forms;
@@ -49,10 +50,30 @@ namespace Solfeggio
 			get => (Map)Resources.MergedDictionaries.To<IList>()[3];
 			set
 			{
+				Colors.Changed -= Color_Changed;
+
 				ColorPaletteChanging?.Invoke();
 				ChangeColorPalette(value);
 				ColorPaletteChanged?.Invoke();
+				
+				Colors.Changed += Color_Changed;
 			}
+		}
+
+		private static int counter;
+		private static async void Color_Changed(MapChangeArgs args)
+		{
+			if (args.IsValueChanged.Not())
+				return;
+
+			counter++;
+			await Task.Delay(128);
+			counter--;
+
+			if (counter > 0)
+				return;
+
+			new Brushes().ForEach(p => Resources[p.Key] = p.Value);
 		}
 
 		static void ChangeColorPalette(Map value)

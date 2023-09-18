@@ -202,29 +202,37 @@
 	</ControlTemplate>
 
 	<ControlTemplate
-		x:Key="ColorValueTemplate">
+		x:Key="ColorValueTemplate"
+		>
 		<Expander
-			x:Name="Root">
+			x:Name="Root"
+			>
 			<Expander.Header>
 				<Rack>
 					<Border
 						CornerRadius="10"
-						Background="LightGray" />
+						Background="LightGray"
+						/>
 					<Border
 						CornerRadius="10"
-						Background="{StaticResource ChessBrush}" />
+						Background="{StaticResource ChessBrush}"
+						/>
 					<Border
 						CornerRadius="10"
-						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}" />
-					<Field
+						Background="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidBrushConverter}}"
+						/>
+					<ColorField
 						Margin="10 4"
-						Text="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Converter={StaticResource ColorToStringTwoWayConverter}}" />
+						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+						/>
 				</Rack>
 			</Expander.Header>
 			<v:PopupView
-				IsOpen="{Binding IsExpanded, ElementName=Root}">
+				IsOpen="{Binding IsExpanded, ElementName=Root}"
+				>
 				<v:ColorPicker
-					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+					Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+					/>
 			</v:PopupView>
 		</Expander>
 	</ControlTemplate>

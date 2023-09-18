@@ -102,6 +102,18 @@
 	</Style>
 
 	<Style
+		TargetType="IntegerField">
+		<Setter
+			Property="Margin"
+			Value="{StaticResource RegularMargin}"
+			/>
+		<Setter
+			Property="Format"
+			Value="{Binding Format.MonitorNumericFormat, Source={Store p:MusicalPresenter}}"
+			/>
+	</Style>
+
+	<Style
 		TargetType="NumericField">
 		<Setter
 			Property="Margin"

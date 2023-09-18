@@ -6,6 +6,16 @@
 	BorderThickness="0"
 	Padding="4"
 	x:Name="This">
+
+	<GroupBox.Resources>
+		<Style
+			TargetType="IntegerField"
+			>
+			<Setter Property="From" Value="0" />
+			<Setter Property="Till" Value="255" />
+		</Style>
+	</GroupBox.Resources>
+	
 	<Rack
 		Rows="^ ^ ^ ^ ^ ^ *"
 		Columns="^ 128 ^ ^ ^"
@@ -97,10 +107,10 @@
 			Value="{Binding B}"
 			Style="{StaticResource ByteSliderStyle}" />
 
-		<Field
+		<ColorField
 			Rack.Cell="R0 C1"
 			Margin="4 4 20 4"
-			Text="{Binding Value, Mode=TwoWay}" />
+			Value="{Binding Value, Mode=TwoWay}" />
 		<Picker
 			Rack.Cell="R0 C1"
 			Width="17"
@@ -138,33 +148,42 @@
 			HorizontalAlignment="Center"
 			Text="HEX" />
 
-		<Field
-			Width="30"
+		<IntegerField
 			Rack.Cell="R1 C2"
-			Text="{Binding A, Mode=TwoWay}" />
-		<Field
+			Value="{Binding A, Mode=TwoWay}"
+			/>
+		<IntegerField
 			Rack.Cell="R2 C2"
-			Text="{Binding R, Mode=TwoWay}" />
-		<Field
+			Value="{Binding R, Mode=TwoWay}"
+			/>
+		<IntegerField
 			Rack.Cell="R3 C2"
-			Text="{Binding G, Mode=TwoWay}" />
-		<Field
+			Value="{Binding G, Mode=TwoWay}"
+			/>
+		<IntegerField
 			Rack.Cell="R4 C2"
-			Text="{Binding B, Mode=TwoWay}" />
+			Value="{Binding B, Mode=TwoWay}"
+			/>
 
-		<Field
-			Width="30"
+		<IntegerField
 			Rack.Cell="R1 C3"
-			Text="{Binding A, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Field
+			Value="{Binding A, Mode=TwoWay}"
+			Format="X"
+			/>
+		<IntegerField
 			Rack.Cell="R2 C3"
-			Text="{Binding R, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Field
+			Value="{Binding R, Mode=TwoWay}"
+			Format="X"
+			/>
+		<IntegerField
 			Rack.Cell="R3 C3"
-			Text="{Binding G, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-		<Field
+			Value="{Binding G, Mode=TwoWay}"
+			Format="X"
+			/>
+		<IntegerField
 			Rack.Cell="R4 C3"
-			Text="{Binding B, Mode=TwoWay, Converter={StaticResource ByteToHexStringTwoWayConverter}}" />
-
+			Value="{Binding B, Mode=TwoWay}"
+			Format="X"
+			/>
 	</Rack>
 </GroupBox>

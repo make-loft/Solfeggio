@@ -1,4 +1,5 @@
 ﻿using Ace;
+using Ace.Controls;
 using Ace.Markup.Patterns;
 
 using System;
@@ -97,22 +98,18 @@ namespace Solfeggio.Views
 			};
 		}
 
-		public static readonly DependencyProperty UnfrozenValueProperty =
-			DependencyProperty.Register(nameof(UnfrozenValue), typeof(Brush), typeof(BrushPicker));
-
-		public static readonly DependencyProperty ValueProperty =
-			DependencyProperty.Register(nameof(Value), typeof(Brush), typeof(BrushPicker));
+		static BrushPicker() => Type<BrushPicker>.CreateProperties();
 
 		public Brush UnfrozenValue
 		{
-			get => (Brush)GetValue(UnfrozenValueProperty);
-			set => SetValue(UnfrozenValueProperty, value);
+			get => this.Get(default(Brush));
+			set => this.Set(value);
 		}
 
 		public Brush Value
 		{
-			get => (Brush)GetValue(ValueProperty);
-			set => SetValue(ValueProperty, value);
+			get => this.Get(default(Brush));
+			set => this.Set(value);
 		}
 
 		SmartSet<GradientStop> _activeGradientStopCollection;
