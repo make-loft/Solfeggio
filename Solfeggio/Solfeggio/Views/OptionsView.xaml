@@ -179,12 +179,13 @@
 			Data.Context="{Store vm:AppViewModel}"
 			>
 			<Rack
-				Rows="^ ^ * ^ ^"
+				Rows="* ^ ^ * ^"
 				>
 				<Stack
 					Rack.Cell="R0"
 					Orientation="Horizontal"
 					Alignment.X="Center"
+					Alignment.Y="Center"
 					>
 					<Title
 						Text="{Localizing Language}"
@@ -212,6 +213,7 @@
 				<Knob
 					Rack.Cell="R3"
 					FontSize="14"
+					Alignment.Y="Center"
 					CommandParameter="{Localizing ReadyToHelpLink}"
 					Command="{Context Navigate}"
 					Content="{Localizing ReadyToHelpMessage, Modifiers=ToUpper}"

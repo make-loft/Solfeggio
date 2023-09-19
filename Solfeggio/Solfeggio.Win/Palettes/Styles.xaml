@@ -329,4 +329,13 @@
 			Value="Horizontal" />
 	</Style>
 
+	<Style
+		x:Key="TitleBorderStyle"
+		TargetType="Border"
+		>
+		<Setter Property="Margin" Value="2" />
+		<Setter Property="CornerRadius" Value="10" />
+		<Setter Property="Background" Value="{StaticResource TitleBrush}" />
+	</Style>
+
 </ResourceDictionary>

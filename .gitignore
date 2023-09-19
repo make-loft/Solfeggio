@@ -21,3 +21,5 @@ _ReSharper.*
 *.svn
 *.dll
 *.compressed
+*.appx
+*.zip

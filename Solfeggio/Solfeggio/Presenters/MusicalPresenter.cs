@@ -59,7 +59,7 @@ namespace Solfeggio.Presenters
 				Spectrum = new();
 		}
 
-		public void DrawMarkers(System.Collections.IList items, Span hBand, double width, double height,
+		public void DrawMarkers(System.Collections.IList items, Span hBand, double width, double height, double strokeThickness,
 			Brush lineBrush, Brush textBrush, IEnumerable<double> values, int zIndex = 0, double vTitleOffset = 0d,
 			bool horizontal = true, Projection projection = default)
 		{
@@ -92,7 +92,7 @@ namespace Solfeggio.Presenters
 
 				//opacityLineBrush.Opacity = skipTitle ? 0.3 : 1.0;
 
-				var line = CreateVerticalLine(offset, height, skipTitle ? opacityLineBrush : lineBrush, vertical: horizontal);
+				var line = CreateVerticalLine(offset, height, skipTitle ? opacityLineBrush : lineBrush, strokeThickness, horizontal);
 				Panel.SetZIndex(line, zIndex);
 
 				items.Add(line);

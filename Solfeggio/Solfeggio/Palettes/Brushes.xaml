@@ -328,6 +328,11 @@
 		Opacity="0.3"
 		/>
 	<SolidColorBrush
+		x:Key="Stroke.MagnitudeGrid"
+		Color="Violet"
+		Opacity="0.3"
+		/>
+	<SolidColorBrush
 		x:Key="Stroke.FrequencyDiscreteGrid"
 		Color="Violet"
 		Opacity="0.3"

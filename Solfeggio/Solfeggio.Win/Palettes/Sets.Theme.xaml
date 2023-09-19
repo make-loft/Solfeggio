@@ -94,7 +94,7 @@
 			>
 
 			<Rack
-				Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
+				Rows="^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^"
 				Columns="^ ^ ^ ^ ^ ^ ^ ^"
 				>
 				<Title
@@ -126,6 +126,11 @@
 					Text="{Localizing Offset, StringFormat='X-{0}'}"
 					/>
 
+				<Border
+					Rack.Cell="R1 C0 RS2"
+					Style="{StaticResource TitleBorderStyle}"
+					/>
+
 				<Rack
 					Rack.Cell="R1 C0 RS2"
 					Rows="* *"
@@ -154,6 +159,11 @@
 						/>
 				</Rack>
 
+				<Border
+					Rack.Cell="R3 C0 RS2"
+					Style="{StaticResource TitleBorderStyle}"
+					/>
+
 				<Rack
 					Rack.Cell="R3 C0 RS2"
 					Rows="* *"
@@ -173,6 +183,11 @@
 						/>
 				</Rack>
 
+				<Border
+					Rack.Cell="R5 C0 RS2"
+					Style="{StaticResource TitleBorderStyle}"
+					/>
+
 				<Rack
 					Rack.Cell="R5 C0 RS2"
 					Rows="* *"
@@ -191,6 +206,11 @@
 						Text="{Localizing FFT}"
 						/>
 				</Rack>
+
+				<Border
+					Rack.Cell="R7 C0 RS5"
+					Style="{StaticResource TitleBorderStyle}"
+					/>
 
 				<Rack
 					Rack.Cell="R7 C0 RS2"
@@ -212,7 +232,17 @@
 				</Rack>
 
 				<Rack
-					Rack.Cell="R9 C0 RS2"
+					Rack.Cell="R9 C0"
+					Columns="* ^"
+					>
+					<Title
+						Rack.Cell="C1"
+						Text="{Localizing Grid}"
+						/>
+				</Rack>
+
+				<Rack
+					Rack.Cell="R10 C0 RS2"
 					Rows="* *"
 					Columns="* ^"
 					>
@@ -466,52 +496,73 @@
 
 				<ContentView
 					Rack.Cell="R9 C1"
-					DataContext="{Binding [Visibility.MagnitudePMI_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.MagnitudeGrid], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R9 C2"
-					DataContext="{Binding [Fill.MagnitudePMI_Histogram], Mode=TwoWay}"
-					Template="{StaticResource BrushPickerTemplate}"
-					/>
-				<ContentView
 					Rack.Cell="R9 C3"
-					DataContext="{Binding [Stroke.MagnitudePMI_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.MagnitudeGrid], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R9 C4"
-					DataContext="{Binding [StrokeThickness.MagnitudePMI_Histogram], Mode=TwoWay, Converter={StaticResource ThicknessToDoubleTwoWayConverter}}"
+					DataContext="{Binding [StrokeThickness.MagnitudeGrid], Mode=TwoWay}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R9 C5"
-					DataContext="{Binding [ZIndex.MagnitudePMI_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [ZIndex.MagnitudeGrid], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>
 
 				<ContentView
 					Rack.Cell="R10 C1"
-					DataContext="{Binding [Visibility.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [Visibility.MagnitudePMI_Histogram], Mode=TwoWay}"
 					Template="{StaticResource VisibilityTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R10 C2"
-					DataContext="{Binding [Fill.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [Fill.MagnitudePMI_Histogram], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R10 C3"
-					DataContext="{Binding [Stroke.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					DataContext="{Binding [Stroke.MagnitudePMI_Histogram], Mode=TwoWay}"
 					Template="{StaticResource BrushPickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R10 C4"
-					DataContext="{Binding [StrokeThickness.MagnitudeFFT_Histogram], Mode=TwoWay, Converter={StaticResource ThicknessToDoubleTwoWayConverter}}"
+					DataContext="{Binding [StrokeThickness.MagnitudePMI_Histogram], Mode=TwoWay, Converter={StaticResource ThicknessToDoubleTwoWayConverter}}"
 					Template="{StaticResource ValuePickerTemplate}"
 					/>
 				<ContentView
 					Rack.Cell="R10 C5"
+					DataContext="{Binding [ZIndex.MagnitudePMI_Histogram], Mode=TwoWay}"
+					Template="{StaticResource ZIndexTemplate}"
+					/>
+
+				<ContentView
+					Rack.Cell="R11 C1"
+					DataContext="{Binding [Visibility.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					Template="{StaticResource VisibilityTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R11 C2"
+					DataContext="{Binding [Fill.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R11 C3"
+					DataContext="{Binding [Stroke.MagnitudeFFT_Histogram], Mode=TwoWay}"
+					Template="{StaticResource BrushPickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R11 C4"
+					DataContext="{Binding [StrokeThickness.MagnitudeFFT_Histogram], Mode=TwoWay, Converter={StaticResource ThicknessToDoubleTwoWayConverter}}"
+					Template="{StaticResource ValuePickerTemplate}"
+					/>
+				<ContentView
+					Rack.Cell="R11 C5"
 					DataContext="{Binding [ZIndex.MagnitudeFFT_Histogram], Mode=TwoWay}"
 					Template="{StaticResource ZIndexTemplate}"
 					/>

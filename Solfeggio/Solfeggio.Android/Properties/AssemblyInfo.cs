@@ -1,12 +1,15 @@
 ﻿using System.Reflection;
+
 using Android.App;
+
+using static Android.Manifest.Permission;
+
+[assembly: UsesPermission(Internet)]
+[assembly: UsesPermission(AccessNetworkState)]
+[assembly: UsesPermission(WriteExternalStorage)]
+[assembly: UsesPermission(RecordAudio)]
 
 [assembly: AssemblyTitle("S O L F E G G I O")]
 [assembly: AssemblyProduct("Solfeggio")]
 [assembly: AssemblyCopyright("© Makeloft Studio")]
-[assembly: AssemblyVersion("5.0.0.0")]
-
-[assembly: UsesPermission(Android.Manifest.Permission.Internet)]
-[assembly: UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
-[assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
-[assembly: UsesPermission(Android.Manifest.Permission.RecordAudio)]
+[assembly: AssemblyVersion("5.2.0.0")]

@@ -2,20 +2,22 @@
 using Ace.Dictionaries;
 using Ace.Markup;
 
-using System.Runtime.CompilerServices;
-using System.Collections;
-using System.Linq;
-using Solfeggio.Palettes;
-
-using Brushes = Solfeggio.Palettes.Brushes;
-using System.Threading.Tasks;
-
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
 using System.Windows;
 using System.Windows.Media;
 #endif
+
+using System.Collections;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
+using Solfeggio.Palettes;
+
+using Brushes = Solfeggio.Palettes.Brushes;
+
 
 namespace Solfeggio
 {
@@ -95,6 +97,7 @@ namespace Solfeggio
 		public static Brush HalfToneKeyBrush => GetBrush();
 
 		public static Brush MarkerBrush => GetBrush();
+		public static Brush MagnitudeGridBrush => GetBrush("Stroke.MagnitudeGrid");
 		public static Brush ButterflyGridBrush => GetBrush("Stroke.FrequencyDiscreteGrid");
 		public static Brush NoteGridBrush => GetBrush("Stroke.FrequencyNotesGrid");
 		public static Brush NoteBrush => GetBrush();

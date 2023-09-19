@@ -12,6 +12,6 @@ namespace Solfeggio.Views
 		public OptionsView() => InitializeComponent();
 
 		object SkipTelemetry_Convert(ConvertArgs args) =>
-			IsVisible && Content.Is(out Pivot pivot) && pivot.ActiveItemOffset.Is(3) ? args.Value : default;
+			IsVisible && Content.Is(out Pivot pivot) && pivot.ActiveItemOffset.Is(2) ? args.Value : default;
 	}
 }
