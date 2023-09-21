@@ -1,0 +1,43 @@
+variables:
+  APP_NAME: 'Solfeggio'
+  EXE_RELEASE_NAME: 'Solfeggio.Launcher'
+  EXE_RELEASE_FOLDER: 'Solfeggio\Solfeggio.Win.Launcher\bin'
+  DEPLOY_FOLDER: 'P:\Projects\Solfeggio'
+  NUGET_PATH: 'C:\NuGet\nuget.exe'
+  MSBUILD_PATH: 'C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe'
+  NUNIT_PATH: 'C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe'
+
+stages:
+  - build
+  - deploy
+
+build_job:
+  stage: build
+  only:
+    - tags  # the build process will only be started by git tag commits
+  script:
+    - '& "$env:NUGET_PATH" restore'  # restore Nuget dependencies
+    - '& "$env:MSBUILD_PATH" /p:Configuration=Release'  # build the project
+  artifacts:
+    expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
+    paths:
+      - '$env:EXE_RELEASE_FOLDER\$env:EXE_RELEASE_NAME.exe'  # saving exe to copy to deploy folder
+
+deploy_job:
+  stage: deploy
+  only:
+    - tags
+  script:
+    # Compose a folder for each release based on commit tag.
+    # Assuming your tag is Rev1.0.0.1
+    # the artifact files will be copied to:
+    # P:\Projects\YourApp\Builds\Rev1.0.0.1\
+    - '$commitSubject = git log -1 --pretty=%s'
+    - '$deployFolder = $($env:DEPLOY_FOLDER) + "\" + $($env:CI_COMMIT_TAG) + "\"'
+
+    # xcopy takes care of recursively creating required folders
+    - 'xcopy /y ".\$env:EXE_RELEASE_FOLDER\$env:EXE_RELEASE_NAME.exe" "$deployFolder\$env:APP_NAME.exe"'
+    - 'xcopy /y ".\$env:EXE_RELEASE_FOLDER\ReadMe.html" "$deployFolder\ReadMe.html"'
+  dependencies:
+    - build_job
+  environment: production
