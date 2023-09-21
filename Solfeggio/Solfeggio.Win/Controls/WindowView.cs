@@ -10,13 +10,15 @@ namespace Solfeggio.Controls
 	{
 		public WindowView() : base()
 		{
-			Closing += (o, e) =>
+			Closing += async (o, e) =>
 			{
-				if (AppView.IsShutdown) return;
 				try
 				{
-					Visibility = Collapsed;
 					e.Cancel = true;
+
+					await Task.Delay(128);
+
+					Visibility = Collapsed;
 				}
 				catch { }
 			};
@@ -27,7 +29,7 @@ namespace Solfeggio.Controls
 					? Normal
 					: WindowState;
 
-				await Task.Delay(400);
+				await Task.Delay(256);
 
 				WindowState = state;
 			};

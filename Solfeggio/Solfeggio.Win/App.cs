@@ -169,7 +169,7 @@ namespace Solfeggio
 
 		private static void ActualizeSettings(Memory box, string settingsVersionKey)
 		{
-			var targetVersion = new Version(4, 1);
+			var targetVersion = TypeOf<App>.Assembly.GetName().Version;
 			var storage = box.Storage;
 			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
 			{

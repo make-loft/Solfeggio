@@ -11,6 +11,28 @@ namespace Solfeggio.ViewModels
 		{
 			yield return new()
 			{
+				DefaultTitle = "Lace",
+				Harmonics =
+				{
+					new() { Magnitude = 0.43d, Frequency = 150d },
+					new() { Magnitude = 0.30d, Frequency = 235.6d },
+					new() { Magnitude = 0.10d, Frequency = 900d },
+				}
+			};
+
+			yield return new()
+			{
+				DefaultTitle = "Fantasy",
+				Harmonics =
+				{
+					new() { Magnitude = 0.43d, Frequency = 150d },
+					new() { Magnitude = 0.30d, Frequency = 600.5d },
+					new() { Magnitude = 0.10d, Frequency = 900d },
+				}
+			};
+
+			yield return new()
+			{
 				DefaultTitle = "Camertone",
 				Harmonics =
 				{
@@ -36,17 +58,6 @@ namespace Solfeggio.ViewModels
 				{
 					new() { Magnitude = 0.43d, Frequency = 258d },
 					new() { Magnitude = 0.30d, Frequency = 645d },
-				}
-			};
-
-			yield return new()
-			{
-				DefaultTitle = "Fantasy",
-				Harmonics =
-				{
-					new() { Magnitude = 0.43d, Frequency = 150d },
-					new() { Magnitude = 0.30d, Frequency = 600.5d },
-					new() { Magnitude = 0.10d, Frequency = 900d },
 				}
 			};
 

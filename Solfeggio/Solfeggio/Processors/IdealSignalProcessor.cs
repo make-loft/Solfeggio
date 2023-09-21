@@ -49,11 +49,11 @@ namespace Solfeggio.Processors
 				var divisor = (float)short.MaxValue;
 
 				var peak = new Bin
-				{
-					Magnitude = reader.ReadInt16() / divisor,
-					Frequency = reader.ReadSingle() / divisor,
-					Phase = reader.ReadInt16() / divisor,
-				};
+				(
+					frequency : reader.ReadSingle() / divisor,
+					magnitude : reader.ReadInt16() / divisor,
+					phase : reader.ReadInt16() / divisor
+				);
 
 				peaks.Add(peak);
 			}
@@ -117,11 +117,11 @@ namespace Solfeggio.Processors
 			var line = reader.ReadLine();
 
 			var peaks = line.SplitByChars("|").Select(l => l.SplitByChars("\t ")).Select(l => new Bin
-			{
-				Magnitude = double.Parse(l[0]),
-				Frequency = double.Parse(l[1]),
-				Phase = l.Length is 3 ? double.Parse(l[2]) : 0d,
-			}).ToList();
+			(
+				frequency : double.Parse(l[1]),
+				magnitude : double.Parse(l[0]),
+				phase : l.Length is 3 ? double.Parse(l[2]) : 0d
+			)).ToList();
 
 			return Next(peaks);
 		}

@@ -28,6 +28,16 @@ namespace Solfeggio.ViewModels
 
 		public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
 		{
+			yield return Create().To(out var b).With
+			(
+				b.DefaultTitleFormat = "∿ {0}",
+				b.DefaultTitle = "Generator",
+				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+				b.AdaptationState = false,
+				b.OutputLevel = .3f,
+				b.FramePow = 10
+			);
+
 			yield return new()
 			{
 				DefaultTitleFormat = "🎙 {0}",
@@ -44,16 +54,6 @@ namespace Solfeggio.ViewModels
 				InputLevel = 4f,
 				FramePow = 11
 			};
-
-			yield return Create().To(out var b).With
-			(
-				b.DefaultTitleFormat = "∿ {0}",
-				b.DefaultTitle = "Generator",
-				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
-				b.AdaptationState = false,
-				b.OutputLevel = .5f,
-				b.FramePow = 10
-			);
 		}
 
 		public override void Expose()

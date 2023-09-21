@@ -158,6 +158,7 @@ namespace Solfeggio
 		public static o Harmony = _("Harmony", "Гармония");
 		public static o Fantasy = _("Fantasy", "Фантазия");
 		public static o Relax = _("Relax", "Релакс");
+		public static o Lace = _("Lace", "Кружево");
 		public static o Speaker = _("Speaker", "Динамик");
 		public static o Microphone = _("Microphone", "Микрофон");
 		public static o Dies = _("Dies", "Диез");
@@ -278,6 +279,5 @@ Please, download the newest release.";
 				"Доступ к микрофону необходим для надлежащей работы приложения.\n\n" +
 				"Пожалуйста, предоставьте разрешение в системных настройках или попробуйте переустановить программу.";
 		}
-
 	}
 }

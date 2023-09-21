@@ -12,7 +12,7 @@
 	Width="{Smart Width, DefaultValue=512}"
 	Left="{Smart Left, DefaultValue=NaN}"
 	Top="{Smart Top, DefaultValue=NaN}"
-	Title="{Localizing Tape, Modifiers=ToUpper}"
+	Title="{Localizing Tape, Modifiers=ToUpper, StringFormat='{}{0} 3D'}"
 	MouseDoubleClick="Window_MouseDoubleClick"
 	MouseDown="Window_MouseDown"
 	MouseMove="Window_MouseMove"

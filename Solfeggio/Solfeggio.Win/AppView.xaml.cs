@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 
 using Solfeggio.Views;
@@ -12,12 +13,10 @@ namespace Solfeggio
 		public static TapeView TapeView { get; set; }
 		public static EncoderView EncoderView { get; set; }
 
-		public static bool IsShutdown { get; private set; }
-
 		public AppView()
 		{
 			InitializeComponent();
-			Closing += (o, e) => IsShutdown = true;
+			Closing += (o, e) => Application.Current.Shutdown();
 
 			MonitorView = new MonitorView();
 			FlowerView = new FlowerView();

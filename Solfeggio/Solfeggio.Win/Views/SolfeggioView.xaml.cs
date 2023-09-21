@@ -560,11 +560,11 @@ namespace Solfeggio.Views
 			{
 				var text = System.IO.File.ReadAllText(dialog.FileName);
 				var peaks = text.SplitByChars("|\n").Select(l => l.SplitByChars(" ")).Select(l => new Bin
-				{
-					Magnitude = double.Parse(l[0]),
-					Frequency = double.Parse(l[1]),
-					Phase = double.Parse(l[2]),
-				});
+				(
+					frequency : double.Parse(l[1]),
+					magnitude : double.Parse(l[0]),
+					phase : double.Parse(l[2])
+				));
 
 				var harmonicManager = Store.Get<HarmonicManager>();
 				harmonicManager.Profiles.Add(new Models.Harmonic.Profile

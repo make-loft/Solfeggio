@@ -121,11 +121,11 @@ namespace Solfeggio.Views
 				framesWriter.WriteLine(line);
 
 				var peaks = line.SplitByChars("|").Select(l => l.SplitByChars("\t ")).Select(l => new Bin
-				{
-					Magnitude = double.Parse(l[0]) / 1000d,
-					Frequency = double.Parse(l[1]),
-					Phase = l.Length is 3 ? double.Parse(l[2]) : 0d,
-				}).ToList();
+				(
+					frequency : double.Parse(l[1]),
+					magnitude : double.Parse(l[0]) / 1000d,
+					phase : l.Length is 3 ? double.Parse(l[2]) : 0d
+				)).ToList();
 
 				var sample = Next(peaks, UseOverlapping);
 				for (var i = 0; i < sample.Length; i++)
