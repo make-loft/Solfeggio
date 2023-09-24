@@ -50,12 +50,12 @@ namespace Solfeggio.Models
 		}
 
 		private static PeakProfile CreateProfile(
-			Color color,
+			string colorCode,
 			double fontSize,
 			string stringFormat = default,
 			bool isVisible = true) => new()
 			{
-				Brush = color.Is(Transparent) ? default : new SolidColorBrush(color),
+				Brush = colorCode.IsNot() ? default : new SolidColorBrush(colorCode.ToColor()),
 				FontFamilyName = "Consolas",
 				StringFormat = stringFormat,
 				IsVisible = isVisible,
@@ -79,11 +79,11 @@ namespace Solfeggio.Models
 		//[DataMember]
 		public Dictionary<string, PeakProfile> PeakProfiles { get; set; } = new()
 		{
-			{ nameof(ActualMagnitude), CreateProfile(Colority.FromHEX("#A0FFFFFF"), 12d) },
-			{ nameof(ActualFrequency), CreateProfile(Colority.FromHEX("#C0FFFFFF"), 14d) },
-			{ nameof(OffsetFrequency), CreateProfile(Colority.FromHEX("#FFFFFFFF"), 16d, "+0.0;−0.0;•0.0") },
-			{ nameof(EthalonFrequency), CreateProfile(Colority.FromHEX("#C0FFFFFF"), 14d) },
-			{ nameof(NoteName), CreateProfile(Colority.FromHEX("#FFFFFFFF"), 16d, default) },
+			{ nameof(ActualMagnitude), CreateProfile("#A0FFFFFF", 12d) },
+			{ nameof(ActualFrequency), CreateProfile("#C0FFFFFF", 14d) },
+			{ nameof(OffsetFrequency), CreateProfile("#FFFFFFFF", 16d, "+0.0;−0.0;•0.0") },
+			{ nameof(EthalonFrequency), CreateProfile("#C0FFFFFF", 14d) },
+			{ nameof(NoteName), CreateProfile("#FFFFFFFF", 16d, default) },
 		};
 	}
 }

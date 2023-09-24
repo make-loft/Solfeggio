@@ -16,6 +16,7 @@ using Xamarin.Forms;
 
 using Grid = System.Windows.Controls.Grid;
 using StackPanel = System.Windows.Controls.Stack;
+using Brushes = Xamarin.Forms.Brush;
 #else
 using System.Windows;
 using System.Windows.Media;

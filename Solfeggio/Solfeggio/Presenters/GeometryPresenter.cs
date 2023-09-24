@@ -4,7 +4,12 @@ using Rainbow;
 
 using System;
 using System.Collections.Generic;
+
+#if XAMARIN
+using Xamarin.Forms;
+#else
 using System.Windows;
+#endif
 
 namespace Solfeggio.Presenters
 {
