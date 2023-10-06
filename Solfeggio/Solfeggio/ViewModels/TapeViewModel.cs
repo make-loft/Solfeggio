@@ -19,7 +19,7 @@ namespace Solfeggio.ViewModels
 		}
 		[DataMember] public double Depth
 		{
-			get => Get(() => Depth, 32d);
+			get => Get(() => Depth, 16d);
 			set => Set(() => Depth, value);
 		}
 		[DataMember] public double Thin

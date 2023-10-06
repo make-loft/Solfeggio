@@ -103,12 +103,13 @@ namespace Solfeggio
 
 		private static void ActualizeSettings(Memory box, string settingsVersionKey)
 		{
-			var targetVersion = new Version(4, 1);
+			var targetVersion = new Version(5, 2, 1);
 			var storage = box.Storage;
 			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
 			{
 				box.Destroy<ProcessingManager>();
 				box.Destroy<HarmonicManager>();
+				box.Destroy<TapeViewModel>();
 			}
 
 			WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
