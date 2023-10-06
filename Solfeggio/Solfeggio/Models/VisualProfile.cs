@@ -55,7 +55,7 @@ namespace Solfeggio.Models
 			string stringFormat = default,
 			bool isVisible = true) => new()
 			{
-				Brush = colorCode.IsNot() ? default : new SolidColorBrush(colorCode.ToColor()),
+				Brush = colorCode.Is() ? colorCode.ToColor().ToBrush() : default,
 				FontFamilyName = "Consolas",
 				StringFormat = stringFormat,
 				IsVisible = isVisible,

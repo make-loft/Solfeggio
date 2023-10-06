@@ -74,11 +74,11 @@ namespace Solfeggio.Models
 		public IEnumerable<double> EnumerateBins(double sampleRate, bool globalLoop = false)
 		{
 			var step = _frequency * Pi.Double / sampleRate;
-			_offset = _phaseMode.Is(PhaseMode.Loop) || globalLoop ? -step : _offset;
+			_offset = _phaseMode.Is(PhaseMode.Loop) || globalLoop ? 0d : _offset;
 			while (true)
 			{
-				_offset += step;
 				var value = _offset + _phase;
+				_offset += step;
 				if (_gap.Is(0d))
 					yield return _magnitude * _basisFunc(value);
 				else

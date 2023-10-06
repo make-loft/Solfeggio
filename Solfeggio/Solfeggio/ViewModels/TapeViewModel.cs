@@ -24,7 +24,7 @@ namespace Solfeggio.ViewModels
 		}
 		[DataMember] public double Thin
 		{
-			get => Get(() => Thin, 0.04d);
+			get => Get(() => Thin, 0.08d);
 			set => Set(() => Thin, value);
 		}
 		[DataMember] public double Approximation

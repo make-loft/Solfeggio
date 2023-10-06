@@ -25,6 +25,7 @@ namespace Solfeggio.Presenters
 
 			var spiralScale = 1d;
 			var pointsCount = (int)(sampleSize / approximation);
+			var convertToPhase = approximation * Pi.Double / sampleRate;
 
 			for (var i = 0; i < pointsCount; i++, spiralScale -= spiralStep)
 			{
@@ -34,9 +35,10 @@ namespace Solfeggio.Presenters
 				for (var j = 0; j < peaks.Count; j++)
 				{
 					var peak = peaks[j];
-					var w = Pi.Double * peak.Frequency;
-					var t = 2d * i / sampleRate * approximation;
-					var phase = peak.Phase + w * t + phaseAngle;
+				//	var w = Pi.Double * peak.Frequency;
+				//	var t = approximation * i / sampleRate;
+					var wt = peak.Frequency * i * convertToPhase; // w * t
+					var phase = peak.Phase + wt + phaseAngle;
 					var magnitude = peak.Magnitude * spiralScale;
 
 					a += magnitude * Math.Cos(phase);

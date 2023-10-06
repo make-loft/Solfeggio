@@ -28,7 +28,7 @@ namespace Solfeggio
 #if DEBUG
 		public static Editions Edition { get; } = Developer;
 #else
-		public static Editions Edition { get; } = Education;
+		public static Editions Edition { get; } = Portable;
 #endif
 		public static Dictionary<Editions, string> YandexMetricaKeys = new()
 		{

@@ -26,48 +26,47 @@ namespace Solfeggio.Views
 			if (geometry.Count > 0)
 				TapeViewModel["GeometryPointsCount"] = geometry.Count.ToString();
 
-			geo.TriangleIndices.Clear();
-			geo.Positions.Clear();
+			Tape.TriangleIndices.Clear();
+			Tape.Positions.Clear();
 
-			wave.TriangleIndices.Clear();
-			wave.Positions.Clear();
+			Wave.TriangleIndices.Clear();
+			Wave.Positions.Clear();
 
 			var tapeViewModel = (TapeViewModel)DataContext;
 			var radius = tapeViewModel.Radius;
 			var depth = tapeViewModel.Depth;
-			var thin = tapeViewModel.Thin;
-			int k = 0;
-			for (var n = 0; n < geometry.Count; n++)
+			var halfThin = tapeViewModel.Thin / 2d;
+
+			for (int n = 0, k = 0; n < geometry.Count; n++)
 			{
-				var x = radius * geometry[n].X;
-				var y = radius * geometry[n].Y;
+				var point = geometry[n];
+
+				var x = radius * point.X;
+				var y = radius * point.Y;
 				var z = depth * n / geometry.Count;
 
-				geo.Positions.Add(new(x, y, z + thin));
-				geo.Positions.Add(new(x, y, z - thin));
+				Tape.Positions.Add(new(x, y, z + halfThin));
+				Tape.Positions.Add(new(x, y, z - halfThin));
 
-				wave.Positions.Add(new(x, 0d, z + thin));
-				wave.Positions.Add(new(x, 0d, z - thin));
+				Wave.Positions.Add(new(x, 0d, z + halfThin));
+				Wave.Positions.Add(new(x, 0d, z - halfThin));
 
-				AddTriangle(geo, k);
-				AddTriangle(wave, k);
-
-				k++;
+				AddTriangle(k++);
+				AddTriangle(k++);
 			}
 		}
 
-		static void AddTriangle(MeshGeometry3D geometry, int k)
+		private void AddTriangle(int offset)
 		{
-			if (k > 0)
-			{
-				geometry.TriangleIndices.Add(k);
-				geometry.TriangleIndices.Add(k - 1);
-				geometry.TriangleIndices.Add(k + 1);
-				geometry.TriangleIndices.Add(k);
-			}
+			AddTriangle(Tape, offset);
+			AddTriangle(Wave, offset);
+		}
 
-			geometry.TriangleIndices.Add(k);
-			geometry.TriangleIndices.Add(k + 1);
+		private static void AddTriangle(MeshGeometry3D geometry, int offset)
+		{
+			geometry.TriangleIndices.Add(offset);
+			geometry.TriangleIndices.Add(offset + 1);
+			geometry.TriangleIndices.Add(offset + 2);
 		}
 
 		private void SwitchPause() => Store.Get<ProcessingManager>().To(out var m).IsPaused = m.IsPaused.Not();
