@@ -22,6 +22,8 @@ using Brushes = Solfeggio.Palettes.Brushes;
 namespace Solfeggio
 {
 	static class AppPalette
+
+
 	{
 		static AppPalette() => Application.Current.Resources = new Map();
 

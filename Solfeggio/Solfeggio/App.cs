@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,7 +17,6 @@ using Yandex.Metrica;
 using Store = Ace.Store;
 
 using static Solfeggio.Editions;
-using System.Text;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Skip)]
 namespace Solfeggio

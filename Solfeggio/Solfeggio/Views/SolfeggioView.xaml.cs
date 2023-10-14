@@ -286,8 +286,10 @@ namespace Solfeggio.Views
 
 			MagnitudeCanvas.Children.Clear();
 
-			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, MagnitudeCanvas.Width, MagnitudeCanvas.Height, 1d,
-				AppPalette.GetBrush("MagnitudePeakBrush"), default, powerPeaks.Select(p => p.Frequency));
+			MusicalPresenter.DrawMarkers(MagnitudeCanvas.Children, MusicalPresenter.Spectrum.Frequency,
+				MagnitudeCanvas.Width, MagnitudeCanvas.Height, 1d,
+				AppPalette.GetBrush("MagnitudePeakBrush"), AppPalette.GetBrush("MagnitudePeakBrush"),
+				powerPeaks.Select(p => p.Frequency));
 
 			MagnitudeCanvas.Children.Add(MagnitudePolyline);
 

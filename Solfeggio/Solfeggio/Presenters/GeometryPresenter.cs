@@ -5,7 +5,7 @@ using Rainbow;
 using System;
 using System.Collections.Generic;
 
-#if XAMARIN
+#if NETSTANDARD
 using Xamarin.Forms;
 #else
 using System.Windows;

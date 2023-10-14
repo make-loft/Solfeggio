@@ -196,8 +196,6 @@ namespace Solfeggio.Presenters
 			Projection correction = default) => new(span.VisualScaleFunc, visualLength,
 				span.Window.From, span.Window.Till, correction);
 
-		private static bool PreviousSign = false;
-
 		static bool GetShortLength(double periodHalf, double from, double till, out double distance)
 		{
 			distance = (till - from) / periodHalf;
