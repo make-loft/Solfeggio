@@ -37,13 +37,13 @@ namespace Solfeggio.Models
 			var newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
 			var oldTitle = Title;
 
-			this[() => Title].Changing += (o, e) =>
+			this[() => Title].Changing += args =>
 			{
 				oldTitle = Title;
 				oldFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
 			};
 
-			this[() => Title].Changed += (o, e) =>
+			this[() => Title].Changed += args =>
 			{
 				newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
 				try

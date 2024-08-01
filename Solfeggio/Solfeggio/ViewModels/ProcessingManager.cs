@@ -60,7 +60,7 @@ namespace Solfeggio.ViewModels
 		{
 			base.Expose();
 
-			this[() => ActiveProfile].Changing += (sender, args) =>
+			this[() => ActiveProfile].Changing += args =>
 			{
 				if (ActiveProfile.Is(out var profile).Not())
 					return;
@@ -69,7 +69,7 @@ namespace Solfeggio.ViewModels
 				profile.Dispose();
 			};
 
-			this[() => ActiveProfile].Changed += (sender, args) =>
+			this[() => ActiveProfile].Changed += args =>
 			{
 				if (ActiveProfile.Is(out var profile).Not())
 					return;

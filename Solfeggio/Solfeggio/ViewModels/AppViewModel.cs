@@ -33,20 +33,20 @@ namespace Solfeggio.ViewModels
 
 		public void Expose()
 		{
-			this[() => ActiveLanguage].Changed += (o, e) =>
+			this[() => ActiveLanguage].Changed += args =>
 				LocalizationSource.Wrap.ActiveManager = new LanguageManager(ActiveLanguage);
 
-			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<ProcessingManager>()
+			this[() => ActiveLanguage].Changed += args => Store.Get<ProcessingManager>()
 				.Profiles
 				.Where(p => p.IsDefault)
 				.ForEach(p => p.RefreshTitle());
 
-			this[() => ActiveLanguage].Changed += (o, e) => Store.Get<HarmonicManager>()
+			this[() => ActiveLanguage].Changed += args => Store.Get<HarmonicManager>()
 				.Profiles
 				.Where(p => p.IsDefault)
 				.ForEach(p => p.RefreshTitle());
 
-			this[Context.Get("Navigate")].Executed += async (o, e) =>
+			this[Context.Get("Navigate")].Executed += async args =>
 			{
 				try
 				{
@@ -55,7 +55,7 @@ namespace Solfeggio.ViewModels
 #else
 					var packageName = App.Current.GetType().Assembly.GetName();
 #endif
-					var uri = e.Parameter?.ToString().Format(packageName);
+					var uri = args.Parameter?.ToString().Format(packageName);
 
 					if (uri.Contains("gitlab"))
 					{
@@ -86,8 +86,8 @@ namespace Solfeggio.ViewModels
 					: LanguageCodes.English
 				: ActiveLanguage;
 #if !NETSTANDARD
-			this[Context.Get("LoadActiveFrame")].Executed += (o, e) => SolfeggioView.LoadActiveFrame();
-			this[Context.Get("SaveActiveFrame")].Executed += (o, e) => SolfeggioView.SaveActiveFrame();
+			this[Context.Get("LoadActiveFrame")].Executed += args => SolfeggioView.LoadActiveFrame();
+			this[Context.Get("SaveActiveFrame")].Executed += args => SolfeggioView.SaveActiveFrame();
 
 			Tape ??= new();
 			Flower ??= new();

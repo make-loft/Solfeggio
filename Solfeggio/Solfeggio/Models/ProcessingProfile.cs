@@ -109,21 +109,21 @@ namespace Solfeggio.Models
 			//OutputDevices.Add(new EncodeProcessor.DeviceInfo());
 #endif
 
-			this[() => ActiveInputDevice].Changed += (o, e) =>
+			this[() => ActiveInputDevice].Changed += args =>
 				ActiveInputDeviceIndex = InputDevices.IndexOf(ActiveInputDevice);
 
-			this[() => ActiveOutputDevice].Changed += (o, e) =>
+			this[() => ActiveOutputDevice].Changed += args =>
 				ActiveOutputDeviceIndex = OutputDevices.IndexOf(ActiveOutputDevice);
 
-			this[() => FramePow].Changed += (o, e) =>
+			this[() => FramePow].Changed += args =>
 			{
 				SampleSize = FrameSize + ShiftSize;
 				EvokeFramePropertiesChanged();
 			};
 
-			this[() => InputLevel].Changed += (o, e) =>
+			this[() => InputLevel].Changed += args =>
 				inputProcessor.To(out var p)?.With(p.Level = InputLevel);
-			this[() => OutputLevel].Changed += (o, e) =>
+			this[() => OutputLevel].Changed += args =>
 				outputProcessor.To(out var p)?.With(p.Level = OutputLevel);
 		}
 

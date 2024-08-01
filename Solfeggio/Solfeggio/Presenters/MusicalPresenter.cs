@@ -40,9 +40,9 @@ namespace Solfeggio.Presenters
 		public void Expose()
 		{
 #if !NETSTANDARD
-			Format[() => Format.MonitorNumericFormat].Changed += (o, e) => Ace.Controls.Field.GlobalTextBindingRefresh();
+			Format[() => Format.MonitorNumericFormat].Changed += args => Ace.Controls.Field.GlobalTextBindingRefresh();
 #endif
-			Format[() => Format.ScreenNumericFormat].Changed += (o, e) =>
+			Format[() => Format.ScreenNumericFormat].Changed += args =>
 			{
 				var digitsCountPart = Format.ScreenNumericFormat.Length > 1 ? Format.ScreenNumericFormat.Substring(1) : "1";
 				var digitsCount = digitsCountPart.TryParse(out int v) ? v : 1;

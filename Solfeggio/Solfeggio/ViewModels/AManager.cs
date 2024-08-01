@@ -27,11 +27,11 @@ namespace Solfeggio.ViewModels
 				Profiles.ForEach(p => p.IsDefault = true);
 			}
 
-			this[Context.Set.Create].Executed += (o, e) => Create().Use(Profiles.Add);
-			this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<TProfile>().Use(Profiles.Remove);
-			this[Context.Set.Delete].CanExecute += (o, e) => e.CanExecute = e.Parameter.Is(out TProfile p) && p.IsDefault.Not();
+			this[Context.Set.Create].Executed += args => Create().Use(Profiles.Add);
+			this[Context.Set.Delete].Executed += args => args.Parameter.To<TProfile>().Use(Profiles.Remove);
+			this[Context.Set.Delete].CanExecute += args => args.CanExecute = args.Parameter.Is(out TProfile p) && p.IsDefault.Not();
 
-			//this[() => ActiveProfile].Changed += (o, e) => Context.Set.Delete.EvokeCanExecuteChanged();
+			//this[() => ActiveProfile].Changed += args => Context.Set.Delete.EvokeCanExecuteChanged();
 
 			Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
 		}

@@ -19,20 +19,20 @@ namespace Solfeggio.Models
 
 			public void Expose()
 			{
-				this[Context.Set.Create].Executed += (o, e) => CreateFor(Harmonics, e.Parameter as Harmonic).Use(Harmonics.Add);
-				this[Context.Set.Delete].Executed += (o, e) => e.Parameter.To<Harmonic>().Use(Harmonics.Remove);
+				this[Context.Set.Create].Executed += args => CreateFor(Harmonics, args.Parameter as Harmonic).Use(Harmonics.Add);
+				this[Context.Set.Delete].Executed += args => args.Parameter.To<Harmonic>().Use(Harmonics.Remove);
 
-				this[Context.Get("Loop")].Executed += (o, e) => Harmonics.ForEach(h => h.PhaseMode.Is(PhaseMode.Loop));
-				this[Context.Get("Flow")].Executed += (o, e) => Harmonics.ForEach(h => h.PhaseMode.Is(PhaseMode.Flow));
-				this[Context.Get("Mute")].Executed += (o, e) => Harmonics.ForEach(h => h.IsEnabled.Is(false));
-				this[Context.Get("Loud")].Executed += (o, e) => Harmonics.ForEach(h => h.IsEnabled.Is(true));
+				this[Context.Get("Loop")].Executed += args => Harmonics.ForEach(h => h.PhaseMode.Is(PhaseMode.Loop));
+				this[Context.Get("Flow")].Executed += args => Harmonics.ForEach(h => h.PhaseMode.Is(PhaseMode.Flow));
+				this[Context.Get("Mute")].Executed += args => Harmonics.ForEach(h => h.IsEnabled.Is(false));
+				this[Context.Get("Loud")].Executed += args => Harmonics.ForEach(h => h.IsEnabled.Is(true));
 
-				this[Context.Get("Loop")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Loop));
-				this[Context.Get("Flow")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Flow));
-				this[Context.Get("Mute")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(true));
-				this[Context.Get("Loud")].CanExecute += (o, e) => e.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(false));
+				this[Context.Get("Loop")].CanExecute += args => args.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Loop));
+				this[Context.Get("Flow")].CanExecute += args => args.CanExecute = Harmonics.Any(h => h.PhaseMode.IsNot(PhaseMode.Flow));
+				this[Context.Get("Mute")].CanExecute += args => args.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(true));
+				this[Context.Get("Loud")].CanExecute += args => args.CanExecute = Harmonics.Any(h => h.IsEnabled.Is(false));
 
-				this[Context.Get("Delete")].Executed += (o, e) => Harmonics.ToArray().ForEach(Harmonics.Remove);
+				this[Context.Get("Delete")].Executed += args => Harmonics.ToArray().ForEach(Harmonics.Remove);
 			}
 
 			private static Harmonic CreateFor(SmartSet<Harmonic> harmonics, Harmonic harmonic) => new()

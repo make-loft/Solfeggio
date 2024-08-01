@@ -20,7 +20,7 @@ namespace Solfeggio.Presenters.Options
 
 		public void Expose()
 		{
-			this[() => ActivePitchStandard].Changed += (o, e) =>
+			this[() => ActivePitchStandard].Changed += args =>
 			{
 				BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(ActivePitchStandard);
 				PianoKeys = EnumeratePianoKeys().ToList();
