@@ -70,6 +70,7 @@ namespace Solfeggio
 			}
 		}
 
+		[STAThread]
 		public static void Main(string[] _) => System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() => new App().Run());
 
 		public App()

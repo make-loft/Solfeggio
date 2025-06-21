@@ -65,7 +65,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Assemblies\Solfeggio.exe.compressed" />
   </ItemGroup>
   <ItemGroup>
