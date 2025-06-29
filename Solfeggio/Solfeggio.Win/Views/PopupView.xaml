@@ -1,4 +1,4 @@
-﻿<Popup 
+﻿<Popup
 	x:Class="Solfeggio.Views.PopupView"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
@@ -16,7 +16,8 @@
 			>
 			<ContentControl.Style>
 				<Style
-					TargetType="{x:Type ContentControl}">
+					TargetType="{x:Type ContentControl}"
+					>
 					<Setter
 						Property="Template"
 						>

@@ -75,6 +75,8 @@ namespace Solfeggio
 
 		public App()
 		{
+			new Ace.Controls.RegisterPropertyAttribute(); // initialize type
+
 			Startup += App_OnStartup;
 			Exit += App_OnExit;
 		}

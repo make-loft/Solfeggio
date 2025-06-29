@@ -23,10 +23,10 @@
 
 	<GradientStopCollection
 		x:Key="RainbowGradient_">
-		<GradientStop Color="#00FF00" Offset=".0" />
+		<GradientStop Color="#00FF00" Offset=".00" />
 		<GradientStop Color="#00FFFF" Offset=".17" />
 		<GradientStop Color="#FFFF00" Offset=".33" />
-		<GradientStop Color="#FF00FF" Offset=".5" />
+		<GradientStop Color="#FF00FF" Offset=".50" />
 		<GradientStop Color="#FF0000" Offset=".66" />
 		<GradientStop Color="#FFFF00" Offset=".73" />
 		<GradientStop Color="#00FF00" Offset="1.0" />

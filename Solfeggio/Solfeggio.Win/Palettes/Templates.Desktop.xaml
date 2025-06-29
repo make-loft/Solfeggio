@@ -249,7 +249,8 @@
 				Header="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"
 				HeaderTemplate="{StaticResource BrushPreviewTemplate}">
 				<v:PopupView
-					IsOpen="{Binding IsExpanded, ElementName=Root}">
+					IsOpen="{Binding IsExpanded, ElementName=Root}"
+					>
 					<v:BrushPicker
 						Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
 						/>

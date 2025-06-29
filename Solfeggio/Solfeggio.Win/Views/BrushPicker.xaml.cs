@@ -29,19 +29,47 @@ namespace Solfeggio.Views
 			GradientStops = default
 		};
 
+		static BrushPicker()
+		{
+			Type<BrushPicker>.When(p => p.Value).Changed += args => args.Sender.Value_Changed();
+		}
+
+		bool isRefresh = false;
+		void CloneToValue(object o, EventArgs e)
+		{
+			isRefresh = true;
+			Value = UnfrozenValue?.Clone();
+			isRefresh = false;
+		}
+
+		private void Value_Changed()
+		{
+			if (isRefresh)
+				return;
+
+			if (UnfrozenValue.Is(out var oldBrush))
+				oldBrush.Changed -= CloneToValue;
+
+			var newBrush = Value?.Clone();
+			if (newBrush.Is())
+				newBrush.Changed += CloneToValue;
+
+			UnfrozenValue = newBrush;
+
+			SelectedIndex = Value switch
+			{
+				SolidColorBrush b => 0,
+				LinearGradientBrush b => 1,
+				RadialGradientBrush b => 2,
+				_ => 0
+			};
+		}
+
 		public BrushPicker()
 		{
 			InitializeComponent();
 
-			bool isRefresh = false;
-			void CloneToValue(object o, EventArgs e)
-			{
-				isRefresh = true;
-				Value = UnfrozenValue?.Clone();
-				isRefresh = false;
-			}
-
-			SelectionChanged += (o, e) =>
+			SelectionChanged += (sender, args) =>
 			{
 				var _ = Value switch
 				{
@@ -51,7 +79,7 @@ namespace Solfeggio.Views
 					_ => Value
 				};
 
-				GradientStopCollection CreateDefaultGradientStops() => new()
+				static GradientStopCollection CreateDefaultGradientStops() => new()
 				{
 					new(Colors.Transparent, 0),
 					new(Colors.Gray, 1)
@@ -73,39 +101,16 @@ namespace Solfeggio.Views
 					_ => Value
 				};
 			};
-
-			DataContextChanged += (o, e) =>
-			{
-				if (isRefresh)
-					return;
-
-				if (UnfrozenValue.Is(out var oldBrush))
-					oldBrush.Changed -= CloneToValue;
-
-				var newBrush = Value?.Clone();
-				if (newBrush.Is())
-					newBrush.Changed += CloneToValue;
-
-				UnfrozenValue = newBrush;
-
-				SelectedIndex = Value switch
-				{
-					SolidColorBrush b => 0,
-					LinearGradientBrush b => 1,
-					RadialGradientBrush b => 2,
-					_ => 0
-				};
-			};
 		}
 
-		static BrushPicker() => Type<BrushPicker>.CreateProperties();
-
+		[RegisterProperty]
 		public Brush UnfrozenValue
 		{
 			get => this.Get(default(Brush));
 			set => this.Set(value);
 		}
 
+		[RegisterProperty]
 		public Brush Value
 		{
 			get => this.Get(default(Brush));
