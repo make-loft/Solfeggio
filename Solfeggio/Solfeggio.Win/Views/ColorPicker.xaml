@@ -9,10 +9,15 @@
 
 	<GroupBox.Resources>
 		<Style
-			TargetType="IntegerField"
+			TargetType="NumericField"
 			>
 			<Setter Property="From" Value="0" />
 			<Setter Property="Till" Value="255" />
+			<Setter Property="Format" Value="D0" />
+			<Setter
+				Property="Margin"
+				Value="{StaticResource RegularMargin}"
+				/>
 		</Style>
 	</GroupBox.Resources>
 	
@@ -148,39 +153,39 @@
 			HorizontalAlignment="Center"
 			Text="HEX" />
 
-		<IntegerField
+		<NumericField
 			Rack.Cell="R1 C2"
 			Value="{Binding A, Mode=TwoWay}"
 			/>
-		<IntegerField
+		<NumericField
 			Rack.Cell="R2 C2"
 			Value="{Binding R, Mode=TwoWay}"
 			/>
-		<IntegerField
+        <NumericField
 			Rack.Cell="R3 C2"
 			Value="{Binding G, Mode=TwoWay}"
 			/>
-		<IntegerField
+		<NumericField
 			Rack.Cell="R4 C2"
 			Value="{Binding B, Mode=TwoWay}"
 			/>
 
-		<IntegerField
+		<NumericField
 			Rack.Cell="R1 C3"
 			Value="{Binding A, Mode=TwoWay}"
 			Format="X"
 			/>
-		<IntegerField
+		<NumericField
 			Rack.Cell="R2 C3"
 			Value="{Binding R, Mode=TwoWay}"
 			Format="X"
 			/>
-		<IntegerField
+		<NumericField
 			Rack.Cell="R3 C3"
 			Value="{Binding G, Mode=TwoWay}"
 			Format="X"
 			/>
-		<IntegerField
+		<NumericField
 			Rack.Cell="R4 C3"
 			Value="{Binding B, Mode=TwoWay}"
 			Format="X"

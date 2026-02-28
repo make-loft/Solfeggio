@@ -426,9 +426,10 @@
 				Rack.Cell="R2 C0"
 				Text="{Localizing Spectrogram}"
 				/>
-			<IntegerField
+			<NumericField
 				Rack.Cell="R2 C1"
 				From="+1"
+				Format="D0"
 				Value="{Binding SpectrogramFramesCount, Mode=TwoWay, FallbackValue={Int32 64}}"
 				/>
 			<Title

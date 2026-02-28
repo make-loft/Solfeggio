@@ -367,7 +367,7 @@
 			<NumericField
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
-				Format="F0"
+				Format="D0"
 				Value="{Binding DataContext, Mode=TwoWay, Converter={StaticResource Int32ToDoubleTwoWayConverter}}"
 				/>
 		</Rack>

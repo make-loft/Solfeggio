@@ -39,7 +39,8 @@ namespace Solfeggio.Models
 		public static IEnumerable<Color> EnumerateColors() => typeof(Colors)
 			.GetProperties()
 			.Where(p => p.PropertyType.Is(ColorType))
-			.Select(p => (Color)p.GetValue(null));
+			.Select(p => (Color)p.GetValue(null))
+			;
 
 		public Brush TopBrush = new SolidColorBrush(BurlyWood);
 
