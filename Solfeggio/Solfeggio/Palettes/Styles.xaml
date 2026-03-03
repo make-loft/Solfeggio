@@ -43,7 +43,6 @@
 		<Setter Property="HorizontalTextAlignment" Value="End" />
 	</Style>
 
-
 	<Style
 		TargetType="NumericField"
 		>
@@ -154,6 +153,37 @@
 		<Setter
 			Property="HeightRequest"
 			Value="4" />
+	</Style>
+
+	<Style
+		x:Key="ErrorToolTipStyle"
+		TargetType="{x:Type ToolTip}"
+		>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="HasDropShadow" Value="True"/>
+		<Setter Property="DataContext" Value="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ToolTip">
+					<Border
+						Name="Border"
+						BorderThickness="1"
+						BorderBrush="LightGray"
+						>
+						<StackPanel Orientation="Vertical">
+							<Label Background="Firebrick" Foreground="White" FontWeight="Bold" Margin="4">Validation error</Label>
+							<TextBlock Margin="10" Text="{Binding ValidationError}"/>
+						</StackPanel>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasDropShadow" Value="true">
+							<Setter TargetName="Border" Property="CornerRadius" Value="4"/>
+							<Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 </ResourceDictionary>

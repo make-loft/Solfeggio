@@ -165,6 +165,7 @@ namespace Solfeggio
 		public static o Bemole = _("Bemole", "Бемоль");
 		public static o Combined = _("Combined", "Комбинировано");
 		public static o Range = _("Range", "Диапазон");
+		public static o Error = _("Error", "Ошибка");
 		public static o Oops = _("Oops", "Упс");
 		public static o Ok = _("Ok", "Ок");
 
