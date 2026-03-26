@@ -109,8 +109,26 @@
     <Compile Include="..\Solfeggio\Headers\WavePcmFormat.cs">
       <Link>Headers\WavePcmFormat.cs</Link>
     </Compile>
-    <Compile Include="..\Solfeggio\Localizator.cs">
-      <Link>Localizator.cs</Link>
+    <Compile Include="..\Solfeggio\Localization\Data\Errors.cs">
+      <Link>Localization\Data\Errors.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\Data\Links.cs">
+      <Link>Localization\Data\Links.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\Data\Messages.cs">
+      <Link>Localization\Data\Messages.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\LanguageManager.cs">
+      <Link>Localization\LanguageManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\Languages.cs">
+      <Link>Localization\Languages.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\Localizator.cs">
+      <Link>Localization\Localizator.cs</Link>
+    </Compile>
+    <Compile Include="..\Solfeggio\Localization\Translations.cs">
+      <Link>Localization\Translations.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio\Models\AProfile.cs">
       <Link>Models\AProfile.cs</Link>

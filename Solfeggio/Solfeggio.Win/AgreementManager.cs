@@ -1,9 +1,11 @@
 ﻿using Ace;
+using Solfeggio.Localization;
 using Solfeggio.ViewModels;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using Yandex.Metrica;
+
 using static Solfeggio.Editions;
 
 namespace Solfeggio

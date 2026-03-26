@@ -73,13 +73,13 @@ namespace Solfeggio.Presenters.Options
 
 		public static double HalfTonesCount => Notes.Length;
 		private static double GetBaseFrequency(double pitchStandard) => pitchStandard / 16d;
-		private static double GetHalftoneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
+		private static double GetHalfToneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
 
 		private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
-			GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalftoneStep(HalfTonesCount));
+			GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalfToneStep(HalfTonesCount));
 
-		private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halftoneStep) =>
-			Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halftoneStep, dt)).ToArray();
+		private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halfToneStep) =>
+			Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halfToneStep, dt)).ToArray();
 
 		public double[] BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 

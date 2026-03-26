@@ -115,6 +115,7 @@ namespace Solfeggio.Processors
 		public override float[] ReadFrame()
 		{
 			var line = reader.ReadLine();
+			var line_ = reader.ReadLine();
 
 			var peaks = line.SplitByChars("|").Select(l => l.SplitByChars("\t ")).Select(l => new Bin
 			(
@@ -141,9 +142,9 @@ namespace Solfeggio.Processors
 
 			var signal = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 
-			if (Console.CapsLock)
+			if (true)
 			{
-				if (overlap.Is() && Console.CapsLock)
+				if (overlap.Is() && true)
 					signal = signal.Raise(0.00f, 0.25f).Add(overlap.Fade(0.00f, 0.25f));
 				overlap = profile.GenerateSignalSample(SampleSize, SampleRate, false);
 			}

@@ -2,6 +2,7 @@
 
 using Rainbow;
 
+using Solfeggio.Localization;
 using Solfeggio.Models;
 #if !NETSTANDARD
 using Solfeggio.Views;
@@ -17,10 +18,10 @@ namespace Solfeggio.ViewModels
 	[DataContract]
 	public class AppViewModel : ContextObject, IExposable
 	{
-		public LanguageCodes[] Languages { get; } = { LanguageCodes.English, LanguageCodes.Russian };
+		public Languages[] Languages { get; } = { Localization.Languages.English, Localization.Languages.Russian };
 
 		[DataMember]
-		public LanguageCodes ActiveLanguage
+		public Languages ActiveLanguage
 		{
 			get => Get(() => ActiveLanguage);
 			set => Set(() => ActiveLanguage, value);
@@ -80,10 +81,10 @@ namespace Solfeggio.ViewModels
 				this["Options.ActiveItemOffset"] = 4; /* agreement item */
 			}
 
-			ActiveLanguage = ActiveLanguage.Is(LanguageCodes.Default)
-				? new[] { "ru", "be" }.Contains(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
-					? LanguageCodes.Russian
-					: LanguageCodes.English
+			ActiveLanguage = ActiveLanguage.Is(Localization.Languages.Default)
+				? (new[] { "ru", "be" }).Contains(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+					? Localization.Languages.Russian
+					: Localization.Languages.English
 				: ActiveLanguage;
 #if !NETSTANDARD
 			this[Context.Get("LoadActiveFrame")].Executed += args => SolfeggioView.LoadActiveFrame();
