@@ -580,26 +580,31 @@
 		x:Key="RangeGridTemplate"
 		>
 		<Rack
-			Rows="^ ^ ^"
-			Columns="^ ^ ^ ^ ^"
+			Rows="^ ^ ^ ^ ^"
+			Columns="^ ^ ^"
 			>
-
 			<Title
-				Rack.Cell="R0 C1"
-				Text="{Localizing From}"
-				/>
-			<Title
-				Rack.Cell="R0 C2"
+				Rack.Cell="R0 C0"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Localizing Length}"
-				/>
-			<Title
-				Rack.Cell="R0 C3"
-				Text="{Localizing Till}"
+				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
 				/>
 
 			<Title
 				Rack.Cell="R1 C0"
+				Text="{Localizing From}"
+				/>
+			<Title
+				Rack.Cell="R2 C0"
+				Opacity="{StaticResource InfoTextOpacityLevel}"
+				Text="{Localizing Length}"
+				/>
+			<Title
+				Rack.Cell="R3 C0"
+				Text="{Localizing Till}"
+				/>
+
+			<Title
+				Rack.Cell="R0 C1"
 				Text="{Localizing Scope}"
 				/>
 			<NumericField
@@ -607,27 +612,22 @@
 				Value="{Binding Scope.From, Mode=TwoWay}"
 				/>
 			<NumericField
-				Rack.Cell="R1 C2"
+				Rack.Cell="R2 C1"
 				IsReadOnly="True"
 				Opacity="{StaticResource InfoTextOpacityLevel}"
 				Value="{Binding Scope.Length, Mode=OneWay}"
 				/>
 			<NumericField
-				Rack.Cell="R1 C3"
+				Rack.Cell="R3 C1"
 				Value="{Binding Scope.Till, Mode=TwoWay}"
-				/>
-			<Title
-				Rack.Cell="R2 C4"
-				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
 				/>
 
 			<Title
-				Rack.Cell="R2 C0"
+				Rack.Cell="R0 C2"
 				Text="{Localizing Window}"
 				/>
 			<NumericField
-				Rack.Cell="R2 C1"
+				Rack.Cell="R1 C2"
 				Value="{Binding Window.From, Mode=TwoWay}"
 				/>
 			<NumericField
@@ -637,15 +637,9 @@
 				Value="{Binding Window.Length, Mode=OneWay}"
 				/>
 			<NumericField
-				Rack.Cell="R2 C3"
+				Rack.Cell="R3 C2"
 				Value="{Binding Window.Till, Mode=TwoWay}"
 				/>
-			<Title
-				Rack.Cell="R1 C4"
-				Opacity="{StaticResource InfoTextOpacityLevel}"
-				Text="{Binding Units, Converter={StaticResource LocalizingConverter}}"
-				/>
-
 		</Rack>
 	</DataTemplate>
 
