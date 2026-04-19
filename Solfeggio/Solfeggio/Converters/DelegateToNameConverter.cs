@@ -1,7 +1,6 @@
-﻿namespace Solfeggio.Converters
+﻿namespace Solfeggio.Converters;
+
+class DelegateToNameConverter : Ace.Markup.Patterns.AValueConverter
 {
-	class DelegateToNameConverter : Ace.Markup.Patterns.AValueConverter
-	{
-		public override object Convert(object value) => value is System.Delegate d ? d.Method.Name : value;
-	}
+	public override object Convert(object value) => value is System.Delegate d ? d.Method.Name : value;
 }

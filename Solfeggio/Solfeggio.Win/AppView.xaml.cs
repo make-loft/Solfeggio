@@ -1,36 +1,34 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 
 using Solfeggio.Views;
 
-namespace Solfeggio
+namespace Solfeggio;
+
+public partial class AppView
 {
-	public partial class AppView
+	public static MonitorView MonitorView { get; set; }
+	public static FlowerView FlowerView { get; set; }
+	public static TapeView TapeView { get; set; }
+	public static EncoderView EncoderView { get; set; }
+
+	public AppView()
 	{
-		public static MonitorView MonitorView { get; set; }
-		public static FlowerView FlowerView { get; set; }
-		public static TapeView TapeView { get; set; }
-		public static EncoderView EncoderView { get; set; }
+		InitializeComponent();
+		Closing += (o, e) => Application.Current.Shutdown();
 
-		public AppView()
-		{
-			InitializeComponent();
-			Closing += (o, e) => Application.Current.Shutdown();
+		MonitorView = new MonitorView();
+		FlowerView = new FlowerView();
+		TapeView = new TapeView();
 
-			MonitorView = new MonitorView();
-			FlowerView = new FlowerView();
-			TapeView = new TapeView();
+		//EncoderView = new EncoderView();
+		//EncoderView.Show();
 
-			//EncoderView = new EncoderView();
-			//EncoderView.Show();
+		static void ShowVisible(params Window[] windows) =>
+			windows.Where(w => w.Visibility is Visibility.Visible).ForEach(w => w.Show());
 
-			static void ShowVisible(params Window[] windows) =>
-				windows.Where(w => w.Visibility is Visibility.Visible).ForEach(w => w.Show());
+		ShowVisible(MonitorView, FlowerView, TapeView);
 
-			ShowVisible(MonitorView, FlowerView, TapeView);
-
-			Closed += (o, e) => Application.Current.Shutdown();
-		}
+		Closed += (o, e) => Application.Current.Shutdown();
 	}
 }

@@ -12,137 +12,138 @@ using Xamarin.Forms;
 using System.Windows;
 #endif
 
-namespace Solfeggio.Models
+namespace Solfeggio.Models;
+
+[DataContract]
+public class VisualizationProfile : AProfile, IExposable
 {
-	[DataContract]
-	public class VisualizationProfile : AProfile, IExposable
+	public static string VisualizationsDirectoryName = "Visualizations";
+
+	[DataMember] public int Id { get; set; }
+	[DataMember] public string Palette { get; set; }
+	public string FileName => $"{VisualizationsDirectoryName}\\{Title}.{Id}";
+
+	public bool IsBusy
 	{
-		public static string VisualizationsDirectoryName = "Visualizations";
+		get => Get(() => IsBusy, false);
+		set => Set(() => IsBusy, value);
+	}
 
-		[DataMember] public int Id { get; set; }
-		[DataMember] public string Palette { get; set; }
-		public string FileName => $"{VisualizationsDirectoryName}\\{Title}.{Id}";
+	public VisualizationProfile() => Expose();
 
-		public bool IsBusy
+	public void Expose()
+	{
+		var oldFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
+		var newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
+		var oldTitle = Title;
+
+		this[() => Title].Changing += args =>
 		{
-			get => Get(() => IsBusy, false);
-			set => Set(() => IsBusy, value);
-		}
+			oldTitle = Title;
+			oldFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
+		};
 
-		public VisualizationProfile() => Expose();
-
-		public void Expose()
+		this[() => Title].Changed += args =>
 		{
-			var oldFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
-			var newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
-			var oldTitle = Title;
-
-			this[() => Title].Changing += args =>
+			newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
+			try
 			{
-				oldTitle = Title;
-				oldFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
-			};
-
-			this[() => Title].Changed += args =>
-			{
-				newFileName = Ace.Store.ActiveBox.KeyFormat.Format(FileName);
-				try
-				{
-					if (File.Exists(oldFileName))
-						File.Move(oldFileName, newFileName);
-				}
-				catch
-				{
-					if (Title.IsNot(oldTitle))
-						Title = oldTitle;
-				}
-			};
-		}
-
-		public static IEnumerable<object> EnumerateAllKeys(ResourceDictionary dictionary)
-		{
-			foreach (var d in dictionary.MergedDictionaries)
-			{
-				var keys = EnumerateAllKeys(d);
-				foreach (var key in keys)
-					yield return key;
+				if (File.Exists(oldFileName))
+					File.Move(oldFileName, newFileName);
 			}
+			catch
+			{
+				if (Title.IsNot(oldTitle))
+					Title = oldTitle;
+			}
+		};
+	}
 
-			foreach (var key in dictionary.Keys)
+	public static IEnumerable<object> EnumerateAllKeys(ResourceDictionary dictionary)
+	{
+		foreach (var d in dictionary.MergedDictionaries)
+		{
+			var keys = EnumerateAllKeys(d);
+			foreach (var key in keys)
 				yield return key;
 		}
 
-		const int AsyncDelay = 64;
+		foreach (var key in dictionary.Keys)
+			yield return key;
+	}
 
-		public async void Keep(bool asyncDelay = true)
-		{
+	const int AsyncDelay = 64;
+
+	public async void Keep(bool asyncDelay = true)
+	{
 #if !XAMARIN
-			var resources = AppPalette.Resources;
-			var valueKeys = AppPalette.Values.Keys.OfType<string>();
-			var colorsKeys = EnumerateAllKeys(AppPalette.Colors).OfType<string>().Distinct();
-			var brushKeys = AppPalette.Brushes.Keys.OfType<string>();
+		var resources = AppPalette.Resources;
+		var valueKeys = AppPalette.Values.Keys.OfType<string>();
+		var colorsKeys = EnumerateAllKeys(AppPalette.Colors).OfType<string>().Distinct();
+		var brushKeys = AppPalette.Brushes.Keys.OfType<string>();
 
-			var theme =
-				colorsKeys
-				.Concat(valueKeys.Concat(brushKeys))
-				.Distinct()
-				.OrderBy()
-				.ToDictionary(k => k, k => resources[k]);
+		var theme =
+			colorsKeys
+			.Concat(valueKeys.Concat(brushKeys))
+			.Distinct()
+			.OrderBy()
+			.ToDictionary(k => k, k => resources[k])
+			;
 
-			if (asyncDelay)
-				await Task.Delay(AsyncDelay);
+		if (asyncDelay)
+			await Task.Delay(AsyncDelay);
 
-			Ace.Store.ActiveBox.TryKeep(theme, FileName);
+		Ace.Store.ActiveBox.TryKeep(theme, FileName);
 #endif
-        }
+	}
 
-        public async void Load(bool asyncDelay = true)
+	public async void Load(bool asyncDelay = true)
+	{
+		IsBusy = true;
+
+		if (asyncDelay)
+			await Task.Delay(AsyncDelay);
+
+		Reset();
+
+		if (Ace.Store.ActiveBox.Check<object>(FileName).Not())
 		{
-			IsBusy = true;
-
-			if (asyncDelay)
-				await Task.Delay(AsyncDelay);
-
-			Reset();
-
-			if (Ace.Store.ActiveBox.Check<object>(FileName).Not())
-			{
-				IsBusy = false;
-				Keep();
-				return;
-			}
-
-			var resources = AppPalette.Resources;
-			var values = AppPalette.Values;
-			var colors = AppPalette.Colors;
-			var theme = Ace.Store.ActiveBox.Revive<Dictionary<string, object>>(FileName);
-
-			theme.ForEach(p =>
-			{
-				if (p.Value is Color)
-					colors[p.Key] = p.Value;
-				else resources[p.Key] = p.Value;
-			});
-
-			resources.EvokePropertyChanged();
-
 			IsBusy = false;
+			Keep();
+			return;
 		}
 
-		public void Reset(string paletteKey = default)
+		var resources = AppPalette.Resources;
+		var values = AppPalette.Values;
+		var colors = AppPalette.Colors;
+		var theme = Ace.Store.ActiveBox.Revive<Dictionary<string, object>>(FileName);
+
+		theme.ForEach(p =>
 		{
-			Palette = paletteKey ?? Palette ?? "Nature";
-			var resources = AppPalette.Resources;
-			var brushes = AppPalette.Brushes;
-			var palettes = AppPalette.ColorPalettes;
-			AppPalette.Colors = new Map((Map)palettes[Palette]);
-			foreach (var key in brushes.Keys)
-			{
-				if (brushes[key].Is(out Brush b))
-					resources[key] = b.Clone();
-			}
+			if (p.Value is Color)
+				colors[p.Key] = p.Value;
+			else resources[p.Key] = p.Value;
+		});
 
-			resources.EvokePropertyChanged();
+		resources.EvokePropertyChanged();
+
+		IsBusy = false;
+	}
+
+	public void Reset(string paletteKey = default)
+	{
+		Palette = paletteKey ?? Palette ?? "Nature";
+		var resources = AppPalette.Resources;
+		var brushes = AppPalette.Brushes;
+		var palettes = AppPalette.ColorPalettes;
+		AppPalette.Colors = new Map((Map)palettes[Palette]);
+
+		foreach (var key in brushes.Keys)
+		{
+			if (brushes[key].Is(out Brush b))
+				resources[key] = b.Clone();
 		}
+
+		resources.EvokePropertyChanged();
 	}
 }

@@ -8,136 +8,135 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Solfeggio.Views
+namespace Solfeggio.Views;
+
+public partial class BrushPicker
 {
-	public partial class BrushPicker
+	SolidColorBrush solidColorBrush;
+
+	LinearGradientBrush linearGradientBrush = new()
 	{
-		SolidColorBrush solidColorBrush;
+		StartPoint = new(0, 0),
+		EndPoint = new(0, 1),
+		GradientStops = default
+	};
 
-		LinearGradientBrush linearGradientBrush = new()
+	RadialGradientBrush radialGradientBrush = new()
+	{
+		Center = new(0.5, 0.0),
+		RadiusX = 1,
+		RadiusY = 1,
+		GradientStops = default
+	};
+
+	static BrushPicker()
+	{
+		Type<BrushPicker>.When(p => p.Value).Changed += args => args.Sender.Value_Changed();
+	}
+
+	bool isRefresh = false;
+	void CloneToValue(object o, EventArgs e)
+	{
+		isRefresh = true;
+		Value = UnfrozenValue?.Clone();
+		isRefresh = false;
+	}
+
+	private void Value_Changed()
+	{
+		if (isRefresh)
+			return;
+
+		if (UnfrozenValue.Is(out var oldBrush))
+			oldBrush.Changed -= CloneToValue;
+
+		var newBrush = Value?.Clone();
+		if (newBrush.Is())
+			newBrush.Changed += CloneToValue;
+
+		UnfrozenValue = newBrush;
+
+		SelectedIndex = Value switch
 		{
-			StartPoint = new(0, 0),
-			EndPoint = new(0, 1),
-			GradientStops = default
+			SolidColorBrush b => 0,
+			LinearGradientBrush b => 1,
+			RadialGradientBrush b => 2,
+			_ => 0
 		};
+	}
 
-		RadialGradientBrush radialGradientBrush = new()
+	public BrushPicker()
+	{
+		InitializeComponent();
+
+		SelectionChanged += (sender, args) =>
 		{
-			Center = new(0.5, 0.0),
-			RadiusX = 1,
-			RadiusY = 1,
-			GradientStops = default
+			var _ = Value switch
+			{
+				SolidColorBrush b => solidColorBrush = b,
+				LinearGradientBrush b => linearGradientBrush = b,
+				RadialGradientBrush b => radialGradientBrush = b,
+				_ => Value
+			};
+
+			static GradientStopCollection CreateDefaultGradientStops() => new()
+			{
+				new(Colors.Transparent, 0),
+				new(Colors.Gray, 1)
+			};
+
+			radialGradientBrush.GradientStops ??= linearGradientBrush.GradientStops;
+			radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
+
+			linearGradientBrush.GradientStops ??= radialGradientBrush.GradientStops;
+			radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
+
+			solidColorBrush ??= new(linearGradientBrush.GradientStops.LastOrDefault()?.Color ?? Colors.Gray);
+
+			Value = SelectedIndex switch
+			{
+				0 => Value as SolidColorBrush ?? solidColorBrush,
+				1 => Value as LinearGradientBrush ?? linearGradientBrush,
+				2 => Value as RadialGradientBrush ?? radialGradientBrush,
+				_ => Value
+			};
 		};
+	}
 
-		static BrushPicker()
-		{
-			Type<BrushPicker>.When(p => p.Value).Changed += args => args.Sender.Value_Changed();
-		}
+	[RegisterProperty]
+	public Brush UnfrozenValue
+	{
+		get => this.Get(default(Brush));
+		set => this.Set(value);
+	}
 
-		bool isRefresh = false;
-		void CloneToValue(object o, EventArgs e)
-		{
-			isRefresh = true;
-			Value = UnfrozenValue?.Clone();
-			isRefresh = false;
-		}
+	[RegisterProperty]
+	public Brush Value
+	{
+		get => this.Get(default(Brush));
+		set => this.Set(value);
+	}
 
-		private void Value_Changed()
-		{
-			if (isRefresh)
-				return;
+	SmartSet<GradientStop> _activeGradientStopCollection;
+	GradientStopCollection _stops;
 
-			if (UnfrozenValue.Is(out var oldBrush))
-				oldBrush.Changed -= CloneToValue;
+	private void RemoveGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
+		_activeGradientStopCollection.Remove(sender.To<Button>().DataContext.To<GradientStop>());
+	private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
+		_activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
 
-			var newBrush = Value?.Clone();
-			if (newBrush.Is())
-				newBrush.Changed += CloneToValue;
-
-			UnfrozenValue = newBrush;
-
-			SelectedIndex = Value switch
-			{
-				SolidColorBrush b => 0,
-				LinearGradientBrush b => 1,
-				RadialGradientBrush b => 2,
-				_ => 0
-			};
-		}
-
-		public BrushPicker()
-		{
-			InitializeComponent();
-
-			SelectionChanged += (sender, args) =>
-			{
-				var _ = Value switch
-				{
-					SolidColorBrush b => solidColorBrush = b,
-					LinearGradientBrush b => linearGradientBrush = b,
-					RadialGradientBrush b => radialGradientBrush = b,
-					_ => Value
-				};
-
-				static GradientStopCollection CreateDefaultGradientStops() => new()
-				{
-					new(Colors.Transparent, 0),
-					new(Colors.Gray, 1)
-				};
-
-				radialGradientBrush.GradientStops ??= linearGradientBrush.GradientStops;
-				radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
-
-				linearGradientBrush.GradientStops ??= radialGradientBrush.GradientStops;
-				radialGradientBrush.GradientStops ??= CreateDefaultGradientStops();
-
-				solidColorBrush ??= new(linearGradientBrush.GradientStops.LastOrDefault()?.Color ?? Colors.Gray);
-
-				Value = SelectedIndex switch
-				{
-					0 => Value as SolidColorBrush ?? solidColorBrush,
-					1 => Value as LinearGradientBrush ?? linearGradientBrush,
-					2 => Value as RadialGradientBrush ?? radialGradientBrush,
-					_ => Value
-				};
-			};
-		}
-
-		[RegisterProperty]
-		public Brush UnfrozenValue
-		{
-			get => this.Get(default(Brush));
-			set => this.Set(value);
-		}
-
-		[RegisterProperty]
-		public Brush Value
-		{
-			get => this.Get(default(Brush));
-			set => this.Set(value);
-		}
-
-		SmartSet<GradientStop> _activeGradientStopCollection;
-		GradientStopCollection _stops;
-
-		private void RemoveGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
-			_activeGradientStopCollection.Remove(sender.To<Button>().DataContext.To<GradientStop>());
-		private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
-			_activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
-
-		private object Converter_Convert(ConvertArgs args)
-		{
-			if (_stops.Is(args.Value))
-				return _activeGradientStopCollection;
-
-			_activeGradientStopCollection = args.Value.To(out _stops).ToSet();
-			_activeGradientStopCollection.CollectionChangeCompleted += (o, e) =>
-			{
-				_stops.Clear();
-				_activeGradientStopCollection.ForEach(_stops.Add);
-			};
-
+	private object Converter_Convert(ConvertArgs args)
+	{
+		if (_stops.Is(args.Value))
 			return _activeGradientStopCollection;
-		}
+
+		_activeGradientStopCollection = args.Value.To(out _stops).ToSet();
+		_activeGradientStopCollection.CollectionChangeCompleted += (o, e) =>
+		{
+			_stops.Clear();
+			_activeGradientStopCollection.ForEach(_stops.Add);
+		};
+
+		return _activeGradientStopCollection;
 	}
 }

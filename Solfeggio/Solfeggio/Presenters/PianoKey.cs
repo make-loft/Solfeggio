@@ -3,58 +3,57 @@ using System;
 using Rainbow;
 using System.Collections.Generic;
 
-namespace Solfeggio.Models
+namespace Solfeggio.Models;
+
+public class PianoKey
 {
-	public class PianoKey
+	public int NoteNumber { get; private set; }
+	public string NoteName { get; private set; }
+	public double LowerFrequency { get; private set; }
+	public double UpperFrequency { get; private set; }
+	public double EthalonFrequency { get; private set; }
+	public double LowerValue { get; private set; }
+	public double UpperValue { get; private set; }
+	public double EthalonValue { get; private set; }
+	public double GetOffsetValue(double frequency) => Math.Log(frequency, 2d) - EthalonValue;
+	public double GetOffsetFrequency(double frequency) => frequency - EthalonFrequency;
+	public double GetRelativeOffset(double frequency) =>
+		2d * GetOffsetValue(frequency) / (UpperValue - LowerValue);
+
+	public Bin TopPeak { get; set; }
+	public List<Bin> Peaks { get; set; } = [];
+
+	public double RelativeOpacity { get; set; } = 1d;
+
+	public override string ToString() => $"{EthalonFrequency:F2} Hz • {NoteName}";
+
+	public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
 	{
-		public int NoteNumber { get; private set; }
-		public string NoteName { get; private set; }
-		public double LowerFrequency { get; private set; }
-		public double UpperFrequency { get; private set; }
-		public double EthalonFrequency { get; private set; }
-		public double LowerValue { get; private set; }
-		public double UpperValue { get; private set; }
-		public double EthalonValue { get; private set; }
-		public double GetOffsetValue(double frequency) => Math.Log(frequency, 2d) - EthalonValue;
-		public double GetOffsetFrequency(double frequency) => frequency - EthalonFrequency;
-		public double GetRelativeOffset(double frequency) =>
-			2d * GetOffsetValue(frequency) / (UpperValue - LowerValue);
+		var lowNoteNumber = 0;
+		var topNoteNumber = oktaveNotes.Length - 1;
 
-		public Bin TopPeak { get; set; }
-		public List<Bin> Peaks { get; set; } = new();
+		var ethalonFrequency = oktaveNotes[noteNumber];
+		var lowerNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
+		var upperNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
 
-		public double RelativeOpacity { get; set; } = 1d;
+		var ethalonValue = Math.Log(ethalonFrequency, 2d);
+		var lowerValue = (Math.Log(lowerNote, 2d) + ethalonValue) / 2d;
+		var upperValue = (ethalonValue + Math.Log(upperNote, 2d)) / 2d;
 
-		public override string ToString() => $"{EthalonFrequency:F2} Hz • {NoteName}";
+		var lowerFrequency = Math.Pow(2d, lowerValue);
+		var upperFrequency = Math.Pow(2d, upperValue);
 
-		public static PianoKey Construct(double[] oktaveNotes, int noteNumber, int oktaveNumber, string note)
+		return new()
 		{
-			var lowNoteNumber = 0;
-			var topNoteNumber = oktaveNotes.Length - 1;
+			NoteNumber = noteNumber,
+			NoteName = note + oktaveNumber,
+			LowerFrequency = lowerFrequency,
+			UpperFrequency = upperFrequency,
+			EthalonFrequency = ethalonFrequency,
 
-			var ethalonFrequency = oktaveNotes[noteNumber];
-			var lowerNote = noteNumber.Is(lowNoteNumber) ? oktaveNotes[topNoteNumber] / 2 : oktaveNotes[noteNumber - 1];
-			var upperNote = noteNumber.Is(topNoteNumber) ? oktaveNotes[lowNoteNumber] * 2 : oktaveNotes[noteNumber + 1];
-
-			var ethalonValue = Math.Log(ethalonFrequency, 2d);
-			var lowerValue = (Math.Log(lowerNote, 2d) + ethalonValue) / 2d;
-			var upperValue = (ethalonValue + Math.Log(upperNote, 2d)) / 2d;
-
-			var lowerFrequency = Math.Pow(2d, lowerValue);
-			var upperFrequency = Math.Pow(2d, upperValue);
-
-			return new()
-			{
-				NoteNumber = noteNumber,
-				NoteName = note + oktaveNumber,
-				LowerFrequency = lowerFrequency,
-				UpperFrequency = upperFrequency,
-				EthalonFrequency = ethalonFrequency,
-
-				LowerValue = lowerValue,
-				UpperValue = upperValue,
-				EthalonValue = ethalonValue,
-			};
-		}
+			LowerValue = lowerValue,
+			UpperValue = upperValue,
+			EthalonValue = ethalonValue,
+		};
 	}
 }

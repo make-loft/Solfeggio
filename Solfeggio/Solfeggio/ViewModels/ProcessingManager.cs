@@ -10,148 +10,147 @@ using Solfeggio.Models;
 
 using static Rainbow.Windowing;
 
-namespace Solfeggio.ViewModels
+namespace Solfeggio.ViewModels;
+
+[DataContract]
+public class ProcessingManager : AManager<ProcessingProfile>
 {
-	[DataContract]
-	public class ProcessingManager : AManager<ProcessingProfile>
+	public bool IsPaused
 	{
-		public bool IsPaused
+		get => Get(() => IsPaused);
+		set => Set(() => IsPaused, value);
+	}
+
+	public IList<Bin> Spectrum { get; private set; }
+	public IList<Bin> SpectrumBetter { get; private set; }
+	public IList<Complex> OuterFrame { get; private set; }
+	public IList<Complex> InnerFrame { get; private set; }
+
+	public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
+	{
+		yield return Create().To(out var b).With
+		(
+			b.DefaultTitleFormat = "∿ {0}",
+			b.DefaultTitle = "Generator",
+			b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
+			b.AdaptationState = false,
+			b.OutputLevel = .3f,
+			b.FramePow = 10
+		);
+
+		yield return new()
 		{
-			get => Get(() => IsPaused);
-			set => Set(() => IsPaused, value);
+			DefaultTitleFormat = "🎙 {0}",
+			DefaultTitle = "Vocal",
+			SampleRate = 16000d,
+			InputLevel = 4f,
+			FramePow = 10
+		};
+
+		yield return new()
+		{
+			DefaultTitleFormat = "🎸 {0}",
+			DefaultTitle = "Tuning",
+			InputLevel = 4f,
+			FramePow = 11
+		};
+	}
+
+	public override void Expose()
+	{
+		base.Expose();
+
+		this[() => ActiveProfile].Changing += args =>
+		{
+			if (ActiveProfile.Is(out var profile).Not())
+				return;
+
+			profile.SampleReady -= OnActiveProfileOnDataReady;
+			profile.Dispose();
+		};
+
+		this[() => ActiveProfile].Changed += args =>
+		{
+			if (ActiveProfile.Is(out var profile).Not())
+				return;
+
+			profile.SampleReady += OnActiveProfileOnDataReady;
+			profile.Expose();
+		};
+
+		EvokePropertyChanged(nameof(ActiveProfile));
+	}
+
+	private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
+	{
+		var sample = args.Sample;
+		var frameSize = args.Source.FrameSize;
+		if (IsPaused || sample.Length < frameSize + args.Source.ShiftSize) return;
+
+		var timeFrame = sample.Length.Is(frameSize)
+			? sample
+			: args.Sample.Skip(0).Take(frameSize).ToArray();
+
+		var spectralFrame = GetSpectrum(timeFrame, args.Source.ActiveWindow);
+		var shiftsPerFrame = (int)args.Source.ShiftsPerFrame;
+		if (shiftsPerFrame > 0)
+		{
+			var timeFrame_ = args.Sample.Skip(args.Source.ShiftSize).Take(frameSize).ToArray();
+			var spectralFrame_ = GetSpectrum(timeFrame_, args.Source.ActiveWindow);
+			var spectrum = Filtering.GetJoinedSpectrum(spectralFrame, spectralFrame_, shiftsPerFrame, args.SampleRate).ToArray();
+			SpectrumBetter = spectrum;
+			Spectrum = spectrum;
+		}
+		else
+		{
+			var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
+			var spectrumInterpolated = Filtering.Interpolate(spectrum, out var peaks).ToArray();
+
+			var data = spectrumInterpolated;
+			var averageSignalMagnitude = data.Aggregate(0d, (s, p) => s += p.Magnitude) / data.Length;
+			var thresholdMagnitude = averageSignalMagnitude * Pi.Double;
+			thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
+			var powerPeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
+
+			AverageSignalMagnitude = averageSignalMagnitude;
+			ThresholdMagnitude = thresholdMagnitude;
+
+			SpectrumBetter = spectrumInterpolated;
+			Spectrum = spectrum;
+			
+			PowerPeaks = powerPeaks;
+			Peaks = peaks;
 		}
 
-		public IList<Bin> Spectrum { get; private set; }
-		public IList<Bin> SpectrumBetter { get; private set; }
-		public IList<Complex> OuterFrame { get; private set; }
-		public IList<Complex> InnerFrame { get; private set; }
+		var (j, k) = 0d;
+		//var innerFrame = spectralFrame.Decimation(false);
+		InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
+		OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
 
-		public override IEnumerable<ProcessingProfile> CreateDefaultProfiles()
+		SampleProcessed?.Invoke();
+	}
+
+	public event System.Action SampleProcessed;
+
+	public double AverageSignalMagnitude { get; set; }
+	public double ThresholdMagnitude { get; set; }
+
+	public IList<Bin> PowerPeaks { get; set; }
+	public IList<Bin> Peaks { get; set; }
+
+	private Complex[] GetSpectrum(Complex[] timeFrame, ApodizationFunc activeWindow)
+	{
+		var frameSize = timeFrame.Length;
+		if (activeWindow.Is(Rectangle)) goto SkipApodization;
+		for (var i = 0; i < frameSize; i++)
 		{
-			yield return Create().To(out var b).With
-			(
-				b.DefaultTitleFormat = "∿ {0}",
-				b.DefaultTitle = "Generator",
-				b.ActiveInputDevice = b.InputDevices.LastOrDefault(),
-				b.AdaptationState = false,
-				b.OutputLevel = .3f,
-				b.FramePow = 10
-			);
-
-			yield return new()
-			{
-				DefaultTitleFormat = "🎙 {0}",
-				DefaultTitle = "Vocal",
-				SampleRate = 16000d,
-				InputLevel = 4f,
-				FramePow = 10
-			};
-
-			yield return new()
-			{
-				DefaultTitleFormat = "🎸 {0}",
-				DefaultTitle = "Tuning",
-				InputLevel = 4f,
-				FramePow = 11
-			};
+			timeFrame[i] *= activeWindow(i, frameSize);
 		}
 
-		public override void Expose()
-		{
-			base.Expose();
+	SkipApodization:
 
-			this[() => ActiveProfile].Changing += args =>
-			{
-				if (ActiveProfile.Is(out var profile).Not())
-					return;
-
-				profile.SampleReady -= OnActiveProfileOnDataReady;
-				profile.Dispose();
-			};
-
-			this[() => ActiveProfile].Changed += args =>
-			{
-				if (ActiveProfile.Is(out var profile).Not())
-					return;
-
-				profile.SampleReady += OnActiveProfileOnDataReady;
-				profile.Expose();
-			};
-
-			EvokePropertyChanged(nameof(ActiveProfile));
-		}
-
-		private void OnActiveProfileOnDataReady(object sender, AudioInputEventArgs args)
-		{
-			var sample = args.Sample;
-			var frameSize = args.Source.FrameSize;
-			if (IsPaused || sample.Length < frameSize + args.Source.ShiftSize) return;
-
-			var timeFrame = sample.Length.Is(frameSize)
-				? sample
-				: args.Sample.Skip(0).Take(frameSize).ToArray();
-
-			var spectralFrame = GetSpectrum(timeFrame, args.Source.ActiveWindow);
-			var shiftsPerFrame = (int)args.Source.ShiftsPerFrame;
-			if (shiftsPerFrame > 0)
-			{
-				var timeFrame_ = args.Sample.Skip(args.Source.ShiftSize).Take(frameSize).ToArray();
-				var spectralFrame_ = GetSpectrum(timeFrame_, args.Source.ActiveWindow);
-				var spectrum = Filtering.GetJoinedSpectrum(spectralFrame, spectralFrame_, shiftsPerFrame, args.SampleRate).ToArray();
-				SpectrumBetter = spectrum;
-				Spectrum = spectrum;
-			}
-			else
-			{
-				var spectrum = Filtering.GetSpectrum(spectralFrame, args.SampleRate).ToArray();
-				var spectrumInterpolated = Filtering.Interpolate(spectrum, out var peaks).ToArray();
-
-				var data = spectrumInterpolated;
-				var averageSignalMagnitude = data.Aggregate(0d, (s, p) => s += p.Magnitude) / data.Length;
-				var thresholdMagnitude = averageSignalMagnitude * Pi.Double;
-				thresholdMagnitude = thresholdMagnitude > 0.001 ? thresholdMagnitude : 0.001;
-				var powerPeaks = peaks.Where(p => p.Magnitude > thresholdMagnitude).ToList();
-
-				AverageSignalMagnitude = averageSignalMagnitude;
-				ThresholdMagnitude = thresholdMagnitude;
-
-				SpectrumBetter = spectrumInterpolated;
-				Spectrum = spectrum;
-				
-				PowerPeaks = powerPeaks;
-				Peaks = peaks;
-			}
-
-			var (j, k) = 0d;
-			//var innerFrame = spectralFrame.Decimation(false);
-			InnerFrame = timeFrame.Select(c => new Complex(k++ / frameSize, c.Real)).ToArray();
-			OuterFrame = args.Sample.Take(frameSize).Select(c => new Complex(j++ / frameSize, c.Real)).ToArray();
-
-			SampleProcessed?.Invoke();
-		}
-
-		public event System.Action SampleProcessed;
-
-		public double AverageSignalMagnitude { get; set; }
-		public double ThresholdMagnitude { get; set; }
-
-		public IList<Bin> PowerPeaks { get; set; }
-		public IList<Bin> Peaks { get; set; }
-
-		private Complex[] GetSpectrum(Complex[] timeFrame, ApodizationFunc activeWindow)
-		{
-			var frameSize = timeFrame.Length;
-			if (activeWindow.Is(Rectangle)) goto SkipApodization;
-			for (var i = 0; i < frameSize; i++)
-			{
-				timeFrame[i] *= activeWindow(i, frameSize);
-			}
-
-		SkipApodization:
-
-			var floats = timeFrame.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
-			var spectralFrame = timeFrame.Transform(true);
-			return spectralFrame;
-		}
+		var floats = timeFrame.Select(v => (float)(v.Real / short.MaxValue)).ToArray();
+		var spectralFrame = timeFrame.Transform(true);
+		return spectralFrame;
 	}
 }

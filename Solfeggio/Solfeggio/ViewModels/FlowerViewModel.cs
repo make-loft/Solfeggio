@@ -1,15 +1,14 @@
 ﻿using Ace;
 
-namespace Solfeggio.ViewModels
+namespace Solfeggio.ViewModels;
+
+[DataContract]
+public class FlowerViewModel : ContextObject
 {
-	[DataContract]
-	public class FlowerViewModel : ContextObject
+	[DataMember]
+	public double Radius
 	{
-		[DataMember]
-		public double Radius
-		{
-			get => Get(() => Radius, 1d);
-			set => Set(() => Radius, value);
-		}
+		get => Get(() => Radius, 1d);
+		set => Set(() => Radius, value);
 	}
 }

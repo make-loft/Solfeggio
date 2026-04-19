@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Solfeggio.Properties {
+namespace Solfeggio.Properties; 
     using System;
     
     
@@ -90,4 +90,3 @@ namespace Solfeggio.Properties {
             }
         }
     }
-}

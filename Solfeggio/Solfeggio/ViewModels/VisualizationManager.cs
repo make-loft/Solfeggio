@@ -5,36 +5,35 @@ using Solfeggio.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Solfeggio.ViewModels
+namespace Solfeggio.ViewModels;
+
+[DataContract]
+public class VisualizationManager : AManager<VisualizationProfile>
 {
-	[DataContract]
-	public class VisualizationManager : AManager<VisualizationProfile>
+	public override VisualizationProfile Create() => new()
 	{
-		public override VisualizationProfile Create() => new()
+		Id = Profiles.Select(p => p.Id).Max() + 1,
+		Title = ActiveProfile?.Title + " ~",
+		Palette = ActiveProfile?.Palette ?? "Nature",
+	};
+
+	public override IEnumerable<VisualizationProfile> CreateDefaultProfiles() => AppPalette.ColorPalettes.Keys.OfType<string>()
+		.Let(out int i).Select(k => new VisualizationProfile
 		{
-			Id = Profiles.Select(p => p.Id).Max() + 1,
-			Title = ActiveProfile?.Title + " ~",
-			Palette = ActiveProfile?.Palette ?? "Nature",
-		};
+			Id = i++,
+			Title = k,
+			Palette = k,
+		});
 
-		public override IEnumerable<VisualizationProfile> CreateDefaultProfiles() => AppPalette.ColorPalettes.Keys.OfType<string>()
-			.Let(out int i).Select(k => new VisualizationProfile
-			{
-				Id = i++,
-				Title = k,
-				Palette = k,
-			});
+	public override VisualizationProfile GetDefault() => Profiles.FirstOrDefault(p => p.Palette.Is("Nature"));
 
-		public override VisualizationProfile GetDefault() => Profiles.FirstOrDefault(p => p.Palette.Is("Nature"));
+	public override void Expose()
+	{
+		base.Expose();
 
-		public override void Expose()
-		{
-			base.Expose();
+		this[() => ActiveProfile].Changing += args => ActiveProfile?.Keep();
+		this[() => ActiveProfile].Changed += args => ActiveProfile?.Load();
 
-			this[() => ActiveProfile].Changing += args => ActiveProfile?.Keep();
-			this[() => ActiveProfile].Changed += args => ActiveProfile?.Load();
-
-			ActiveProfile?.Load();
-		}
+		ActiveProfile?.Load();
 	}
 }

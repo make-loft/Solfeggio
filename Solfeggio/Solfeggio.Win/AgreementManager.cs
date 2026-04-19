@@ -8,39 +8,38 @@ using Yandex.Metrica;
 
 using static Solfeggio.Editions;
 
-namespace Solfeggio
+namespace Solfeggio;
+
+public static class AgreementManager
 {
-	public static class AgreementManager
+	private static readonly TimeSpan LongSessionDuation = TimeSpan.FromMinutes(4);
+
+	public static void CheckExpirationStatus(Editions edition)
 	{
-		private static readonly TimeSpan LongSessionDuation = TimeSpan.FromMinutes(4);
+		return;
 
-		public static void CheckExpirationStatus(Editions edition)
+		if (edition.Is(Gratitude)) return;
+		var versionAge = DateTime.Now - new DateTime(2019, 7, 25);
+		if (versionAge > TimeSpan.FromDays(64))
 		{
-			return;
-
-			if (edition.Is(Gratitude)) return;
-			var versionAge = DateTime.Now - new DateTime(2019, 7, 25);
-			if (versionAge > TimeSpan.FromDays(64))
-			{
-				YandexMetrica.ReportEvent("Expiration", versionAge);
-				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
-				MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
-				Process.Start(Localizator.HomeLink[activeLanguage]);
-			}
+			YandexMetrica.ReportEvent("Expiration", versionAge);
+			var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
+			MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
+			Process.Start(Localizator.HomeLink[activeLanguage]);
 		}
+	}
 
-		public static void CheckSessionDuration(Editions edition, DateTime startupTimestamp)
+	public static void CheckSessionDuration(Editions edition, DateTime startupTimestamp)
+	{
+		return;
+
+		if (edition.Is(Gratitude)) return;
+		var sessionDuration = DateTime.Now - startupTimestamp;
+		if (sessionDuration > LongSessionDuation)
 		{
-			return;
-
-			if (edition.Is(Gratitude)) return;
-			var sessionDuration = DateTime.Now - startupTimestamp;
-			if (sessionDuration > LongSessionDuation)
-			{
-				YandexMetrica.ReportEvent("LongSession", sessionDuration);
-				var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
-				Process.Start(Localizator.HomeLink[activeLanguage]);
-			}
+			YandexMetrica.ReportEvent("LongSession", sessionDuration);
+			var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
+			Process.Start(Localizator.HomeLink[activeLanguage]);
 		}
 	}
 }

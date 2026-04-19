@@ -1,18 +1,17 @@
-﻿namespace Solfeggio.Converters
+﻿namespace Solfeggio.Converters;
+
+class ByteToHexStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 {
-	class ByteToHexStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
+	public override object Convert(object value) => ((byte)value).ToString("X2");
+	public override object ConvertBack(object value)
 	{
-		public override object Convert(object value) => ((byte)value).ToString("X2");
-		public override object ConvertBack(object value)
+		try
 		{
-			try
-			{
-				return byte.Parse((string)value, System.Globalization.NumberStyles.HexNumber);
-			}
-			catch
-			{
-				return default;
-			}
+			return byte.Parse((string)value, System.Globalization.NumberStyles.HexNumber);
+		}
+		catch
+		{
+			return default;
 		}
 	}
 }

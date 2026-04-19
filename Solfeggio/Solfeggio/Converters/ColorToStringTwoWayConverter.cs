@@ -4,25 +4,22 @@ using Xamarin.Forms;
 using System.Windows.Media;
 #endif
 
-namespace Solfeggio.Converters
+namespace Solfeggio.Converters;
+
+public class ColorToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 {
-	public class ColorToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
-	{
-		public override object Convert(object value) => value?.ToString();
+	public override object Convert(object value) => value?.ToString();
 #if !NETSTANDARD
-		public override object ConvertBack(object value)
+	public override object ConvertBack(object value)
+	{
+		try
 		{
-			try
-			{
-				return value is Color c
-					? c
-					: ColorConverter.ConvertFromString((string)value);
-			}
-			catch
-			{
-				return Colors.Gray;
-			}
+			return value is Color c ? c : ColorConverter.ConvertFromString((string)value);
 		}
-#endif
+		catch
+		{
+			return Colors.Gray;
+		}
 	}
+#endif
 }

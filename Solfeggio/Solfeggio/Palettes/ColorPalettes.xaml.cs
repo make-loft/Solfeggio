@@ -1,10 +1,9 @@
 ﻿using Xamarin.Forms.Xaml;
 
-namespace Solfeggio.Palettes
-{
+namespace Solfeggio.Palettes;
+
     [XamlCompilation(XamlCompilationOptions.Skip)]
     public partial class ColorPalettes
     {
-		public ColorPalettes() => InitializeComponent();
-	}
+	public ColorPalettes() => InitializeComponent();
 }

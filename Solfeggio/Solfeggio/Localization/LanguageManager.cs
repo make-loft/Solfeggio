@@ -7,11 +7,9 @@ using System.Resources;
 
 namespace Solfeggio;
 
-public class LanguageManager : ResourceManager
+public class LanguageManager(Languages language) : ResourceManager
 {
-	public LanguageManager(Languages language) => _keyToValue = GetDictionary(language);
-
-	private readonly Dictionary<string, string> _keyToValue;
+	private readonly Dictionary<string, string> _keyToValue = GetDictionary(language);
 
 	public override string GetString(string key) =>
 		_keyToValue.TryGetValue(key, out var value) ? value : default;

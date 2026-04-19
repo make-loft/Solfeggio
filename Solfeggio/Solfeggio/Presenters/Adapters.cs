@@ -123,7 +123,7 @@ namespace Solfeggio.Presenters
 	{
 		//public static Color SkToPresenter(this SKColor c) => new Color {SkColor = c};
 		public static Color SkToXamarin(this SKColor c) => Color.FromRgb(c.Red, c.Green, c.Blue);
-		public static SKColor XamarinToSk(this Color c) => new SKColor((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
+		public static SKColor XamarinToSk(this Color c) => new((byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
 	}
 }
 

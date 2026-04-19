@@ -2,70 +2,65 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Solfeggio.Api
+namespace Solfeggio.Api;
+
+public partial class Wave
 {
-	public partial class Wave
+	public static partial class In
 	{
-		public static partial class In
+		public class DeviceInfo(int number) : ADeviceInfo<WaveInCapabilities>(number)
 		{
-			public class DeviceInfo : ADeviceInfo<WaveInCapabilities>
+			public override WaveInCapabilities GetCapabilities()
 			{
-				public DeviceInfo(int number) : base(number) { }
-
-				public override WaveInCapabilities GetCapabilities()
-				{
-					waveInGetDevCaps((IntPtr)_number, out var capabilities, Marshal.SizeOf(typeof(WaveInCapabilities))).Verify();
-					return capabilities;
-				}
-
-				public Session CreateSession(WaveFormat format) => new(_number, format);
-
-				public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-					new Processor(CreateSession(waveFormat), sampleSize, buffersCount);
+				waveInGetDevCaps((IntPtr)_number, out var capabilities, Marshal.SizeOf(typeof(WaveInCapabilities))).Verify();
+				return capabilities;
 			}
 
-			public static int GetDevicesCount() => waveInGetNumDevs();
+			public Session CreateSession(WaveFormat format) => new(_number, format);
 
-			public static IEnumerable<DeviceInfo> EnumerateDevices()
+			public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
+				new Processor(CreateSession(waveFormat), sampleSize, buffersCount);
+		}
+
+		public static int GetDevicesCount() => waveInGetNumDevs();
+
+		public static IEnumerable<DeviceInfo> EnumerateDevices()
+		{
+			var devicesCount = GetDevicesCount();
+			for (var i = 0; i < devicesCount; i++)
+				yield return new(i);
+		}
+
+		public static readonly DeviceInfo DefaultDevice = new(-1);
+
+		public class Session : ASession
+		{
+			public Session(int deviceNumber, WaveFormat format)
 			{
-				var devicesCount = GetDevicesCount();
-				for (var i = 0; i < devicesCount; i++)
-					yield return new(i);
+				this.deviceNumber = deviceNumber;
+				WaveFormat = format;
 			}
 
-			public static readonly DeviceInfo DefaultDevice = new(-1);
+			public override MmResult Lull() => waveInStop(handle).Verify(); /* waveOutPause */
+			public override MmResult Wake() => waveInStart(handle).Verify(); /* waveOutRestart */
 
-			public class Session : ASession
-			{
-				public Session(int deviceNumber, WaveFormat format)
-				{
-					this.deviceNumber = deviceNumber;
-					WaveFormat = format;
-				}
+			public override MmResult Close() => waveInClose(handle).Verify();
+			public override MmResult Reset() => waveInReset(handle).Verify();
+			public override MmResult Open(Callback callback) =>
+				waveInOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
 
-				public override MmResult Lull() => waveInStop(handle).Verify(); /* waveOutPause */
-				public override MmResult Wake() => waveInStart(handle).Verify(); /* waveOutRestart */
+			public override MmResult GetPosition(out MmTime time, int size) => waveInGetPosition(handle, out time, size).Verify();
 
-				public override MmResult Close() => waveInClose(handle).Verify();
-				public override MmResult Reset() => waveInReset(handle).Verify();
-				public override MmResult Open(Callback callback) =>
-					waveInOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
+			public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+			public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
+			public override MmResult MarkForProcessing(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
 
-				public override MmResult GetPosition(out MmTime time, int size) => waveInGetPosition(handle, out time, size).Verify();
+			public override float GetVolume() => default;
+			public override void SetVolume(double value) { }
+		}
 
-				public override MmResult PrepareHeader(Header header) => waveInPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult UnprepareHeader(Header header) => waveInUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-				public override MmResult MarkForProcessing(Header header) =>	waveInAddBuffer(handle, header, Marshal.SizeOf(header)).Verify();
-
-				public override float GetVolume() => default;
-				public override void SetVolume(double value) { }
-			}
-
-			public class Processor : Processor<DeviceInfo>
-			{
-				public Processor(Session session, int bufferSize, int buffersCount) : 
-					base(session, bufferSize, buffersCount) { }
-			}
+		public class Processor(In.Session session, int bufferSize, int buffersCount) : Processor<DeviceInfo>(session, bufferSize, buffersCount)
+		{
 		}
 	}
 }

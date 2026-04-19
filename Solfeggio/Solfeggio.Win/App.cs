@@ -18,169 +18,168 @@ using Version = System.Version;
 using static Solfeggio.Editions;
 using static System.Environment;
 
-namespace Solfeggio
+namespace Solfeggio;
+
+public enum Editions { Developer, Portable, Education, Gratitude }
+
+public partial class App : Application
 {
-	public enum Editions { Developer, Portable, Education, Gratitude }
+	public static Editions Edition { get; } = Portable;
 
-	public partial class App : Application
+	public static Dictionary<Editions, string> YandexMetricaKeys = new()
 	{
-		public static Editions Edition { get; } = Portable;
+		{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
+		{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
+		{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
+		{ Gratitude, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
+	};
 
-		public static Dictionary<Editions, string> YandexMetricaKeys = new()
+	#region Launching
+	/* should not use nested assemblies during App static initialization */
+
+	private static readonly Type ArrayOfBytesType = typeof(byte[]);
+
+	public static IEnumerable<byte[]> EnumerateNestedRawAssemblies() => typeof(Properties.Assemblies)
+			.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+			.Where(p => p.PropertyType == ArrayOfBytesType)
+			.Select(p => p.GetValue(null, null))
+			.Cast<byte[]>();
+	#endregion
+
+	public static readonly string Location = Assembly.GetEntryAssembly().Location;
+	public static readonly string EntryFolder = Path.GetDirectoryName(Location);
+
+	private static bool CheckWriteAccess(string path)
+	{
+		try
 		{
-			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
-			{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
-			{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
-			{ Gratitude, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
+			var directory = Path.Combine(path, "tmp");
+			while (Directory.Exists(directory)) directory += "_";
+			Directory.CreateDirectory(directory).Delete();
+
+			var file = Path.Combine(path, "tmp");
+			while (File.Exists(file)) file += "_";
+			File.Create(file).Dispose();
+			File.Delete(file);
+
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	[STAThread]
+	public static void Main(string[] _) => System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() => new App().Run());
+
+	public App()
+	{
+		new Ace.Controls.RegisterPropertyAttribute(); // initialize type
+
+		Startup += App_OnStartup;
+		Exit += App_OnExit;
+	}
+
+	private DateTime _startupTimestamp;
+
+	private void App_OnStartup(object sender, StartupEventArgs args)
+	{
+		var settingsFolder = CheckWriteAccess(EntryFolder)
+			? Path.Combine(EntryFolder, "Settings", Location.GetHashCode().ToString())
+			: Path.Combine(GetFolderPath(SpecialFolder.MyDocuments), "Solfeggio", Location.GetHashCode().ToString());
+
+		try
+		{
+			if (Directory.Exists(settingsFolder).Not()) Directory.CreateDirectory(settingsFolder);
+			var box = Store.ActiveBox = new Memory(new Ace.Specific.KeyFileStorage(), Path.Combine(settingsFolder, "{0}.json"));
+			box.ReplicationProfile.MemberProviders[1] =
+				new ContractMemberProvider(BindingFlags.Public | BindingFlags.Instance, Member.CanReadWrite);
+			SetHandlers(box);
+
+			var metricaFolder = Path.Combine(settingsFolder, "Metric");
+
+			YandexMetricaFolder.SetCurrent(metricaFolder);
+			YandexMetrica.Activate(YandexMetricaKeys[Edition]);
+			//AgreementManager.CheckExpirationStatus(Edition);
+
+			var settingsVersionKey = Path.Combine(settingsFolder, "AppVersion.txt");
+			ActualizeSettings(box, settingsVersionKey);
+		}
+		catch (Exception exception)
+		{
+			MessageBox.Show(exception.ToString());
+		}
+
+		DispatcherUnhandledException += (o, e) =>
+		{
+			if (Debugger.IsAttached) return;
+			YandexMetrica.ReportError(e.Exception.Message, e.Exception);
+			MessageBox.Show(e.ToString());
+			e.Handled = true;
 		};
 
-		#region Launching
-		/* should not use nested assemblies during App static initialization */
+		Store.Get<AppViewModel>();
+		_startupTimestamp = DateTime.Now;
 
-		private static readonly Type ArrayOfBytesType = typeof(byte[]);
+		AppPalette.Load();
 
-		public static IEnumerable<byte[]> EnumerateNestedRawAssemblies() => typeof(Properties.Assemblies)
-				.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-				.Where(p => p.PropertyType == ArrayOfBytesType)
-				.Select(p => p.GetValue(null, null))
-				.Cast<byte[]>();
-		#endregion
+		(Current.MainWindow = new AppView()).Show();
+	}
 
-		public static readonly string Location = Assembly.GetEntryAssembly().Location;
-		public static readonly string EntryFolder = Path.GetDirectoryName(Location);
+	private void App_OnExit(object sender, ExitEventArgs e)
+	{
+		Store.Snapshot();
+		Store.Get<VisualizationManager>().ActiveProfile?.Keep(asyncDelay: false);
 
-		private static bool CheckWriteAccess(string path)
+		AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
+	}
+
+	private void SetHandlers(Memory memoryBox)
+	{
+		memoryBox.EncodeFailed += (key, item, exception) =>
 		{
-			try
-			{
-				var directory = Path.Combine(path, "tmp");
-				while (Directory.Exists(directory)) directory += "_";
-				Directory.CreateDirectory(directory).Delete();
+			if (Debugger.IsAttached)
+				MessageBox.Show($"{key} : {item}\n{exception}");
+			else YandexMetrica.ReportError($"{key} : {item}", exception);
+		};
 
-				var file = Path.Combine(path, "tmp");
-				while (File.Exists(file)) file += "_";
-				File.Create(file).Dispose();
-				File.Delete(file);
+		memoryBox.DecodeFailed += (key, type, exception) =>
+		{
+			if (Debugger.IsAttached)
+				MessageBox.Show($"{key} - {type}\n{exception}");
+			else YandexMetrica.ReportError($"{key} - {type}", exception);
+		};
+	}
 
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
+	private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
+	{
+		using var stream = storage.GetReadStream(key);
+		using var streamReader = new StreamReader(stream, Encoding.UTF8);
+		var data = streamReader.ReadToEnd();
+		return Version.TryParse(data, out var version)
+			? version
+			: new Version();
+	}
+
+	private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
+	{
+		using var stream = storage.GetWriteStream(key);
+		using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
+		streamWriter.Write(version.ToString());
+		return version;
+	}
+
+	private static void ActualizeSettings(Memory box, string settingsVersionKey)
+	{
+		var targetVersion = TypeOf<App>.Assembly.GetName().Version;
+		var storage = box.Storage;
+		if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
+		{
+			box.Destroy<ProcessingManager>();
+			box.Destroy<HarmonicManager>();
 		}
 
-		[STAThread]
-		public static void Main(string[] _) => System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() => new App().Run());
-
-		public App()
-		{
-			new Ace.Controls.RegisterPropertyAttribute(); // initialize type
-
-			Startup += App_OnStartup;
-			Exit += App_OnExit;
-		}
-
-		private DateTime _startupTimestamp;
-
-		private void App_OnStartup(object sender, StartupEventArgs args)
-		{
-			var settingsFolder = CheckWriteAccess(EntryFolder)
-				? Path.Combine(EntryFolder, "Settings", Location.GetHashCode().ToString())
-				: Path.Combine(GetFolderPath(SpecialFolder.MyDocuments), "Solfeggio", Location.GetHashCode().ToString());
-
-			try
-			{
-				if (Directory.Exists(settingsFolder).Not()) Directory.CreateDirectory(settingsFolder);
-				var box = Store.ActiveBox = new Memory(new Ace.Specific.KeyFileStorage(), Path.Combine(settingsFolder, "{0}.json"));
-				box.ReplicationProfile.MemberProviders[1] =
-					new ContractMemberProvider(BindingFlags.Public | BindingFlags.Instance, Member.CanReadWrite);
-				SetHandlers(box);
-
-				var metricaFolder = Path.Combine(settingsFolder, "Metric");
-
-				YandexMetricaFolder.SetCurrent(metricaFolder);
-				YandexMetrica.Activate(YandexMetricaKeys[Edition]);
-				//AgreementManager.CheckExpirationStatus(Edition);
-
-				var settingsVersionKey = Path.Combine(settingsFolder, "AppVersion.txt");
-				ActualizeSettings(box, settingsVersionKey);
-			}
-			catch (Exception exception)
-			{
-				MessageBox.Show(exception.ToString());
-			}
-
-			DispatcherUnhandledException += (o, e) =>
-			{
-				if (Debugger.IsAttached) return;
-				YandexMetrica.ReportError(e.Exception.Message, e.Exception);
-				MessageBox.Show(e.ToString());
-				e.Handled = true;
-			};
-
-			Store.Get<AppViewModel>();
-			_startupTimestamp = DateTime.Now;
-
-			AppPalette.Load();
-
-			(Current.MainWindow = new AppView()).Show();
-		}
-
-		private void App_OnExit(object sender, ExitEventArgs e)
-		{
-			Store.Snapshot();
-			Store.Get<VisualizationManager>().ActiveProfile?.Keep(asyncDelay: false);
-
-			AgreementManager.CheckSessionDuration(Edition, _startupTimestamp);
-		}
-
-		private void SetHandlers(Memory memoryBox)
-		{
-			memoryBox.EncodeFailed += (key, item, exception) =>
-			{
-				if (Debugger.IsAttached)
-					MessageBox.Show($"{key} : {item}\n{exception}");
-				else YandexMetrica.ReportError($"{key} : {item}", exception);
-			};
-
-			memoryBox.DecodeFailed += (key, type, exception) =>
-			{
-				if (Debugger.IsAttached)
-					MessageBox.Show($"{key} - {type}\n{exception}");
-				else YandexMetrica.ReportError($"{key} - {type}", exception);
-			};
-		}
-
-		private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
-		{
-			using var stream = storage.GetReadStream(key);
-			using var streamReader = new StreamReader(stream, Encoding.UTF8);
-			var data = streamReader.ReadToEnd();
-			return Version.TryParse(data, out var version)
-				? version
-				: new Version();
-		}
-
-		private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
-		{
-			using var stream = storage.GetWriteStream(key);
-			using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
-			streamWriter.Write(version.ToString());
-			return version;
-		}
-
-		private static void ActualizeSettings(Memory box, string settingsVersionKey)
-		{
-			var targetVersion = TypeOf<App>.Assembly.GetName().Version;
-			var storage = box.Storage;
-			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
-			{
-				box.Destroy<ProcessingManager>();
-				box.Destroy<HarmonicManager>();
-			}
-
-			WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
-		}
+		WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
 	}
 }

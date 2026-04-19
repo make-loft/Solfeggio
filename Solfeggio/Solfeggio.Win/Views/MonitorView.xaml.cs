@@ -1,7 +1,6 @@
-﻿namespace Solfeggio.Views
+﻿namespace Solfeggio.Views;
+
+public partial class MonitorView
 {
-	public partial class MonitorView
-	{
-		public MonitorView() => InitializeComponent();
-	}
+	public MonitorView() => InitializeComponent();
 }

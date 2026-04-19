@@ -1,7 +1,6 @@
-﻿namespace Solfeggio.Palettes
+﻿namespace Solfeggio.Palettes;
+
+public partial class Styles
 {
-	public partial class Styles
-	{
-		public Styles() => InitializeComponent();
-	}
+	public Styles() => InitializeComponent();
 }
