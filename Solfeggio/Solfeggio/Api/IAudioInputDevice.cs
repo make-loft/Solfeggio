@@ -18,8 +18,8 @@ public static class AudioInputDevice
 {
 	public static IAudioInputDevice DefaultDevice => Store.Get<IAudioInputDevice>();
 
-	public static TimeSpan GetBufferDuration(this IAudioInputDevice device) =>
-		TimeSpan.FromSeconds(device.SampleSize / device.SampleRate);
+	public static TimeSpan GetBufferDuration(this IAudioInputDevice device)
+		=> TimeSpan.FromSeconds(device.SampleSize / device.SampleRate);
 
 	public static double DefaultSampleRate = 22050d;
 

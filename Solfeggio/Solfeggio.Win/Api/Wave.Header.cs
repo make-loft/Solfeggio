@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Solfeggio.Api;
 
 public partial class Wave
-    {
+  {
 	[StructLayout(LayoutKind.Sequential)]
 	public class Header
 	{

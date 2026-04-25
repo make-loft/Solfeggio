@@ -592,11 +592,12 @@ public partial class SolfeggioView
 
 	bool _sizeChanged;
 
-	bool IsStateChanged(Projection actualScaleFunc, SmartRange window) =>
-		_sizeChanged ||
-		window.From.IsNot(_previousWindowFrom) ||
-		window.Till.IsNot(_previousWindowTill) ||
-		actualScaleFunc.IsNot(_previousScaleFunc);
+	bool IsStateChanged(Projection actualScaleFunc, SmartRange window)
+		=> _sizeChanged
+		|| window.From.IsNot(_previousWindowFrom)
+		|| window.Till.IsNot(_previousWindowTill)
+		|| actualScaleFunc.IsNot(_previousScaleFunc)
+		;
 
 	void KeepState(Projection actualScaleFunc, SmartRange window)
 	{

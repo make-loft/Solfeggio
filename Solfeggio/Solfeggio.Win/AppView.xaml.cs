@@ -24,8 +24,8 @@ public partial class AppView
 		//EncoderView = new EncoderView();
 		//EncoderView.Show();
 
-		static void ShowVisible(params Window[] windows) =>
-			windows.Where(w => w.Visibility is Visibility.Visible).ForEach(w => w.Show());
+		static void ShowVisible(params Window[] windows)
+			=> windows.Where(w => w.Visibility is Visibility.Visible).ForEach(w => w.Show());
 
 		ShowVisible(MonitorView, FlowerView, TapeView);
 

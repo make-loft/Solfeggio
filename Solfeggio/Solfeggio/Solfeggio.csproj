@@ -2,33 +2,33 @@
 
   <PropertyGroup>
 	<TargetFramework>netstandard2.0</TargetFramework>
-	<LangVersion>latest</LangVersion>
+	<LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;XAMARIN</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  <DefineConstants>TRACE;XAMARIN</DefineConstants>
+  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pitch\**" />
-    <EmbeddedResource Remove="Pitch\**" />
-    <None Remove="Pitch\**" />
+  <Compile Remove="Pitch\**" />
+  <EmbeddedResource Remove="Pitch\**" />
+  <None Remove="Pitch\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Extensions\PatchingExtensions.cs" />
-    <Compile Remove="Processors\EncodeProcessor.cs" />
-    <Compile Remove="Processors\IdealSignalProcessor.cs" />
-    <Compile Remove="Processors\PcmReader.cs" />
+  <Compile Remove="Extensions\PatchingExtensions.cs" />
+  <Compile Remove="Processors\EncodeProcessor.cs" />
+  <Compile Remove="Processors\IdealSignalProcessor.cs" />
+  <Compile Remove="Processors\PcmReader.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Palettes\ResourceDictionary.xaml" />
+  <EmbeddedResource Remove="Palettes\ResourceDictionary.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,47 +45,47 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Palettes\Brushes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\ColorPalettes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Converters.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Sets.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Styles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Templates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Palettes\Values.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\OptionsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\SolfeggioView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Brushes.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\ColorPalettes.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Converters.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Sets.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Styles.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Templates.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Palettes\Values.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Views\OptionsView.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
+  <EmbeddedResource Update="Views\SolfeggioView.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Dictionaries\Templates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\OptionsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\SolfeggioView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+  <None Update="App.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </None>
+  <None Update="Dictionaries\Templates.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </None>
+  <None Update="Views\OptionsView.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </None>
+  <None Update="Views\SolfeggioView.xaml">
+  <Generator>MSBuild:Compile</Generator>
+  </None>
   </ItemGroup>
 </Project>

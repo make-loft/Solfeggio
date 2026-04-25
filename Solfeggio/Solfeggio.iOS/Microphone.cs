@@ -5,26 +5,26 @@ using Ace;
 using AudioToolbox;
 using Rainbow;
 
-namespace Solfeggio.iOS
-{
+namespace Solfeggio.iOS;
+
     public class Microphone : IAudioInputDevice
     {
-        public static readonly Microphone Default = new Microphone();
+        public static readonly Microphone Default = new();
 
         public bool IsRecodingState => _recorder.Is() && _recorder.IsRunning;
 
         private AudioQueueBuffer _bytes;
         private InputAudioQueue _recorder;
 
-        public static double[] GetValidSampleRates() =>
-            AudioInputDevice.StandardSampleRates.Where(IsValidSampleRate).ToArray();
+        public static double[] GetValidSampleRates()
+            => AudioInputDevice.StandardSampleRates.Where(IsValidSampleRate).ToArray();
 
         public static bool IsValidSampleRate(double frequency)
         {
             try
             {
-	            new InputAudioQueue(AudioStreamBasicDescription.CreateLinearPCM(frequency));
-				return true;
+                new InputAudioQueue(AudioStreamBasicDescription.CreateLinearPCM(frequency));
+                return true;
             }
             catch
             {
@@ -45,18 +45,18 @@ namespace Solfeggio.iOS
             //if (_recorder.Is()) _recorder.Release();
 
 
-		
-			var sRate = (int) Math.Round(sampleRate);
+
+            var sRate = (int)Math.Round(sampleRate);
             var minBufferSizeInBytes = desiredFrameSize;
             MinFrameSize = minBufferSizeInBytes / sizeof(short);
             var desiredBufferSize = sizeof(short) * desiredFrameSize;
             var bytesCount = desiredBufferSize < minBufferSizeInBytes ? minBufferSizeInBytes : desiredBufferSize;
 
-	        _recorder = new InputAudioQueue(AudioStreamBasicDescription.CreateLinearPCM(SampleRate, 1));
-	        _recorder.InputCompleted += (sender, args) =>
-	        {
-		        _bytes = args.Buffer;
-	        };
+            _recorder = new InputAudioQueue(AudioStreamBasicDescription.CreateLinearPCM(SampleRate, 1));
+            _recorder.InputCompleted += (sender, args) =>
+            {
+                _bytes = args.Buffer;
+            };
             if (_recorder.AllocateBuffer(bytesCount, out IntPtr _).IsNot(AudioQueueStatus.Ok)) throw new Exception();
 
 
@@ -70,22 +70,22 @@ namespace Solfeggio.iOS
         {
             while (IsRecodingState)
             {
-				var currentRecorder = _recorder;
-	            await Task.Delay(200);
-				if (currentRecorder.IsNot(_recorder)) return;
+                var currentRecorder = _recorder;
+                await Task.Delay(200);
+                if (currentRecorder.IsNot(_recorder)) return;
 
-	            var readLengthInBytes = _bytes.AudioDataByteSize;
+                var readLengthInBytes = _bytes.AudioDataByteSize;
 
-				var frameSize = readLengthInBytes / sizeof(short);
+                var frameSize = readLengthInBytes / sizeof(short);
                 var frame = new Complex[frameSize];
-                var shorts  = new byte[frameSize];
-	            System.Runtime.InteropServices.Marshal.Copy(_bytes.AudioData, shorts, 0, (int)_bytes.AudioDataByteSize);
-				for (var i = 0; i < frameSize; i++)
+                var shorts = new byte[frameSize];
+                System.Runtime.InteropServices.Marshal.Copy(_bytes.AudioData, shorts, 0, (int)_bytes.AudioDataByteSize);
+                for (var i = 0; i < frameSize; i++)
                 {
                     frame[i] = shorts[i];
                 }
 
-                DataReady?.Invoke(this, new AudioInputEventArgs {Frame = frame, Source = this});
+                DataReady?.Invoke(this, new AudioInputEventArgs { Frame = frame, Source = this });
             }
         }
 
@@ -100,4 +100,3 @@ namespace Solfeggio.iOS
 
         public event EventHandler<AudioInputEventArgs> DataReady;
     }
-}

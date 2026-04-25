@@ -9,11 +9,11 @@ partial class Sets_Theme
 {
 	public Sets_Theme() => InitializeComponent();
 
-	void ResetPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) =>
-		Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
-		.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.To<string>());
+	void ResetPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		=> Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
+			.Reset(sender.To<Picker>().SelectedItem.To<DictionaryEntry>().Key.To<string>());
 
-	void ResetButton_Click(object sender, System.Windows.RoutedEventArgs e) =>
-		Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
-		.Reset();
+	void ResetButton_Click(object sender, System.Windows.RoutedEventArgs e)
+		=> Store.Get<ViewModels.VisualizationManager>().ActiveProfile?
+			.Reset();
 }

@@ -17,8 +17,8 @@ public class PianoKey
 	public double EthalonValue { get; private set; }
 	public double GetOffsetValue(double frequency) => Math.Log(frequency, 2d) - EthalonValue;
 	public double GetOffsetFrequency(double frequency) => frequency - EthalonFrequency;
-	public double GetRelativeOffset(double frequency) =>
-		2d * GetOffsetValue(frequency) / (UpperValue - LowerValue);
+	public double GetRelativeOffset(double frequency)
+		=> 2d * GetOffsetValue(frequency) / (UpperValue - LowerValue);
 
 	public Bin TopPeak { get; set; }
 	public List<Bin> Peaks { get; set; } = [];

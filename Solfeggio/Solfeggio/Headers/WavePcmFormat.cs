@@ -17,7 +17,7 @@ public class WaveHeader
 	[MarshalAs(UnmanagedType.U4, SizeConst = 4)]
 	private int chunkSize = 0;
 
-	/* Format		   The "WAVE" format name */
+	/* Format		 The "WAVE" format name */
 	[MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
 	private char[] format = "WAVE".ToCharArray();
 
@@ -38,7 +38,7 @@ public class WaveHeader
 	private short numChannels = 1;
 	public short NumChannels { get => numChannels; set => numChannels = value; }
 
-	/* SampleRate	   8000, 44100, etc. */
+	/* SampleRate	 8000, 44100, etc. */
 	[MarshalAs(UnmanagedType.U4, SizeConst = 4)]
 	private int sampleRate = 44100;
 	public int SampleRate { get => sampleRate; set => sampleRate = value; }
@@ -47,7 +47,7 @@ public class WaveHeader
 	[MarshalAs(UnmanagedType.U4, SizeConst = 4)]
 	private int byteRate = 0;
 
-	/* BlockAlign	   == NumChannels * BitsPerSample/8 */
+	/* BlockAlign	 == NumChannels * BitsPerSample/8 */
 	[MarshalAs(UnmanagedType.U2, SizeConst = 2)]
 	private short blockAlign = 0;
 

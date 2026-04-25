@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
-    x:Class="Solfeggio.Palettes.Templates"
+  x:Class="Solfeggio.Palettes.Templates"
 	xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:p="clr-namespace:Solfeggio.Presenters"
-    xmlns:vm="clr-namespace:Solfeggio.ViewModels"
-    xmlns:m="clr-namespace:Solfeggio.Models"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:p="clr-namespace:Solfeggio.Presenters"
+  xmlns:vm="clr-namespace:Solfeggio.ViewModels"
+  xmlns:m="clr-namespace:Solfeggio.Models"
 	>
 
 	<DataTemplate

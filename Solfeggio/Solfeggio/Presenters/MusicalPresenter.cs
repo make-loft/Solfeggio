@@ -51,10 +51,11 @@ public class MusicalPresenter : ContextObject, IExposable
 			VisualProfile.PeakProfiles[profileName].StringFormat = $"+0.{zeros};−0.{zeros};•0.{zeros}";
 		};
 
-		bool IsSpectrumCollapsed() =>
-			Spectrum.Frequency.Window.Length.Is(0d) ||
-			Spectrum.Magnitude.Window.Length.Is(0d) ||
-			Spectrum.Phase.Window.Length.Is(0d);
+		bool IsSpectrumCollapsed()
+			=> Spectrum.Frequency.Window.Length.Is(0d)
+			|| Spectrum.Magnitude.Window.Length.Is(0d)
+			|| Spectrum.Phase.Window.Length.Is(0d)
+			;
 
 		if (IsSpectrumCollapsed())
 			Spectrum = new();
@@ -423,7 +424,8 @@ public class MusicalPresenter : ContextObject, IExposable
 		var weightValue = (int)(300d * expressionLevel);
 		var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);
 
-		double GetValueByKey(string key) =>
+		double GetValueByKey(string key)
+			=>
 			key.Is("ActualMagnitude") ? activeMagnitude :
 			key.Is("ActualFrequency") ? activeFrequency :
 			key.Is("OffsetFrequency") ? pianoKey.GetOffsetFrequency(pianoKey.TopPeak.Frequency) :

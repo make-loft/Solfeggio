@@ -32,8 +32,8 @@ public partial class Converters
 		new() { Color = Colority.FromRGBA(0x00, 0x00, 0xFF), Offset = 1.0 },
 	};
 
-	public static Color GetOffsetColor(KeyValuePair<Bin, PianoKey> pair, Projection magnitudeProjection) =>
-		Colority.GetColor(GradientPoints, Math.Abs(pair.Value.GetRelativeOffset(pair.Key.Frequency)))
+	public static Color GetOffsetColor(KeyValuePair<Bin, PianoKey> pair, Projection magnitudeProjection)
+		=> Colority.GetColor(GradientPoints, Math.Abs(pair.Value.GetRelativeOffset(pair.Key.Frequency)))
 		.Mix(Colority.Channel.A, 0.368 + 0.632 * magnitudeProjection(pair.Key.Magnitude));
 
 	private object HarmonicOffsetToBrush_Convert(ConvertArgs args) => args.Value is KeyValuePair<Bin, PianoKey> key
@@ -54,6 +54,6 @@ After:
 	object ToVisualValue(ConvertArgs args) => FrequencySpan.VisualScaleFunc((double)args.Value);
 	object ToLogicalValue(ConvertArgs args) => FrequencySpan.LogicalScaleFunc((double)args.Value);
 
-	object Debug_Convert(ConvertArgs args) =>
-		args.Value;
+	object Debug_Convert(ConvertArgs args)
+		=> args.Value;
 }

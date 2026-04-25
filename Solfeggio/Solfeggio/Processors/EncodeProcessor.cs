@@ -20,8 +20,8 @@ class EncodeProcessor : IProcessor
 		public override string ProductName => "Encoder";
 
 		public override WaveOutCapabilities GetCapabilities() => throw new NotImplementedException();
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source) =>
-			new EncodeProcessor(waveFormat.SampleRate, sampleSize, source);
+		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source)
+			=> new EncodeProcessor(waveFormat.SampleRate, sampleSize, source);
 	}
 
 	public float Level { get; set; } = 1f;

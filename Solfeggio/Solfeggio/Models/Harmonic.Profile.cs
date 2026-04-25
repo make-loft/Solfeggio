@@ -44,8 +44,8 @@ public partial class Harmonic
 				: presenter.Music.ActivePitchStandard
 		};
 
-		public float[] GenerateSignalSample(int length, double rate, bool isStatic) =>
-			GenerateSignalSample(Harmonics.ToList(), length, rate, isStatic); /* Harmonics may be modified during enumeration */
+		public float[] GenerateSignalSample(int length, double rate, bool isStatic)
+			=> GenerateSignalSample(Harmonics.ToList(), length, rate, isStatic); /* Harmonics may be modified during enumeration */
 
 		private static float[] GenerateSignalSample(IEnumerable<Harmonic> harmonics, int length, double rate, bool gobalLoop)
 		{

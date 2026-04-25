@@ -2,8 +2,8 @@
 
 namespace Solfeggio.Palettes;
 
-    [XamlCompilation(XamlCompilationOptions.Skip)]
-    public partial class Sets
-    {
+  [XamlCompilation(XamlCompilationOptions.Skip)]
+  public partial class Sets
+  {
 	public Sets() => InitializeComponent();
 }

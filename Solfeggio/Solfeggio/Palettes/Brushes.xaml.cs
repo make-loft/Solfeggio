@@ -2,8 +2,8 @@
 
 namespace Solfeggio.Palettes;
 
-    [XamlCompilation(XamlCompilationOptions.Skip)]
-    public partial class Brushes
-    {
+  [XamlCompilation(XamlCompilationOptions.Skip)]
+  public partial class Brushes
+  {
 	public Brushes() => InitializeComponent();
 }

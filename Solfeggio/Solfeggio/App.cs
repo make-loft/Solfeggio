@@ -19,100 +19,99 @@ using Store = Ace.Store;
 using static Solfeggio.Editions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Skip)]
-namespace Solfeggio
+namespace Solfeggio;
+
+public enum Editions { Developer, Portable, Education, Gratitude }
+
+public partial class App : Application
 {
-	public enum Editions { Developer, Portable, Education, Gratitude }
-
-	public partial class App : Application
-	{
 #if DEBUG
-		public static Editions Edition { get; } = Developer;
+	public static Editions Edition { get; } = Developer;
 #else
-		public static Editions Edition { get; } = Portable;
+	public static Editions Edition { get; } = Portable;
 #endif
-		public static Dictionary<Editions, string> YandexMetricaKeys = new()
+	public static Dictionary<Editions, string> YandexMetricaKeys = new()
+	{
+		{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
+		{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
+		{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
+		{ Gratitude, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
+	};
+
+	public static readonly string AppDataFolderPath =
+		Environment.SpecialFolder.ApplicationData.GetPath();
+
+	static App()
+	{
+		CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+		CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
+		Store.ActiveBox.KeyFormat = Path.Combine(AppDataFolderPath, "{0}.json");
+
+		var settingsVersionKey = Path.Combine(AppDataFolderPath, "AppVersion.txt");
+		ActualizeSettings(Store.ActiveBox, settingsVersionKey);
+	}
+
+	public App()
+	{
+		Store.Get<AppViewModel>();
+		Store.Get<MusicalPresenter>();
+	}
+
+	protected override void OnStart()
+	{
+		AppPalette.Load();
+
+		MainPage = new Views.SolfeggioView();
+
+		YandexMetrica.Wake();
+	}
+
+	protected override void OnSleep()
+	{
+		Store.Get<ProcessingManager>().ActiveProfile?.Dispose();
+
+		Store.Snapshot();
+
+		YandexMetrica.Lull();
+	}
+
+	protected override void OnResume()
+	{
+		YandexMetrica.Wake();
+
+		Store.Get<ProcessingManager>().ActiveProfile?.Expose();
+	}
+
+	private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
+	{
+		using var stream = storage.GetReadStream(key);
+		using var streamReader = new StreamReader(stream, Encoding.UTF8);
+		var data = streamReader.ReadToEnd();
+		return Version.TryParse(data, out var version)
+			? version
+			: new Version();
+	}
+
+	private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
+	{
+		using var stream = storage.GetWriteStream(key);
+		using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
+		streamWriter.Write(version.ToString());
+		return version;
+	}
+
+	private static void ActualizeSettings(Memory box, string settingsVersionKey)
+	{
+		var targetVersion = new Version(5, 2, 1);
+		var storage = box.Storage;
+		if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
 		{
-			{ Developer, "4722c611-c016-4e44-943b-05f9c56968d6" },
-			{ Portable, "d1e987f6-1930-473c-8f45-78cd96bb5fc0" },
-			{ Education, "37e2b088-6a25-4987-992c-e12b7e020e85" },
-			{ Gratitude, "e23fdc0c-166e-4885-9f18-47cc7b60f867" },
-		};
-
-		public static readonly string AppDataFolderPath =
-			Environment.SpecialFolder.ApplicationData.GetPath();
-
-		static App()
-		{
-			CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-
-			Store.ActiveBox.KeyFormat = Path.Combine(AppDataFolderPath, "{0}.json");
-
-			var settingsVersionKey = Path.Combine(AppDataFolderPath, "AppVersion.txt");
-			ActualizeSettings(Store.ActiveBox, settingsVersionKey);
+			box.Destroy<ProcessingManager>();
+			box.Destroy<HarmonicManager>();
+			box.Destroy<TapeViewModel>();
 		}
 
-		public App()
-		{
-			Store.Get<AppViewModel>();
-			Store.Get<MusicalPresenter>();
-		}
-
-		protected override void OnStart()
-		{
-			AppPalette.Load();
-
-			MainPage = new Views.SolfeggioView();
-
-			YandexMetrica.Wake();
-		}
-
-		protected override void OnSleep()
-		{
-			Store.Get<ProcessingManager>().ActiveProfile?.Dispose();
-
-			Store.Snapshot();
-
-			YandexMetrica.Lull();
-		}
-
-		protected override void OnResume()
-		{
-			YandexMetrica.Wake();
-
-			Store.Get<ProcessingManager>().ActiveProfile?.Expose();
-		}
-
-		private static Version ReadSettingsVersion(Ace.Patterns.IStorage storage, string key)
-		{
-			using var stream = storage.GetReadStream(key);
-			using var streamReader = new StreamReader(stream, Encoding.UTF8);
-			var data = streamReader.ReadToEnd();
-			return Version.TryParse(data, out var version)
-				? version
-				: new Version();
-		}
-
-		private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)
-		{
-			using var stream = storage.GetWriteStream(key);
-			using var streamWriter = new StreamWriter(stream, Encoding.UTF8);
-			streamWriter.Write(version.ToString());
-			return version;
-		}
-
-		private static void ActualizeSettings(Memory box, string settingsVersionKey)
-		{
-			var targetVersion = new Version(5, 2, 1);
-			var storage = box.Storage;
-			if (storage.HasKey(settingsVersionKey).Not() || ReadSettingsVersion(storage, settingsVersionKey) < targetVersion)
-			{
-				box.Destroy<ProcessingManager>();
-				box.Destroy<HarmonicManager>();
-				box.Destroy<TapeViewModel>();
-			}
-
-			WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
-		}
+		WriteSettingsVersion(storage, settingsVersionKey, targetVersion);
 	}
 }

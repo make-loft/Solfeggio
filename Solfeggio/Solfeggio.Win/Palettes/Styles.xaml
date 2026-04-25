@@ -2,7 +2,7 @@
 	x:Class="Solfeggio.Palettes.Styles"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:p="clr-namespace:Solfeggio.Presenters"
+  xmlns:p="clr-namespace:Solfeggio.Presenters"
 	>
 
 	<!--<Style

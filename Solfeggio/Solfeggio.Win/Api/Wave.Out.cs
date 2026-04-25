@@ -18,8 +18,8 @@ public partial class Wave
 
 			public Session CreateSession(WaveFormat format) => new(_number, format);
 
-			public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source) =>
-				new Processor(CreateSession(waveFormat), sampleSize, buffersCount, source);
+			public virtual IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount, IProcessor source)
+				=> new Processor(CreateSession(waveFormat), sampleSize, buffersCount, source);
 		}
 
 		public static int GetDevicesCount() => waveOutGetNumDevs();
@@ -46,16 +46,14 @@ public partial class Wave
 
 			public override MmResult Close() => waveOutClose(handle).Verify();
 			public override MmResult Reset() => waveOutReset(handle).Verify();
-			public override MmResult Open(Callback callback) =>
-				waveOutOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
+			public override MmResult Open(Callback callback)
+				=> waveOutOpen(out handle, (IntPtr)deviceNumber, WaveFormat, callback, IntPtr.Zero, OpenFlags.CallbackFunction).Verify();
 
-			public override MmResult GetPosition(out MmTime time, int size) =>
-				waveOutGetPosition(handle, out time, size).Verify();
+			public override MmResult GetPosition(out MmTime time, int size) => waveOutGetPosition(handle, out time, size).Verify();
 
 			public override MmResult PrepareHeader(Header header) => waveOutPrepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
 			public override MmResult UnprepareHeader(Header header) => waveOutUnprepareHeader(handle, header, Marshal.SizeOf(header)).Verify();
-			public override MmResult MarkForProcessing(Header header) =>
-				waveOutWrite(handle, header, Marshal.SizeOf(header)).Verify();
+			public override MmResult MarkForProcessing(Header header) => waveOutWrite(handle, header, Marshal.SizeOf(header)).Verify();
 
 			public override float GetVolume()
 			{

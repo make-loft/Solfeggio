@@ -161,7 +161,7 @@
 			Rack.Cell="R2 C2"
 			Value="{Binding R, Mode=TwoWay}"
 			/>
-        <NumericField
+    <NumericField
 			Rack.Cell="R3 C2"
 			Value="{Binding G, Mode=TwoWay}"
 			/>

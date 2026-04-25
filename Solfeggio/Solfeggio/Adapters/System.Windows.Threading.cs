@@ -1,21 +1,20 @@
 ﻿using System.Threading.Tasks;
 
-namespace System.Windows.Threading
+namespace System.Windows.Threading;
+
+class DispatcherTimer
 {
-	class DispatcherTimer
+	public event EventHandler Tick;
+	public TimeSpan Interval { get; set; }
+	private bool IsEnabled { get; set; } = true;
+	public void Stop() => IsEnabled = false;
+	public async void Start()
 	{
-		public event EventHandler Tick;
-		public TimeSpan Interval { get; set; }
-		private bool IsEnabled { get; set; } = true;
-		public void Stop() => IsEnabled = false;
-		public async void Start()
+		while (true)
 		{
-			while (true)
-			{
-				await Task.Delay(Interval);
-				if (IsEnabled)
-					Tick?.Invoke(this, EventArgs.Empty);
-			}
+			await Task.Delay(Interval);
+			if (IsEnabled)
+				Tick?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

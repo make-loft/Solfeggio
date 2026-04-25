@@ -13,10 +13,10 @@ public partial class Templates
 {
 	public Templates() => InitializeComponent();
 
-	ProcessingManager ProcessingManager = Store.Get<ProcessingManager>();
+	readonly ProcessingManager ProcessingManager = Store.Get<ProcessingManager>();
 
-	object LevelToPointsCount(ConvertArgs args) =>
-		(int) (ProcessingManager.ActiveProfile.FrameSize / args.Value.To<double>());
+	object LevelToPointsCount(ConvertArgs args)
+		=> (int) (ProcessingManager.ActiveProfile.FrameSize / args.Value.To<double>());
 
 	object PianoKeyToFrequencyConvert(ConvertArgs args) => args.Value is PianoKey key
 		? key.EthalonFrequency

@@ -5,8 +5,8 @@ namespace Solfeggio.Api;
 
 public static class MmControl
 {
-	public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null) =>
-		result == MmResult.NoError ? result : throw new Exception($"{result} calling {source}");
+	public static MmResult Verify(this MmResult result, [CallerMemberName]string source = null)
+		=> result is MmResult.NoError ? result : throw new($"{result} calling {source}");
 }
 
 public enum MmResult

@@ -19,7 +19,8 @@ public static class FileDialogFilters
 	public static string PcmBin = "Frame files (*.bin)|*.bin|All files (*.*)|*.*";
 }
 
-class PcmBinDecoder(int sampleRate, int sampleSize, int buffersCount) : AStreamProcessor<BinaryReader>(sampleRate, sampleSize, buffersCount)
+class PcmBinDecoder(int sampleRate, int sampleSize, int buffersCount)
+	: AStreamProcessor<BinaryReader>(sampleRate, sampleSize, buffersCount)
 {
 
 	public class DeviceInfo : Wave.In.DeviceInfo
@@ -30,8 +31,8 @@ class PcmBinDecoder(int sampleRate, int sampleSize, int buffersCount) : AStreamP
 
 		public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
 
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-			new PcmBinDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
+		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount)
+			=> new PcmBinDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
 	}
 
 	protected override string Filter { get; } = FileDialogFilters.PcmBin;
@@ -86,7 +87,8 @@ class PcmBinDecoder(int sampleRate, int sampleSize, int buffersCount) : AStreamP
 	public override BinaryReader CreateReader(Stream stream) => new(stream);
 }
 
-class StreamPcmTxtDecoder(int sampleRate, int sampleSize, int buffersCount) : AStreamProcessor<StreamReader>(sampleRate, sampleSize, buffersCount)
+class StreamPcmTxtDecoder(int sampleRate, int sampleSize, int buffersCount)
+	: AStreamProcessor<StreamReader>(sampleRate, sampleSize, buffersCount)
 {
 	public class DeviceInfo : Wave.In.DeviceInfo
 	{
@@ -96,8 +98,8 @@ class StreamPcmTxtDecoder(int sampleRate, int sampleSize, int buffersCount) : AS
 
 		public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
 
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-			new StreamPcmTxtDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
+		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount)
+			=> new StreamPcmTxtDecoder(waveFormat.SampleRate, sampleSize, buffersCount);
 	}
 
 	protected override string Filter { get; } = FileDialogFilters.PcmTxt;

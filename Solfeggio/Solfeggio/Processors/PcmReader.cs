@@ -98,8 +98,8 @@ class PcmReader : AStreamProcessor<BinaryReader>
 
 		public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
 
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-			new PcmReader(waveFormat.SampleRate, sampleSize, buffersCount);
+		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount)
+			=> new PcmReader(waveFormat.SampleRate, sampleSize, buffersCount);
 	}
 
 	public PcmReader(int sampleRate, int sampleSize, int buffersCount)

@@ -20,8 +20,8 @@ namespace Solfeggio.Presenters
 {
 	public static class Ext
 	{
-		public static SKColor WithOpacity(this SKColor c, double opacity) =>
-			new(c.Red, c.Green, c.Blue, (byte)(c.Alpha * opacity));
+		public static SKColor WithOpacity(this SKColor c, double opacity)
+			=> new(c.Red, c.Green, c.Blue, (byte)(c.Alpha * opacity));
 
 		public static Color FromArgb(byte a, byte r, byte g, byte b) => Color.FromRgba(r, g, b, a);
 
@@ -60,10 +60,11 @@ namespace Solfeggio.Presenters
 			return ToSkPaint(brush,opacity, ref clamp);
 		}
 
-		public static SKPaint ToSkPaint(this Brush brush, double opacity, ref Clamp clamp) =>
-			brush.As<LinearGradientBrush>()?.ToSkPaint(opacity, ref clamp) ??
-			brush.As<RadialGradientBrush>()?.ToSkPaint(opacity, ref clamp) ??
-			brush.As<SolidColorBrush>()?.ToSkPaint(opacity);
+		public static SKPaint ToSkPaint(this Brush brush, double opacity, ref Clamp clamp)
+			=> brush.As<LinearGradientBrush>()?.ToSkPaint(opacity, ref clamp)
+			?? brush.As<RadialGradientBrush>()?.ToSkPaint(opacity, ref clamp)
+			?? brush.As<SolidColorBrush>()?.ToSkPaint(opacity)
+			;
 
 		public static SKPaint ToSkPaint(this SolidColorBrush brush, double opacity) => new()
 		{
@@ -586,7 +587,8 @@ namespace System.Windows.Controls
 
 	public static class LayoutOptionsConverters
 	{
-		public static VerticalAlignment ToVerticalAlignment(this Xamarin.Forms.LayoutOptions o) =>
+		public static VerticalAlignment ToVerticalAlignment(this Xamarin.Forms.LayoutOptions o)
+			=>
 
 			o.Is(CenterAndExpand) ? VerticalAlignment.Center :
 			o.Is(StartAndExpand) ? VerticalAlignment.Top :
@@ -600,7 +602,8 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static HorizontalAlignment ToHorizontalAlignment(this Xamarin.Forms.LayoutOptions o) =>
+		public static HorizontalAlignment ToHorizontalAlignment(this Xamarin.Forms.LayoutOptions o)
+			=>
 
 			o.Is(Center) ? HorizontalAlignment.Center :
 			o.Is(Start) ? HorizontalAlignment.Left :
@@ -614,7 +617,8 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static LayoutOptions ToLayoutOptions(this HorizontalAlignment o) =>
+		public static LayoutOptions ToLayoutOptions(this HorizontalAlignment o)
+			=>
 
 			o.Is(HorizontalAlignment.Center) ? Center :
 			o.Is(HorizontalAlignment.Left) ? Start :
@@ -623,7 +627,8 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static LayoutOptions ToLayoutOptions(this VerticalAlignment o) =>
+		public static LayoutOptions ToLayoutOptions(this VerticalAlignment o)
+			=>
 
 			o.Is(VerticalAlignment.Center) ? Center :
 			o.Is(VerticalAlignment.Top) ? Start :

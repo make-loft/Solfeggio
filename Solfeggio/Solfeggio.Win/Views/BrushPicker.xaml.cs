@@ -120,10 +120,10 @@ public partial class BrushPicker
 	SmartSet<GradientStop> _activeGradientStopCollection;
 	GradientStopCollection _stops;
 
-	private void RemoveGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
-		_activeGradientStopCollection.Remove(sender.To<Button>().DataContext.To<GradientStop>());
-	private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e) =>
-		_activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
+	private void RemoveGradientStop_Button_Click(object sender, RoutedEventArgs e)
+		=> _activeGradientStopCollection.Remove(sender.To<Button>().DataContext.To<GradientStop>());
+	private void AddGradientStop_Button_Click(object sender, RoutedEventArgs e)
+		=> _activeGradientStopCollection.Add(new(Colors.Gray, 0.5));
 
 	private object Converter_Convert(ConvertArgs args)
 	{

@@ -67,18 +67,18 @@ public class MusicalOptions : ContextObject, IExposable
 		{"C |С ","C♯|D♭","D |D ","D♯|E♭","E |E ","F |F ","F♯|G♭","G |G ","G♯|A♭","A |A ","A♯|B♭","B |B "};
 
 	public static readonly bool[] Tones = Notes.Select(n => n.Contains("♯|").Not()).ToArray();
-	public static Brush[] OktaveBrushes() =>
-		Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
+	public static Brush[] OktaveBrushes()
+		=> Tones.Select(t => t ? AppPalette.FullToneKeyBrush : AppPalette.HalfToneKeyBrush).Cast<Brush>().ToArray();
 
 	public static double HalfTonesCount => Notes.Length;
 	private static double GetBaseFrequency(double pitchStandard) => pitchStandard / 16d;
 	private static double GetHalfToneStep(double halfTonesCount) => Math.Pow(2d, 1d / halfTonesCount);
 
-	private static double[] GetBaseOktaveFrequencySet(double pitchStandard) =>
-		GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalfToneStep(HalfTonesCount));
+	private static double[] GetBaseOktaveFrequencySet(double pitchStandard)
+		=> GetBaseOktaveFrequencySet(GetBaseFrequency(pitchStandard), GetHalfToneStep(HalfTonesCount));
 
-	private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halfToneStep) =>
-		Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halfToneStep, dt)).ToArray();
+	private static double[] GetBaseOktaveFrequencySet(double baseFrequency, double halfToneStep)
+		=> Enumerable.Range(-9, 12).Select(dt => baseFrequency * Math.Pow(halfToneStep, dt)).ToArray();
 
 	public double[] BaseOktaveFrequencySet = GetBaseOktaveFrequencySet(DefaultPitchStandard);
 

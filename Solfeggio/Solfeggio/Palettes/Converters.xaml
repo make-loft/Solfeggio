@@ -107,14 +107,14 @@
 		/>
 
 	<Converter
-        x:Key="HarmonicOffsetConverter"
-        Convert="HarmonicOffset_Convert"
-        />
+    x:Key="HarmonicOffsetConverter"
+    Convert="HarmonicOffset_Convert"
+    />
 
 	<Converter
-        x:Key="HarmonicOffsetToBrushConverter"
-        Convert="HarmonicOffsetToBrush_Convert"
-        />
+    x:Key="HarmonicOffsetToBrushConverter"
+    Convert="HarmonicOffsetToBrush_Convert"
+    />
 
 	<c:MathConverter
 		x:Key="ScaleValueConverter"

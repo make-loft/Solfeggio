@@ -18,8 +18,8 @@ public class AudioStreamReader : Wave.In.DeviceInfo
 
 	public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
 
-	public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-		new FileStreamProcessor(waveFormat.SampleRate, sampleSize);
+	public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount)
+		=> new FileStreamProcessor(waveFormat.SampleRate, sampleSize);
 }
 
 class FileStreamProcessor : IProcessor

@@ -19,8 +19,8 @@ class SoftwareSignalGenerator(int sampleRate, int sampleSize)
 
 		public override WaveInCapabilities GetCapabilities() => throw new NotImplementedException();
 
-		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount) =>
-			new SoftwareSignalGenerator(waveFormat.SampleRate, sampleSize);
+		public override IProcessor CreateProcessor(WaveFormat waveFormat, int sampleSize, int buffersCount)
+			=> new SoftwareSignalGenerator(waveFormat.SampleRate, sampleSize);
 	}
 
 	private readonly HarmonicManager _manager = Store.Get<HarmonicManager>();

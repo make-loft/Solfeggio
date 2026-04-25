@@ -42,6 +42,7 @@
     <MandroidI18n />
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +63,7 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AndroidLinkTool>r8</AndroidLinkTool>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />

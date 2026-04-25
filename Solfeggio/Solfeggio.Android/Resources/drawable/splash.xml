@@ -1,18 +1,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item>
-    <!--<color android:color="#2196F3"/>-->
-    <shape android:shape="rectangle">
-      <gradient
-        android:startColor="#2196F3"
-        android:endColor="#1976D2"
-        android:angle="-90"
-        />
-    </shape>
+  <!--<color android:color="#2196F3"/>-->
+  <shape android:shape="rectangle">
+  <gradient
+    android:startColor="#2196F3"
+    android:endColor="#1976D2"
+    android:angle="-90"
+    />
+  </shape>
   </item>
   <item>
-    <bitmap
-      android:src="@drawable/logo"
-      android:gravity="center"
-      />
+  <bitmap
+  android:src="@drawable/logo"
+  android:gravity="center"
+  />
   </item>
 </layer-list>

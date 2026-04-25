@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Solfeggio.Api
+namespace Solfeggio.Api;
+
+public struct WaveFormat
 {
-	public struct WaveFormat
+	public int SampleRate { get; set; }
+	public WaveFormat(int sampleRate, int a, int channels)
 	{
-		public int SampleRate { get; set; }
-		public WaveFormat(int sampleRate, int a, int channels)
-		{
-			SampleRate = sampleRate;
-		}
+		SampleRate = sampleRate;
 	}
 }

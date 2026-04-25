@@ -159,7 +159,8 @@ public partial class App : Application
 		var data = streamReader.ReadToEnd();
 		return Version.TryParse(data, out var version)
 			? version
-			: new Version();
+			: new Version()
+			;
 	}
 
 	private static Version WriteSettingsVersion(Ace.Patterns.IStorage storage, string key, Version version)

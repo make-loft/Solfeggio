@@ -13,7 +13,8 @@ public class DoubleToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 	public string Head { get; set; }
 	public string Tail { get; set; }
 
-	double ToDouble(object value) =>
+	double ToDouble(object value)
+		=>
 		value is double d ? d :
 		value is float f ? f :
 		0d;

@@ -2,8 +2,8 @@
 
 namespace Solfeggio.Palettes;
 
-    [XamlCompilation(XamlCompilationOptions.Skip)]
-    public partial class ColorPalettes
-    {
+  [XamlCompilation(XamlCompilationOptions.Skip)]
+  public partial class ColorPalettes
+  {
 	public ColorPalettes() => InitializeComponent();
 }

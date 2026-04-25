@@ -3,17 +3,17 @@ using System.Runtime.InteropServices;
 
 namespace Solfeggio.Api;
 
-    [Flags]
-    enum WaveOutSupport
-    {
-        Pitch = 0x0001,
-        PlaybackRate = 0x0002,
-        Volume = 0x0004,
-        LRVolume = 0x0008,
-        Sync = 0x0010,
-        SampleAccurate = 0x0020,
-    }
-    
+  [Flags]
+  enum WaveOutSupport
+  {
+    Pitch = 0x0001,
+    PlaybackRate = 0x0002,
+    Volume = 0x0004,
+    LRVolume = 0x0008,
+    Sync = 0x0010,
+    SampleAccurate = 0x0020,
+  }
+  
 public interface IDeviceCapabilities
 {
 	string ProductName { get; }
