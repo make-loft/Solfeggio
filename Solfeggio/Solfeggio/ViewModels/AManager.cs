@@ -33,7 +33,7 @@ public abstract class AManager<TProfile> : ContextObject, IExposable
 
 		//this[() => ActiveProfile].Changed += args => Context.Set.Delete.EvokeCanExecuteChanged();
 
-		Profiles.CollectionChanged += (o, e) => ActiveProfile = Profiles.LastOrDefault();
+		Profiles.CollectionChanged += (sender, args) => ActiveProfile = Profiles.LastOrDefault();
 	}
 
 	public virtual TProfile GetDefault() => Profiles.FirstOrDefault();

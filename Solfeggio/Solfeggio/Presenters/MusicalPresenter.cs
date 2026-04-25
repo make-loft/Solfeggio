@@ -61,9 +61,18 @@ public class MusicalPresenter : ContextObject, IExposable
 			Spectrum = new();
 	}
 
-	public void DrawMarkers(System.Collections.IList items, Span hBand, double width, double height, double strokeThickness,
-		Brush lineBrush, Brush textBrush, IEnumerable<double> values, int zIndex = 0, double vTitleOffset = 0d,
-		bool horizontal = true, Projection projection = default)
+	public void DrawMarkers
+	(
+		System.Collections.IList items,
+		Span hBand,
+		double width, double height,
+		double strokeThickness,
+		Brush lineBrush, Brush textBrush,
+		IEnumerable<double> values,
+		int zIndex = 0, double vTitleOffset = 0d,
+		bool horizontal = true,
+		Projection projection = default
+	)
 	{
 		var w = width;
 		var h = height;
@@ -158,11 +167,13 @@ public class MusicalPresenter : ContextObject, IExposable
 
 	public delegate void Deconstruct<TIn, TOut>(in TIn p, out TOut h, out TOut v);
 
-	private static IEnumerable<TIn> EnumerateActivePoints<TIn>(
+	private static IEnumerable<TIn> EnumerateActivePoints<TIn>
+	(
 		IEnumerable<TIn> items,
 		Deconstruct<TIn, double> deconstruct,
 		double hLowerValue,
-		double hUpperValue)
+		double hUpperValue
+	)
 	{
 		var enumerator = items.GetEnumerator();
 		var startPoint = default(TIn);
@@ -193,9 +204,8 @@ public class MusicalPresenter : ContextObject, IExposable
 		}
 	}
 
-	public static ScaleTransformer GetScaleTransformer(Span span, double visualLength,
-		Projection correction = default) => new(span.VisualScaleFunc, visualLength,
-			span.Window.From, span.Window.Till, correction);
+	public static ScaleTransformer GetScaleTransformer(Span span, double visualLength, Projection correction = default)
+		=> new(span.VisualScaleFunc, visualLength, span.Window.From, span.Window.Till, correction);
 
 	static bool GetShortLength(double periodHalf, double from, double till, out double distance)
 	{
@@ -206,16 +216,17 @@ public class MusicalPresenter : ContextObject, IExposable
 		return turn;
 	}
 
-	public static IEnumerable<TOut> Draw<TIn, TOut>(
+	public static IEnumerable<TOut> Draw<TIn, TOut>
+	(
 		IEnumerable<TIn> points,
 		Create<TOut> create,
 		CreateWithContent<TIn, TOut> createWithContent,
 		Deconstruct<TIn, double> deconstruct,
 		Span hBand, Span vBand,
 		double hLength, double vLength,
-		Projection hCorrection,
-		Projection vCorrection,
-		bool isPhaseMode = false)
+		Projection hCorrection, Projection vCorrection,
+		bool isPhaseMode = false
+	)
 	{
 		var hScaleTransformer = GetScaleTransformer(hBand, hLength, hCorrection);
 		var vScaleTransformer = GetScaleTransformer(vBand, vLength, vCorrection);
@@ -252,26 +263,24 @@ public class MusicalPresenter : ContextObject, IExposable
 
 					yield return createWithContent.IsNot()
 						? create(in hVisualOffset, in vVisualOffset)
-						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
-
-
+						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue)
+						;
 
 					hVisualOffset = hScaleTransformer.GetVisualOffset(hPreviousValue + c);
 					vVisualOffset = vScaleTransformer.GetVisualOffset(+vPhaseValue * sign);
 
 					yield return createWithContent.IsNot()
 						? create(in hVisualOffset, in vVisualOffset)
-						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
-
-
+						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue)
+						;
 
 					hVisualOffset = hScaleTransformer.GetVisualOffset(hActiveValue);
 					vVisualOffset = vScaleTransformer.GetVisualOffset(vActiveValue);
 
 					yield return createWithContent.IsNot()
 						? create(in hVisualOffset, in vVisualOffset)
-						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
-
+						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue)
+						;
 				}
 				else
 				{
@@ -280,8 +289,8 @@ public class MusicalPresenter : ContextObject, IExposable
 
 					yield return createWithContent.IsNot()
 						? create(in hVisualOffset, in vVisualOffset)
-						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
-
+						: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue)
+						;
 				}
 			}
 			else
@@ -291,7 +300,8 @@ public class MusicalPresenter : ContextObject, IExposable
 
 				yield return createWithContent.IsNot()
 					? create(in hVisualOffset, in vVisualOffset)
-					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue);
+					: createWithContent(in hVisualOffset, in vVisualOffset, activePoint, vActiveValue, hActiveValue, vUpperValue)
+					;
 			}
 
 			previousPoint = activePoint;
@@ -418,8 +428,9 @@ public class MusicalPresenter : ContextObject, IExposable
 		width, height, default, default
 	);
 
-	private IEnumerable<TextBlock> EnumeratePanelContent(
-		PianoKey pianoKey, double activeFrequency, double activeMagnitude, double expressionLevel, double width, double height)
+	private IEnumerable<TextBlock> EnumeratePanelContent(PianoKey pianoKey,
+		double activeFrequency, double activeMagnitude, double expressionLevel,
+		double width, double height)
 	{
 		var weightValue = (int)(300d * expressionLevel);
 		var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);

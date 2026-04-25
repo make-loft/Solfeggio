@@ -10,11 +10,11 @@ public class WindowView : Window
 {
 	public WindowView() : base()
 	{
-		Closing += async (o, e) =>
+		Closing += async (sender, args) =>
 		{
 			try
 			{
-				e.Cancel = true;
+				args.Cancel = true;
 
 				await Task.Delay(128);
 
@@ -23,7 +23,7 @@ public class WindowView : Window
 			catch { }
 		};
 
-		IsVisibleChanged += async (o, e) =>
+		IsVisibleChanged += async (sender, args) =>
 		{
 			var state = Visibility is Visible && WindowState is Minimized
 				? Normal

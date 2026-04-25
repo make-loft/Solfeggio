@@ -66,9 +66,9 @@ public partial class ColorPicker : INotifyPropertyChanged
 		Opacity.Background = AlphaBrush;
 
 		var skipOpacity = false;
-		PropertyChanged += (o, e) =>
+		PropertyChanged += (sender, args) =>
 		{
-			if (e.PropertyName.IsNot(nameof(Value))) return;
+			if (args.PropertyName.IsNot(nameof(Value))) return;
 			var value = Value;
 			_activeNamedColor = NamedColors.FirstOrDefault(p => p.Color.Is(value));
 			InvokePropertyChanged(nameof(ActiveNamedColor));
@@ -81,17 +81,17 @@ public partial class ColorPicker : INotifyPropertyChanged
 			Spectrum.Opacity = Value.A / 255d;
 		};
 
-		Spectrum.MouseLeftButtonDown += (o, e) => Spectrum.Opacity = 1.0;
-		Spectrum.MouseLeftButtonUp += (o, e) => Spectrum.Opacity = Value.A / 255d;
+		Spectrum.MouseLeftButtonDown += (sender, args) => Spectrum.Opacity = 1.0;
+		Spectrum.MouseLeftButtonUp += (sender, args) => Spectrum.Opacity = Value.A / 255d;
 
-		Spectrum.MouseLeftButtonDown += (o, e) =>
+		Spectrum.MouseLeftButtonDown += (sender, args) =>
 		{
 			skipOpacity = true;
 			Value = PickColor(Spectrum, Mouse.GetPosition(Spectrum));
 			skipOpacity = false;
 		};
 
-		Spectrum.MouseMove += (o, e) =>
+		Spectrum.MouseMove += (sender, args) =>
 		{
 			if (Mouse.LeftButton.Is(MouseButtonState.Released))
 				return;
@@ -101,12 +101,12 @@ public partial class ColorPicker : INotifyPropertyChanged
 			skipOpacity = false;
 		};
 
-		Spectrum.MouseWheel += (o, e) => Spectrum.Opacity += e.Delta / 2000;
+		Spectrum.MouseWheel += (sender, args) => Spectrum.Opacity += args.Delta / 2000;
 
-		Opacity.MouseLeftButtonDown += (o, e) =>
+		Opacity.MouseLeftButtonDown += (sender, args) =>
 			A = PickColor(Opacity, Mouse.GetPosition(Opacity), true).A;
 
-		Opacity.MouseMove += (o, e) =>
+		Opacity.MouseMove += (sender, args) =>
 		{
 			if (Mouse.LeftButton.Is(MouseButtonState.Released))
 				return;

@@ -35,7 +35,7 @@ public partial class BrushPicker
 	}
 
 	bool isRefresh = false;
-	void CloneToValue(object o, EventArgs e)
+	void CloneToValue(object sender, EventArgs args)
 	{
 		isRefresh = true;
 		Value = UnfrozenValue?.Clone();
@@ -131,7 +131,7 @@ public partial class BrushPicker
 			return _activeGradientStopCollection;
 
 		_activeGradientStopCollection = args.Value.To(out _stops).ToSet();
-		_activeGradientStopCollection.CollectionChangeCompleted += (o, e) =>
+		_activeGradientStopCollection.CollectionChangeCompleted += (sender, args) =>
 		{
 			_stops.Clear();
 			_activeGradientStopCollection.ForEach(_stops.Add);

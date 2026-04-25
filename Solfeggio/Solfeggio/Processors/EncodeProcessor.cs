@@ -49,14 +49,14 @@ class EncodeProcessor : IProcessor
 		txtPath = dialog.FileName + ".txt";
 		pcmPath = dialog.FileName;
 
-		source.DataAvailable += (o, e) =>
+		source.DataAvailable += (sender, args) =>
 		{
 			if (source is ASoftwareSignalProcessor sp)
 			{
 				//sp.IsAutoTickEnabledOnce = true;
 			}
 
-			FlushFrame(e.Sample);
+			FlushFrame(args.Sample);
 		};
 	}
 

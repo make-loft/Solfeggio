@@ -8,11 +8,11 @@ public partial class RangeBar
 
 	bool _isRangeMoving, _isRangeChanging;
 
-	private void RangeMoved(object sender, RoutedPropertyChangedEventArgs<double> e)
+	private void RangeMoved(object sender, RoutedPropertyChangedEventArgs<double> args)
 	{
 		if (_isRangeMoving || _isRangeChanging) return;
 		_isRangeMoving = true;
-		var delta = e.NewValue - e.OldValue;
+		var delta = args.NewValue - args.OldValue;
 		var newSelectionEnd = SelectionEnd += delta;
 		var newSelectionStart = SelectionStart += delta;
 		SelectionEnd = newSelectionEnd < Maximum ? newSelectionEnd : Maximum;
@@ -21,15 +21,15 @@ public partial class RangeBar
 		_isRangeMoving = false;
 	}
 
-	private void RangeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+	private void RangeChanged(object sender, RoutedPropertyChangedEventArgs<double> args)
 	{
 		if (_isRangeChanging || _isRangeMoving) return;
 		_isRangeChanging = true;
-		Value += (e.NewValue - e.OldValue) / 2d;
+		Value += (args.NewValue - args.OldValue) / 2d;
 		_isRangeChanging = false;
 	}
 
-	private void RangeBarLoaded(object sender, RoutedEventArgs e)
+	private void RangeBarLoaded(object sender, RoutedEventArgs args)
 	{
 		_isRangeMoving = true;
 		Value = (SelectionStart + SelectionEnd) / 2d;

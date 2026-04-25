@@ -30,14 +30,14 @@ public partial class Wave
 
 			if (source.IsNot()) return;
 
-			source.DataAvailable += (o, e) =>
+			source.DataAvailable += (sender, args) =>
 			{
 				var buffer = buffers.Where(b => b.IsDone).FirstOrDefault();
 				if (buffer.Is())
 				{
 					var scale = Level * short.MaxValue;
-					var sample = e.Sample.Select(f => (short)(f * scale)).ToArray();
-					Array.Copy(sample, buffer.Data, e.Sample.Length);
+					var sample = args.Sample.Select(f => (short)(f * scale)).ToArray();
+					Array.Copy(sample, buffer.Data, args.Sample.Length);
 					if (State.Is(Processing)) buffer.MarkForProcessing();
 				}
 			};

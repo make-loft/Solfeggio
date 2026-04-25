@@ -111,12 +111,12 @@ public partial class App : Application
 			MessageBox.Show(exception.ToString());
 		}
 
-		DispatcherUnhandledException += (o, e) =>
+		DispatcherUnhandledException += (sender, args) =>
 		{
 			if (Debugger.IsAttached) return;
-			YandexMetrica.ReportError(e.Exception.Message, e.Exception);
-			MessageBox.Show(e.ToString());
-			e.Handled = true;
+			YandexMetrica.ReportError(args.Exception.Message, args.Exception);
+			MessageBox.Show(args.ToString());
+			args.Handled = true;
 		};
 
 		Store.Get<AppViewModel>();

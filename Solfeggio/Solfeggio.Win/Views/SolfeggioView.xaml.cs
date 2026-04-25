@@ -34,30 +34,30 @@ public partial class SolfeggioView
 	{
 		InitializeComponent();
 
-		Loaded += (o, e) => Focus();
-		SizeChanged += (o, e) => _sizeChanged = true;
+		Loaded += (sender, args) => Focus();
+		SizeChanged += (sender, args) => _sizeChanged = true;
 
-		MouseLeftButtonUp += (o, e) => Mouse.Capture(default);
-		MouseLeftButtonDown += (o, e) => Mouse.Capture(e.OriginalSource as Canvas);
-		PreviewKeyDown += (o, e) => ProcessingManager.IsPaused = e.Key.Is(Key.Space)
+		MouseLeftButtonUp += (sender, args) => Mouse.Capture(default);
+		MouseLeftButtonDown += (sender, args) => Mouse.Capture(args.OriginalSource as Canvas);
+		PreviewKeyDown += (sender, args) => ProcessingManager.IsPaused = args.Key.Is(Key.Space)
 			? ProcessingManager.IsPaused.Not()
 			: ProcessingManager.IsPaused;
 
 		Point from = default;
-		MouseLeftButtonUp += (o, e) => from = default;
-		MouseLeftButtonDown += (o, e) => from = e.GetPosition(this);
+		MouseLeftButtonUp += (sender, args) => from = default;
+		MouseLeftButtonDown += (sender, args) => from = args.GetPosition(this);
 		SpectrogramCanvas.MouseMove += MouseMove;
 		MagnitudeCanvas.MouseMove += MouseMove;
 		PhaseCanvas.MouseMove += MouseMove;
 		PianoCanvas.MouseMove += MouseMove;
 		FrameCanvas.MouseMove += MouseMove;
 
-		void MouseMove(object o, MouseEventArgs e)
+		void MouseMove(object sender, MouseEventArgs args)
 		{
-			if (e.LeftButton.IsNot(MouseButtonState.Pressed))
+			if (args.LeftButton.IsNot(MouseButtonState.Pressed))
 				return;
 
-			var till = e.GetPosition(this);
+			var till = args.GetPosition(this);
 			if (from.Is(default))
 			{
 				from = till;
@@ -68,9 +68,9 @@ public partial class SolfeggioView
 			var deltaY = from.Y - till.Y;
 			var isHorizontalMove = deltaX * deltaX > deltaY * deltaY;
 
-			var control = (FrameworkElement)o;
+			var control = (FrameworkElement)sender;
 			var flip = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && isHorizontalMove.Not();
-			var bandwidth = o.Is(FrameCanvas)
+			var bandwidth = sender.Is(FrameCanvas)
 				? flip ? MusicalPresenter.Frame.Level : MusicalPresenter.Frame.Offset
 				: flip ? MusicalPresenter.Spectrum.Magnitude : MusicalPresenter.Spectrum.Frequency;
 
@@ -103,26 +103,26 @@ public partial class SolfeggioView
 			bandwidth.LimitWindow();
 		};
 
-		MouseWheel += (o, e) =>
+		MouseWheel += (sender, args) =>
 		{
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 			{
-				var offset = e.Delta * ActualWidth / 32d;
+				var offset = args.Delta * ActualWidth / 32d;
 				MusicalPresenter.Spectrum.Frequency.Transform(ActualWidth, offset, true);
 				return;
 			}
 
-			var control = o as FrameworkElement;
+			var control = sender as FrameworkElement;
 			//var control = Mouse.DirectlyOver.As<DependencyObject>()
 			//	?.EnumerateSelfAndVisualAncestors().OfType<Canvas>().FirstOrDefault()
 			//	?? Mouse.DirectlyOver.As<FrameworkElement>();
 
-			var bandwidth = o.Is(FrameCanvas)
+			var bandwidth = sender.Is(FrameCanvas)
 				? MusicalPresenter.Frame.Offset
 				: MusicalPresenter.Spectrum.Frequency;
 
 			var from = Mouse.GetPosition(control);
-			var till = new Point { X = from.X, Y = from.Y + e.Delta / 8d };
+			var till = new Point { X = from.X, Y = from.Y + args.Delta / 8d };
 
 			if (control.Is())
 				bandwidth.TransformRelative(control.ActualWidth, control.ActualHeight, from, till);
@@ -130,29 +130,29 @@ public partial class SolfeggioView
 
 		var navigationKeys = new[] { Key.Left, Key.Up, Key.Right, Key.Down };
 
-		PreviewKeyDown += async (o, e) =>
+		PreviewKeyDown += async (sender, args) =>
 		{
 			var control = Mouse.DirectlyOver.As<DependencyObject>()
 				?.EnumerateSelfAndVisualAncestors().OfType<Canvas>().FirstOrDefault()
 				?? Mouse.DirectlyOver.As<object>();
 
 			var pressedKeys = navigationKeys.Where(Keyboard.IsKeyDown).ToList();
-			var upperDirection = e.Key switch
+			var upperDirection = args.Key switch
 			{
 				Key.Left or Key.Up => -1,
 				Key.Right or Key.Down => +1,
 				_ => 0,
 			};
 
-			var lowerDirection = e.Key switch
+			var lowerDirection = args.Key switch
 			{
 				Key.Left or Key.Down => -1,
 				Key.Right or Key.Up => +1,
 				_ => 0,
 			};
 
-			e.Handled = lowerDirection.IsNot(0) && upperDirection.IsNot(0);
-			if (e.Handled.Not()) return;
+			args.Handled = lowerDirection.IsNot(0) && upperDirection.IsNot(0);
+			if (args.Handled.Not()) return;
 
 			var shift = lowerDirection == upperDirection;
 			var delta = shift

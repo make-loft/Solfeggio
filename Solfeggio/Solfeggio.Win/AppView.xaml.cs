@@ -15,7 +15,7 @@ public partial class AppView
 	public AppView()
 	{
 		InitializeComponent();
-		Closing += (o, e) => Application.Current.Shutdown();
+		Closing += (sender, args) => Application.Current.Shutdown();
 
 		MonitorView = new MonitorView();
 		FlowerView = new FlowerView();
@@ -29,6 +29,6 @@ public partial class AppView
 
 		ShowVisible(MonitorView, FlowerView, TapeView);
 
-		Closed += (o, e) => Application.Current.Shutdown();
+		Closed += (sender, args) => Application.Current.Shutdown();
 	}
 }

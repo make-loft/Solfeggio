@@ -37,14 +37,14 @@ public class SplashActivity : Activity
 
 	protected override async void OnCreate(Bundle bundle)
 	{
-		AndroidEnvironment.UnhandledExceptionRaiser += (o, args) => ProcessUnhandledException(args.Exception);
-		AppDomain.CurrentDomain.UnhandledException += (o, args) => ProcessUnhandledException(args.ExceptionObject as Exception);
+		AndroidEnvironment.UnhandledExceptionRaiser += (sender, args) => ProcessUnhandledException(args.Exception);
+		AppDomain.CurrentDomain.UnhandledException += (sender, args) => ProcessUnhandledException(args.ExceptionObject as Exception);
 		async void ProcessUnhandledException(Exception exception)
 		{
 			if (exception.IsNot())
 				return;
 
-			for (var e = exception; e.Is(); e = e.InnerException)
+			for (var e = exception; args.Is(); e = args.InnerException)
 				YandexMetrica.ReportUnhandledException(e);
 
 			await this.ShowAlertDialogAsync
@@ -92,7 +92,7 @@ public class SplashActivity : Activity
 		FinishAffinity();
 	}
 
-	private void RunAnalitics(object o)
+	private void RunAnalitics(object _)
 	{
 		var (androidId, advertisingId) = default(string);
 

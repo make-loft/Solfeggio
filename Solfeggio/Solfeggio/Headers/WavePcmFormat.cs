@@ -29,7 +29,7 @@ public class WaveHeader
 	[MarshalAs(UnmanagedType.U4, SizeConst = 4)]
 	private int subchunk1Size = 16;
 
-	/* AudioFormat	  PCM = 1 (i.e. Linear quantization) */
+	/* AudioFormat	  PCM = 1 (i.args. Linear quantization) */
 	[MarshalAs(UnmanagedType.U2, SizeConst = 2)]
 	private short audioFormat = 1;
 

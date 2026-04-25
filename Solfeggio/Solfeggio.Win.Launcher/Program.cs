@@ -30,8 +30,8 @@ class Program
 
 		var domain = AppDomain.CurrentDomain;
 		var appAssembly = domain.Load(GetAppRawAssembly());
-		domain.AssemblyResolve += (o, e) =>
-			domain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == new AssemblyName(e.Name).Name);
+		domain.AssemblyResolve += (sender, args) =>
+			domain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == new AssemblyName(args.Name).Name);
 
 		GetAppNestedRawAssemblies().ToList().ForEach(b => domain.Load(b));
 	}

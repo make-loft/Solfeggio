@@ -72,14 +72,14 @@ public partial class TapeView
 	private void SwitchPause() => Store.Get<ProcessingManager>().To(out var m).IsPaused = m.IsPaused.Not();
 
 	readonly Key[] HandleKeys = { Key.Space, Key.W, Key.S, Key.D, Key.A, Key.Left, Key.Right, Key.Up, Key.Down };
-	private void Window_KeyDown(object sender, KeyEventArgs e)
+	private void Window_KeyDown(object sender, KeyEventArgs args)
 	{
-		if (Keyboard.FocusedElement.IsNot(e.OriginalSource))
+		if (Keyboard.FocusedElement.IsNot(args.OriginalSource))
 			return;
 
-		var key = e.Key;
-		e.Handled = HandleKeys.Contains(key);
-		if (e.Key is Key.Space)
+		var key = args.Key;
+		args.Handled = HandleKeys.Contains(key);
+		if (key is Key.Space)
 			SwitchPause();
 	}
 
@@ -235,12 +235,12 @@ public partial class TapeView
 	private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) => SwitchPause();
 
 	Point from;
-	private void Window_MouseMove(object sender, MouseEventArgs e)
+	private void Window_MouseMove(object sender, MouseEventArgs args)
 	{
-		if (e.Handled)
+		if (args.Handled)
 			return;
 
-		var till = e.GetPosition(sender as IInputElement);
+		var till = args.GetPosition(sender as IInputElement);
 		double dx = till.X - from.X;
 		double dy = till.Y - from.Y;
 		from = till;
@@ -249,7 +249,7 @@ public partial class TapeView
 		if (distance <= 0)
 			return;
 
-		if (e.MouseDevice.LeftButton is MouseButtonState.Pressed)
+		if (args.MouseDevice.LeftButton is MouseButtonState.Pressed)
 		{
 			var fieldOfView = TapeViewModel.Camera is PerspectiveCamera c ? c.FieldOfView : 45;
 			var angle = (distance / fieldOfView) % 45;

@@ -162,9 +162,9 @@ public partial class SolfeggioView
       BusyTitle.IsVisible = false;
 		};
 
-		SpectrogramCanvas.SizeChanged += (o, e) => _fullSpectrogramRefresh = true;
+		SpectrogramCanvas.SizeChanged += (sender, args) => _fullSpectrogramRefresh = true;
 
-		Appearing += async (o, e) =>
+		Appearing += async (sender, args) =>
 		{
 			await Task.Delay(2000);
 

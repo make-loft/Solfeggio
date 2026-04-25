@@ -183,9 +183,9 @@ public class ProcessingProfile : AProfile, IAudioInputDevice, IExposable, IDispo
 
 	bool _resetRequested;
 
-	private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+	private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
 	{
-		if (LifecyclePropertyNames.Contains(e.PropertyName).Not())
+		if (LifecyclePropertyNames.Contains(args.PropertyName).Not())
 			return;
 
 		if (_resetRequested.Is(false))

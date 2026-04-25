@@ -23,32 +23,32 @@ public partial class PopupView
 	{
 		InitializeComponent();
 
-		Opened += (o, e) => Popups.Add(this);
-		Closed += (o, e) => Popups.Remove(this);
+		Opened += (sender, args) => Popups.Add(this);
+		Closed += (sender, args) => Popups.Remove(this);
 
-		Opened += (o, e) => Child.MoveFocus(new(FocusNavigationDirection.Next));
-		Closed += (o, e) => Popups.LastOrDefault()?.Child.MoveFocus(new(FocusNavigationDirection.Next));
+		Opened += (sender, args) => Child.MoveFocus(new(FocusNavigationDirection.Next));
+		Closed += (sender, args) => Popups.LastOrDefault()?.Child.MoveFocus(new(FocusNavigationDirection.Next));
 
-		MouseMove += (o, e) => e.Handled = true;
+		MouseMove += (sender, args) => args.Handled = true;
 
-		PreviewMouseLeftButtonDown += (o, e) =>
+		PreviewMouseLeftButtonDown += (sender, args) =>
 		{
-			if (e.Source.Is(ContentControl))
+			if (args.Source.Is(ContentControl))
 				Mouse.Capture(DragMoveThumb);
 		};
 
-		DragMoveThumb.DragDelta += (o, e) =>
+		DragMoveThumb.DragDelta += (sender, args) =>
 		{
-			HorizontalOffset += e.HorizontalChange;
-			VerticalOffset += e.VerticalChange;
+			HorizontalOffset += args.HorizontalChange;
+			VerticalOffset += args.VerticalChange;
 		};
 
-		KeyDown += (o, e) =>
+		KeyDown += (sender, args) =>
 		{
-			if (e.Key.IsNot(Key.Escape) || e.Handled.IsTrue())
+			if (args.Key.IsNot(Key.Escape) || args.Handled.IsTrue())
 				return;
 
-			e.Handled = true;
+			args.Handled = true;
 			IsOpen = false;
 		};
 	}

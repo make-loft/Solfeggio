@@ -27,11 +27,11 @@ public partial class FlowerView
 	private void SwitchPause() => Store.Get<ProcessingManager>().To(out var m).IsPaused = m.IsPaused.Not();
 
 	readonly Key[] HandleKeys = [ Key.Space, Key.W, Key.S, Key.D, Key.A, Key.Left, Key.Right, Key.Up, Key.Down ];
-	private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+	private void Window_PreviewKeyDown(object sender, KeyEventArgs args)
 	{
-		var key = e.Key;
-		e.Handled = HandleKeys.Contains(key);
-		if (e.Key is Key.Space)
+		var key = args.Key;
+		args.Handled = HandleKeys.Contains(key);
+		if (args.Key is Key.Space)
 			SwitchPause();
 	}
 
