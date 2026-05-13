@@ -26,17 +26,12 @@ public class DoubleToStringTwoWayConverter : Ace.Markup.Patterns.AValueConverter
 
 	public override object ConvertBack(object value) => value is double d
 		? d 
-		: Clip(value).TryParse(out d, NumberFormatInfo.CurrentInfo) ? d : default;
-
-	string Clip(object value) => value.Is(out string str)
-		? Clip(str,
-			Head.Is() && str.StartsWith(Head) ? Head.Length : 0,
-			Tail.Is() && str.EndsWith(Tail) ? str.Length - Tail.Length : str.Length)
-		: value?.ToString()
+		: Clip(value.To<string>()).TryParse(out d, NumberFormatInfo.CurrentInfo) ? d : default
 		;
 
-	string Clip(string str, int from, int till) => (till - from).To(out var length) < 0
-		? default
-		: str.Substring(from, length)
-		;
+	private string Clip(string value) => value.Clip
+	(
+		Head.Is() && value.StartsWith(Head) ? Head.Length : 0,
+		Tail.Is() && value.EndsWith(Tail) ? value.Length - Tail.Length : value.Length
+	);
 }

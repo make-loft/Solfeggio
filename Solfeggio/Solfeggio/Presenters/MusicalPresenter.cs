@@ -429,19 +429,20 @@ public class MusicalPresenter : ContextObject, IExposable
 	);
 
 	private IEnumerable<TextBlock> EnumeratePanelContent(PianoKey pianoKey,
-		double activeFrequency, double activeMagnitude, double expressionLevel,
+		double actualFrequency, double actualMagnitude, double expressionLevel,
 		double width, double height)
 	{
 		var weightValue = (int)(300d * expressionLevel);
 		var fontWeight = FontWeight.FromOpenTypeWeight(weightValue > 999 ? 999 : weightValue < 1 ? 1 : weightValue);
 
-		double GetValueByKey(string key)
-			=>
-			key.Is("ActualMagnitude") ? activeMagnitude :
-			key.Is("ActualFrequency") ? activeFrequency :
-			key.Is("OffsetFrequency") ? pianoKey.GetOffsetFrequency(pianoKey.TopPeak.Frequency) :
-			key.Is("EthalonFrequency") ? pianoKey.EthalonFrequency :
-			default;
+		double GetValueByKey(string key) => key switch
+		{
+			"ActualMagnitude" => actualMagnitude,
+			"ActualFrequency" => actualFrequency,
+			"OffsetFrequency" => pianoKey.GetOffsetFrequency(pianoKey.TopPeak.Frequency),
+			"EthalonFrequency" => pianoKey.EthalonFrequency,
+			_ => default
+		};
 
 		return VisualProfile.PeakProfiles.Where(p => p.Value.IsVisible).Select(p => new TextBlock
 		{
