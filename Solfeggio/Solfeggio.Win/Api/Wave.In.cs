@@ -59,7 +59,7 @@ public partial class Wave
 			public override void SetVolume(double value) { }
 		}
 
-		public class Processor(In.Session session, int bufferSize, int buffersCount) : Processor<DeviceInfo>(session, bufferSize, buffersCount)
+		public class Processor(Session session, int bufferSize, int buffersCount) : Processor<DeviceInfo>(session, bufferSize, buffersCount)
 		{
 		}
 	}

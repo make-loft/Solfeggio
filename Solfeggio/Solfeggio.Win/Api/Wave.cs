@@ -30,7 +30,7 @@ public static partial class Wave
 		WAVE_FORMAT_DIRECT = 8*/
 	}
 
-	public delegate void Callback(IntPtr hWaveOut, Message message, IntPtr dwInstance, Wave.Header wavhdr, IntPtr dwReserved);
+	public delegate void Callback(IntPtr hWaveOut, Message message, IntPtr dwInstance, Header wavhdr, IntPtr dwReserved);
 
 	public abstract class ADeviceInfo<TCapabilities>(int number)
 		where TCapabilities : IDeviceCapabilities, new()

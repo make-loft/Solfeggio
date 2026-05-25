@@ -194,7 +194,7 @@ public class WaveFormatExtensible : WaveFormat
 	/// Serialize
 	/// </summary>
 	/// <param name="writer"></param>
-	public override void Serialize(System.IO.BinaryWriter writer)
+	public override void Serialize(BinaryWriter writer)
 	{
 		base.Serialize(writer);
 		writer.Write(wValidBitsPerSample);

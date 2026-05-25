@@ -9,7 +9,7 @@ namespace Solfeggio.Api;
 
 public partial class Wave
 {
-	public class Buffer(Wave.ASession session, int binsCount) : Buffer<short>(session, binsCount)
+	public class Buffer(ASession session, int binsCount) : Buffer<short>(session, binsCount)
 	{
 	}
 

@@ -18,12 +18,12 @@ public partial class Wave
 
 		[DllImport("winmm.dll")] public static extern Int32 waveInGetNumDevs();
 		[DllImport("winmm.dll", CharSet = CharSet.Auto)] public static extern MmResult waveInGetDevCaps(IntPtr deviceID, out WaveInCapabilities waveInCaps, int waveInCapsSize);
-		[DllImport("winmm.dll")] public static extern MmResult waveInAddBuffer(IntPtr hWaveIn, Wave.Header pwh, int cbwh);
+		[DllImport("winmm.dll")] public static extern MmResult waveInAddBuffer(IntPtr hWaveIn, Header pwh, int cbwh);
 		[DllImport("winmm.dll")] public static extern MmResult waveInClose(IntPtr hWaveIn);
 		[DllImport("winmm.dll")] public static extern MmResult waveInOpen(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, Callback dwCallback, IntPtr dwInstance, OpenFlags dwFlags);
 		[DllImport("winmm.dll", EntryPoint = "waveInOpen")] public static extern MmResult waveInOpenWindow(out IntPtr hWaveIn, IntPtr uDeviceID, WaveFormat lpFormat, IntPtr callbackWindowHandle, IntPtr dwInstance, OpenFlags dwFlags);
-		[DllImport("winmm.dll")] public static extern MmResult waveInPrepareHeader(IntPtr hWaveIn, Wave.Header lpWaveInHdr, int uSize);
-		[DllImport("winmm.dll")] public static extern MmResult waveInUnprepareHeader(IntPtr hWaveIn, Wave.Header lpWaveInHdr, int uSize);
+		[DllImport("winmm.dll")] public static extern MmResult waveInPrepareHeader(IntPtr hWaveIn, Header lpWaveInHdr, int uSize);
+		[DllImport("winmm.dll")] public static extern MmResult waveInUnprepareHeader(IntPtr hWaveIn, Header lpWaveInHdr, int uSize);
 		[DllImport("winmm.dll")] public static extern MmResult waveInReset(IntPtr hWaveIn);
 		[DllImport("winmm.dll")] public static extern MmResult waveInStart(IntPtr hWaveIn);
 		[DllImport("winmm.dll")] public static extern MmResult waveInStop(IntPtr hWaveIn);

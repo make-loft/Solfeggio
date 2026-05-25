@@ -24,7 +24,7 @@ public enum Editions { Developer, Portable, Education, Gratitude }
 
 public partial class App : Application
 {
-	public static Editions Edition { get; } = Portable;
+	public static Editions Edition { get; } = Developer;
 
 	public static Dictionary<Editions, string> YandexMetricaKeys = new()
 	{

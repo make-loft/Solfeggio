@@ -587,7 +587,7 @@ namespace System.Windows.Controls
 
 	public static class LayoutOptionsConverters
 	{
-		public static VerticalAlignment ToVerticalAlignment(this Xamarin.Forms.LayoutOptions o)
+		public static VerticalAlignment ToVerticalAlignment(this LayoutOptions o)
 			=>
 
 			o.Is(CenterAndExpand) ? VerticalAlignment.Center :
@@ -602,7 +602,7 @@ namespace System.Windows.Controls
 
 			throw new ArgumentException();
 
-		public static HorizontalAlignment ToHorizontalAlignment(this Xamarin.Forms.LayoutOptions o)
+		public static HorizontalAlignment ToHorizontalAlignment(this LayoutOptions o)
 			=>
 
 			o.Is(Center) ? HorizontalAlignment.Center :

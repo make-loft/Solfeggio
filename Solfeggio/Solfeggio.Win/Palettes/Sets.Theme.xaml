@@ -269,7 +269,7 @@
 				</Rack>
 
 				<ContentView
-					Rack.Cell="R7 C6 RS4"
+					Rack.Cell="R7 C6 RS5"
 					DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Magnitude}"
 					Template="{StaticResource RangePickerTemplate}"
 					/>
@@ -289,7 +289,7 @@
 					Template="{StaticResource RangePickerTemplate}"
 					/>
 				<ContentView
-					Rack.Cell="R3 C7 RS8"
+					Rack.Cell="R3 C7 RS9"
 					DataContext="{StoreBinding StoreKey=p:MusicalPresenter, Path=Spectrum.Frequency}"
 					Template="{StaticResource RangePickerTemplate}"
 					/>

@@ -71,7 +71,7 @@ public partial class Wave
 			}
 		}
 
-		public class Processor(Out.Session session, int bufferSize, int buffersCount, IProcessor source) : Processor<DeviceInfo>(session, bufferSize, buffersCount, source)
+		public class Processor(Session session, int bufferSize, int buffersCount, IProcessor source) : Processor<DeviceInfo>(session, bufferSize, buffersCount, source)
 		{
 		}
 	}

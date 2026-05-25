@@ -15,12 +15,13 @@ using Rainbow;
 using Ace;
 using Ace.Extensions;
 
+using Solfeggio.Models;
 using Solfeggio.Presenters;
 using Solfeggio.Presenters.Options;
 using Solfeggio.ViewModels;
 
 using static Ace.Extensions.Colority;
-using Solfeggio.Models;
+using static System.Windows.Input.MouseButtonState;
 
 namespace Solfeggio.Views;
 
@@ -36,16 +37,30 @@ public partial class SolfeggioView
 
 		Loaded += (sender, args) => Focus();
 		SizeChanged += (sender, args) => _sizeChanged = true;
-
-		MouseLeftButtonUp += (sender, args) => Mouse.Capture(default);
-		MouseLeftButtonDown += (sender, args) => Mouse.Capture(args.OriginalSource as Canvas);
 		PreviewKeyDown += (sender, args) => ProcessingManager.IsPaused = args.Key.Is(Key.Space)
 			? ProcessingManager.IsPaused.Not()
-			: ProcessingManager.IsPaused;
+			: ProcessingManager.IsPaused
+			;
 
 		Point from = default;
-		MouseLeftButtonUp += (sender, args) => from = default;
-		MouseLeftButtonDown += (sender, args) => from = args.GetPosition(this);
+
+		void MouseButtonUp(object sender, MouseButtonEventArgs args)
+		{
+			from = default;
+			Mouse.Capture(default);
+		}
+
+		void MouseButtonDown(object sender, MouseButtonEventArgs args)
+		{
+			from = args.GetPosition(this);
+			Mouse.Capture(args.OriginalSource as Canvas);
+		}
+
+		MouseRightButtonDown += MouseButtonDown;
+		MouseLeftButtonDown += MouseButtonDown;
+		MouseRightButtonUp += MouseButtonUp;
+		MouseLeftButtonUp += MouseButtonUp;
+
 		SpectrogramCanvas.MouseMove += MouseMove;
 		MagnitudeCanvas.MouseMove += MouseMove;
 		PhaseCanvas.MouseMove += MouseMove;
@@ -54,7 +69,7 @@ public partial class SolfeggioView
 
 		void MouseMove(object sender, MouseEventArgs args)
 		{
-			if (args.LeftButton.IsNot(MouseButtonState.Pressed))
+			if (args.LeftButton.IsNot(Pressed) && args.RightButton.IsNot(Pressed))
 				return;
 
 			var till = args.GetPosition(this);
@@ -72,7 +87,8 @@ public partial class SolfeggioView
 			var flip = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && isHorizontalMove.Not();
 			var bandwidth = sender.Is(FrameCanvas)
 				? flip ? MusicalPresenter.Frame.Level : MusicalPresenter.Frame.Offset
-				: flip ? MusicalPresenter.Spectrum.Magnitude : MusicalPresenter.Spectrum.Frequency;
+				: flip ? MusicalPresenter.Spectrum.Magnitude : MusicalPresenter.Spectrum.Frequency
+				;
 
 			if (isHorizontalMove)
 			{
@@ -357,7 +373,8 @@ public partial class SolfeggioView
 			.Where(k => k.TopPeak.Magnitude > ProcessingManager.ThresholdMagnitude)
 			.OrderBy(k => k.TopPeak.Magnitude)
 			.Take(MusicalPresenter.MaxHarmonicsCount)
-			.ToList();
+			.ToList()
+			;
 
 		var activeProfile = ProcessingManager.ActiveProfile;
 		var geometryFill = GeometryPresenter.Draw(ProcessingManager.Peaks, activeProfile.FrameSize, activeProfile.SampleRate,
@@ -567,10 +584,10 @@ public partial class SolfeggioView
 			));
 
 			var harmonicManager = Store.Get<HarmonicManager>();
-			harmonicManager.Profiles.Add(new Models.Harmonic.Profile
+			harmonicManager.Profiles.Add(new Harmonic.Profile
 			{
 				Title = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName),
-				Harmonics = new(peaks.Select(b => new Models.Harmonic
+				Harmonics = new(peaks.Select(b => new Harmonic
 				{
 					Magnitude = b.Magnitude,
 					Frequency = b.Frequency,

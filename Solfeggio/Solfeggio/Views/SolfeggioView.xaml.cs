@@ -208,10 +208,10 @@ public partial class SolfeggioView
 		}
 	}
 
-	private readonly struct SpectrogramFrame(IList<Bin> spectrumInterpolated, IList<Models.PianoKey> pianoKeys)
+	private readonly struct SpectrogramFrame(IList<Bin> spectrumInterpolated, IList<PianoKey> pianoKeys)
 	{
 		public IList<Bin> SpectrumInterpolated { get; } = spectrumInterpolated;
-		public IList<Models.PianoKey> PianoKeys { get; } = pianoKeys;
+		public IList<PianoKey> PianoKeys { get; } = pianoKeys;
 	}
 
 	void OnCanvasPaintSurface(object sender, SKPaintSurfaceEventArgs args) => sender.To<Canvas>().Draw(args);

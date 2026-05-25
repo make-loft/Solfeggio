@@ -714,7 +714,6 @@
 				Rack.Cell="R1 C1"
 				ItemsSource="{Binding InputDevices}"
 				ActiveItem="{Binding ActiveInputDevice, Mode=TwoWay}"
-				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				DisplayMemberPath="ProductName"
 				/>
 
@@ -726,7 +725,6 @@
 				Rack.Cell="R2 C1"
 				ItemsSource="{Binding OutputDevices}"
 				ActiveItem="{Binding ActiveOutputDevice, Mode=TwoWay}"
-				IsEnabled="{Binding IsDefault, FallbackValue={False}, Converter={StaticResource TrueToFalseConverter}}"
 				DisplayMemberPath="ProductName"
 				/>
 
