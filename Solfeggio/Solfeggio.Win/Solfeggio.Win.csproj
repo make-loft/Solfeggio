@@ -58,9 +58,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Yandex.Metrica.NET, Version=3.5.1.0, Culture=neutral, PublicKeyToken=21e4d3bd28ff137d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Yandex.Metrica.3.5.1\lib\net45\Yandex.Metrica.NET.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Solfeggio\Api\IAudioInputDevice.cs">
@@ -290,11 +287,6 @@
     <Compile Include="Palettes\Sets.Theme.xaml.cs">
       <DependentUpon>Sets.Theme.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Assemblies.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Assemblies.resx</DependentUpon>
-    </Compile>
     <Compile Include="Views\BrushPicker.xaml.cs">
       <DependentUpon>BrushPicker.xaml</DependentUpon>
     </Compile>
@@ -410,7 +402,6 @@
     <EmbeddedResource Include="Properties\Assemblies.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Assemblies.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
@@ -423,6 +414,10 @@
       <Project>{6f747757-053c-4f64-8722-b1745efae275}</Project>
       <Name>Rainbow.Standard1.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\yandex.metric\Yandex.Metrica\Yandex.Metrica.Win.csproj">
+      <Project>{8abef116-e3be-4ac7-b2d9-2d19356c4eb7}</Project>
+      <Name>Yandex.Metrica.Win</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\Ace.dll" />
@@ -433,17 +428,11 @@
     <Resource Include="..\..\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props'))" />
-  </Target>
   <PropertyGroup>
     <PreBuildEvent>copy "$(SolutionDir)\Ace\bin\Ace.dll" "$(ProjectDir)\Assemblies\Ace.dll"
 copy "$(SolutionDir)\Rainbow\Rainbow\bin\netstandard1.0\Rainbow.dll" "$(ProjectDir)\Assemblies\Rainbow.dll"
 copy "$(SolutionDir)\Xamarin.Synonyms\bin\Xamarin.Synonyms.dll" "$(ProjectDir)\Assemblies\Xamarin.Synonyms.dll"
-copy "$(SolutionDir)\packages\Yandex.Metrica.3.5.1\lib\net45\Yandex.Metrica.NET.dll" "$(ProjectDir)\Assemblies\Yandex.Metrica.NET.dll"</PreBuildEvent>
+copy "$(SolutionDir)\Yandex.Metrica\Yandex.Metrica\bin\Yandex.Metrica.Win.dll" "$(ProjectDir)\Assemblies\Yandex.Metrica.NET.dll"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.
