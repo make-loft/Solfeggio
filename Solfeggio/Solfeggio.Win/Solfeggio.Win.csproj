@@ -271,6 +271,11 @@
     <Compile Include="Palettes\Templates.Desktop.xaml.cs">
       <DependentUpon>Templates.Desktop.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Assemblies.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Assemblies.resx</DependentUpon>
+    </Compile>
     <Compile Include="Views\EncoderView.xaml.cs">
       <DependentUpon>EncoderView.xaml</DependentUpon>
     </Compile>
@@ -399,10 +404,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Properties\Assemblies.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -422,17 +423,24 @@
   <ItemGroup>
     <None Include="Assemblies\Ace.dll" />
     <None Include="Assemblies\Rainbow.dll" />
-    <None Include="Assemblies\Yandex.Metrica.NET.dll" />
+    <None Include="Assemblies\Yandex.Metrica.Win.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\..\logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Assemblies.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Assemblies.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)\Ace\bin\Ace.dll" "$(ProjectDir)\Assemblies\Ace.dll"
-copy "$(SolutionDir)\Rainbow\Rainbow\bin\netstandard1.0\Rainbow.dll" "$(ProjectDir)\Assemblies\Rainbow.dll"
-copy "$(SolutionDir)\Xamarin.Synonyms\bin\Xamarin.Synonyms.dll" "$(ProjectDir)\Assemblies\Xamarin.Synonyms.dll"
-copy "$(SolutionDir)\Yandex.Metrica\Yandex.Metrica\bin\Yandex.Metrica.Win.dll" "$(ProjectDir)\Assemblies\Yandex.Metrica.NET.dll"</PreBuildEvent>
+    <PreBuildEvent>if not exist "$(ProjectDir)Assemblies" mkdir "$(ProjectDir)Assemblies"
+
+copy "$(SolutionDir)Ace\bin\Ace.dll" "$(ProjectDir)Assemblies\Ace.dll"
+copy "$(SolutionDir)Rainbow\Rainbow\bin\netstandard1.0\Rainbow.dll" "$(ProjectDir)Assemblies\Rainbow.dll"
+copy "$(SolutionDir)Yandex.Metric\Yandex.Metrica\bin\Yandex.Metrica.Win.dll" "$(ProjectDir)Assemblies\Yandex.Metrica.Win.dll"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.

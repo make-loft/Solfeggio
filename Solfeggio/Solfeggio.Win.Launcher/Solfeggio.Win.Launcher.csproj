@@ -90,11 +90,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)\Solfeggio\Solfeggio.Win\bin\Solfeggio.exe" "$(ProjectDir)\Assemblies\Solfeggio.exe"
+    <PreBuildEvent>if not exist "$(ProjectDir)Assemblies" mkdir "$(ProjectDir)Assemblies"
+
+copy "$(SolutionDir)Solfeggio\Solfeggio.Win\bin\Solfeggio.exe" "$(ProjectDir)Assemblies\Solfeggio.exe"
 
 ..\..\..\Compressor\bin\Compressor.exe  "$(SolutionDir)Solfeggio\Solfeggio.Win.Launcher\Assemblies\Solfeggio.exe"
 
-del "$(ProjectDir)\Assemblies\Solfeggio.exe"</PreBuildEvent>
+del "$(ProjectDir)Assemblies\Solfeggio.exe"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

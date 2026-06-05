@@ -22,7 +22,7 @@ public static class AgreementManager
 		var versionAge = DateTime.Now - new DateTime(2019, 7, 25);
 		if (versionAge > TimeSpan.FromDays(64))
 		{
-			YandexMetrica.ReportEvent("Expiration", versionAge);
+			YandexMetrica.Report("Expiration", versionAge.ToString());
 			var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
 			MessageBox.Show(Localizator.ExpirationMessage[activeLanguage]);
 			Process.Start(Localizator.HomeLink[activeLanguage]);
@@ -37,7 +37,7 @@ public static class AgreementManager
 		var sessionDuration = DateTime.Now - startupTimestamp;
 		if (sessionDuration > LongSessionDuation)
 		{
-			YandexMetrica.ReportEvent("LongSession", sessionDuration);
+			YandexMetrica.Report("LongSession", sessionDuration.ToString());
 			var activeLanguage = Store.Get<AppViewModel>().ActiveLanguage;
 			Process.Start(Localizator.HomeLink[activeLanguage]);
 		}

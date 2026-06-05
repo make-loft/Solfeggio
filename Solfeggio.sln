@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{C731
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadableAudioConverter", "Rainbow\ReadableAudioConverter\ReadableAudioConverter.csproj", "{70A1E92C-33AB-4501-A7C1-062BBBBA4511}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yandex.Metrica.Win", "yandex.metric\Yandex.Metrica\Yandex.Metrica.Win.csproj", "{8ABEF116-E3BE-4AC7-B2D9-2D19356C4EB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
