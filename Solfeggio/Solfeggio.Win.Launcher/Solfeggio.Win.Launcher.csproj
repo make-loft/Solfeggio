@@ -53,7 +53,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Compressor\FileCompressor.cs">
+    <Compile Include="..\..\Ace\Compressor\FileCompressor.cs">
       <Link>FileCompressor.cs</Link>
     </Compile>
     <Compile Include="..\Solfeggio.Win\Properties\AssemblyInfo.cs">
@@ -94,7 +94,7 @@
 
 copy "$(SolutionDir)Solfeggio\Solfeggio.Win\bin\Solfeggio.exe" "$(ProjectDir)Assemblies\Solfeggio.exe"
 
-..\..\..\Compressor\bin\Compressor.exe  "$(SolutionDir)Solfeggio\Solfeggio.Win.Launcher\Assemblies\Solfeggio.exe"
+$(SolutionDir)Ace\Compressor\bin\Compressor.exe  "$(SolutionDir)Solfeggio\Solfeggio.Win.Launcher\Assemblies\Solfeggio.exe"
 
 del "$(ProjectDir)Assemblies\Solfeggio.exe"</PreBuildEvent>
   </PropertyGroup>

@@ -1,6 +1,4 @@
-﻿using Compressor;
-using Solfeggio.Launcher.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +6,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+
+using Compressor;
+
+using Solfeggio.Launcher.Properties;
 
 namespace Solfeggio.Launcher;
 
@@ -30,10 +32,10 @@ class Program
 
 		var domain = AppDomain.CurrentDomain;
 		var appAssembly = domain.Load(GetAppRawAssembly());
-		domain.AssemblyResolve += (sender, args) =>
-			domain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == new AssemblyName(args.Name).Name);
-
-		GetAppNestedRawAssemblies().ToList().ForEach(b => domain.Load(b));
+		domain.AssemblyResolve += (sender, args) => domain.GetAssemblies()
+			.FirstOrDefault(a => a.GetName().Name == new AssemblyName(args.Name).Name)
+			;
+		GetAppNestedRawAssemblies().Select(domain.Load).ToList();
 	}
 
 	static byte[] GetAppRawAssembly() => Assemblies.App_exe.ConvertBytes(CompressionMode.Decompress);
@@ -57,17 +59,14 @@ class Program
 
 	static void CleanAssemblyFiles(string appPath)
 	{
-		var files = new[]
-		{
-			"Ace.dll", "Ace.pdb",
-			"Rainbow.dll", "Rainbow.pdb",
-			"Yandex.Metrica.NET.dll",
-			"Solfeggio.pdb",
-		};
-
 		var appDirectory = Path.GetDirectoryName(appPath);
+		Directory.GetFiles(appDirectory)
+			.Where(f => f.EndsWith(".dll") || f.EndsWith(".pdb"))
+			.Select(TryDelete)
+			.ToList()
+			;
+
 		var suspectedPath = Path.Combine(appDirectory, "Solfeggio.exe");
-		foreach (var file in files) TryDelete(Path.Combine(appDirectory, file));
 		if (appPath != suspectedPath) TryDelete(suspectedPath);
 	}
 }
