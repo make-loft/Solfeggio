@@ -4,6 +4,6 @@
 [submodule "Rainbow"]
 	path = Rainbow
 	url = ../Rainbow
-[submodule "yandex.metric"]
-	path = yandex.metric
+[submodule "Yandex.Metric"]
+	path = Yandex.Metric
 	url = ../Yandex.Metric
