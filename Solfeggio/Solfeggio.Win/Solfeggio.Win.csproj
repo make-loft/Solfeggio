@@ -436,11 +436,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(ProjectDir)Assemblies" mkdir "$(ProjectDir)Assemblies"
+    <PreBuildEvent>
+if not exist "$(ProjectDir)Assemblies" mkdir "$(ProjectDir)Assemblies"
 
 copy "$(SolutionDir)Ace\bin\Ace.dll" "$(ProjectDir)Assemblies\Ace.dll"
 copy "$(SolutionDir)Rainbow\Rainbow\bin\netstandard1.0\Rainbow.dll" "$(ProjectDir)Assemblies\Rainbow.dll"
-copy "$(SolutionDir)Yandex.Metric\Yandex.Metrica\bin\Yandex.Metrica.Win.dll" "$(ProjectDir)Assemblies\Yandex.Metrica.Win.dll"</PreBuildEvent>
+copy "$(SolutionDir)Yandex.Metric\Yandex.Metrica\bin\Yandex.Metrica.Win.dll" "$(ProjectDir)Assemblies\Yandex.Metrica.Win.dll"
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.
